@@ -1,0 +1,254 @@
+﻿@page
+@model NOVAAPP.Pages.Productos.IndexModel
+@{
+    ViewData["Title"] = "Productos";
+
+}
+
+
+
+@section styles{
+
+
+}
+
+@section scripts{
+
+      <script>
+        $(document).ready(function () {
+            jQuery(document).ready(function ($) {
+                $(document).ready(function () {
+                    $('.mi-selector').select2();
+                });
+            });
+            $(".js-example-responsive").select2({
+                width: 'resolve',// need to override the changed default
+                height: 'resolve'
+            });
+
+          
+
+
+
+        });
+
+     
+        function  InsertarSAP() {
+
+         $.ajax({
+                        type: 'GET',
+                        dataType: 'json',
+                        url: '@Url.Page("Index", "InsertarSAP")',
+                        data: { },
+                        success: function (result) {
+                 $("#divProcesando").modal("hide");
+                              
+                             if (result == false) {
+                                 
+                                 Swal.fire({
+                                     icon: 'error',
+                                     title: 'Oops...',
+                                     text: 'Ha ocurrido un error al intentar insertar a SAP'
+
+                                 })
+
+                             } else {
+                                 Swal.fire({
+                                     title: "Ha sido insertado a SAP con éxito",
+
+                                     icon: 'success',
+                                     showCancelButton: false,
+                                     customClass: {
+                                         confirmButton: 'swalBtnColor',
+
+                                     },
+                                     confirmButtonText: 'OK'
+                                 }).then((result) => {
+                                     if (result.isConfirmed) {
+                                         location.reload();
+                                     }
+                                 })
+                             }
+             },
+             beforeSend: function () {
+                 $("#divProcesando").modal("show");
+             }
+                     })
+        }
+
+
+
+    </script>
+
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Productos
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+        <li class="breadcrumb-item active">Listado Productos</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+
+               <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-sm-8"> <h4 class="box-title">Filtro</h4></div>
+
+
+                    </div>
+
+
+                </div>
+                <div class="box-body">
+                    <form method="get">
+                        <div class="row">
+                            <div class="col-sm-3 pr-1">
+                                <div class="form-group">
+                                    <label>Bodega</label>
+                                      <select class="form-control select2  " asp-for="filtro.Codigo1">
+                                                    @foreach(var item in Model.Bodegas)
+                                                    {
+                                                        <option value="@item.id"> @item.CodSAP - @item.Nombre</option>
+                                                    }
+
+
+                                                </select>
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-sm-3 pr-1">
+                                <div class="form-group">
+                                    <label>Lista de Precio</label>
+                                      <select class="form-control select2  " asp-for="filtro.Codigo2">
+                                                    @foreach(var item in Model.Listas)
+                                                    {
+                                                        <option value="@item.id"> @item.CodSAP - @item.Nombre</option>
+                                                    }
+
+
+                                                </select>
+                                </div>
+                            </div>
+
+                            
+                            
+                            <div class="col-sm-3 pl-1" style="text-align: center; padding-top: 1%;">
+                                <button title="Buscar" type="submit" class="btn btn-rounded btn-outline-primary" > <i class="fa fa-search"></i></button>
+                            </div>
+ 
+
+
+                            
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-sm-8"> <h4 class="box-title">Productos</h4></div>
+                      <div class="col-sm-2"> <button onclick="javascript: InsertarSAP()" class="btn btn-rounded btn-success"><i class="mdi mdi-cached"></i  title="Sincronizar a SAP"> Sincronizar a SAP</button></div>
+
+                    </div>
+
+
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                     <th>ID</th>
+                                    <th>Código</th>
+                                  <th>Impuesto</th>
+                                    <th>Nombre</th>
+                                     <th>Bodega</th>
+                                      <th>Lista de Precio</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Unidad de Medida</th>
+                                    <th>Cabys</th>
+                                
+                                      <th>Costo</th>
+                                      <th>Stock</th>
+                                    
+                                       
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Objeto)
+                                {
+                                <tr>
+                                      <td>
+                                        @item.id
+                                    </td>
+                                    <td>
+                                        @item.Codigo
+                                    </td>
+
+                                   
+                                    <td>  @( Model.Impuestos.Where(a => a.id == item.idImpuesto).FirstOrDefault() == null ? "Impuesto Inexistente" :  Model.Impuestos.Where(a => a.id == item.idImpuesto).FirstOrDefault().Codigo) </td> 
+                                       
+                                            <td>         @item.Nombre </td>
+                                              <td>  @( Model.Bodegas.Where(a => a.id == item.idBodega).FirstOrDefault() == null ? "Bodega Inexistente" :  Model.Bodegas.Where(a => a.id == item.idBodega).FirstOrDefault().Nombre) </td> 
+                                                 <td>  @( Model.Listas.Where(a => a.id == item.idListaPrecios).FirstOrDefault() == null ? "Lista de Precio Inexistente" :  Model.Listas.Where(a => a.id == item.idListaPrecios).FirstOrDefault().Nombre) </td> 
+                                                <td>         @item.PrecioUnitario </td>
+                                                    <td>         @item.UnidadMedida </td>
+                                                        <td>         @item.Cabys </td>
+                                                            
+                                                                    <td>         @item.Costo </td>
+                                                                        <td>         @item.Stock </td>
+
+                                                                           
+                                </tr>
+
+                                }
+
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                     <th>ID</th>
+                                           <th>Código</th>
+                                    <th>Impuesto</th> 
+
+                                   
+                                    <th>Nombre</th>
+                                        <th>Bodega</th>
+                                      <th>Lista de Precio</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Unidad de Medida</th>
+                                    <th>Cabys</th>
+                               
+                                      <th>Costo</th>
+                                      <th>Stock</th>
+                                     
+
+                                        
+
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->

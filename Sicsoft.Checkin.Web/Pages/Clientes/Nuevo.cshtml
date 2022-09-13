@@ -1,0 +1,346 @@
+﻿@page
+@model NOVAAPP.Pages.Clientes.NuevoModel
+@{
+     ViewData["Title"] = "Agregar Clientes";
+}
+@section styles{
+
+
+}
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+
+            jQuery(document).ready(function ($) {
+                $(document).ready(function () {
+                });
+            });
+       
+            Recuperar();
+        });
+        var Cantones = [];
+        var Distritos = [];
+        var Barrios = [];
+
+         function Recuperar() {
+           
+             
+             Cantones = JSON.parse($("#Cantones").val());
+               Distritos = JSON.parse($("#Distritos").val());
+              Barrios = JSON.parse($("#Barrios").val());  //Viene de input
+        
+             ModificaSelects(0);
+
+        }
+        function ModificaSelects(i)
+        {
+            var codProvincia = parseInt($("#selectP").val());
+            var codCanton = parseInt($("#selectC").val());
+            var codDistrito = parseInt($("#selectD").val());
+
+            if(i == 0)
+            {
+                RellenaCantones(Cantones.filter(a => a.CodProvincia == codProvincia));
+                RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
+                RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+
+            }
+
+            if(i == 1)
+            {
+                RellenaCantones(Cantones.filter(a => a.CodProvincia == codProvincia));
+                RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
+                RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+
+            }
+            if (i == 2) {
+
+                RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
+                RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+
+            }
+
+            if (i == 3) {
+                RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+            }
+
+        }
+        
+        function RellenaCantones(ListCantones)
+        {
+             var sOptions = '';
+
+            $("#selectC").html('');
+
+            for (var i = 0; i < ListCantones.length; i++) {
+                
+                sOptions += '<option value="'+ListCantones[i].CodCanton+'">'+ListCantones[i].NomCanton+'</option>';
+                 
+            }
+            $("#selectC").html(sOptions);
+        }
+
+        function RellenaDistritos(ListDistritos)
+        {
+             var sOptions = '';
+
+            $("#selectD").html('');
+
+            for (var i = 0; i < ListDistritos.length; i++) {
+                
+                sOptions += '<option value="'+ListDistritos[i].CodDistrito+'">'+ListDistritos[i].NomDistrito+'</option>';
+                 
+            }
+            $("#selectD").html(sOptions);
+        }
+
+        function RellenaBarrios(ListBarrios)
+        {
+             var sOptions = '';
+
+            $("#selectB").html('');
+
+            for (var i = 0; i < ListBarrios.length; i++) {
+                
+                sOptions += '<option value="'+ListBarrios[i].CodBarrio+'">'+ListBarrios[i].NomBarrio+'</option>';
+                 
+            }
+            $("#selectB").html(sOptions);
+        }
+
+    </script>
+
+}<!-- Content Header (Page header) -->
+@using Newtonsoft.Json;
+<section class="content-header">
+    <h1>
+        Clientes
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+        <li class="breadcrumb-item active">Crear Nuevo Cliente</li>
+    </ol>
+</section>
+
+
+
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-8">
+                                <h6 class="box-subtitle"> Crear Nuevo Cliente</h6>
+
+                            </div>
+                            <div class="col-4">
+                                 <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <form method="post" id="formTipos" role="form" novalidate class="needs-validation " enctype="multipart/form-data">
+                              <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="row">
+                              <div class="col-4">
+                                      <div class="form-group">
+                            <label for="cyber">Tipo de Cédula:</label>
+                            <select id="selectTP" class="form-control" asp-for="Cliente.TipoCedula" required>
+                                <option value="01">Nacional</option>
+                                <option value="02">Jurídica</option>
+                                <option value="03">DIMEX</option>
+                                <option value="04">NITE</option>
+
+                                 
+                            </select>
+                        </div>
+                                    </div>
+                                   <div class="col-4">
+                                        <div class="form-group">
+                                            <h5>Cédula<span class="text-danger">*</span></h5>
+                                            <div class="controls">
+                                                <input type="text" asp-for="Cliente.Cedula" class="form-control" required data-validation-required-message="Este campo es requerido">
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4">
+                                          <div class="form-group">
+                                            <h5>Nombre<span class="text-danger">*</span></h5>
+                                            <div class="controls">
+                                                <input type="text" asp-for="Cliente.Nombre" class="form-control" required data-validation-required-message="Este campo es requerido">
+                                            </div>
+                                            
+                                        </div>
+                                       
+                                    </div>
+                                    
+                                 
+                            
+                        </div>
+                       
+
+
+                        <div class="row">
+                            <div class="col-6">
+                                 <div class="form-group">
+                                            <h5>Email<span class="text-danger">*</span></h5>
+                                            <div class="controls">
+                                                <input type="text" asp-for="Cliente.Email" class="form-control" required data-validation-required-message="Este campo es requerido">
+                                            </div>
+                                            
+                                        </div>
+                             
+
+                            </div>
+                            
+                              <div class="col-6">
+                                 <div class="form-group">
+                                            <h5>Teléfono<span class="text-danger">*</span></h5>
+                                            <div class="controls">
+                                                <input type="number" asp-for="Cliente.Telefono" class="form-control" required data-validation-required-message="Este campo es requerido">
+                                            </div>
+                                            
+                                        </div>
+                             
+
+                            </div>
+                       
+                        </div>
+                         <div class="row">
+                            <div class="col-3">
+                                 <div class="form-group">
+                                             <label for="nom">Provincia:</label>
+                             <select id="selectP" class="form-control" asp-for="Cliente.Provincia" onchange="javascript: ModificaSelects(1)" required>
+                               
+                                    <option value="1" selected>San José</option>
+                                    <option value="2">Alajuela</option>
+                                    <option value="3">Cartago</option>
+                                    <option value="4">Heredia</option>
+                                    <option value="5">Guanacaste</option>
+                                    <option value="6">Puntarenas</option>
+                                    <option value="7">Limón</option>
+                                    
+                                    
+
+                                 
+                            </select>
+                                            
+                                        </div>
+                             
+
+                            </div>
+                              <div class="col-3">
+                                 <div class="form-group">
+   <label for="nom">Cantón:</label>
+                             <select id="selectC" class="form-control" asp-for="Cliente.Canton"  onchange="javascript: ModificaSelects(2)" required>
+                               @foreach(var item in Model.Cantones)
+                                {
+                                    <option value="@item.CodCanton">@item.NomCanton</option>
+                                    
+                                }
+
+                                 
+                            </select>
+                                            
+                                        </div>
+                             
+
+                            </div>
+                            <div class="col-3">
+                             <div class="form-group">
+                                           <label for="nom">Distrito:</label>
+                             <select id="selectD" class="form-control" asp-for="Cliente.Distrito" onchange="javascript: ModificaSelects(3)" required>
+                               @foreach(var item in Model.Distritos)
+                                {
+                                    <option value="@item.CodDistrito">@item.NomDistrito</option>
+                                    
+                                }
+
+                                 
+                            </select>
+                                            
+                                        </div>
+                               
+                            </div>
+                             <div class="col-3">
+                             <div class="form-group">
+                                         <label for="nom">Barrio:</label>
+                             <select id="selectB" class="form-control" asp-for="Cliente.Barrio" required>
+                               @foreach(var item in Model.Barrios)
+                                {
+                                    <option value="@item.CodBarrio">@item.NomBarrio</option>
+                                    
+                                }
+
+                                 
+                            </select>    
+                                        </div>
+                               
+                            </div>
+                        </div>
+                             <div class="row">
+                            <div class="col-6">
+                                 <div class="form-group">
+                                            <h5>Dirección<span class="text-danger">*</span></h5>
+                                            <div class="controls">
+                                                <input type="text" asp-for="Cliente.Sennas" class="form-control" required data-validation-required-message="Este campo es requerido">
+                                            </div>
+                                            
+                                        </div>
+                             
+
+                            </div>
+                              <div class="col-6">
+                                 <div class="form-group">
+                                            <h5>Lista de Precio<span class="text-danger">*</span></h5>
+                                             
+                                                <select class="form-control select2  " asp-for="Cliente.idListaPrecios">
+                                                    @foreach(var item in Model.PrecioLista)
+                                                    {
+                                                        <option value="@item.id">@item.Nombre</option>
+                                                    }
+
+
+                                                </select>
+                                                
+                                            
+                                        </div>
+                             
+
+                            </div>
+                              </div>
+                        <div class="text-xs-right">
+                                        <button type="submit" class="btn btn-info" title="Guardar Cambios">Guardar Cambios</button>
+                                    </div>
+                        </form>
+                    </div>
+                    <div class="clearfix"></div>
+
+                   
+<div class="row">
+    <div class="col-md-12 col-sm-12  ">
+        <div class="x_panel">
+
+            <div class="x_content">
+                <form method="post" id="formTipos" role="form" novalidate class="needs-validation " enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input hidden id="Cantones" value="@JsonConvert.SerializeObject(Model.Cantones)" />
+                    <input hidden id="Distritos" value="@JsonConvert.SerializeObject(Model.Distritos)" />
+                    <input hidden id="Barrios" value="@JsonConvert.SerializeObject(Model.Barrios)" />
+
+                     </form>
+
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+

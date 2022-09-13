@@ -1,0 +1,303 @@
+﻿@page
+@model Sicsoft.CostaRica.Checkin.Web.Pages.Account.RegistroUsuarioModel
+@{
+    ViewData["Title"] = "Insertar Usuario";
+}
+
+
+
+@section styles{
+
+
+}
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+            $('.summernote').summernote();
+            $(".select2").select2({
+                theme: 'bootstrap4',
+            });
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        })
+
+
+    </script>
+    <script>
+        var btn = document.getElementById('Guardar');
+        $(document).ready(function () {
+            btn.disabled = true;
+
+        });
+        function esMayuscula(letra) {
+            return letra === letra.toUpperCase();
+        }
+
+        function esMinuscula(letra) {
+            return letra === letra.toLowerCase();
+        }
+
+        function verificaMayusculas(palabra) {
+            var i = 0;
+            for (var index = 0; index < palabra.length; index++) {
+                var letraActual = palabra.charAt(index);
+                if (isNaN(letraActual)) {
+                    if (tiene_caracteres(letraActual) == 0) {
+
+                        if (esMayuscula(letraActual)) {
+                            i++;
+                        }
+                    }
+                }
+
+
+
+            }
+
+            return i;
+
+        }
+
+
+        function verificaMinisculas(palabra) {
+            var i = 0;
+            for (var index = 0; index < palabra.length; index++) {
+                var letraActual = palabra.charAt(index);
+                if (isNaN(letraActual)) {
+                    if (tiene_caracteres(letraActual) == 0) {
+
+                        if (esMinuscula(letraActual)) {
+                            i++;
+                        }
+                    }
+
+                }
+
+
+            }
+
+            return i;
+
+        }
+
+        function tiene_caracteres(texto) {
+            var regularExpression = "@@/^(?=.*[])(?=.*[!#$%^&*])[-!#$%^&*]{,}$/";
+            for (i = 0; i < texto.length; i++) {
+                if (regularExpression.indexOf(texto.charAt(i), 0) != -1) {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        function son_iguales(texto1, texto2) {
+            if (texto1 === texto2) {
+                return 1;
+            } else {
+                console.log(texto1 + " " + texto2);
+                return 0;
+
+            }
+        }
+
+        function tiene_numeros(texto) {
+            var numeros = "0123456789";
+            for (i = 0; i < texto.length; i++) {
+                if (numeros.indexOf(texto.charAt(i), 0) != -1) {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+        //Revisa las contraseñas
+
+        function RevisaContraseña() {
+
+            if (tiene_numeros($("#clave").val()) == 0) {
+                var x = document.getElementById("ErrorClave");
+                x.style.display = "block";
+                $("#ErrorClave").text("La contraseña debe contener letras y numeros");
+                btn.disabled = true;
+
+            } else if ($("#clave").val().length < 8) {
+                var x = document.getElementById("ErrorClave");
+                x.style.display = "block";
+                $("#ErrorClave").text("La contraseña debe tener una longitud mayor a 8 caracteres");
+                btn.disabled = true;
+            } else if (verificaMayusculas($("#clave").val()) == 0) {
+
+                var x = document.getElementById("ErrorClave");
+                x.style.display = "block";
+                $("#ErrorClave").text("La contraseña debe tener mayúsculas");
+                btn.disabled = true;
+            }
+            else if (verificaMinisculas($("#clave").val()) == 0) {
+                var x = document.getElementById("ErrorClave");
+                x.style.display = "block";
+                $("#ErrorClave").text("La contraseña debe tener minúsculas");
+                btn.disabled = true;
+            }
+
+            else {
+                var x = document.getElementById("ErrorClave");
+                x.style.display = "none";
+
+                if (tiene_caracteres($("#clave").val()) == 0) {
+                    console.log("No  tiene");
+                    var x = document.getElementById("ErrorClave");
+                    x.style.display = "block";
+                    $("#ErrorClave").text("La contraseña debe contener al menos un caracter especial");
+                    btn.disabled = true;
+                } else {
+                    console.log("Si tiene");
+                    var x = document.getElementById("ErrorClave");
+                    x.style.display = "none";
+                    // btn.disabled = false;
+
+
+                }
+            }
+
+            RevisaConfirmacionContraseña();
+
+
+
+        }
+
+        function RevisaConfirmacionContraseña() {
+            if (son_iguales($("#clave").val(), $("#cClave").val()) == 0) {
+                console.log(" son distintos");
+                var x = document.getElementById("ErrorConfirmacionClave");
+                x.style.display = "block";
+                $("#ErrorConfirmacionClave").text("Las contraseñas no coinciden");
+                btn.disabled = true;
+            } else {
+                console.log("No son iguales");
+                var x = document.getElementById("ErrorConfirmacionClave");
+                x.style.display = "none";
+                btn.disabled = false;
+            }
+
+
+        }
+
+
+    </script>
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Usuarios
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+        <li class="breadcrumb-item active">Crear Nuevo Usuario</li>
+    </ol>
+</section>
+
+
+
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-8">
+                            <h6 class="box-subtitle"> Crear Nuevo Usuario</h6>
+
+                        </div>
+                        <div class="col-4">
+                            <a asp-page="/Usuarios/Index" class="btn btn-outline-info" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col">
+                            <form method="post" id="formTipos" role="form" novalidate class="needs-validation " enctype="multipart/form-data">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="row">
+
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <h5>Nombre<span class="text-danger">*</span></h5>
+                                            <div class="controls">
+                                                <input type="text" asp-for="Input.Nombre" class="form-control" required data-validation-required-message="Este campo es requerido">
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <h5>Email<span class="text-danger">*</span></h5>
+                                            <div class="controls">
+                                                <input type="email" asp-for="Input.Email" class="form-control" required data-validation-required-message="Este campo es requerido">
+                                            </div>
+
+                                        </div>
+                                       
+                                      
+
+                                        <div class="form-group">
+                                            <h5>Rol </h5>
+                                            <div class="controls">
+                                                <select asp-for="Input.idRol" class="form-control select2">
+                                                    <option value="0">Seleccione</option>
+                                                    @foreach (var item in Model.Roles)
+                                                    {
+                                                        <option value="@item.idRol">@item.NombreRol </option>
+                                                    }
+
+                                                </select>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <h5>Contraseña<span class="text-danger">*</span></h5>
+                                            <div class="controls">
+                                                <input type="password" asp-for="Input.Clave" class="form-control" required data-validation-required-message="Este campo es requerido" id="clave" onchange="javascript: RevisaContraseña()">
+                                                <span style="display:none;" id="ErrorClave" class="text-danger"></span>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <h5>Confirmar Contraseña<span class="text-danger">*</span></h5>
+                                            <div class="controls">
+                                                <input type="password" id="cClave" onchange="javascript: RevisaConfirmacionContraseña()" class="form-control">
+                                                <span style="display:none;" id="ErrorConfirmacionClave" class="text-danger"></span>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="text-xs-right">
+                                    <button type="submit"  id="Guardar" class="btn btn-info" title="Guardar Cambios">Guardar Cambios</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+ 

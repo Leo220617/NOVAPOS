@@ -1,0 +1,140 @@
+﻿@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@using Sicsoft.Checkin.Web.Models;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
+
+
+<!-- Left side column. contains the sidebar -->
+<aside class="main-sidebar">
+    <!-- sidebar-->
+    <section class="sidebar">
+
+
+        <ul class="sidebar-menu" data-widget="tree">
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-cogs"></i> <span>Administrativo</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-right pull-right"></i>
+                    </span>
+                </a>
+
+                <ul class="treeview-menu">
+                          @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "16").FirstOrDefault()))
+                        {
+
+                            <li><a asp-page="/Sucursales/Index"><i class="mdi mdi-home-outline"></i>Sucursales</a></li>
+                        }
+
+                    }
+                    
+                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "6").FirstOrDefault()))
+                        {
+
+                            <li><a asp-page="/BitacoraErrores/Index"><i class="mdi mdi-alert-circle"></i>Bitacora Errores</a></li>
+                        }
+
+                    }
+                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "4").FirstOrDefault()))
+                        {
+
+                            <li><a asp-page="/Bodegas/Index"><i class="mdi mdi-garage"></i>Bodegas</a></li>
+                        }
+
+                    }
+
+                      @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "5").FirstOrDefault()))
+                        {
+
+                            <li><a asp-page="/Impuestos/Index"><i class="mdi mdi-file"></i>Impuestos</a></li>
+                        }
+
+                    }
+
+                        @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "7").FirstOrDefault()))
+                        {
+
+                            <li><a asp-page="/ListaPrecios/Index"><i class="mdi mdi-currency-usd"></i>Lista de Precios</a></li>
+                        }
+
+                    }
+
+                      @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
+                        {
+
+                            <li><a asp-page="/Usuarios/Index"><i class="mdi mdi-account-outline"></i>Usuarios</a></li>
+                        }
+
+                    }
+
+                     @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "9").FirstOrDefault()))
+                        {
+
+                            <li><a asp-page="/Productos/Index"><i class="mdi mdi-cube"></i>Productos</a></li>
+                        }
+
+                    }
+
+                        @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "10").FirstOrDefault()))
+                        {
+
+                            <li><a asp-page="/Cajas/Index"><i class="mdi mdi-cart-outline"></i>Cajas</a></li>
+                        }
+
+                    }
+
+                        @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "11").FirstOrDefault()))
+                        {
+
+                            <li><a asp-page="/Clientes/Index"><i class="mdi mdi-account-multiple"></i>Clientes</a></li>
+                        }
+
+                    }
+
+                      @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "12").FirstOrDefault()))
+                        {
+
+                            <li><a asp-page="/CorreoEnvio/Index"><i class="mdi mdi-email-open-outline"></i>Correos Recepción</a></li>
+                        }
+
+                    }
+                
+                    
+
+
+                </ul>
+            </li>
+            
+          
+            <li class="nav-devider"></li>
+            <li class="treeview " > <!--active-->
+
+                <a href="#">
+                    <i class="fa fa-first-order"></i> <span>Transaccional</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-right pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                     
+                   
+                </ul>
+            </li>
+             
+          
+
+        </ul>
+    </section>
+</aside>

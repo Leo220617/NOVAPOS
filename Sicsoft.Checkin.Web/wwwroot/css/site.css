@@ -1,0 +1,8 @@
+﻿.icono
+{
+    font-size: 170%;
+}
+.fa-trash {
+    color: red !important;
+    cursor: pointer;
+}

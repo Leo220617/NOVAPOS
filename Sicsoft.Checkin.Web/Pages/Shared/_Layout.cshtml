@@ -1,0 +1,259 @@
+﻿@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@using Sicsoft.Checkin.Web.Models;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Expires" CONTENT="-1">
+    <title>@ViewData["Title"]</title>
+    @await RenderSectionAsync("styles", false)
+    <!-- jQuery 3 -->
+    <script src="~/assets/vendor_components/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+
+
+    <!-- Bootstrap 4.0-->
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor_components/bootstrap/dist/css/bootstrap.css">
+    <!-- Bootstrap extend-->
+    <link rel="stylesheet" type="text/css" href="~/css/bootstrap-extend.css">
+    <!-- Vector CSS -->
+    <link href="/assets/vendor_components/jvectormap/lib2/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="~/assets/vendor_components/bootstrap-daterangepicker/daterangepicker.css">
+
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" href="~/assets/vendor_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="~/assets/vendor_plugins/iCheck/all.css">
+
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="/assets/vendor_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css">
+
+
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href="~/assets/vendor_plugins/timepicker/bootstrap-timepicker.min.css">
+
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/assets/vendor_components/select2/dist/css/select2.min.css">
+
+    <!-- Theme style -->
+    <link rel="stylesheet" type="text/css" href="~/css/master_style.css">
+    <!-- Azurex Admin skins -->
+    <link rel="stylesheet" type="text/css" href="~/css/skins/_all-skins.css">
+    <!-- Data Table-->
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor_components/datatable/datatables.min.css" />
+
+
+
+    <!-- InputMask -->
+    <script src="~/assets/vendor_plugins/input-mask/jquery.inputmask.js"></script>
+    <script src="~/assets/vendor_plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+    <script src="~/assets/vendor_plugins/input-mask/jquery.inputmask.extensions.js"></script>
+
+    <!-- Popup CSS -->
+    <link href="~/assets/vendor_components/Magnific-Popup-master/dist/magnific-popup.css" rel="stylesheet">
+
+ 
+
+
+
+    <link rel="stylesheet" type="text/css" href="/css/site.css" />
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script>
+
+
+
+
+</head>
+<body class="hold-transition skin-purple light-sidebar sidebar-mini sidebar-collapse">
+
+
+    <div class="wrapper">
+
+        <header class="main-header">
+            <div class="p-10 clearfix float-left">
+                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <i class="ti-align-left"></i>
+                </a>
+                <!-- Logo -->
+                <a asp-page="Index" class="logo">
+                    <!-- logo-->
+                    <span class="logo-lg">
+                        <img src="~/img/logonova.png" alt="logo" class="light-logo" style="margin-top: -7%;">
+                        <img src="~/img/logonova.png" alt="logo" class="dark-logo"style="margin-top: -7%;">
+                    </span>
+                </a>
+            </div>
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top">
+                <!-- Sidebar toggle button-->
+                <div>
+
+
+                </div>
+
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+
+                        <!-- User Account-->
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="mdi mdi-account"></i>
+                            </a>
+                            <ul class="dropdown-menu scale-up">
+                                <!-- Menu Body -->
+                                <li class="user-body">
+                                    <div class="row no-gutters">
+                                        <div class="col-12 text-left">
+                                            <a href="#">@(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Name).Select(s1 => s1.Value).FirstOrDefault())</a>
+                                        </div>
+                                        <div role="separator" class="divider col-12"></div>
+
+                                        <div class="col-12 text-left">
+                                            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "1").FirstOrDefault()))
+                                                {
+                                                    <a asp-page="/SeguridadRolesModulos/Index"><i class="ti-user"></i> Roles</a>
+                                                }
+                                            }
+                                        </div>
+                                        <div role="separator" class="divider col-12"></div>
+                                        <div class="col-12 text-left">
+                                            <form class="form-inline" asp-page="/Account/Logout" id="cerrarSesion" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                                                <a onclick="document.getElementById('cerrarSesion').submit()"><i class="fa fa-power-off"></i> Salir</a>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                    <!-- /.row -->
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- Control Sidebar Toggle Button -->
+                        <li>
+
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+
+        <!-- Left side column. contains the sidebar -->
+        <partial name="_NavbarPartial" />
+
+
+        <div class="content-wrapper">
+            @RenderBody()
+            @Html.Partial("Mensajes")
+        </div>
+
+        <footer class="main-footer">
+            <div class="pull-right d-none d-sm-inline-block">
+                <ul class="nav nav-primary nav-dotted nav-dot-separated justify-content-center justify-content-md-end">
+                    <li class="nav-item">
+
+                    </li>
+                    <li class="nav-item">
+
+                    </li>
+                </ul>
+            </div> ©@DateTime.Now.Year, D&D Consultores. Todos los derechos reservados.
+        </footer>
+
+
+    </div>
+
+
+
+    <!-- SlimScroll -->
+    <script src="~/assets/vendor_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- Azurex Admin App -->
+    <script src="~/js/template.js"></script>
+
+
+
+    <!-- jQuery UI 1.11.4 -->
+    <script src="/assets/vendor_components/jquery-ui/jquery-ui.js"></script>
+    <!-- popper -->
+    <script src="~/assets/vendor_components/popper/dist/popper.min.js"></script>
+
+
+    <!-- Bootstrap 4.0-->
+    <script src="~/assets/vendor_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Select2 -->
+    <script src="~/assets/vendor_components/select2/dist/js/select2.full.js"></script>
+
+    <!-- InputMask -->
+    <script src="~/assets/vendor_plugins/input-mask/jquery.inputmask.js"></script>
+    <script src="~/assets/vendor_plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+    <script src="~/assets/vendor_plugins/input-mask/jquery.inputmask.extensions.js"></script>
+
+    <!-- date-range-picker -->
+    <script src="~/assets/vendor_components/moment/min/moment.min.js"></script>
+    <script src="~/assets/vendor_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+    <!-- bootstrap datepicker -->
+    <script src="~/assets/vendor_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
+    <!-- bootstrap color picker -->
+    <script src="~/assets/vendor_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
+
+    <!-- bootstrap time picker -->
+    <script src="~/assets/vendor_plugins/timepicker/bootstrap-timepicker.min.js"></script>
+
+
+    <!-- iCheck 1.0.1 -->
+    <script src="~/assets/vendor_plugins/iCheck/icheck.min.js"></script>
+
+    <!-- FastClick -->
+    <script src="~/assets/vendor_components/fastclick/lib/fastclick.js"></script>
+
+
+
+    <!-- SlimScroll -->
+    <script src="~/assets/vendor_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+
+
+
+    <!-- Azurex Admin for advanced form element -->
+    <script src="~/js/pages/advanced-form-element.js"></script>
+
+    <!-- This is data table -->
+    <script src="~/assets/vendor_components/datatable/datatables.min.js"></script>
+
+    <!-- Azurex Admin for Data Table -->
+    <script src="~/js/pages/data-table.js"></script>
+
+    <!-- Form validator JavaScript -->
+    <script src="~/js/pages/validation.js"></script>
+
+    <!-- Magnific popup JavaScript -->
+    <script src="~/assets/vendor_components/Magnific-Popup-master/dist/jquery.magnific-popup.min.js"></script>
+
+    <script src="~/assets/vendor_components/Magnific-Popup-master/dist/jquery.magnific-popup-init.js"></script>
+ 
+
+    @RenderSection("Scripts", required: false)
+</body>
+
+
+</html>

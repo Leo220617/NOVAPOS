@@ -1,0 +1,454 @@
+﻿@page "{id}"
+@model InversionGloblalWeb.Pages.SeguridadRolesModulos.RolesModulosModel
+@{
+    ViewData["Title"] = "Asignar Modulos";
+}
+
+
+ 
+
+@section styles{
+
+
+}
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            jQuery(document).ready(function ($) {
+                $(document).ready(function () {
+                    $('.mi-selector').select2();
+                });
+            });
+            $(".js-example-responsive").select2({
+                width: 'resolve',// need to override the changed default
+                height: 'resolve'
+            });
+
+            RellenaDatosAsignados();
+
+        });
+
+        var ProdCadena = [];
+        var ProdCadenaM = [];
+
+        function InsertarProductoTablaMia(i) {
+            var detalle =
+            {
+                codModulo: ProdCadena[i].codModulo,
+                descripcion: ProdCadena[i].descripcion
+            }
+            ProdCadenaM.push(detalle);
+
+            ProdCadena.splice(i, 1);
+            RellenaTablaM();
+            RellenaTablaG();
+
+        }
+
+        function InsertarProductoTablaG(i) {
+            var detalle =
+            {
+                codModulo: ProdCadenaM[i].codModulo,
+                descripcion: ProdCadenaM[i].descripcion
+            }
+            ProdCadena.push(detalle);
+
+            ProdCadenaM.splice(i, 1);
+            RellenaTablaM();
+            RellenaTablaG();
+
+        }
+
+        function RellenaDatosAsignados() {
+
+
+
+             $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '@Url.Page("RolesModulos", "Modulos")',
+                 data: { id: $("#CodRol").val() },
+            success: function (result) {
+
+                console.log(result);
+
+
+
+                    for (var i = 0; i < result.modulosGenerales.length; i++) {
+                        var detalle = {
+                            codModulo: result.modulosGenerales[i].codModulo,
+                            descripcion: result.modulosGenerales[i].descripcion,
+
+                        };
+                        ProdCadena.push(detalle);
+
+                    }
+
+                for (var i = 0; i < result.modulosMiosS.length; i++) {
+                    if (result.modulosMiosS[i].descripcion != null) {
+
+                        var detalle = {
+                            codModulo: result.modulosMiosS[i].codModulo,
+                            descripcion: result.modulosMiosS[i].descripcion,
+
+                        };
+                        ProdCadenaM.push(detalle);
+                    }
+
+                    }
+                    RellenaTablaG();
+                    RellenaTablaM();
+
+
+            },
+            beforeSend: function () {
+
+            },
+            complete: function () {
+
+            }
+        });
+        }
+
+        function RellenaTablaG() {
+            var sOptions = '';
+
+            $("#tbody1").html('');
+
+            for (var i = 0; i < ProdCadena.length; i++) {
+                sOptions += '<tr>'
+                sOptions += '<td align="center" style="padding-top:15px;">  <p style="font-size:15px;">' + ProdCadena[i].codModulo + '</p></td>';
+                sOptions += '<td align="left" style="padding-top:15px;">  <p style="font-size:15px;">' + ProdCadena[i].descripcion + '</p></td>';
+
+                sOptions += '<td align="center" style="padding-top:15px;"><a  onclick="javascript: InsertarProductoTablaMia(' + i + ')" title="Pasar Modulo" class="fa fa-mail-forward icono"></a> ';
+
+
+
+                sOptions += '</tr>'
+            }
+            $("#tbody1").html(sOptions);
+        }
+
+
+        function RellenaTablaM() {
+            var sOptions = '';
+
+            $("#tbody2").html('');
+
+            for (var i = 0; i < ProdCadenaM.length; i++) {
+                sOptions += '<tr>'
+                sOptions += '<td align="center" style="padding-top:15px;">  <p style="font-size:15px;">' + ProdCadenaM[i].codModulo + '</p></td>';
+                sOptions += '<td align="left" style="padding-top:15px;">  <p style="font-size:15px;">' + ProdCadenaM[i].descripcion + '</p></td>';
+
+                sOptions += '<td align="center" style="padding-top:15px;"><a  onclick="javascript: InsertarProductoTablaG(' + i + ')" title="Pasar Modulo" class="fa fa-mail-reply icono"></a> ';
+
+
+
+                sOptions += '</tr>'
+            }
+            $("#tbody2").html(sOptions);
+        }
+
+        function Generar() {
+
+            var CodRol = $("#CodRol").val();
+
+            for (var i = 0; i < ProdCadenaM.length; i++) {
+                ProdCadenaM[i].descripcion = ProdCadenaM[i].descripcion.replace(" ", "_");
+            }
+            var rolesMod =
+            {
+                ProdCadenaM
+            };
+            var modulos = JSON.stringify(rolesMod);
+
+
+            var enviar = {
+                CodRol,
+                modulos
+            };
+            var str = JSON.stringify(enviar).toString();
+            str = str.replace(" ", "_");
+            console.log(str);
+
+
+           $.ajax({
+                    type: 'POST',
+
+                    url: '@Url.Page("RolesModulos", "Generar")',
+                    dataType: 'text',
+                    data: { recibidos: str},
+                        headers: {
+                            RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                        },
+                    success: function (json) {
+
+                        $("#divProcesando").hide();
+
+                        if ($('.modal-backdrop').is(':visible')) {
+
+                            $('body').removeClass('modal-open');
+                            $('.modal-backdrop').hide();
+                        }
+                        console.log("resultado " + json);
+                        if (json == "true") {
+                            Swal.fire({
+                                title: "Ha sido guardado con éxito",
+
+                                icon: 'success',
+                                showCancelButton: false,
+
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'swalBtnColor',
+
+                                },
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            })
+
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Ha ocurrido un error al intentar guardar'
+
+                            })
+                        }
+                    },
+
+                    beforeSend: function (xhr) {
+
+                        $("#divProcesando").modal("show");
+                    },
+                    complete: function () {
+
+                    },
+                    error: function (error) {
+
+                    }
+                    });
+
+
+        }
+
+
+        function PasarTodasDerecha() {
+
+            var tam = ProdCadenaM.length;
+            var tam2 = ProdCadena.length;
+
+
+            for (var i = 0; i < ProdCadena.length; i++) {
+
+                var detalle =
+                {
+                    codModulo: ProdCadena[i].codModulo,
+                    descripcion: ProdCadena[i].descripcion
+                }
+                ProdCadenaM.push(detalle);
+            }
+
+            ProdCadena = [];
+
+
+            RellenaTablaM();
+            RellenaTablaG();
+        }
+
+
+        function PasarTodasIzquierda() {
+            var tam = ProdCadena.length;
+            var tam2 = ProdCadenaM.length;
+
+            console.log(tam2);
+            for (var i = 0; i < tam2; i++) {
+
+                var detalle =
+                {
+                    codModulo: ProdCadenaM[i].codModulo,
+                    descripcion: ProdCadenaM[i].descripcion
+                }
+                ProdCadena.push(detalle);
+            }
+
+
+            ProdCadenaM = [];
+
+
+            RellenaTablaM();
+            RellenaTablaG();
+        }
+
+        function cerrarModalError() {
+            $("#Error").hide();
+        }
+
+    </script>
+}
+
+
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Roles
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+        <li class="breadcrumb-item active">Asignar Módulos</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xl-12 col-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-8">
+                            <h6 class="box-subtitle"> Asignar Modulos</h6>
+
+                        </div>
+                        <div class="col-4">
+                            <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-12">
+
+                            <div class="col-xl-12 col-12">
+                                <div class="form-group">
+                                    <h5>Nombre del Rol</h5>
+                                    <div class="controls">
+                                        <input type="text" asp-for="Roles.NombreRol" class="form-control" readonly>
+                                        <input id="CodRol" asp-for="Roles.idRol" hidden />
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h3>
+                                Lista de Módulos Disponibles
+                            </h3>
+                        </div>
+                        <div class="col-sm-4" style="text-align: right;">
+                            <a onclick="javascript: PasarTodasDerecha()" title="Pasar Todos los Modulos" class="fa fa-fast-forward icono"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-12">
+
+                            <div class="table-responsive tableFixHead" style="padding:inherit; overflow:scroll;    z-index: 5; height: 290px;">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+
+                                            <th align="center" style=" text-align: center;"><h3>Código</h3></th>
+                                            <th align="center" style=" text-align: center;"><h3>Nombre </h3></th>
+
+
+
+
+                                            <th align="center" style=" text-align: center;"><h3>Acción</h3></th>
+                                        </tr>
+
+                                    </thead>
+                                    <tbody id="tbody1">
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h3>
+                                Lista Módulos Asignados al Rol
+                            </h3>
+                        </div>
+                        <div class="coll-sm-4" style="text-align: right;">
+                            <a onclick="javascript: PasarTodasIzquierda()" title="Pasar Todos los Modulos" class="fa fa-fast-backward icono"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-12">
+
+                            <div class="table-responsive tableFixHead" style="padding:inherit; overflow:scroll;    z-index: 5; height: 290px;">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+
+                                            <th align="center" style=" text-align: center;"><h3>Código</h3></th>
+                                            <th align="center" style=" text-align: center;"><h3>Nombre </h3></th>
+
+
+
+
+                                            <th align="center" style=" text-align: center;"><h3>Acción</h3></th>
+                                        </tr>
+
+                                    </thead>
+                                    <tbody id="tbody2">
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-12">
+            <div class="text-xs-right">
+                <button onclick="javascript: Generar();" class="btn btn-info" title="Guardar Cambios">Guardar Cambios</button>
+            </div>
+        </div>
+       
+    </div>
+</section>
+
+
+
+ 
+
+ 

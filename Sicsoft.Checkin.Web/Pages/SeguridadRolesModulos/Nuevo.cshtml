@@ -1,0 +1,80 @@
+﻿@page
+@model InversionGloblalWeb.Pages.SeguridadRolesModulos.NuevoModel
+@{
+    ViewData["Title"] = "Roles";
+}
+
+
+@section styles{
+
+
+}
+
+@section scripts{
+
+
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Roles
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+        <li class="breadcrumb-item active">Crear Nuevo Rol</li>
+    </ol>
+</section>
+
+
+
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-8">
+                                <h6 class="box-subtitle"> Crear Nuevo Rol</h6>
+
+                            </div>
+                            <div class="col-4">
+                                 <a asp-page="/SeguridadRolesModulos/Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col">
+                                <form method="post" id="formTipos" role="form" novalidate class="needs-validation " enctype="multipart/form-data">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <h5>Nombre del Rol<span class="text-danger">*</span></h5>
+                                            <div class="controls">
+                                                <input type="text" asp-for="Rol.NombreRol" class="form-control" required data-validation-required-message="Este campo es requerido">
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="text-xs-right">
+                                        <button type="submit" class="btn btn-info" title="Guardar Cambios">Guardar Cambios</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+     
+

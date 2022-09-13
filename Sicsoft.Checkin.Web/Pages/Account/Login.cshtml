@@ -1,0 +1,101 @@
+﻿@page
+@model Sicsoft.Checkin.Web.LoginModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Inicio de Sesión</title>
+    <link rel="icon" type="image/png" href="images/icons/favicon.ico" />
+
+
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/css/bootstrap-extend.css">
+    <link rel="stylesheet" type="text/css" href="~/css/master_style.css">
+    <link rel="stylesheet" type="text/css" href="~/css/skins/_all-skins.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor_components/bootstrap/dist/css/bootstrap.min.css">
+    
+    <style>
+
+    </style>
+
+</head>
+<body class="hold-transition login-page" style="background-color: #74BA3E;">
+
+
+    <div class="container h-p100">
+        <div class="row align-items-center justify-content-md-center h-p100">
+            <div class="col-lg-4 col-md-8 col-12">
+                <div class="login-box bg-img rounded" style="background-color: #FFFFFF;" >
+                    <div class="login-box-body">
+                        <h3 class="text-center"><img src="/img/Novagro.png"></h3>
+                        <h3 class="login-box-msg">Iniciar Sesión</h3>
+
+                        <form method="post" id="formTipos" role="form" novalidate class="form-element text-black">
+                            <div asp-validation-summary="All" style="text-align: center;" class=" text-red"></div>
+                           
+                          
+
+                            
+                            <div class="form-group has-feedback">
+                                <input type="text" asp-for="Input.nombreUsuario" class="form-control text-black" placeholder="Nombre de Usuario" id="nombreUsuario" >
+                                <span asp-validation-for="Input.nombreUsuario" class="ion ion-person form-control-feedback text-black"></span>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <input type="password" asp-for="Input.clave" class="form-control text-black" placeholder="Contraseña">
+                                <span asp-validation-for="Input.clave" class="ion ion-locked form-control-feedback text-black"></span>
+                            </div>
+                           
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="basic_checkbox_1">
+                                        <label for="basic_checkbox_1">Remember Me</label>
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-6">
+                                    <div class="fog-pwd text-right">
+
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-success btn-block margin-top-10">INICIAR SESIÓN</button>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                        </form>
+
+                        <div class="margin-top-30 text-center">
+
+                        </div>
+
+                    </div>
+                    <!-- /.login-box-body -->
+                </div>
+                <!-- /.login-box -->
+
+            </div>
+        </div>
+    </div>
+
+
+ 
+
+    <!-- jQuery 3 -->
+    <script src="~/assets/vendor_components/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+
+    <!-- popper -->
+    <script src="~/assets/vendor_components/popper/dist/popper.min.js"></script>
+
+    <!-- Bootstrap 4.0-->
+    <script src="~/assets/vendor_components/bootstrap/dist/js/bootstrap.min.js"></script>
+ 
+</body>
+    
+</html>

@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <UserSecretsId>4ba243ec-c8c3-4f14-9368-8b7f6fb7acea</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Pages\Bodegas\Index.cshtml" />
+    <Content Remove="Pages\Cajas\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Castle.Windsor" Version="5.1.2" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
+    <PackageReference Include="refit" Version="5.0.23" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="5.0.23" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\vendor_components\flat-color-icons\PNG\512\A\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Bodegas\Index.cshtml" />
+    <None Include="Pages\Cajas\Index.cshtml" />
+    <None Include="wwwroot\assets\vendor_components\popper\.github\ISSUE_TEMPLATE.md" />
+    <None Include="wwwroot\assets\vendor_components\popper\.github\PULL_REQUEST_TEMPLATE.md" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\Bodegas\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Bodegas\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Cajas\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\Cajas\Index.cshtml" />
+  </ItemGroup>
+
+
+
+</Project>

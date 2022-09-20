@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\Bodegas\Index.cshtml" />
-    <Content Remove="Pages\Cajas\Index.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Castle.Windsor" Version="5.1.2" />
     <PackageReference Include="iTextSharp" Version="5.5.13.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.3" />
@@ -27,26 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Pages\Bodegas\Index.cshtml" />
-    <None Include="Pages\Cajas\Index.cshtml" />
     <None Include="wwwroot\assets\vendor_components\popper\.github\ISSUE_TEMPLATE.md" />
     <None Include="wwwroot\assets\vendor_components\popper\.github\PULL_REQUEST_TEMPLATE.md" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\Bodegas\Index.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\Bodegas\Index.cshtml" />
-    <_ContentIncludedByDefault Remove="Pages\Cajas\Index.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\Cajas\Index.cshtml" />
-  </ItemGroup>
 
 
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using NOVAAPP.Models;
 using Refit;
 using Sicsoft.Checkin.Web.Models;
 using Sicsoft.Checkin.Web.Servicios;
@@ -20,20 +22,28 @@ namespace Sicsoft.Checkin.Web
     public class LoginModel : PageModel
     {
         private readonly ICrudApi<LoginDevolucion,int> checkInService;
+        private readonly ICrudApi<SucursalesViewModel, string> sucursales;
+        private readonly ICrudApi<CajasViewModel, int> cajas;
+
 
 
         [BindProperty]
         public LoginViewModel Input { get; set; }
 
-        public LoginModel(ICrudApi<LoginDevolucion, int> checkInService)
+        [BindProperty]
+        public SucursalesViewModel[] Sucursales { get; set; }
+
+        public LoginModel(ICrudApi<LoginDevolucion, int> checkInService, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<CajasViewModel, int> cajas)
         {
             this.checkInService = checkInService;
+            this.sucursales = sucursales;
+            this.cajas = cajas;
         }
         public async Task<IActionResult> OnGetAsync()
         {
             try
             {
-              
+                Sucursales = await sucursales.ObtenerLista("");
                 return Page();
             }
             catch (ApiException ex)
@@ -44,7 +54,23 @@ namespace Sicsoft.Checkin.Web
                 return Page();
             }
         }
-        
+
+        public async Task<IActionResult> OnGetCajas(string CodSuc)
+        {
+            try
+            {
+                var cajas1 = await cajas.ObtenerLista("");
+                cajas1 = cajas1.Where(a => a.CodSuc == CodSuc).ToArray();
+               
+                return new JsonResult(cajas1);
+            }
+            catch (ApiException ex)
+            {
+                var cajas1 = new CajasViewModel[0];
+                return new JsonResult(cajas1);
+            }
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -55,7 +81,7 @@ namespace Sicsoft.Checkin.Web
             ActionResult response = Page();
             try
             {
-                var resultado = await checkInService.Login(Input.nombreUsuario, Input.clave);
+                var resultado = await checkInService.Login(Input.CodSuc, Input.idCaja,Input.nombreUsuario, Input.clave);
                 string str = "";
 
                 foreach(var item in resultado.Seguridad)
@@ -70,7 +96,12 @@ namespace Sicsoft.Checkin.Web
                 //identity.AddClaim(new Claim(ClaimTypes.Actor, resultado.idLogin.ToString()));
                 identity.AddClaim(new Claim(ClaimTypes.Role, resultado.idRol.ToString()));
                 identity.AddClaim(new Claim("Roles",str));
-               // identity.AddClaim(new Claim("CambiarClave", resultado.CambiarClave.ToString())); 
+                identity.AddClaim(new Claim("CodSuc", resultado.CodSuc.ToString()));
+                identity.AddClaim(new Claim("Caja", resultado.Caja.ToString()));
+                identity.AddClaim(new Claim("idCaja", resultado.idCaja.ToString()));
+                identity.AddClaim(new Claim("idCierre", resultado.idCierre.ToString()));
+
+
 
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
@@ -92,6 +123,12 @@ namespace Sicsoft.Checkin.Web
             catch (ApiException exception)
             {
                 if(exception.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    Errores error = JsonConvert.DeserializeObject<Errores>(exception.Content.ToString());
+                    ModelState.AddModelError("User name", error.Message);
+                    return Page();
+                }
+                else
                 {
                     Errores error = JsonConvert.DeserializeObject<Errores>(exception.Content.ToString());
                     ModelState.AddModelError("User name", error.Message);

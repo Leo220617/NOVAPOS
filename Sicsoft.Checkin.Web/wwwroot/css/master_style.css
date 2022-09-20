@@ -12507,7 +12507,7 @@ table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTa
     color: #fff;
 }
 .login-slider, .login-box, .login-slider > .slide, .login-slider > .slide img{
-	max-height: 470px;
+	max-height: 500px;
 }
 .login-slider > .slide img{
 	border-radius: 5px;

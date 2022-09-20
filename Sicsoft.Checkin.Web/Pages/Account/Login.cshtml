@@ -22,7 +22,7 @@
     <style>
 
     </style>
-
+    
 </head>
 <body class="hold-transition login-page" style="background-color: #74BA3E;">
 
@@ -33,23 +33,47 @@
                 <div class="login-box bg-img rounded" style="background-color: #FFFFFF;" >
                     <div class="login-box-body">
                         <h3 class="text-center"><img src="/img/Novagro.png"></h3>
-                        <h3 class="login-box-msg">Iniciar Sesión</h3>
+                     
 
                         <form method="post" id="formTipos" role="form" novalidate class="form-element text-black">
-                            <div asp-validation-summary="All" style="text-align: center;" class=" text-red"></div>
-                           
-                          
+                            <div asp-validation-summary="All" style="text-align: center;" class="text-red"></div>
 
-                            
+
                             <div class="form-group has-feedback">
-                                <input type="text" asp-for="Input.nombreUsuario" class="form-control text-black" placeholder="Nombre de Usuario" id="nombreUsuario" >
+                                <select id="selectSucurales" class="form-control" asp-for="Input.CodSuc" onchange="javascript: CambiaSucursal()" required>
+                                    <option value="0">Seleccione</option>
+                                    @foreach (var item in Model.Sucursales)
+                                    {
+                                        <option value="@item.CodSuc">@item.CodSuc - @item.Nombre</option>
+                                    }
+
+
+
+                                </select>
+
+
+                                <span asp-validation-for="Input.CodSuc"  ></span>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <select id="selectCajas" class="form-control" asp-for="Input.idCaja" required>
+                                    
+
+
+
+                                </select>
+
+
+                                <span asp-validation-for="Input.idCaja"  ></span>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <input type="text" asp-for="Input.nombreUsuario" class="form-control text-black" placeholder="Nombre de Usuario" id="nombreUsuario">
                                 <span asp-validation-for="Input.nombreUsuario" class="ion ion-person form-control-feedback text-black"></span>
                             </div>
                             <div class="form-group has-feedback">
                                 <input type="password" asp-for="Input.clave" class="form-control text-black" placeholder="Contraseña">
                                 <span asp-validation-for="Input.clave" class="ion ion-locked form-control-feedback text-black"></span>
                             </div>
-                           
+
                             <div class="row">
                                 <div class="col-6">
                                     <div class="checkbox">
@@ -95,7 +119,47 @@
 
     <!-- Bootstrap 4.0-->
     <script src="~/assets/vendor_components/bootstrap/dist/js/bootstrap.min.js"></script>
- 
+    <script>
+        $(document).ready(function () {
+            jQuery(document).ready(function ($) {
+                $(document).ready(function () {
+
+                });
+            });
+
+
+
+
+
+
+        });
+        function CambiaSucursal() {
+             $.ajax({
+                        type: 'GET',
+                        dataType: 'json',
+                        url: '@Url.Page("Login", "Cajas")',
+                 data: { CodSuc: $("#selectSucurales").val() },
+                        success: function (result) {
+                            console.log(result);
+                            if (result != []) {
+
+                                var text = "";
+                                $("#selectCajas").html("");
+                                for (var i = 0; i < result.length; i++) {
+                                    text += "<option value='" + result[i].id + "'>" + result[i].nombre +" </option>"
+                                }
+
+                                $("#selectCajas").html(text);
+
+                             }
+             },
+             beforeSend: function () {
+
+             }
+                     })
+        }
+
+    </script>
 </body>
     
 </html>

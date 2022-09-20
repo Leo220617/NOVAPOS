@@ -106,14 +106,16 @@ namespace Sicsoft.Checkin.Web
 
 
             services.AddRefitClient<ICrudApi<LoginDevolucion, int>>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Login/Conectar"));
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Login/ConectarPOS"));
             // Add additional IHttpClientBuilder chained methods as required here:
             //  .AddHttpMessageHandler<AuthenticatedHttpClientHandler>()
             // .SetHandlerLifetime(TimeSpan.FromMinutes(2));
 
-       
+            services.AddRefitClient<ICrudApi<SucursalesViewModel, string>>()
+     .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Sucursales"));
 
-          
+            services.AddRefitClient<ICrudApi<CajasViewModel, int>>()
+.ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Cajas")) ;
 
             services.AddRefitClient<ICrudApi<LoginUsuario, int>>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Login"))
@@ -162,9 +164,7 @@ namespace Sicsoft.Checkin.Web
 .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Cabys"))
 .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
-            services.AddRefitClient<ICrudApi<CajasViewModel, int>>()
-.ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Cajas"))
-.AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+            
 
             services.AddRefitClient<ICrudApi<ClientesViewModel, string>>()
 .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Clientes"))
@@ -207,9 +207,7 @@ namespace Sicsoft.Checkin.Web
 .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
 
-            services.AddRefitClient<ICrudApi<SucursalesViewModel, string>>()
-.ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Sucursales"))
-.AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+            
             return services;
         }
     }

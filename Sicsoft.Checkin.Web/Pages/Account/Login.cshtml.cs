@@ -81,7 +81,8 @@ namespace Sicsoft.Checkin.Web
             ActionResult response = Page();
             try
             {
-                var resultado = await checkInService.Login(Input.CodSuc, Input.idCaja,Input.nombreUsuario, Input.clave);
+                var ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+                var resultado = await checkInService.Login(Input.CodSuc, Input.idCaja,Input.nombreUsuario, Input.clave, ip);
                 string str = "";
 
                 foreach(var item in resultado.Seguridad)

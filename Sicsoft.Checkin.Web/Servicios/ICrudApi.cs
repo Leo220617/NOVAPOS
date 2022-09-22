@@ -20,7 +20,7 @@ namespace Sicsoft.Checkin.Web.Servicios
         Task<TEntity> CambiarClave([Body] TEntity payload);
 
         [Get("")]
-        Task<TEntity> Login(string CodSuc, int idCaja, string nombreUsuario, string clave);
+        Task<TEntity> Login(string CodSuc, int idCaja, string nombreUsuario, string clave, string ip);
 
         [Get("/InsertarSAP")]
         Task<TEntity> InsertarSAP();

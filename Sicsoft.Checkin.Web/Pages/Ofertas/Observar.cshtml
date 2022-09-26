@@ -1,0 +1,173 @@
+﻿@page "{id}"
+@model NOVAAPP.Pages.Ofertas.ObservarModel
+@{
+     ViewData["Title"] = "Ofertas";
+}
+@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@using Sicsoft.Checkin.Web.Models;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
+@section styles{
+
+
+}
+@section scripts{
+   
+}
+
+
+@using Newtonsoft.Json;
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+       Ofertas
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+        <li class="breadcrumb-item active">Observar Oferta</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-8">
+                            <h6 class="box-subtitle">Observar Oferta</h6>
+                           
+
+                        </div>
+                        <div class="col-4">
+                            <a asp-page="./Index" class="btn btn-outline-info" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+
+                            &nbsp;
+
+                           
+
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <!-- title row -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-header mt-0">
+                                <h2 class="d-inline"><span class="font-size-24">Oferta No: @Model.Oferta.id</span></h2>
+                                <br />
+                                <div class="text-left">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
+
+                                        </div>
+                                      
+                                        <div class="col-3">
+                                            <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
+
+                                        </div>
+
+                                          
+                                          
+
+
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- info row -->
+                    <div class="row invoice-info">
+                        <div class="col-md-8 invoice-col">
+                            <strong>Cliente</strong>
+                            <address>
+                                <strong class="text-blue font-size-24"> @Model.Oferta.idCliente -   @( Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" :  Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault().Nombre)</strong>
+                                   
+
+                            </address>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <!-- Table row -->
+                    <div class="row">
+                        <div class="col-12 table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="bg-pale-info">
+                                        <th class="text-center">#</th>
+                                        <th class="text-center">Producto</th>
+                                        <th class="text-center">Cantidad</th>
+                                        <th class="text-center">Precio Unitario</th>
+                                        <th class="text-center">% Descuento</th>
+                                        <th class="text-center">Descuento</th>
+                                        <th class="text-center">Impuesto</th>
+                                        <th class="text-center">Total</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Oferta.Detalle)
+                                    {
+                                        <tr>
+                                           <td>@item.NumLinea</td>
+                                           
+                                            <td>@item.idProducto-  @( Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" :  Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Nombre)   </td>
+                                            <td class="text-right">@(Math.Round(item.Cantidad))</td>
+                                           
+                                            
+                                            <td class="text-center">@Math.Round(item.PrecioUnitario,2)</td>
+                                            <td class="text-center">@Math.Round(@item.PorDescto)%</td>
+                                            <td class="text-center">@Math.Round(@item.Descuento,2)</td>
+                                            <td class="text-center">@Math.Round(@item.TotalImpuesto,2)</td>
+                                            <td class="text-center">@Math.Round(@item.TotalLinea,2)</td>
+
+                                        </tr>
+                                    }
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <!-- /.row -->
+
+                </div>
+            </div>
+
+
+            <!-- Default box -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h4 class="box-title">Comentarios</h4>
+                </div>
+                <div class="box-body">
+                       <td>@Model.Oferta.Comentarios</td>
+            
+                <!-- /.box-body -->
+            </div>
+           
+
+
+
+        </div>
+    </div>
+</section>
+

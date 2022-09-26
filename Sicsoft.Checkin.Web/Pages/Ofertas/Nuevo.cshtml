@@ -1,0 +1,553 @@
+﻿@page
+@model NOVAAPP.Pages.Ofertas.NuevoModel
+@{
+     ViewData["Title"] = "Ofertas";
+}
+@section styles{
+    <style>
+        .input {
+            text-align: center;
+        }
+    </style>
+    <style>
+
+        #menu {
+            float: left;
+            width: 100%;
+            background-color: #fff;
+        }
+
+            #menu img {
+                width: 12%;
+                margin: 2%;
+                cursor: pointer;
+            }
+
+        #principal {
+            float: left;
+            width: 75%;
+        }
+
+        #visor {
+            width: 60%;
+            margin: 10%
+        }
+
+            #visor img {
+                width: 100%
+            }
+
+
+
+        /*  h4 {
+            font-size: 22px !important;
+        }*/
+
+        body {
+            margin: 0;
+        }
+
+        img {
+            border: none;
+        }
+
+        button, h1 {
+            margin: 0;
+            padding: 0;
+        }
+
+        #wrapper {
+            width: 100%;
+        }
+        /*
+        h1 {
+            padding: 50px 0;
+            text-align: center;
+        }*/
+
+
+
+        .preload {
+            padding-top: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .activate-preload {
+            display: block;
+        }
+
+        #container-input {
+            width: 640px;
+            margin: 0 auto;
+            border: solid 1px #CCC;
+            position: relative;
+            overflow: hidden;
+        }
+
+            #container-input .wrap-file .content-icon-camera {
+                width: 55px;
+                overflow: hidden;
+            }
+
+                #container-input .wrap-file .content-icon-camera:hover {
+                    background-color: #e6e6e6;
+                }
+
+                #container-input .wrap-file .content-icon-camera .icon-camera {
+                    width: 36px;
+                    height: 36px;
+                    background: url('../../camera.png') no-repeat;
+                    cursor: pointer;
+                    position: absolute;
+                    top: 8px;
+                    left: 8px;
+                }
+
+                #container-input .wrap-file .content-icon-camera #file {
+                    padding: 15px;
+                    opacity: 0;
+                    position: relative;
+                    cursor: pointer;
+                    left: -120px;
+                    z-index: 1;
+                }
+
+            #container-input .wrap-file #preview-images .thumbnail {
+                width: 120px;
+                height: 120px;
+                display: inline-block;
+                vertical-align: middle;
+                border: solid 2px #CCC;
+                background-size: cover;
+                position: relative;
+            }
+
+                #container-input .wrap-file #preview-images .thumbnail:not(:last-child) {
+                    margin-right: 5px;
+                }
+
+                #container-input .wrap-file #preview-images .thumbnail .close-button {
+                    width: 20px;
+                    height: 20px;
+                    background-color: black;
+                    color: white;
+                    text-align: center;
+                    position: absolute;
+                    top: 5px;
+                    right: 5px;
+                    border-radius: 100px;
+                    cursor: pointer;
+                }
+
+            #container-input #publish {
+                padding: 15px 35px;
+                font-size: 1.1em;
+                float: right;
+                border: none;
+                cursor: pointer;
+                background-color: #8ECA67;
+                color: #FFF;
+            }
+
+                #container-input #publish:hover {
+                    background-color: #6EAD45;
+                }
+    </style>
+
+    <style type="text/css">
+        /* body {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }*/
+
+            #draw-canvas {
+            border: 2px dotted #CCCCCC;
+            border-radius: 5px;
+            cursor: crosshair;
+        }
+
+        #draw-dataUrl {
+            width: 100%;
+        }
+
+     /*   h3 {
+            margin: 10px 15px;
+        }*/
+
+       /* header {
+            background: #273B47;
+            height: 100%;
+            width: 100%;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }*/
+
+        section {
+            flex: 1;
+        }
+
+        h1 {
+            margin: 10px 15px;
+        }
+
+        header {
+            color: white;
+            font-weight: 500;
+            /* padding-left: 15px;*/
+        }
+
+
+
+
+        .contenedor {
+            width: 100% margin: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .instrucciones {
+            width: 90%;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        label {
+            margin: 0 15px;
+        }
+
+        footer {
+            background: #273B47;
+            color: white;
+            height: 100%;
+            width: 100%;
+            margin-top: 10px;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        input[type=range] {
+            -webkit-appearance: none;
+            margin: 18px 0;
+        }
+
+            input[type=range]:focus {
+                outline: none;
+            }
+
+            input[type=range]::-webkit-slider-runnable-track {
+                width: 100%;
+                height: 8.4px;
+                cursor: pointer;
+                animate: 0.2s;
+                box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+                background: #3071a9;
+                border-radius: 1.3px;
+                border: 0.2px solid #010101;
+            }
+
+            input[type=range]::-webkit-slider-thumb {
+                box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+                border: 1px solid #000000;
+                height: 36px;
+                width: 16px;
+                border-radius: 3px;
+                background: #ffffff;
+                cursor: pointer;
+                -webkit-appearance: none;
+                margin-top: -14px;
+            }
+
+            input[type=range]:focus::-webkit-slider-runnable-track {
+                background: #367ebd;
+            }
+
+            input[type=range]::-moz-range-track {
+                width: 100%;
+                height: 8.4px;
+                cursor: pointer;
+                animate: 0.2s;
+                box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+                background: #3071a9;
+                border-radius: 1.3px;
+                border: 0.2px solid #010101;
+            }
+
+            input[type=range]::-moz-range-thumb {
+                box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+                border: 1px solid #000000;
+                height: 36px;
+                width: 16px;
+                border-radius: 3px;
+                background: #ffffff;
+                cursor: pointer;
+            }
+
+            input[type=range]::-ms-track {
+                width: 100%;
+                height: 8.4px;
+                cursor: pointer;
+                animate: 0.2s;
+                background: transparent;
+                border-color: transparent;
+                border-width: 16px 0;
+                color: transparent;
+            }
+
+            input[type=range]::-ms-fill-lower {
+                background: #2a6495;
+                border: 0.2px solid #010101;
+                border-radius: 2.6px;
+                box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            }
+
+            input[type=range]::-ms-fill-upper {
+                background: #3071a9;
+                border: 0.2px solid #010101;
+                border-radius: 2.6px;
+                box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            }
+
+            input[type=range]::-ms-thumb {
+                box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+                border: 1px solid #000000;
+                height: 36px;
+                width: 16px;
+                border-radius: 3px;
+                background: #ffffff;
+                cursor: pointer;
+            }
+
+            input[type=range]:focus::-ms-fill-lower {
+                background: #3071a9;
+            }
+
+            input[type=range]:focus::-ms-fill-upper {
+                background: #367ebd;
+            }
+    </style>
+}
+
+@section scripts{
+    <script>
+ var Detalle = [];
+
+  for (var i = 0; i < det.length; i++) {
+
+                    var detalle =
+                    {
+                        id: det[i].id,
+                        idEncabezado: det[i].idEncabezado,
+                        idProducto: det[i].idProducto,
+                        NumLinea: det[i].NumLinea,
+                        Cantidad: det[i].Cantidad,
+                        TotalImpuesto: det[i].TotalImpuesto,
+                        PrecioUnitario: det[i].PrecioUnitario,
+                        PorDescto: det[i].PorDescto,
+                        Descuento: det[i].Descuento,
+                       
+
+
+                    }
+                    Detalle.push(detalle);
+                    onChangeCantidadListado(i)
+                }
+ </script>
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Ofertas
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+        <li class="breadcrumb-item active">Crear Nueva Oferta</li>
+    </ol>
+</section>
+
+
+
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-8">
+                                <h6 class="box-subtitle"> Crear Nueva Oferta</h6>
+
+                            </div>
+                            <div class="col-4">
+                                 <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <form method="post" id="formTipos" role="form" novalidate class="needs-validation " enctype="multipart/form-data">
+                              <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="row">
+                            
+                                   <div class="col-6">
+                                        <div class="form-group">
+                                             <h5>Cliente<span class="text-danger">*</span></h5>
+                                             
+                                                <select class="form-control select2  " asp-for="Oferta.idCliente">
+                                                    @foreach(var item in Model.Clientes)
+                                                    {
+                                                        <option value="@item.id">@item.Nombre</option>
+                                                    }
+
+
+                                                </select>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6">
+                                          <div class="form-group">
+                                           <h5> <b>Fecha de Vencimiento </b></h5>
+                                                <div class="controls">
+                                                    <input type="date" asp-for="Oferta.FechaVencimiento"class="form-control" required data-validation-required-message="Este campo es requerido">
+                                                </div>
+                                            
+                                        </div>
+                                       
+                                    </div>
+                                    
+                                 
+                            
+                        </div>
+                       
+
+
+                        <div class="row">
+
+                            <div class="col-6">
+                                 <div class="form-group">
+
+                                            <h5>Producto<span class="text-danger">*</span></h5>
+                                             
+                                                <select> class="form-control select2  " asp-for=">
+                                                    @foreach (var item in Model.Productos)
+                                    {
+                                                        <option value="@item.id">@item.Nombre</option>
+                                                    }
+
+
+                                                </select>
+                                            
+                                        </div>
+                             
+
+                            </div>
+                            <div class="col-6">
+                          <div class="form-group">
+                                            <h5>Rol<span class="text-danger">*</span></h5>
+                                             
+                                                <select class="form-control select2  " asp-for="Oferta.idCliente">
+                                                    @foreach(var item in Model.Clientes)
+                                                    {
+                                                        <option value="@item.id">@item.Nombre</option>
+                                                    }
+
+
+                                                </select>
+                                                
+                                           
+                                            
+                                        </div>
+                               
+                            </div>
+                        </div>
+
+                        <div class="text-xs-right">
+                                        <button type="submit" class="btn btn-info" title="Guardar Cambios">Guardar Cambios</button>
+                                    </div>
+                        </form>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using InversionGloblalWeb.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Refit;
+using Sicsoft.Checkin.Web.Servicios;
+using NOVAAPP.Models;
+
+
+namespace NOVAAPP.Pages.Ofertas
+{
+    public class ObservarModel : PageModel
+    {
+        private readonly ICrudApi<OfertasViewModel, int> service;
+        private readonly ICrudApi<ClientesViewModel, int> serviceE;
+        private readonly ICrudApi<ProductosViewModel, int> serviceP;
+
+        [BindProperty]
+        public ClientesViewModel[] Cliente { get; set; }
+
+        [BindProperty]
+        public OfertasViewModel Oferta { get; set; }
+
+        [BindProperty]
+        public ProductosViewModel Producto { get; set; }
+
+
+
+        public ObservarModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, int> serviceE, ICrudApi<ProductosViewModel, int> serviceP, ClientesViewModel[] cliente, OfertasViewModel oferta, ProductosViewModel producto)
+        {
+            this.service = service;
+            this.serviceE = serviceE;
+            this.serviceP = serviceP;
+           
+        }
+        public async Task<IActionResult> OnGetAsync(int id)
+        {
+            try
+            {
+                var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+                if (string.IsNullOrEmpty(Roles.Where(a => a == "21").FirstOrDefault()))
+                {
+                    return RedirectToPage("/NoPermiso");
+                }
+                Oferta = await service.ObtenerPorId(id);
+                Cliente = await serviceE.ObtenerLista("");
+                Producto = await serviceP.ObtenerLista("");
+
+                return Page();
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return Page();
+            }
+        }
+    }
+}
+

@@ -128,7 +128,13 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                     
+                       @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "19").FirstOrDefault()))
+                        {
+
+                            <li><a asp-page="/Ofertas/Index"><i class="mdi mdi-home-outline"></i>Ofertas</a></li>
+                        }
+
+                    }
                    
                 </ul>
             </li>

@@ -18,7 +18,7 @@ namespace NOVAAPP.Pages.Ofertas
     public class NuevoModel : PageModel
     {
         private readonly ICrudApi<OfertasViewModel, int> service; //API
-        private readonly ICrudApi<UsuariosViewModel, int> serviceU;
+        private readonly ICrudApi<ImpuestosViewModel, int> serviceU;
         private readonly ICrudApi<ClientesViewModel, string> clientes;
         private readonly ICrudApi<ProductosViewModel, string> productos;
 
@@ -27,7 +27,7 @@ namespace NOVAAPP.Pages.Ofertas
         public OfertasViewModel Oferta { get; set; }
 
         [BindProperty]
-        public UsuariosViewModel[] Users { get; set; }
+        public ImpuestosViewModel[] Impuestos { get; set; }
         [BindProperty]
         public ClientesViewModel[] Clientes { get; set; }
 
@@ -35,7 +35,7 @@ namespace NOVAAPP.Pages.Ofertas
         public ProductosViewModel[] Productos { get; set; }
 
 
-        public NuevoModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<UsuariosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos) //CTOR 
+        public NuevoModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos) //CTOR 
         {
             this.service = service;
             this.serviceU = serviceU;
@@ -52,7 +52,7 @@ namespace NOVAAPP.Pages.Ofertas
                 {
                     return RedirectToPage("/NoPermiso");
                 }
-                Users = await serviceU.ObtenerLista("");
+                Impuestos = await serviceU.ObtenerLista("");
                 Clientes = await clientes.ObtenerLista("");
                 Productos = await productos.ObtenerLista("");
                 return Page();

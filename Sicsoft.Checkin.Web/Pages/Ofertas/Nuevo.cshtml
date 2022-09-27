@@ -23,7 +23,7 @@
 
 
 }
-@section scripts{
+    @section scripts{
 
 
     <script>
@@ -44,54 +44,318 @@
         var Productos = [];
         var ProdClientes = [];
         var Impuestos = [];
+        var Cantones = [];
+        var Distritos = [];
+        var Barrios = [];
 
-        function Recuperar()
-        {
-            
+        function Recuperar() {
+            Cantones = JSON.parse($("#Cantones").val());
+            Distritos = JSON.parse($("#Distritos").val());
+            Barrios = JSON.parse($("#Barrios").val());
             Clientes = JSON.parse($("#Clientes").val());
             Productos = JSON.parse($("#Productos").val());
             Impuestos = JSON.parse($("#Impuestos").val());
-        }
 
-        function RellenaProductos()
+              RellenaClientes();
+        }
+        function RellenaClientes()
         {
+            var html = "";
+            $("#ClienteSeleccionado").html(html);
+            for (var i = 0; i < Clientes.length; i++) {
+                html += "<option value='" + Clientes[i].id + "' > " + Clientes[i].Codigo + " - " + Clientes[i].Nombre + " </option>";
+            }
+
+
+
+            $("#ClienteSeleccionado").html(html);
+        }
+        function RellenaProductos() {
 
             var html = "";
-             $("#ProductoSeleccionado").html(html);
-            for (var i = 0; i < ProdClientes.length; i++)
-            {
+            $("#ProductoSeleccionado").html(html);
+            for (var i = 0; i < ProdClientes.length; i++) {
                 html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " </option>";
             }
-             
-                                         
-                                  
+
+
+
             $("#ProductoSeleccionado").html(html);
         }
 
-        function onChangeCliente()
-        {
+        function onChangeCliente() {
             var idCliente = $("#ClienteSeleccionado").val();
 
             var Cliente = Clientes.find(a => a.id == idCliente);
-             
+
             $("#spanDireccion").text(Cliente.Sennas);
-            $("#strongInfo").text( "Phone: " + Cliente.Telefono +" "+ "  " + " "+ "  " + "Email: " + Cliente.Email );
+            $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
 
             ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
             RellenaProductos();
         }
 
-           function onChangeProducto()
-        {
+        function onChangeProducto() {
             var idProducto = $("#ProductoSeleccionado").val();
 
             var Producto = ProdClientes.find(a => a.id == idProducto);
-             
+
             $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
             $("#inputCabys").val(Producto.Cabys);
+            $("#impuesto").val(Producto.idImpuesto);
+
 
         }
 
+        function ModificaSelects(i) {
+            var codProvincia = parseInt($("#selectP").val());
+            var codCanton = parseInt($("#selectC").val());
+            var codDistrito = parseInt($("#selectD").val());
+
+            if (i == 0) {
+                RellenaCantones(Cantones.filter(a => a.CodProvincia == codProvincia));
+                RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
+                RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+
+            }
+
+            if (i == 1) {
+                RellenaCantones(Cantones.filter(a => a.CodProvincia == codProvincia));
+                RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
+                RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+
+            }
+            if (i == 2) {
+
+                RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
+                RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+
+            }
+
+            if (i == 3) {
+                RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+            }
+
+        }
+
+        function RellenaCantones(ListCantones) {
+            var sOptions = '';
+
+            $("#selectC").html('');
+
+            for (var i = 0; i < ListCantones.length; i++) {
+
+                sOptions += '<option value="' + ListCantones[i].CodCanton + '">' + ListCantones[i].NomCanton + '</option>';
+
+            }
+            $("#selectC").html(sOptions);
+        }
+
+        function RellenaDistritos(ListDistritos) {
+            var sOptions = '';
+
+            $("#selectD").html('');
+
+            for (var i = 0; i < ListDistritos.length; i++) {
+
+                sOptions += '<option value="' + ListDistritos[i].CodDistrito + '">' + ListDistritos[i].NomDistrito + '</option>';
+
+            }
+            $("#selectD").html(sOptions);
+        }
+
+        function RellenaBarrios(ListBarrios) {
+            var sOptions = '';
+
+            $("#selectB").html('');
+
+            for (var i = 0; i < ListBarrios.length; i++) {
+
+                sOptions += '<option value="' + ListBarrios[i].CodBarrio + '">' + ListBarrios[i].NomBarrio + '</option>';
+
+            }
+            $("#selectB").html(sOptions);
+        }
+
+        function AbrirModalAgregarCliente() {
+            $("#ModalAgregarCliente").modal("show");
+        }
+
+        function validar(cliente)
+        {
+            if(cliente.idListaPrecios == "" || cliente.idListaPrecios == null)
+            {
+                return false;
+            }else if(cliente.Nombre == "" || cliente.Nombre == null)
+            {
+                return false;
+            }
+            else if(cliente.Cedula == "" || cliente.Cedula == null)
+            {
+                return false;
+            }else if(cliente.Email == "" || cliente.Email == null)
+            {
+                return false;
+
+            }else if(cliente.Telefono == "" || cliente.Telefono == null)
+            {
+                return false;
+
+            }else if(cliente.Sennas == "" || cliente.Sennas == null)
+            {
+                return false;
+            }
+
+            else
+            {
+                return true;
+            }
+        }
+
+        function LimpiarDatosCliente()
+        {
+             $("#idListaP").val("1").trigger('change.select2');
+             $("#Nombre").val("");
+             $("#selectTP").val("1").trigger('change.select2');
+             $("#Cedula").val("");
+             $("#Email").val("");
+             $("#Telefono").val("");
+             $("#selectP").val("1").trigger('change.select2');
+             $("#Sennas").val("");
+        }
+
+        function Agregar() {
+            try {
+                var Cliente =
+                {
+                    id: 0,
+                    Codigo: "",
+                    idListaPrecios: $("#idListaP").val(),
+                    Nombre:  $("#Nombre").val(),
+                    TipoCedula: $("#selectTP").val(),
+                    Cedula: $("#Cedula").val(),
+                    Email: $("#Email").val(),
+                    CodPais: "506",
+                    Telefono: $("#Telefono").val(),
+                    Provincia: $("#selectP").val(),
+                    Canton: $("#selectC").val(),
+                    Distrito: $("#selectD").val(),
+                    Barrio: $("#selectB").val(),
+                    Sennas: $("#Sennas").val(),
+                    Saldo: 0,
+                    Activo: true,
+                    ProcesadoSAP: false
+                };
+
+                if (validar(Cliente)) {
+                    Swal.fire({
+                    title: '¿Desea guardar la información de este cliente?',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: `Aceptar`,
+                    denyButtonText: `Cancelar`,
+                    customClass: {
+                        confirmButton: 'swalBtnColor',
+                        denyButton: 'swalDeny'
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                         
+                        var recibidos = JSON.stringify(Cliente);
+
+                        $.ajax({
+                            type: 'POST',
+
+                            url: '@Url.Page("Nuevo", "AgregarCliente")',
+                            dataType: 'json',
+                            data: { recibidos: Cliente },
+                            headers: {
+                                RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (json) {
+
+                                 
+                                console.log("resultado " + json.cliente);
+                                if (json.success == true) {
+                                    Swal.fire({
+                                        title: "Ha sido generado con éxito",
+
+                                        icon: 'success',
+                                        showCancelButton: false,
+
+                                        confirmButtonText: 'OK',
+                                        customClass: {
+                                            confirmButton: 'swalBtnColor',
+
+                                        },
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            //Despues de insertar, ocupariamos el id del cliente en la bd 
+                                            //para entonces setearlo en el array de clientes
+
+                                            LimpiarDatosCliente();
+                                            $("#ModalAgregarCliente").modal("hide");
+                                            Clientes.push(json.cliente);
+                                            RellenaClientes();
+                                             $("#ClienteSeleccionado").val(json.cliente.id).trigger('change.select2');
+
+
+                                        }
+                                    })
+
+                                } else {
+                                     
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Ha ocurrido un error al intentar guardar'
+
+                                    })
+                                }
+                            },
+
+                            beforeSend: function (xhr) {
+
+                                
+                            },
+                            complete: function () {
+                               
+                            },
+                            error: function (error) {
+                                
+                                
+                            }
+                        });
+                    }
+                })
+                }else
+                {
+                     Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Pareciera que aún falta un campo por llenar'
+
+                });
+                }
+
+
+
+            } catch (e) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar agregar ' + e
+
+                })
+            }
+        }
+
+
+
+    </script>
+
+
+    <script>
         function ImprimirPantalla() {
             try {
                 // window.print();
@@ -124,9 +388,7 @@
                 })
             }
         }
-
     </script>
-
 
 }
 
@@ -146,8 +408,12 @@
     <section class="content ">
         <div class="row">
             <div class="col-12">
-             <input hidden id="Clientes" value="@JsonConvert.SerializeObject(Model.Clientes)" />
-              <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
+                <input hidden id="Cantones" value="@JsonConvert.SerializeObject(Model.Cantones)" />
+                <input hidden id="Distritos" value="@JsonConvert.SerializeObject(Model.Distritos)" />
+                <input hidden id="Barrios" value="@JsonConvert.SerializeObject(Model.Barrios)" />
+                <input hidden id="Clientes" value="@JsonConvert.SerializeObject(Model.Clientes)" />
+                <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
+                <input hidden id="Impuestos" value="@JsonConvert.SerializeObject(Model.Impuestos)" />
 
                 <!-- Content Header (Page header) -->
                 <div class="box">
@@ -192,24 +458,21 @@
 
                                     <select id="ClienteSeleccionado" asp-for="Oferta.idCliente" class="form-control select2" onchange="javascript: onChangeCliente()">
                                         <option value="0"> Seleccione Cliente</option>
-                                    @foreach (var item in Model.Clientes)
-                                    {
-                                        <option value="@item.id">@item.Codigo - @item.Nombre</option>
-                                    }
+                                    
 
 
                                 </select>
 
                                 <br><br>
-                               <span id="spanDireccion"> </span> <br>
+                                <span id="spanDireccion"> </span> <br>
                                 <strong id="strongInfo">Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
                             </address>
                         </div>
-                        <div class="col-sm-4"> <a asp-page="Nuevo" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Cliente</a></div>
+                        <div class="col-sm-4"> <a onclick="javascript: AbrirModalAgregarCliente()" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Cliente</a></div>
                     </div>
                     <!-- /.col -->
                     <!-- /.row -->
-                
+
                 </div>
 
             </div>
@@ -217,151 +480,151 @@
             <div class="box">
                 <div class="box-body">
                     <div class="row">
-                       
-                        
-    <div class="col-12  ">
-        <div class="x_panel">
-            <div class="x_content">
- 
-                     
-
-                    <div class="row">
-                          <div class="col-6">
-                              <h3>Productos</h3>
-                          </div>
-                    </div>
- 
-        
-            </div>
-            <div class="x_content">
- 
-                     
-
-                    <div class="row">
-                          <div class="col-6">
-                             <select id="ProductoSeleccionado"    class="form-control select2" onchange="javascript: onChangeProducto()" >
-                                   <option value="0"> Seleccione Productos</option>
-                                   
 
 
-                                </select>
-                          </div>
-
-                    </div>
-                            <br />
-                            <div class="row">
-
-                            <div class="col-4">
-                            <div class="form-group">
-                                <label>Cantidad</label>
-                                <input type="number" class="form-control" id="cantidad" placeholder="Cantidad" value="1">
+                        <div class="col-12  ">
+                            <div class="x_panel">
+                                <div class="x_content">
 
 
-                            </div>
+
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h3>Productos</h3>
+                                        </div>
+                                    </div>
 
 
-                        </div>
-
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label>Impuesto</label>
-                                <br />
-                                <select id="impuesto" class="form-control "  style="width: 100%">
-                                    <option value="0">Seleccione</option>
-                                     @foreach(var item in Model.Impuestos)
-                                {
-                                    <option value="@item.id">@Math.Round(@item.Tarifa,2)%</option>
-                                    
-                                }
-                            </select>
-
-                            </div>
+                                </div>
+                                <div class="x_content">
 
 
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label>% Descuento</label>
-                                <input type="number" class="form-control" id="descuento" placeholder="Descuento" value="0">
+
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <select id="ProductoSeleccionado" class="form-control select2" onchange="javascript: onChangeProducto()">
+                                                <option value="0"> Seleccione Productos</option>
 
 
-                            </div>
+
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <br />
+                                    <div class="row">
+
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label>Cantidad</label>
+                                                <input type="number" class="form-control" id="cantidad" placeholder="Cantidad" value="1">
 
 
-                        </div>
-                            </div>
+                                            </div>
 
-                            <br />
 
-                            <div class="row">
-                                <div class="col-md-3 pr-1">
-                                    <div class="form-group">
-                                        <label>Precio Unitario</label>
-                                        <input id="inputPrecio" type="number" class="form-control"  placeholder="Precio Unitario" value="0">
+                                        </div>
+
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label>Impuesto</label>
+                                                <br />
+                                                <select id="impuesto" class="form-control " style="width: 100%">
+                                                    <option value="0">Seleccione</option>
+                                                    @foreach (var item in Model.Impuestos)
+                                                    {
+                                                        <option value="@item.id">@Math.Round(@item.Tarifa,2)%</option>
+
+                                                    }
+                                                </select>
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label>% Descuento</label>
+                                                <input type="number" class="form-control" id="descuento" placeholder="Descuento" value="0">
+
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+                                    <br />
+
+                                    <div class="row">
+                                        <div class="col-md-3 pr-1">
+                                            <div class="form-group">
+                                                <label>Precio Unitario</label>
+                                                <input id="inputPrecio" type="number" class="form-control" placeholder="Precio Unitario" value="0">
+
+
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="col-md-6  ">
+                                            <div class="form-group">
+                                                <label>Cabys</label>
+                                                <input id="inputCabys" type="text" maxlength="13" class="form-control" placeholder="Cabys">
+
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-md-3 pr-1">
+                                            <div class="form-group">
+                                                <label>Doc. Exoneración</label>
+                                                <select id="exoneracion" class="form-control " style="width: 100%">
+                                                    <option value="0">Seleccione</option>
+                                                    @foreach (var item in Model.Impuestos)
+                                                    {
+                                                        <option value="@item.id">@item.Tarifa</option>
+
+                                                    }
+                                                </select>
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-sm-12 pl-1" style="text-align: right;">
+
+                                            <a id="agregar" onclick="javascript: AgregarProducto();" class="btn btn-primary" style="color: white !important;">+ Agregar </a>
+                                        </div>
+
 
 
                                     </div>
 
 
-                                </div>
-
-                                 <div class="col-md-6  ">
-                                    <div class="form-group">
-                                        <label>Cabys</label>
-                                        <input id="inputCabys" type="text" maxlength="13" class="form-control"  placeholder="Cabys"  >
-
-
-                                    </div>
 
 
                                 </div>
-                                <div class="col-md-3 pr-1">
-                                    <div class="form-group">
-                                        <label>Doc. Exoneración</label>
-                                        <select id="exoneracion" class="form-control "  style="width: 100%">
-                                    <option value="0">Seleccione</option>
-                                     @foreach(var item in Model.Impuestos)
-                                {
-                                    <option value="@item.id">@item.Tarifa</option>
-                                    
-                                }
-                                </select>
-
-                                    </div>
-
-
-                                </div>
-                                <div class="col-sm-12 pl-1" style="text-align: right;">
-
-                                    <a id="agregar" onclick="javascript: AgregarProducto();" class="btn btn-primary" style="color: white !important;">+ Agregar </a>
-                                 </div>
-
-
-
                             </div>
-                            
-                    
- 
-        
-            </div>
-        </div>
-    </div>
-
-     
+                        </div>
 
 
 
-                        
+
+
+
 
 
                     </div>
                 </div>
             </div>
 
-            
+
             <div class="box">
                 <div class="box-body">
-                        <!-- Table row -->
+                    <!-- Table row -->
                     <div class="row">
                         <div class="col-12 table-responsive">
                             <table class="table table-bordered">
@@ -377,42 +640,7 @@
                                         <th class="text-right">Total</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-
-
-                                    <tr>
-
-
-                                    <tr>
-                                        <td>2</td>
-
-                                        <td>12345678912514 - Product Two</td>
-                                        <td class="text-right">1</td>
-                                        <td class="text-right">$1500.00</td>
-                                        <td class="text-right">$1500.00</td>
-                                        <td class="text-right">$1500.00</td>
-                                        <td class="text-right">$1500.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-
-                                        <td>12345678912514 - Product Three</td>
-                                        <td class="text-right">2</td>
-                                        <td class="text-right">$1500.00</td>
-                                        <td class="text-right">$1500.00</td>
-                                        <td class="text-right">$540.00</td>
-                                        <td class="text-right">$1080.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-
-                                        <td>12345678912514 - Product four</td>
-                                        <td class="text-right">3</td>
-                                        <td class="text-right">$1500.00</td>
-                                        <td class="text-right">$1500.00</td>
-                                        <td class="text-right">$320.00</td>
-                                        <td class="text-right">$960.00</td>
-                                    </tr>
+                                <tbody id="tbody">
                                 </tbody>
                             </table>
                         </div>
@@ -461,6 +689,200 @@
 </section>
 
 
+<!--Modal para agregar Clientes-->
+
+
+<div class="modal fade bs-example-modal-lg" id="ModalAgregarCliente" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Agregar Cliente</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="cyber">Tipo de Cédula:</label>
+                            <select id="selectTP" class="form-control" required>
+                                <option value="01">Nacional</option>
+                                <option value="02">Jurídica</option>
+                                <option value="03">DIMEX</option>
+                                <option value="04">NITE</option>
+
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <h5>Cédula<span class="text-danger">*</span></h5>
+                            <div class="controls">
+                                <input type="text" id="Cedula" class="form-control" required data-validation-required-message="Este campo es requerido">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <div class="form-group">
+                            <h5>Nombre<span class="text-danger">*</span></h5>
+                            <div class="controls">
+                                <input type="text" id="Nombre" class="form-control" required data-validation-required-message="Este campo es requerido">
+                            </div>
+
+                        </div>
+
+                    </div>
 
 
 
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <h5>Email<span class="text-danger">*</span></h5>
+                            <div class="controls">
+                                <input type="text" id="Email" class="form-control" required data-validation-required-message="Este campo es requerido">
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <h5>Teléfono<span class="text-danger">*</span></h5>
+                            <div class="controls">
+                                <input type="number" id="Telefono" class="form-control" required data-validation-required-message="Este campo es requerido">
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="nom">Provincia:</label>
+                            <select id="selectP" class="form-control" onchange="javascript: ModificaSelects(1)" required>
+
+                                <option value="1" selected>San José</option>
+                                <option value="2">Alajuela</option>
+                                <option value="3">Cartago</option>
+                                <option value="4">Heredia</option>
+                                <option value="5">Guanacaste</option>
+                                <option value="6">Puntarenas</option>
+                                <option value="7">Limón</option>
+
+
+
+
+                            </select>
+
+                        </div>
+
+
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="nom">Cantón:</label>
+                            <select id="selectC" class="form-control" onchange="javascript: ModificaSelects(2)" required>
+                                @foreach (var item in Model.Cantones)
+                                {
+                                    <option value="@item.CodCanton">@item.NomCanton</option>
+
+                                }
+
+
+                            </select>
+
+                        </div>
+
+
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="nom">Distrito:</label>
+                            <select id="selectD" class="form-control" onchange="javascript: ModificaSelects(3)" required>
+                                @foreach (var item in Model.Distritos)
+                                {
+                                    <option value="@item.CodDistrito">@item.NomDistrito</option>
+
+                                }
+
+
+                            </select>
+
+                        </div>
+
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="nom">Barrio:</label>
+                            <select id="selectB" class="form-control" required>
+                                @foreach (var item in Model.Barrios)
+                                {
+                                    <option value="@item.CodBarrio">@item.NomBarrio</option>
+
+                                }
+
+
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <h5>Dirección<span class="text-danger">*</span></h5>
+                            <div class="controls">
+                                <input type="text" id="Sennas" class="form-control" required data-validation-required-message="Este campo es requerido">
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <h5>Lista de Precio<span class="text-danger">*</span></h5>
+
+                            <select class="form-control select2  " id="idListaP">
+                               <option value="">Seleccione</option>
+
+                                @foreach (var item in Model.PrecioLista)
+                                {
+                                    <option value="@item.id">@item.Nombre</option>
+                                }
+
+
+                            </select>
+
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Cancelar</button> &nbsp;
+                <button type="button" class="btn btn-primary waves-effect text-left" onclick="javascript: Agregar();">Agregar</button> &nbsp;
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

@@ -93,7 +93,7 @@ throw new Error('template requires jQuery')
       this.fixSidebar()
     }.bind(this))
   }
-
+   
   Layout.prototype.fix = function () {
     // Remove overflow from .wrapper if layout-boxed exists
     $(Selector.layoutBoxed + ' > ' + Selector.wrapper).css('overflow', 'hidden')

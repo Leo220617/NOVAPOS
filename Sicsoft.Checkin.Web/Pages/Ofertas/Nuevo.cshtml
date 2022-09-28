@@ -47,6 +47,8 @@
         var Cantones = [];
         var Distritos = [];
         var Barrios = [];
+        var ProdCadena = [];
+
 
         function Recuperar() {
             Cantones = JSON.parse($("#Cantones").val());
@@ -62,6 +64,8 @@
         {
             var html = "";
             $("#ClienteSeleccionado").html(html);
+            html += "<option value='0' > Seleccione Cliente </option>";
+
             for (var i = 0; i < Clientes.length; i++) {
                 html += "<option value='" + Clientes[i].id + "' > " + Clientes[i].Codigo + " - " + Clientes[i].Nombre + " </option>";
             }
@@ -74,6 +78,9 @@
 
             var html = "";
             $("#ProductoSeleccionado").html(html);
+
+            html += "<option value='0' > Seleccione Producto </option>";
+
             for (var i = 0; i < ProdClientes.length; i++) {
                 html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " </option>";
             }
@@ -100,9 +107,16 @@
 
             var Producto = ProdClientes.find(a => a.id == idProducto);
 
-            $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
-            $("#inputCabys").val(Producto.Cabys);
-            $("#impuesto").val(Producto.idImpuesto);
+            if (Producto != undefined) {
+                $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
+                $("#inputCabys").val(Producto.Cabys);
+                $("#impuesto").val(Producto.idImpuesto);
+            } else {
+                $("#inputPrecio").val(0);
+                $("#inputCabys").val("");
+                $("#impuesto").val(0);
+            }
+            
 
 
         }
@@ -224,7 +238,7 @@
              $("#Sennas").val("");
         }
 
-        function Agregar() {
+        function AgregarCliente() {
             try {
                 var Cliente =
                 {
@@ -295,7 +309,29 @@
 
                                             LimpiarDatosCliente();
                                             $("#ModalAgregarCliente").modal("hide");
-                                            Clientes.push(json.cliente);
+
+                                            var ClienteInsertar =
+                                            {
+                                                id: json.cliente.id,
+                                                Codigo: json.cliente.codigo,
+                                                idListaPrecios: json.cliente.idListaPrecios,
+                                                Nombre: json.cliente.nombre,
+                                                TipoCedula: json.cliente.tipoCedula,
+                                                Cedula: json.cliente.cedula,
+                                                Email: json.cliente.email,
+                                                CodPais: json.cliente.codPais,
+                                                Telefono: json.cliente.telefono,
+                                                Provincia: json.cliente.provincia,
+                                                Canton: json.cliente.canton,
+                                                Distrito: json.cliente.distrito,
+                                                Barrio: json.cliente.barrio,
+                                                Sennas: json.cliente.sennas,
+                                                Saldo: json.cliente.saldo,
+                                                Activo: true,
+                                                ProcesadoSAP: false
+                                            };
+
+                                            Clientes.push(ClienteInsertar);
                                             RellenaClientes();
                                              $("#ClienteSeleccionado").val(json.cliente.id).trigger('change.select2');
 
@@ -349,6 +385,111 @@
                 })
             }
         }
+
+
+        function RellenaTabla() {
+            var html = "";
+            $("#tbody").html(html);
+
+
+            for (var i = 0; i < ProdCadena.length; i++) {
+                html += "<tr>";
+
+                html += "<td> " + (i + 1)  + " </td>";
+
+                html += "<td > " + ProdCadena[i].Descripcion + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
+                html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto("+ i +") '> </a> </td>";
+
+                html += "</tr>";
+
+
+            }
+
+
+
+            $("#tbody").html(html);
+        }
+
+        function AgregarProductoTabla() {
+            var subtotalG = parseFloat($("#subG").text());
+            var impuestoG = parseFloat($("#impG").text());
+            var descuentoG = parseFloat($("#descG").text());
+            var totalG = parseFloat($("#totG").text());
+
+            var id = $("#ProductoSeleccionado").val();
+            var PE = ProdClientes.find(a => a.id == id);
+
+            var Producto =
+            {
+                idEncabezado: 0,
+                Descripcion: PE.Codigo + " - " + PE.Nombre,
+                idProducto: PE.id,
+                NumLinea: 0,
+                Cantidad: $("#cantidad").val(),
+                TotalImpuesto: 0,
+                PrecioUnitario: $("#inputPrecio").val(),
+                PorDescto: $("#descuento").val(),
+                Descuento: 0,
+                TotalLinea: 0
+            };
+
+            var ImpuestoTarifa = $("#impuesto").val();
+            var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
+
+            var calculoIMP = IMP.Tarifa;
+
+            Producto.TotalImpuesto = (Producto.Cantidad * Producto.PrecioUnitario) * (calculoIMP / 100);
+            Producto.Descuento = (Producto.Cantidad * Producto.PrecioUnitario) * (Producto.PorDescto / 100);
+            Producto.TotalLinea = (Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento + Producto.TotalImpuesto;
+
+            subtotalG += (Producto.Cantidad * Producto.PrecioUnitario);
+            impuestoG += Producto.TotalImpuesto;
+            descuentoG += Producto.Descuento;
+            totalG += Producto.TotalLinea;
+
+            $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
+            $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
+            $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+            $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+
+            ProdCadena.push(Producto);
+
+            RellenaTabla();
+
+            $("#ProductoSeleccionado").val("0").trigger('change.select2');
+
+          
+
+            
+
+        }
+
+        function EliminarProducto(i) {
+
+            var Producto = ProdCadena[i];
+
+            var subtotalG = parseFloat($("#subG").text());
+            var impuestoG = parseFloat($("#impG").text());
+            var descuentoG = parseFloat($("#descG").text());
+            var totalG = parseFloat($("#totG").text());
+
+            subtotalG -= (Producto.Cantidad * Producto.PrecioUnitario);
+            impuestoG -= Producto.TotalImpuesto;
+            descuentoG -= Producto.Descuento;
+            totalG -= Producto.TotalLinea;
+            $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
+            $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
+            $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+            $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+            ProdCadena.splice(i, 1);
+            RellenaTabla();
+        }
+       
 
 
 
@@ -596,7 +737,7 @@
                                         </div>
                                         <div class="col-sm-12 pl-1" style="text-align: right;">
 
-                                            <a id="agregar" onclick="javascript: AgregarProducto();" class="btn btn-primary" style="color: white !important;">+ Agregar </a>
+                                            <a id="agregar" onclick="javascript: AgregarProductoTabla();" class="btn btn-primary" style="color: white !important;"  >+ Agregar </a>
                                         </div>
 
 
@@ -638,6 +779,8 @@
                                         <th class="text-right">Descuento</th>
                                         <th class="text-right">Impuesto</th>
                                         <th class="text-right">Total</th>
+                                        <th class="text-right">Eliminar</th>
+
                                     </tr>
                                 </thead>
                                 <tbody id="tbody">
@@ -657,13 +800,13 @@
 
 
                             <div>
-                                <p>Sub Total  :  $3,592.00</p>
-                                <p>Descuento  :  $110.44</p>
-                                <p>Impuesto :  $646.56</p>
+                                <p>Sub Total  : <span id="subG">0</span> </p>
+                                <p>Descuento  : <span id="descG">0</span></p>
+                                <p>Impuesto :  <span id="impG"> 0</span></p>
 
                             </div>
                             <div class="total-payment">
-                                <h3><b>Total :</b> $4,349.00</h3>
+                                <h3><b>Total :</b>  <span id="totG">0 </span></h3>
                             </div>
 
                         </div>
@@ -877,7 +1020,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Cancelar</button> &nbsp;
-                <button type="button" class="btn btn-primary waves-effect text-left" onclick="javascript: Agregar();">Agregar</button> &nbsp;
+                <button type="button" class="btn btn-primary waves-effect text-left" onclick="javascript: AgregarCliente();">Agregar</button> &nbsp;
 
             </div>
         </div>

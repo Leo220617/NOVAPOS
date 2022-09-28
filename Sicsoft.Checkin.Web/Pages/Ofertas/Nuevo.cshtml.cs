@@ -147,5 +147,44 @@ namespace NOVAAPP.Pages.Ofertas
             }
         }
 
+        public async Task<IActionResult> OnPostAgregarOferta(OfertasViewModel recibidos)
+        {
+            string error = "";
+
+
+            try
+            {
+
+
+                var resp = await service.Agregar(recibidos);
+
+                var resp2 = new
+                {
+                    success = true,
+                    Oferta = resp
+                };
+                return new JsonResult(resp2);
+            }
+            catch (ApiException ex)
+            {
+                Errores errores = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
+                ModelState.AddModelError(string.Empty, errores.Message);
+                return new JsonResult(error);
+                //return new JsonResult(false);
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError(string.Empty, ex.Message);
+                var resp2 = new
+                {
+                    success = false,
+                    Oferta = ""
+                };
+                return new JsonResult(resp2);
+            }
+        }
+
+
     }
 }

@@ -94,7 +94,7 @@ namespace Sicsoft.Checkin.Web
                 var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
                 identity.AddClaim(new Claim(ClaimTypes.Name, resultado.Email));
                 identity.AddClaim(new Claim(ClaimTypes.UserData, resultado.token));
-                //identity.AddClaim(new Claim(ClaimTypes.Actor, resultado.idLogin.ToString()));
+                identity.AddClaim(new Claim(ClaimTypes.Actor, resultado.id.ToString()));
                 identity.AddClaim(new Claim(ClaimTypes.Role, resultado.idRol.ToString()));
                 identity.AddClaim(new Claim("Roles",str));
                 identity.AddClaim(new Claim("CodSuc", resultado.CodSuc.ToString()));

@@ -491,10 +491,139 @@
         }
        
         function Generar() {
+            try {
+
+
+                 var EncOferta= {
+                    id: 0 ,
+                   idCliente: $("#ClienteSeleccionado").val() ,
+                   idUsuarioCreador:  0,
+                   Fecha: $("#Fecha").val() ,
+                   FechaVencimiento: $("#fechaVencimiento").val() ,
+                   Comentarios: "" ,
+                   Subtotal: parseFloat($("#subG").text()) ,
+                   TotalImpuestos: parseFloat($("#impG").text()) ,
+                   TotalDescuento: parseFloat($("#descG").text()) ,
+                   TotalCompra: parseFloat($("#totG").text()) ,
+                   PorDescto: parseFloat($("#descuento").val()), 
+                   Detalle: ProdCadena
+                }
+
+                if(validarOferta(EncOferta))
+                {
+                     Swal.fire({
+                    title: '¿Desea guardar la oferta?',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: `Aceptar`,
+                    denyButtonText: `Cancelar`,
+                    customClass: {
+                        confirmButton: 'swalBtnColor',
+                        denyButton: 'swalDeny'
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                         
+                        
+
+                        $.ajax({
+                            type: 'POST',
+
+                            url: '@Url.Page("Nuevo", "AgregarOferta")',
+                            dataType: 'json',
+                            data: { recibidos: EncOferta },
+                            headers: {
+                                RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (json) {
+
+                                 
+                                console.log("resultado " + json.Oferta);
+                                if (json.success == true) {
+                                    Swal.fire({
+                                        title: "Ha sido generado con éxito",
+
+                                        icon: 'success',
+                                        showCancelButton: false,
+
+                                        confirmButtonText: 'OK',
+                                        customClass: {
+                                            confirmButton: 'swalBtnColor',
+
+                                        },
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            //Despues de insertar, ocupariamos el id del cliente en la bd 
+                                            //para entonces setearlo en el array de clientes
+
+                                             window.location.href = window.location.href.split("/Nuevo")[0];
+
+
+                                        }
+                                    })
+
+                                } else {
+                                     
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Ha ocurrido un error al intentar guardar'
+
+                                    })
+                                }
+                            },
+
+                            beforeSend: function (xhr) {
+
+                                
+                            },
+                            complete: function () {
+                               
+                            },
+                            error: function (error) {
+                                
+                                
+                            }
+                        });
+                    }
+                })
+                }else{
+
+                }
+
+            }catch(e)
+            {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar agregar ' + e
+
+                })
+            }
+
+           
 
         }
 
+        function validarOferta(e)
+        {
+            if(e.idCliente == "0" || e.idCliente == null)
+            {
+                return false;
+            }else if(e.FechaVencimiento == "" || e.FechaVencimiento == null)
+            {
+                return false;
+            }
+            else if(e.Detalle.length == 0 || e.Detalle == null)
+            {
+                return false;
+            } 
 
+            else
+            {
+                return true;
+            }
+        }
     </script>
 
 
@@ -580,17 +709,26 @@
                     <div class="box-body">
                         <!-- title row -->
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="page-header mt-0">
                                     <h2 class="d-inline"><span class="font-size-24">Cotización</span></h2>
                                     <div class="text-left">
-                                        <h5>Fecha <span class="font-size-18">22 July 2018</span></h5>
+                                        <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
+                                        <input hidden id="Fecha" type="datetime" value="@DateTime.Now" />
+
                                     </div>
 
                                 </div>
 
                             </div>
+                            <div class="col-6">
+                                 <div class="form-group">
+                                                <label>Fecha Vencimiento</label>
+                                                <input type="date" class="form-control" id="fechaVencimiento"  value="@DateTime.Now.Date">
 
+
+                                            </div>
+                            </div>
                             <!-- /.col -->
                         </div>
                         <!-- info row -->
@@ -819,12 +957,10 @@
                     <div class="row no-print">
                         <div class="col-12">
                             <button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>
-                            <button type="button" class="btn btn-success pull-right">
+                            <button type="button" class="btn btn-success pull-right" onclick="    javascript: Generar()">
                                 <i class="fa fa-credit-card"></i> Generar
                             </button>
-                            <button type="button" class="btn btn-danger pull-right" style="margin-right: 5px;">
-                                <i class="fa fa-download"></i> Generar PDF
-                            </button>
+                           
                         </div>
                     </div>
                 </div>

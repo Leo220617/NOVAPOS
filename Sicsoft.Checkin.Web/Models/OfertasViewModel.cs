@@ -16,5 +16,7 @@ namespace NOVAAPP.Models
         public decimal TotalCompra { get; set; }
         public decimal PorDescto { get; set; }
         public DetOfertaViewModel[] Detalle { get; set; }
+
+        public string Status { get; set; }
     }
 }

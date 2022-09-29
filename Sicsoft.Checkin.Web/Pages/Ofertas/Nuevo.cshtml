@@ -258,7 +258,8 @@
                     Sennas: $("#Sennas").val(),
                     Saldo: 0,
                     Activo: true,
-                    ProcesadoSAP: false
+                    ProcesadoSAP: false,
+                    idCondicionPago: 0
                 };
 
                 if (validar(Cliente)) {
@@ -328,7 +329,8 @@
                                                 Sennas: json.cliente.sennas,
                                                 Saldo: json.cliente.saldo,
                                                 Activo: true,
-                                                ProcesadoSAP: false
+                                                ProcesadoSAP: false,                                               ,
+                                                idCondicionPago: 0
                                             };
 
                                             Clientes.push(ClienteInsertar);
@@ -500,12 +502,12 @@
                    idUsuarioCreador:  0,
                    Fecha: $("#Fecha").val() ,
                    FechaVencimiento: $("#fechaVencimiento").val() ,
-                   Comentarios: "" ,
-                   Subtotal: parseFloat($("#subG").text()) ,
-                   TotalImpuestos: parseFloat($("#impG").text()) ,
-                   TotalDescuento: parseFloat($("#descG").text()) ,
-                   TotalCompra: parseFloat($("#totG").text()) ,
-                   PorDescto: parseFloat($("#descuento").val()), 
+                   Comentarios: $("#inputComentarios").val() ,
+                   Subtotal: parseFloat($("#subG").text().replace(",","").replace(".","")) ,
+                   TotalImpuestos: parseFloat($("#impG").text().replace(",","").replace(".","")) ,
+                   TotalDescuento: parseFloat($("#descG").text().replace(",","").replace(".","")) ,
+                   TotalCompra: parseFloat($("#totG").text().replace(",","").replace(".","")) ,
+                   PorDescto: parseFloat($("#descuento").val().replace(",","").replace(".","")), 
                    Detalle: ProdCadena
                 }
 
@@ -661,7 +663,35 @@
             }
         }
     </script>
+     <script>
+        function BuscarCliente() {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: 'https://apis.gometa.org/cedulas/' + $("#Cedula").val() + '&key=gkUkysPxCKUYWZS', //Nombre del metodo
+                data: {},
+                success: function(result) {
 
+                    console.log(result);
+
+                    if(result.nombre != undefined)
+                    {
+                         $("#Nombre").val(result.nombre);
+                        $("#selectTP").val(result.tipoIdentificacion);
+                    }
+
+
+
+                },
+                beforeSend: function() {
+
+                },
+                complete: function() {
+
+                }
+            });
+        }
+    </script>
 }
 
 
@@ -849,7 +879,7 @@
 
                                         </div>
 
-                                        <div class="col-md-6  ">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Cabys</label>
                                                 <input id="inputCabys" type="text" maxlength="13" class="form-control" placeholder="Cabys">
@@ -953,7 +983,26 @@
                         <!-- /.col -->
                     </div>
                     <!-- /.row -->
-                    <!-- this row will not appear when printing -->
+                   
+                </div>
+            </div>
+            
+
+            <div class="box">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+
+                            <div class="form-group">
+                                                <label>Comentarios</label> 
+                                                <textarea id="inputComentarios" class="form-control"></textarea>
+
+                                            </div>
+
+                        </div>
+
+                    </div>
+                     <!-- this row will not appear when printing -->
                     <div class="row no-print">
                         <div class="col-12">
                             <button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>
@@ -965,6 +1014,7 @@
                     </div>
                 </div>
             </div>
+        
         </div>
     </div>
 </section>
@@ -1000,7 +1050,7 @@
                         <div class="form-group">
                             <h5>Cédula<span class="text-danger">*</span></h5>
                             <div class="controls">
-                                <input type="text" id="Cedula" class="form-control" required data-validation-required-message="Este campo es requerido">
+                                <input type="text" id="Cedula" class="form-control" required data-validation-required-message="Este campo es requerido" maxlength="12" onchange="javascript: BuscarCliente()">
                             </div>
 
                         </div>
@@ -1136,7 +1186,7 @@
                         <div class="form-group">
                             <h5>Lista de Precio<span class="text-danger">*</span></h5>
 
-                            <select class="form-control select2  " id="idListaP">
+                            <select class="form-control select2" style="width: 200px;" id="idListaP">
                                <option value="">Seleccione</option>
 
                                 @foreach (var item in Model.PrecioLista)

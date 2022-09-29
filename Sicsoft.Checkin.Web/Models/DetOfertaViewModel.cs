@@ -13,6 +13,8 @@
         public decimal Descuento { get; set; }
 
         public decimal TotalLinea { get; set; }
+        public string Cabys { get; set; }
+        public int idExoneracion { get; set; }
 
     }
 }

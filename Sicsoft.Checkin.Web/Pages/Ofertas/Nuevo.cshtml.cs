@@ -25,6 +25,8 @@ namespace NOVAAPP.Pages.Ofertas
         private readonly ICrudApi<DistritosViewModel, int> serviceD;
         private readonly ICrudApi<BarriosViewModel, int> serviceB;
         private readonly ICrudApi<ListaPreciosViewModel, int> precio;
+        private readonly ICrudApi<ExoneracionesViewModel, int> exo;
+
 
 
         [BindProperty]
@@ -48,7 +50,10 @@ namespace NOVAAPP.Pages.Ofertas
         [BindProperty]
         public ListaPreciosViewModel[] PrecioLista { get; set; }
 
-        public NuevoModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos,ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio) //CTOR 
+        [BindProperty]
+        public ExoneracionesViewModel[] Exoneraciones { get; set; }
+
+        public NuevoModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos,ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo) //CTOR 
         {
             this.service = service;
             this.serviceU = serviceU;
@@ -58,6 +63,7 @@ namespace NOVAAPP.Pages.Ofertas
             this.serviceD = serviceD;
             this.serviceB = serviceB;
             this.precio = precio;
+            this.exo = exo;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -76,6 +82,7 @@ namespace NOVAAPP.Pages.Ofertas
                 Distritos = await serviceD.ObtenerLista("");
                 Barrios = await serviceB.ObtenerLista("");
                 PrecioLista = await precio.ObtenerLista("");
+                Exoneraciones = await exo.ObtenerLista("");
                 return Page();
             }
             catch (Exception ex)

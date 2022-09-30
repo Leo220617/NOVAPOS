@@ -12,5 +12,7 @@ namespace NOVAAPP.Models
 
        
         public decimal Tarifa { get; set; }
+
+        public bool Activo { get; set; }
     }
 }

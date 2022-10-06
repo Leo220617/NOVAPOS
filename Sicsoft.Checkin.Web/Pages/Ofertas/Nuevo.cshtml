@@ -61,9 +61,9 @@
 
             RellenaClientes();
             RellenaExoneraciones();
+            maskCedula();
         }
-        function RellenaClientes()
-        {
+        function RellenaClientes() {
             var html = "";
             $("#ClienteSeleccionado").html(html);
             html += "<option value='0' > Seleccione Cliente </option>";
@@ -84,7 +84,7 @@
             html += "<option value='0' > Seleccione Producto </option>";
 
             for (var i = 0; i < ProdClientes.length; i++) {
-                html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " </option>";
+                html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " - " + ProdClientes[i].PrecioUnitario + " </option>";
             }
 
 
@@ -99,7 +99,7 @@
             html += "<option value='0' > Seleccione Exoneracion </option>";
 
             for (var i = 0; i < Exoneraciones.length; i++) {
-                html += "<option value='" + Exoneraciones[i].id + "' > " + Exoneraciones[i].NumDoc  + " </option>";
+                html += "<option value='" + Exoneraciones[i].id + "' > " + Exoneraciones[i].NumDoc + " </option>";
             }
 
 
@@ -133,7 +133,7 @@
                 $("#inputCabys").val("");
                 $("#impuesto").val(0);
             }
-            
+
 
 
         }
@@ -212,49 +212,51 @@
             $("#ModalAgregarCliente").modal("show");
         }
 
-        function validar(cliente)
-        {
-            if(cliente.idListaPrecios == "" || cliente.idListaPrecios == null)
-            {
+        function validar(cliente) {
+            if (cliente.idListaPrecios == "" || cliente.idListaPrecios == null) {
                 return false;
-            }else if(cliente.Nombre == "" || cliente.Nombre == null)
-            {
+            } else if (cliente.Nombre == "" || cliente.Nombre == null) {
                 return false;
             }
-            else if(cliente.Cedula == "" || cliente.Cedula == null)
-            {
-                return false;
-            }else if(cliente.Email == "" || cliente.Email == null)
-            {
+            else if (cliente.Cedula == "" || cliente.Cedula == null) {
                 return false;
 
-            }else if(cliente.Telefono == "" || cliente.Telefono == null)
-            {
+
+            }else if (cliente.Email == "" || cliente.Email == null) {
                 return false;
 
-            }else if(cliente.Sennas == "" || cliente.Sennas == null)
-            {
+            } else if (cliente.Telefono == "" || cliente.Telefono == null) {
+                return false;
+
+            } else if (cliente.Sennas == "" || cliente.Sennas == null) {
+                return false;
+
+            }else if (cliente.CorreoPublitario == "" || cliente.CorreoPublicitario == null) {
+                return false;
+
+            }else if (cliente.idGrupo == "" || cliente.idGrupo == null) {
                 return false;
             }
 
-            else
-            {
+            else {
                 return true;
             }
         }
 
-        function LimpiarDatosCliente()
-        {
-             $("#idListaP").val("1").trigger('change.select2');
-             $("#Nombre").val("");
-             $("#selectTP").val("1").trigger('change.select2');
-             $("#Cedula").val("");
-             $("#Email").val("");
-             $("#Telefono").val("");
-             $("#selectP").val("1").trigger('change.select2');
-             $("#Sennas").val("");
+        function LimpiarDatosCliente() {
+            $("#idListaP").val("1").trigger('change.select2');
+            $("#idGrupo").val("1").trigger('change.select2');
+            $("#Nombre").val("");
+            $("#selectTP").val("1").trigger('change.select2');
+            $("#Cedula").val("");
+            $("#Email").val("");
+            $("#Telefono").val("");
+            $("#selectP").val("1").trigger('change.select2');
+            $("#Sennas").val("");
+             $("#CorreoPublicitario").val("");
         }
 
+       //Agregar Cliente
         function AgregarCliente() {
             try {
                 var Cliente =
@@ -262,6 +264,7 @@
                     id: 0,
                     Codigo: "",
                     idListaPrecios: $("#idListaP").val(),
+                    idGrupo: $("#idGrupo").val(),
                     Nombre:  $("#Nombre").val(),
                     TipoCedula: $("#selectTP").val(),
                     Cedula: $("#Cedula").val(),
@@ -273,6 +276,7 @@
                     Distrito: $("#selectD").val(),
                     Barrio: $("#selectB").val(),
                     Sennas: $("#Sennas").val(),
+                    CorreoPublicitario: $("#CorreoPublicitario").val(),
                     Saldo: 0,
                     Activo: true,
                     ProcesadoSAP: false,
@@ -333,6 +337,7 @@
                                                 id: json.cliente.id,
                                                 Codigo: json.cliente.codigo,
                                                 idListaPrecios: json.cliente.idListaPrecios,
+                                                idGrupo: json.cliente.idGrupo,
                                                 Nombre: json.cliente.nombre,
                                                 TipoCedula: json.cliente.tipoCedula,
                                                 Cedula: json.cliente.cedula,
@@ -345,6 +350,7 @@
                                                 Barrio: json.cliente.barrio,
                                                 Sennas: json.cliente.sennas,
                                                 Saldo: json.cliente.saldo,
+                                                CorreoPublicitario: json.cliente.CorreoPublicitario,
                                                 Activo: true,
                                                 ProcesadoSAP: false,                                             
                                                 idCondicionPago: 0
@@ -404,8 +410,7 @@
                 })
             }
         }
-
-
+       ///
         function RellenaTabla() {
             var html = "";
             $("#tbody").html(html);
@@ -414,7 +419,7 @@
             for (var i = 0; i < ProdCadena.length; i++) {
                 html += "<tr>";
 
-                html += "<td> " + (i + 1)  + " </td>";
+                html += "<td> " + (i + 1) + " </td>";
 
                 html += "<td > " + ProdCadena[i].Descripcion + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
@@ -422,7 +427,7 @@
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
-                html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto("+ i +") '> </a> </td>";
+                html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
                 html += "</tr>";
 
@@ -433,12 +438,31 @@
 
             $("#tbody").html(html);
         }
+        function cantidadRepetidos(palabra, separador) {
+
+
+            return palabra.split(separador).length - 1;
+        }
+        function ReplaceLetra(palabra) {
+            var cantidad = cantidadRepetidos(palabra, ",");
+            for (var i = 0; i < cantidad; i++) {
+                palabra = palabra.replace(",", "");
+            }
+
+            //var cantidad2 = cantidadRepetidos(palabra, ".");
+            //for (var i = 0; i < cantidad2; i++) {
+            //    palabra = palabra.replace(".", "");
+            //}
+            return palabra;
+        }
+
 
         function AgregarProductoTabla() {
-            var subtotalG = parseFloat($("#subG").text());
-            var impuestoG = parseFloat($("#impG").text());
-            var descuentoG = parseFloat($("#descG").text());
-            var totalG = parseFloat($("#totG").text());
+
+            var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
+            var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
+            var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
+            var totalG = parseFloat(ReplaceLetra($("#totG").text()));
 
             var id = $("#ProductoSeleccionado").val();
             var PE = ProdClientes.find(a => a.id == id);
@@ -449,10 +473,10 @@
                 Descripcion: PE.Codigo + " - " + PE.Nombre,
                 idProducto: PE.id,
                 NumLinea: 0,
-                Cantidad: $("#cantidad").val(),
+                Cantidad: parseFloat($("#cantidad").val()),
                 TotalImpuesto: 0,
-                PrecioUnitario: $("#inputPrecio").val(),
-                PorDescto: $("#descuento").val(),
+                PrecioUnitario: parseFloat($("#inputPrecio").val()),
+                PorDescto: parseFloat($("#descuento").val()),
                 Descuento: 0,
                 TotalLinea: 0,
                 Cabys: $("#inputCabys").val(),
@@ -465,8 +489,8 @@
 
                 var calculoIMP = IMP.Tarifa;
 
-                Producto.TotalImpuesto = (Producto.Cantidad * Producto.PrecioUnitario) * (calculoIMP / 100);
                 Producto.Descuento = (Producto.Cantidad * Producto.PrecioUnitario) * (Producto.PorDescto / 100);
+                Producto.TotalImpuesto = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * (calculoIMP / 100);
                 Producto.TotalLinea = (Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento + Producto.TotalImpuesto;
 
                 subtotalG += (Producto.Cantidad * Producto.PrecioUnitario);
@@ -493,11 +517,11 @@
                 })
             }
 
-            
 
-          
 
-            
+
+
+
 
         }
 
@@ -505,10 +529,10 @@
 
             var Producto = ProdCadena[i];
 
-            var subtotalG = parseFloat($("#subG").text());
-            var impuestoG = parseFloat($("#impG").text());
-            var descuentoG = parseFloat($("#descG").text());
-            var totalG = parseFloat($("#totG").text());
+            var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
+            var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
+            var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
+            var totalG = parseFloat(ReplaceLetra($("#totG").text()));
 
             subtotalG -= (Producto.Cantidad * Producto.PrecioUnitario);
             impuestoG -= Producto.TotalImpuesto;
@@ -521,8 +545,9 @@
             ProdCadena.splice(i, 1);
             RellenaTabla();
         }
-       
-        function Generar() {
+            
+        //Generar 
+             function Generar() {
             try {
 
 
@@ -533,11 +558,11 @@
                    Fecha: $("#Fecha").val() ,
                    FechaVencimiento: $("#fechaVencimiento").val() ,
                    Comentarios: $("#inputComentarios").val() ,
-                   Subtotal: parseFloat($("#subG").text().replace(",","").replace(".","")) ,
-                   TotalImpuestos: parseFloat($("#impG").text().replace(",","").replace(".","")) ,
-                   TotalDescuento: parseFloat($("#descG").text().replace(",","").replace(".","")) ,
-                   TotalCompra: parseFloat($("#totG").text().replace(",","").replace(".","")) ,
-                   PorDescto: parseFloat($("#descuento").val().replace(",","").replace(".","")), 
+                   Subtotal: parseFloat(ReplaceLetra($("#subG").text() )) ,
+                   TotalImpuestos: parseFloat(ReplaceLetra($("#impG").text() )) ,
+                   TotalDescuento: parseFloat(ReplaceLetra($("#descG").text() )) ,
+                   TotalCompra: parseFloat(ReplaceLetra($("#totG").text() )) ,
+                   PorDescto: parseFloat(ReplaceLetra($("#descuento").val() )), 
                    Detalle: ProdCadena
                 }
 
@@ -636,23 +661,19 @@
            
 
         }
+        //
 
-        function validarOferta(e)
-        {
-            if(e.idCliente == "0" || e.idCliente == null)
-            {
+        function validarOferta(e) {
+            if (e.idCliente == "0" || e.idCliente == null) {
                 return false;
-            }else if(e.FechaVencimiento == "" || e.FechaVencimiento == null)
-            {
+            } else if (e.FechaVencimiento == "" || e.FechaVencimiento == null) {
                 return false;
-            } 
-            else if(e.Detalle.length == 0 || e.Detalle == null)
-            {
+            }
+            else if (e.Detalle.length == 0 || e.Detalle == null) {
                 return false;
-            } 
+            }
 
-            else
-            {
+            else {
                 return true;
             }
         }
@@ -693,7 +714,7 @@
             }
         }
     </script>
-     <script>
+    <script>
         function BuscarCliente() {
             $.ajax({
                 type: 'GET',
@@ -704,9 +725,8 @@
 
                     console.log(result);
 
-                    if(result.nombre != undefined)
-                    {
-                         $("#Nombre").val(result.nombre);
+                    if (result.nombre != undefined) {
+                        $("#Nombre").val(result.nombre);
                         $("#selectTP").val(result.tipoIdentificacion);
                     }
 
@@ -786,7 +806,7 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label>Fecha Vencimiento</label>
-                                    <input type="date" class="form-control" id="fechaVencimiento" value="@DateTime.Now.Date">
+                                    <input type="date" class="form-control" id="fechaVencimiento" value="@DateTime.Now.Date.AddDays(3).ToString("yyyy-MM-dd")">
 
 
                                 </div>
@@ -872,178 +892,178 @@
                                                 <div class="form-group">
                                                     <label>Impuesto</label>
                                                     <br />
-                                                    <select id="impuesto" class="form-control " style="width: 100%">
+                                                    <select id="impuesto" disabled class="form-control " style="width: 100%">
                                                         <option value="0">Seleccione</option>
                                                         @foreach (var item in Model.Impuestos)
-                                                        {
-                                                            <option value="@item.id">@Math.Round(@item.Tarifa, 2)%</option>
+                                                    {
+                                                        <option value="@item.id">@Math.Round(@item.Tarifa, 2)%</option>
 
-                                                        }
-                                                    </select>
-
-                                                </div>
-
+                                                    }
+                                                </select>
 
                                             </div>
-                                            <div class="col-4">
-                                                <div class="form-group">
-                                                    <label>% Descuento</label>
-                                                    <input type="number" class="form-control" id="descuento" placeholder="Descuento" value="0">
 
 
-                                                </div>
-
-
-                                            </div>
                                         </div>
-
-                                        <br />
-
-                                        <div class="row">
-                                            <div class="col-md-3 pr-1">
-                                                <div class="form-group">
-                                                    <label>Precio Unitario</label>
-                                                    <input id="inputPrecio" type="number" class="form-control" placeholder="Precio Unitario" value="0">
-
-
-                                                </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label>% Descuento</label>
+                                                <input type="number" class="form-control" id="descuento" placeholder="Descuento" value="0">
 
 
                                             </div>
 
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Cabys</label>
-                                                    <input id="inputCabys" type="text" maxlength="13" class="form-control" placeholder="Cabys">
 
+                                        </div>
+                                    </div>
 
-                                                </div>
+                                    <br />
 
-
-                                            </div>
-                                            <div class="col-md-3 pr-1">
-                                                <div class="form-group">
-                                                    <label>Doc. Exoneración</label>
-                                                    <select id="exoneracion" class="form-control " style="width: 100%">
-                                                        <option value="0">Seleccione</option>
-                                                        
-                                                    </select>
-
-                                                </div>
+                                    <div class="row">
+                                        <div class="col-md-3 pr-1">
+                                            <div class="form-group">
+                                                <label>Precio de Venta</label>
+                                                <input id="inputPrecio" disabled type="number" class="form-control" placeholder="Precio Unitario" value="0">
 
 
                                             </div>
-                                            <div class="col-sm-12 pl-1" style="text-align: right;">
-
-                                                <a id="agregar" onclick="javascript: AgregarProductoTabla();" class="btn btn-primary" style="color: white !important;">+ Agregar </a>
-                                            </div>
-
 
 
                                         </div>
 
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Cabys</label>
+                                                <input id="inputCabys" disabled type="text" maxlength="13" class="form-control" placeholder="Cabys">
+
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-md-3 pr-1">
+                                            <div class="form-group">
+                                                <label>Doc. Exoneración</label>
+                                                <select id="exoneracion" class="form-control " style="width: 100%">
+                                                    <option value="0">Seleccione</option>
+
+                                                </select>
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-sm-12 pl-1" style="text-align: right;">
+
+                                            <a id="agregar" onclick="javascript: AgregarProductoTabla();" class="btn btn-primary" style="color: white !important;">+ Agregar </a>
+                                        </div>
 
 
 
                                     </div>
+
+
+
+
                                 </div>
                             </div>
-
-
-
-
-
-
-
-
                         </div>
-                    </div>
-                </div>
 
 
-                <div class="box">
-                    <div class="box-body">
-                        <!-- Table row -->
-                        <div class="row">
-                            <div class="col-12 table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-
-                                            <th>Descripción</th>
-                                            <th class="text-right">Cantidad</th>
-                                            <th class="text-right">Costo Unitario</th>
-                                            <th class="text-right">Descuento</th>
-                                            <th class="text-right">Impuesto</th>
-                                            <th class="text-right">Total</th>
-                                            <th class="text-right">Eliminar</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbody">
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.col -->
-                        </div>
-                        <!-- /.row -->
-
-                        <div class="row">
-                            <!-- accepted payments column -->
-                            <div class="col-12 col-sm-6">
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-12 col-sm-6 text-right">
 
 
-                                <div>
-                                    <p>Sub Total  : <span id="subG">0</span> </p>
-                                    <p>Descuento  : <span id="descG">0</span></p>
-                                    <p>Impuesto :  <span id="impG"> 0</span></p>
 
-                                </div>
-                                <div class="total-payment">
-                                    <h3><b>Total :</b>  <span id="totG">0 </span></h3>
-                                </div>
 
-                            </div>
-                            <!-- /.col -->
-                        </div>
-                        <!-- /.row -->
+
 
                     </div>
                 </div>
-
-
-                <div class="box">
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-sm-6">
-
-                                <div class="form-group">
-                                    <label>Comentarios</label>
-                                    <textarea id="inputComentarios" class="form-control"></textarea>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                        <!-- this row will not appear when printing -->
-                        <div class="row no-print">
-                            <div class="col-12">
-                                <button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>
-                                <button type="button" class="btn btn-success pull-right" onclick="    javascript: Generar()">
-                                    <i class="fa fa-credit-card"></i> Generar
-                                </button>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
+
+
+            <div class="box">
+                <div class="box-body">
+                    <!-- Table row -->
+                    <div class="row">
+                        <div class="col-12 table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+
+                                        <th>Descripción</th>
+                                        <th class="text-right">Cantidad</th>
+                                        <th class="text-right">Precio de Venta</th>
+                                        <th class="text-right">Descuento</th>
+                                        <th class="text-right">Impuesto</th>
+                                        <th class="text-right">Total</th>
+                                        <th class="text-right">Eliminar</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+
+                    <div class="row">
+                        <!-- accepted payments column -->
+                        <div class="col-12 col-sm-6">
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-12 col-sm-6 text-right">
+
+
+                            <div>
+                                <p>Sub Total  : <span id="subG">0</span> </p>
+                                <p>Descuento  : <span id="descG">0</span></p>
+                                <p>Impuesto :  <span id="impG"> 0</span></p>
+
+                            </div>
+                            <div class="total-payment">
+                                <h3><b>Total :</b>  <span id="totG">0 </span></h3>
+                            </div>
+
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+
+                </div>
+            </div>
+
+
+            <div class="box">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+
+                            <div class="form-group">
+                                <label>Comentarios</label>
+                                <textarea id="inputComentarios" class="form-control"></textarea>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- this row will not appear when printing -->
+                    <div class="row no-print">
+                        <div class="col-12">
+                            <button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>
+                            <button type="button" class="btn btn-success pull-right" onclick="    javascript: Generar()">
+                                <i class="fa fa-credit-card"></i> Generar
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </section>
 
@@ -1064,7 +1084,7 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label for="cyber">Tipo de Cédula:</label>
-                            <select id="selectTP" class="form-control" required>
+                            <select id="selectTP" class="form-control" onchange="javascript: maskCedula();" required>
                                 <option value="01">Nacional</option>
                                 <option value="02">Jurídica</option>
                                 <option value="03">DIMEX</option>
@@ -1101,7 +1121,7 @@
 
 
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-4">
                         <div class="form-group">
                             <h5>Email<span class="text-danger">*</span></h5>
                             <div class="controls">
@@ -1112,8 +1132,19 @@
 
 
                     </div>
+                     <div class="col-4">
+                        <div class="form-group">
+                            <h5>Correo Publicitario<span class="text-danger">*</span></h5>
+                            <div class="controls">
+                                <input type="text" id="CorreoPublicitario" class="form-control" required data-validation-required-message="Este campo es requerido">
+                            </div>
 
-                    <div class="col-6">
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-4">
                         <div class="form-group">
                             <h5>Teléfono<span class="text-danger">*</span></h5>
                             <div class="controls">
@@ -1199,7 +1230,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-4">
                         <div class="form-group">
                             <h5>Dirección<span class="text-danger">*</span></h5>
                             <div class="controls">
@@ -1210,14 +1241,34 @@
 
 
                     </div>
-                    <div class="col-6">
+                    <div class="col-4">
                         <div class="form-group">
                             <h5>Lista de Precio<span class="text-danger">*</span></h5>
 
                             <select class="form-control select2" style="width: 200px;" id="idListaP">
-                               <option value="">Seleccione</option>
+                                <option value="">Seleccione</option>
 
                                 @foreach (var item in Model.PrecioLista)
+                                {
+                                    <option value="@item.id">@item.Nombre</option>
+                                }
+
+
+                            </select>
+
+
+                        </div>
+
+
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <h5>Grupo<span class="text-danger">*</span></h5>
+
+                            <select class="form-control select2" style="width: 200px;" id="idGrupo">
+                                <option value="">Seleccione</option>
+
+                                @foreach (var item in Model.Grupos)
                                 {
                                     <option value="@item.id">@item.Nombre</option>
                                 }
@@ -1245,3 +1296,56 @@
     <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+<script>
+     function maskCedula()
+        {
+         $("#Telefono").mask("9999-9999");
+            var TC = $("#selectTP").val();
+
+            switch(TC)
+            {
+                case "01":
+                {
+                        $("#Cedula").mask("999999999");
+                        break;
+                }
+                 case "02":
+                {
+                        $("#Cedula").mask("9999999999");
+                        break;
+                }
+            }
+
+        }
+
+        function validarCedula()
+        {
+             var TC = $("#selectTP").val();
+
+            switch(TC)
+            {
+                case "01":
+                {
+                    if($("#Cedula").val().length < 9)
+                    {
+                         
+                        $("#Cedula").focus();
+                        $("#Cedula").select();
+                    }
+                         
+                        break;
+                }
+                 case "02":
+                {
+                    if($("#Cedula").val().length < 10)
+                    {
+                         
+                        $("#Cedula").focus();
+                        $("#Cedula").select();
+                    }
+                         
+                        break;
+                }
+            }
+        }
+</script>

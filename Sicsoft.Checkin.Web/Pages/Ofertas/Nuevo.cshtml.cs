@@ -26,6 +26,7 @@ namespace NOVAAPP.Pages.Ofertas
         private readonly ICrudApi<BarriosViewModel, int> serviceB;
         private readonly ICrudApi<ListaPreciosViewModel, int> precio;
         private readonly ICrudApi<ExoneracionesViewModel, int> exo;
+        private readonly ICrudApi<GruposClientesViewModel, int> grupo;
 
 
 
@@ -53,7 +54,10 @@ namespace NOVAAPP.Pages.Ofertas
         [BindProperty]
         public ExoneracionesViewModel[] Exoneraciones { get; set; }
 
-        public NuevoModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos,ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo) //CTOR 
+        [BindProperty]
+        public GruposClientesViewModel[] Grupos { get; set; }
+
+        public NuevoModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos,ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo) //CTOR 
         {
             this.service = service;
             this.serviceU = serviceU;
@@ -64,6 +68,7 @@ namespace NOVAAPP.Pages.Ofertas
             this.serviceB = serviceB;
             this.precio = precio;
             this.exo = exo;
+            this.grupo = grupo;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -83,6 +88,7 @@ namespace NOVAAPP.Pages.Ofertas
                 Barrios = await serviceB.ObtenerLista("");
                 PrecioLista = await precio.ObtenerLista("");
                 Exoneraciones = await exo.ObtenerLista("");
+                Grupos = await grupo.ObtenerLista("");
                 return Page();
             }
             catch (Exception ex)

@@ -218,6 +218,11 @@ namespace Sicsoft.Checkin.Web
 .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Exoneraciones"))
 .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
+
+            services.AddRefitClient<ICrudApi<GruposClientesViewModel, int>>()
+.ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/GruposClientes"))
+.AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+
             return services;
         }
     }

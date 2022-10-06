@@ -53,6 +53,8 @@ namespace NOVAAPP.Models
         public bool ProcesadoSAP { get; set; }
         public int idCondicionPago { get; set; }
 
-       
+        public string CorreoPublicitario { get; set; }
+
+        public int idGrupo { get; set; }
     }
 }

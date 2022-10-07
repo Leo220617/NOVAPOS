@@ -18,6 +18,8 @@ namespace InversionGloblalWeb.Models
         public string Categoria { get; set; }
         public DateTime FechaInicial { get; set; }
         public DateTime FechaFinal { get; set; }
+        public bool Externo { get; set; }
+        public bool Activo { get; set; }
 
     }
 }

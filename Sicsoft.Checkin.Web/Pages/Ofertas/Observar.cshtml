@@ -135,6 +135,7 @@
                                             <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
 
                                         </div>
+                                         
 
                                         <div class="col-4">
                                             <h5> <b>Estado:</b>@if(Model.Oferta.Status == "0")
@@ -163,7 +164,7 @@
                         <div class="col-md-8 invoice-col">
                             <strong>Cliente</strong>
                             <address>
-                                <strong class="text-blue font-size-24"> @( Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" : Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault().Codigo + " - "+ Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault().Nombre)  </strong>
+                                <strong class="text-blue font-size-24"> @( Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" : Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault().Codigo + " - "+ Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault().Nombre)   </strong>
                                    
 
                             </address>
@@ -184,6 +185,9 @@
                                         <th class="text-center">% Descuento</th>
                                         <th class="text-center">Descuento</th>
                                         <th class="text-center">Impuesto</th>
+                                        <th class="text-center">% Exoneración</th>
+
+
                                         <th class="text-center">Total</th>
 
                                     </tr>
@@ -205,6 +209,7 @@
                                             <td class="text-center">@Math.Round(@item.PorDescto)%</td>
                                             <td class="text-center">@Math.Round(@item.Descuento,2).ToString("C",formato)</td>
                                             <td class="text-center">@Math.Round(@item.TotalImpuesto,2).ToString("C",formato)</td>
+                                            <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
                                             <td class="text-center">@Math.Round(@item.TotalLinea,2).ToString("C",formato)</td>
 
                                         </tr>

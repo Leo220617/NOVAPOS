@@ -69,7 +69,10 @@ namespace NOVAAPP.Pages.Ofertas
                 }
                 Listas = await service.ObtenerLista(filtro);
                 Users = await serviceU.ObtenerLista("");
-                Clientes = await clientes.ObtenerLista("");
+                ParametrosFiltros filtro2 = new ParametrosFiltros();
+                filtro2.Externo = true;
+               
+                Clientes = await clientes.ObtenerLista(filtro2);
 
                 return Page();
             }

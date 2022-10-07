@@ -1,21 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using InversionGloblalWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using NOVAAPP.Models;
 using Refit;
 using Sicsoft.Checkin.Web.Servicios;
-
+using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace NOVAAPP.Pages.Ofertas
 {
-    public class NuevoModel : PageModel
+    public class EditarModel : PageModel
     {
         private readonly ICrudApi<OfertasViewModel, int> service; //API
         private readonly ICrudApi<ImpuestosViewModel, int> serviceU;
@@ -57,7 +54,7 @@ namespace NOVAAPP.Pages.Ofertas
         [BindProperty]
         public GruposClientesViewModel[] Grupos { get; set; }
 
-        public NuevoModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos,ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo) //CTOR 
+        public EditarModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo) //CTOR 
         {
             this.service = service;
             this.serviceU = serviceU;
@@ -71,15 +68,17 @@ namespace NOVAAPP.Pages.Ofertas
             this.grupo = grupo;
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             try
             {
                 var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
-                if (string.IsNullOrEmpty(Roles.Where(a => a == "20").FirstOrDefault()))
+                if (string.IsNullOrEmpty(Roles.Where(a => a == "29").FirstOrDefault()))
                 {
                     return RedirectToPage("/NoPermiso");
                 }
+
+                Oferta = await service.ObtenerPorId(id);
                 Impuestos = await serviceU.ObtenerLista("");
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;
@@ -101,7 +100,6 @@ namespace NOVAAPP.Pages.Ofertas
                 return Page();
             }
         }
-
         public async Task<IActionResult> OnPostAsync()
         {
             try
@@ -123,8 +121,6 @@ namespace NOVAAPP.Pages.Ofertas
                 return Page();
             }
         }
-
-
         public async Task<IActionResult> OnPostAgregarCliente(ClientesViewModel recibidos)
         {
             string error = "";
@@ -134,7 +130,7 @@ namespace NOVAAPP.Pages.Ofertas
             {
 
 
-               var resp =  await clientes.Agregar(recibidos);
+                var resp = await clientes.Agregar(recibidos);
 
                 var resp2 = new
                 {
@@ -200,7 +196,5 @@ namespace NOVAAPP.Pages.Ofertas
                 return new JsonResult(resp2);
             }
         }
-
-
     }
 }

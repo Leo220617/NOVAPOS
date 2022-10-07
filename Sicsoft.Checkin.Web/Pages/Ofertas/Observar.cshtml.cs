@@ -21,6 +21,7 @@ namespace NOVAAPP.Pages.Ofertas
         private readonly ICrudApi<OfertasViewModel, int> service;
         private readonly ICrudApi<ClientesViewModel, string> serviceE;
         private readonly ICrudApi<ProductosViewModel, string> serviceP;
+        private readonly ICrudApi<ExoneracionesViewModel, int> exoneracion;
 
         [BindProperty]
         public ClientesViewModel[] Clientes { get; set; }
@@ -31,11 +32,15 @@ namespace NOVAAPP.Pages.Ofertas
         [BindProperty]
         public ProductosViewModel[] Productos { get; set; }
 
-        public ObservarModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP)
+        [BindProperty]
+        public ExoneracionesViewModel[] Exoneraciones { get; set; }
+
+        public ObservarModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion)
         {
             this.service = service;
             this.serviceE = serviceE;
             this.serviceP = serviceP;
+            this.exoneracion = exoneracion;
         }
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -49,6 +54,7 @@ namespace NOVAAPP.Pages.Ofertas
                 Oferta = await service.ObtenerPorId(id);
                 Clientes = await serviceE.ObtenerLista("");
                 Productos = await serviceP.ObtenerLista("");
+                Exoneraciones = await exoneracion.ObtenerLista("");
 
                 return Page();
             }

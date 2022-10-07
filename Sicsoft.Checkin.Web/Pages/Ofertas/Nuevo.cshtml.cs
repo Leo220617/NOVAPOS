@@ -102,29 +102,7 @@ namespace NOVAAPP.Pages.Ofertas
             }
         }
 
-        public async Task<IActionResult> OnPostAsync()
-        {
-            try
-            {
-                await service.Agregar(Oferta);
-                return RedirectToPage("./Index");
-            }
-            catch (ApiException ex)
-            {
-                Errores error = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
-                ModelState.AddModelError(string.Empty, error.Message);
-
-                return Page();
-            }
-            catch (Exception ex)
-            {
-
-                ModelState.AddModelError(string.Empty, ex.Message);
-                return Page();
-            }
-        }
-
-
+         
         public async Task<IActionResult> OnPostAgregarCliente(ClientesViewModel recibidos)
         {
             string error = "";

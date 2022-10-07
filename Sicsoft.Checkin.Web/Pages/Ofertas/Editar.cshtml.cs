@@ -100,27 +100,7 @@ namespace NOVAAPP.Pages.Ofertas
                 return Page();
             }
         }
-        public async Task<IActionResult> OnPostAsync()
-        {
-            try
-            {
-                await service.Agregar(Oferta);
-                return RedirectToPage("./Index");
-            }
-            catch (ApiException ex)
-            {
-                Errores error = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
-                ModelState.AddModelError(string.Empty, error.Message);
-
-                return Page();
-            }
-            catch (Exception ex)
-            {
-
-                ModelState.AddModelError(string.Empty, ex.Message);
-                return Page();
-            }
-        }
+         
         public async Task<IActionResult> OnPostAgregarCliente(ClientesViewModel recibidos)
         {
             string error = "";
@@ -168,12 +148,12 @@ namespace NOVAAPP.Pages.Ofertas
             {
 
                 recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
-                var resp = await service.Agregar(recibidos);
+                  await service.Editar(recibidos);
 
                 var resp2 = new
                 {
                     success = true,
-                    Oferta = resp
+                    Oferta = ""
                 };
                 return new JsonResult(resp2);
             }

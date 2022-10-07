@@ -18,5 +18,8 @@ namespace NOVAAPP.Models
         public DetOfertaViewModel[] Detalle { get; set; }
 
         public string Status { get; set; }
+
+        public string CodSuc { get; set; }
+        public string Moneda { get; set; }
     }
 }

@@ -26,7 +26,7 @@
     @section scripts{
 
 
-   <script src="/js/Ofertas/NuevoOferta.js"></script>
+   <script src="/js/Ofertas/EditarOferta.js"></script>
  
    
 }
@@ -47,7 +47,8 @@
     <section class="content ">
         <div class="row">
             <div class="col-12">
-
+                        
+                <input hidden asp-for="Oferta.id" id="id"/>
                 <input hidden id="Cantones" value="@JsonConvert.SerializeObject(Model.Cantones)" />
                 <input hidden id="Distritos" value="@JsonConvert.SerializeObject(Model.Distritos)" />
                 <input hidden id="Barrios" value="@JsonConvert.SerializeObject(Model.Barrios)" />
@@ -55,7 +56,11 @@
                 <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
                 <input hidden id="Impuestos" value="@JsonConvert.SerializeObject(Model.Impuestos)" />
                 <input hidden id="Exoneraciones" value="@JsonConvert.SerializeObject(Model.Exoneraciones)" />
+                <input hidden id="Oferta" value="@JsonConvert.SerializeObject(Model.Oferta)" />
+
                 <input hidden id="urlGenerar" value="@Url.Page("Editar", "AgregarOferta")" />
+                <input hidden id="urlCliente" value="@Url.Page("Editar", "AgregarCliente")" />
+
 
                 <!-- Content Header (Page header) -->
                 <div class="box">
@@ -67,24 +72,20 @@
 
                             </div>
                             <div class="col-4">
-                                <a asp-page="./Index" class="btn btn-outline-info" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+                                 <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
 
-
-
-
-
+                                
                             </div>
                         </div>
                     </div>
                     <div class="box-body">
-                        <input hidden asp-for="Oferta.id" />
                         <!-- title row -->
                         <div class="row">
                             <div class="col-6">
                                 <div class="page-header mt-0">
                                     <h2 class="d-inline"><span class="font-size-24">Cotización</span></h2>
                                     <div class="text-left">
-                                        <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
+                                        <h5>Fecha <span class="font-size-18">@Model.Oferta.Fecha.ToString("dd MMM yyy")</span></h5>
                                         <input hidden id="Fecha" type="datetime" value="@DateTime.Now" />
 
                                     </div>
@@ -95,7 +96,7 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label>Fecha Vencimiento</label>
-                                    <input type="date" class="form-control" id="fechaVencimiento" value="@DateTime.Now.Date.AddDays(3).ToString("yyyy-MM-dd")">
+                                    <input type="date" class="form-control" id="fechaVencimiento" value="@Model.Oferta.FechaVencimiento.ToString("yyyy-MM-dd")">
 
 
                                 </div>

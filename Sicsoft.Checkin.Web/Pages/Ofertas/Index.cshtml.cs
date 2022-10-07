@@ -19,6 +19,7 @@ namespace NOVAAPP.Pages.Ofertas
         private readonly ICrudApi<UsuariosViewModel, int> serviceU;
         private readonly ICrudApi<ClientesViewModel, string> clientes;
 
+
         [BindProperty]
         public OfertasViewModel[] Listas { get; set; }
 

@@ -48,7 +48,7 @@ namespace NOVAAPP.Pages.Ofertas
                     return RedirectToPage("/NoPermiso");
                 }
                 DateTime time = new DateTime();
-
+                filtro.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
                 if (time == filtro.FechaInicial)
                 {
 
@@ -66,6 +66,7 @@ namespace NOVAAPP.Pages.Ofertas
                     filtro.FechaFinal = ultimoDia;
 
                     filtro.Codigo3 = 1;
+                    filtro.ItemCode = "0";
 
                 }
                 Listas = await service.ObtenerLista(filtro);

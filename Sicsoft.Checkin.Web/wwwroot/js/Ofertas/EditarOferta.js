@@ -22,6 +22,8 @@ var Barrios = [];
 var ProdCadena = [];
 var Exoneraciones = [];
 var Oferta = [];
+var TipoCambio = [];
+
 function Recuperar() {
     Cantones = JSON.parse($("#Cantones").val());
     Distritos = JSON.parse($("#Distritos").val());
@@ -31,6 +33,7 @@ function Recuperar() {
     Impuestos = JSON.parse($("#Impuestos").val());
     Exoneraciones = JSON.parse($("#Exoneraciones").val());
     Oferta = JSON.parse($("#Oferta").val());
+    TipoCambio = JSON.parse($("#TipoCambio").val());
 
     ExoneracionesCliente = [];
 
@@ -636,6 +639,8 @@ function Generar() {
             TotalDescuento: parseFloat(ReplaceLetra($("#descG").text())),
             TotalCompra: parseFloat(ReplaceLetra($("#totG").text())),
             PorDescto: parseFloat(ReplaceLetra($("#descuento").val())),
+            CodSuc: "",
+            Moneda: $("#selectMoneda").val(),
             Detalle: ProdCadena
         }
 

@@ -126,18 +126,18 @@
                                 <br />
                                 <div class="text-left">
                                     <div class="row">
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
 
                                         </div>
                                       
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
 
                                         </div>
                                          
 
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <h5> <b>Estado:</b>@if(Model.Oferta.Status == "0")
                                             {
                                                 <span class="badge badge-pill badge-success">Abierto</span>
@@ -149,7 +149,10 @@
 
                                         </div>
 
-                                          
+                                        <div class="col-3">
+                                            <h5> <b>Moneda</b> @Model.Oferta.Moneda</h5>
+
+                                        </div>
                                           
 
 
@@ -280,17 +283,20 @@
                                 <br />
                                 <div class="text-left">
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-4">
                                             <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
 
                                         </div>
                                       
-                                        <div class="col-6">
+                                        <div class="col-4">
                                             <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
 
                                         </div>
 
-                                          
+                                        <div class="col-4">
+                                            <h5> <b>Moneda</b> @Model.Oferta.Moneda</h5>
+
+                                        </div>
                                           
 
 
@@ -326,6 +332,8 @@
                                         <th class="text-center">% Descuento</th>
                                         <th class="text-center">Descuento</th>
                                         <th class="text-center">Impuesto</th>
+                                        <th class="text-center">% Exoneración</th>
+
                                         <th class="text-center">Total</th>
 
                                     </tr>
@@ -334,22 +342,24 @@
 
                                     @foreach (var item in Model.Oferta.Detalle)
                                     {
-                                        <tr>
-                                           <td>@item.NumLinea</td>
-                                           
-                                          
-                                            <td>  @( Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - "+ Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Nombre)   </td>
-                                    
-                                            <td class="text-right">@(Math.Round(item.Cantidad))</td>
-                                           
-                                            
-                                            <td class="text-center">@Math.Round(item.PrecioUnitario,2).ToString("C",formato)</td>
-                                            <td class="text-center">@Math.Round(@item.PorDescto) %</td>
-                                            <td class="text-center">@Math.Round(@item.Descuento,2).ToString("C",formato)</td>
-                                            <td class="text-center">@Math.Round(@item.TotalImpuesto,2).ToString("C",formato)</td>
-                                            <td class="text-center">@Math.Round(@item.TotalLinea,2).ToString("C",formato)</td>
+                                    <tr>
+                                        <td>@item.NumLinea</td>
 
-                                        </tr>
+
+                                        <td>  @( Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - "+ Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Nombre)   </td>
+
+                                        <td class="text-right">@(Math.Round(item.Cantidad))</td>
+
+
+                                        <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
+                                        <td class="text-center">@Math.Round(@item.PorDescto) %</td>
+                                        <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>
+                                        <td class="text-center">@Math.Round(@item.TotalImpuesto, 2).ToString("C", formato)</td>
+                                        <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
+
+                                        <td class="text-center">@Math.Round(@item.TotalLinea, 2).ToString("C", formato)</td>
+
+                                    </tr>
                                     }
 
 

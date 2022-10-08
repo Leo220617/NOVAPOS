@@ -25,6 +25,7 @@ namespace NOVAAPP.Pages.Ofertas
         private readonly ICrudApi<ExoneracionesViewModel, int> exo;
         private readonly ICrudApi<GruposClientesViewModel, int> grupo;
 
+        private readonly ICrudApi<TipoCambiosViewModel, int> tipoCambio;
 
 
         [BindProperty]
@@ -53,8 +54,10 @@ namespace NOVAAPP.Pages.Ofertas
 
         [BindProperty]
         public GruposClientesViewModel[] Grupos { get; set; }
+        [BindProperty]
+        public TipoCambiosViewModel[] TP { get; set; }
 
-        public EditarModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo) //CTOR 
+        public EditarModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio) //CTOR 
         {
             this.service = service;
             this.serviceU = serviceU;
@@ -66,6 +69,7 @@ namespace NOVAAPP.Pages.Ofertas
             this.precio = precio;
             this.exo = exo;
             this.grupo = grupo;
+            this.tipoCambio = tipoCambio;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -91,6 +95,8 @@ namespace NOVAAPP.Pages.Ofertas
                 PrecioLista = await precio.ObtenerLista("");
                 Exoneraciones = await exo.ObtenerLista("");
                 Grupos = await grupo.ObtenerLista("");
+                filtro.FechaInicial = DateTime.Now.Date;
+                TP = await tipoCambio.ObtenerLista(filtro);
                 return Page();
             }
             catch (Exception ex)
@@ -146,6 +152,7 @@ namespace NOVAAPP.Pages.Ofertas
 
             try
             {
+                recibidos.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
 
                 recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
                   await service.Editar(recibidos);

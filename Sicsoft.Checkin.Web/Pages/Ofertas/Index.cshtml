@@ -144,28 +144,7 @@
 
 
 
-
-                                @*@ <div class="col-sm-3 pr-1">
-                            <div class="form-group">
-                            <label>Status</label>
-                            <select id="statusBodega" class="form-control" asp-for="filtro.Codigo3">
-                            <option value="-1">Seleccione</option>
-
-                            <option value="1">Pendiente Recibir</option>
-
-                            <option value="2">Recibiendo</option>
-                            <option value="3">Generado</option>
-                            <option value="4">En SAP y Faltante</option>
-                            <option value="5">En SAP Completo</option>
-
-
-
-
-                            </select>
-                            </div>
-
-
-                            </div>*@
+ 
                                 <div class="col-sm-2 pl-1" style="text-align: center; padding-top: 2%;">
                                     <button title="Buscar" type="submit" class="btn btn-rounded btn-outline-primary"> <i class="fa fa-search"></i></button>
                                 </div>
@@ -203,6 +182,8 @@
                                         <th>Fecha Creado</th>
 
                                         <th>Fecha Vencimiento</th>
+                                        <th>Moneda</th>
+
                                         <th>SubTotal</th>
                                         <th>Descuento</th>
                                         <th>Impuesto</th>
@@ -234,6 +215,9 @@
                                         </td>
                                         <td>
                                                 @item.FechaVencimiento.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td>
+                                                @item.Moneda
                                         </td>
                                         <td>
                                                 @Math.Round(@item.Subtotal, 2).ToString("C",formato)
@@ -296,6 +280,8 @@
                                     <th>Fecha Creado</th>
 
                                     <th>Fecha Vencimiento</th>
+                                        <th>Moneda</th>
+
                                     <th>SubTotal</th>
                                     <th>Descuento</th>
                                     <th>Impuesto</th>

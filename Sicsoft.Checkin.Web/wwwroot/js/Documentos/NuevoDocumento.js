@@ -39,6 +39,70 @@ function Recuperar() {
     RellenaExoneraciones();
     maskCedula();
 }
+
+function onChangeMoneda() {
+    try {
+
+        var subtotalG = 0;
+        var impuestoG = 0;
+        var descuentoG = 0;
+        var totalG = 0;
+
+        var Moneda = $("#selectMoneda").val();
+
+        for (var i = 0; i < ProdCadena.length; i++) {
+            var Produc = Productos.find(a => a.id == ProdCadena[i].idProducto);
+
+            if (ProdCadena[i].Moneda != Moneda) {
+                var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+
+                if (Moneda != "CRC") {
+
+                    ProdCadena[i].Moneda = Moneda;
+                    ProdCadena[i].PrecioUnitario = ProdCadena[i].PrecioUnitario / TipodeCambio.TipoCambio;
+                    ProdCadena[i].Descuento = ProdCadena[i].Descuento / TipodeCambio.TipoCambio;
+                    ProdCadena[i].TotalImpuesto = ProdCadena[i].TotalImpuesto / TipodeCambio.TipoCambio;
+                    ProdCadena[i].TotalLinea = ProdCadena[i].TotalLinea / TipodeCambio.TipoCambio;
+
+                   
+
+                    
+
+                } else {
+
+                    ProdCadena[i].Moneda = Moneda;
+                    ProdCadena[i].PrecioUnitario = ProdCadena[i].PrecioUnitario * TipodeCambio.TipoCambio;
+                    ProdCadena[i].Descuento = ProdCadena[i].Descuento * TipodeCambio.TipoCambio;
+                    ProdCadena[i].TotalImpuesto = ProdCadena[i].TotalImpuesto * TipodeCambio.TipoCambio;
+                    ProdCadena[i].TotalLinea = ProdCadena[i].TotalLinea * TipodeCambio.TipoCambio;
+                  
+                }
+                
+
+            }
+
+            subtotalG += (ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario);
+            impuestoG += ProdCadena[i].TotalImpuesto;
+            descuentoG += ProdCadena[i].Descuento;
+            totalG += ProdCadena[i].TotalLinea;
+        }
+        $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
+        $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
+        $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+        $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+
+        RellenaTabla();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+        })
+    }
+}
+
+
 function RellenaClientes() {
     var html = "";
     $("#ClienteSeleccionado").html(html);
@@ -137,11 +201,15 @@ function onChangeProducto() {
         $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
         $("#inputCabys").val(Producto.Cabys);
         $("#impuesto").val(Producto.idImpuesto);
+        $("#MonedaProducto").val(Producto.Moneda);
+
         ExoneracionxCliente();
     } else {
         $("#inputPrecio").val(0);
         $("#inputCabys").val("");
         $("#impuesto").val(0);
+        $("#MonedaProducto").val("");
+
     }
 
 
@@ -468,84 +536,88 @@ function ReplaceLetra(palabra) {
 
 
 function AgregarProductoTabla() {
+    try {
+        var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
+        var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
+        var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
+        var totalG = parseFloat(ReplaceLetra($("#totG").text()));
 
-    var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
-    var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
-    var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
-    var totalG = parseFloat(ReplaceLetra($("#totG").text()));
+        var id = $("#ProductoSeleccionado").val();
+        var PE = ProdClientes.find(a => a.id == id);
 
-    var id = $("#ProductoSeleccionado").val();
-    var PE = ProdClientes.find(a => a.id == id);
+        var Producto =
+        {
+            idEncabezado: 0,
+            Descripcion: PE.Codigo + " - " + PE.Nombre,
+            Moneda: PE.Moneda,
+            idProducto: PE.id,
+            NumLinea: 0,
+            Cantidad: parseFloat($("#cantidad").val()),
+            TotalImpuesto: 0,
+            PrecioUnitario: parseFloat($("#inputPrecio").val()),
+            PorDescto: parseFloat($("#descuento").val()),
+            Descuento: 0,
+            TotalLinea: 0,
+            Cabys: $("#inputCabys").val(),
+            idExoneracion: $("#exoneracion").val(),
+            PorExoneracion: 0
+        };
 
-    var Producto =
-    {
-        idEncabezado: 0,
-        Descripcion: PE.Codigo + " - " + PE.Nombre,
-        idProducto: PE.id,
-        NumLinea: 0,
-        Cantidad: parseFloat($("#cantidad").val()),
-        TotalImpuesto: 0,
-        PrecioUnitario: parseFloat($("#inputPrecio").val()),
-        PorDescto: parseFloat($("#descuento").val()),
-        Descuento: 0,
-        TotalLinea: 0,
-        Cabys: $("#inputCabys").val(),
-        idExoneracion: $("#exoneracion").val(),
-        PorExoneracion: 0
-    };
-
-    if (Producto.Cabys.length >= 13) {
+        if (Producto.Cabys.length >= 13) {
 
 
-        var ImpuestoTarifa = $("#impuesto").val();
-        var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
+            var ImpuestoTarifa = $("#impuesto").val();
+            var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
 
-        var calculoIMP = IMP.Tarifa;
+            var calculoIMP = IMP.Tarifa;
 
-        Producto.Descuento = (Producto.Cantidad * Producto.PrecioUnitario) * (Producto.PorDescto / 100);
-        Producto.TotalImpuesto = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * (calculoIMP / 100);
-        //EX => Exoneracion
-        var EX = Exoneraciones.find(a => a.id == Producto.idExoneracion);
-        if (EX != undefined) {
-            var ValorExonerado = (EX.PorExon / 100);
-            var TarifaExonerado = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * ValorExonerado;
-            Producto.TotalImpuesto -= TarifaExonerado;
-            Producto.PorExoneracion = EX.PorExon;
+            Producto.Descuento = (Producto.Cantidad * Producto.PrecioUnitario) * (Producto.PorDescto / 100);
+            Producto.TotalImpuesto = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * (calculoIMP / 100);
+            //EX => Exoneracion
+            var EX = Exoneraciones.find(a => a.id == Producto.idExoneracion);
+            if (EX != undefined) {
+                var ValorExonerado = (EX.PorExon / 100);
+                var TarifaExonerado = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * ValorExonerado;
+                Producto.TotalImpuesto -= TarifaExonerado;
+                Producto.PorExoneracion = EX.PorExon;
+            }
+            //Termina Exoneracion
+
+
+            Producto.TotalLinea = (Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento + Producto.TotalImpuesto;
+
+            subtotalG += (Producto.Cantidad * Producto.PrecioUnitario);
+            impuestoG += Producto.TotalImpuesto;
+            descuentoG += Producto.Descuento;
+            totalG += Producto.TotalLinea;
+
+            $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
+            $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
+            $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+            $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+
+            ProdCadena.push(Producto);
+
+            RellenaTabla();
+            onChangeMoneda();
+
+            $("#ProductoSeleccionado").val("0").trigger('change.select2');
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Producto sin Cabys valido'
+
+            })
         }
-        //Termina Exoneracion
-
-
-        Producto.TotalLinea = (Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento + Producto.TotalImpuesto;
-
-        subtotalG += (Producto.Cantidad * Producto.PrecioUnitario);
-        impuestoG += Producto.TotalImpuesto;
-        descuentoG += Producto.Descuento;
-        totalG += Producto.TotalLinea;
-
-        $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
-        $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
-        $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
-        $("#totG").text(formatoDecimal(totalG.toFixed(2)));
-
-        ProdCadena.push(Producto);
-
-        RellenaTabla();
-
-        $("#ProductoSeleccionado").val("0").trigger('change.select2');
-    } else {
+    } catch (e) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Producto sin Cabys valido'
+            text: 'Error en: ' + e
 
         })
     }
-
-
-
-
-
-
 
 }
 

@@ -108,7 +108,7 @@
                             <div class="col-3">
                                 <div class="form-group">
                                     <label>Moneda</label>
-                                    <select class="form-control" id="selectMoneda">
+                                    <select class="form-control" id="selectMoneda" onchange="javascript: onChangeMoneda()">
                                         <option value="CRC" selected>CRC</option>
                                         <option value="USD">USD</option>
 
@@ -183,7 +183,7 @@
                                         <br />
                                         <div class="row">
 
-                                            <div class="col-4">
+                                            <div class="col-3">
                                                 <div class="form-group">
                                                     <label>Cantidad</label>
                                                     <input type="number" class="form-control" id="cantidad" placeholder="Cantidad" value="1">
@@ -194,7 +194,7 @@
 
                                             </div>
 
-                                            <div class="col-4">
+                                            <div class="col-3">
                                                 <div class="form-group">
                                                     <label>Impuesto</label>
                                                     <br />
@@ -211,7 +211,7 @@
 
 
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <div class="form-group">
                                                 <label>% Descuento</label>
                                                 <input type="number" class="form-control" id="descuento" placeholder="Descuento" value="0">
@@ -221,6 +221,16 @@
 
 
                                         </div>
+                                         <div class="col-3">
+                                                <div class="form-group">
+                                                    <label>Moneda</label>
+                                                    <input type="text" class="form-control" id="MonedaProducto" readonly placeholder="Moneda"  >
+
+
+                                                </div>
+
+
+                                            </div>
                                     </div>
 
                                     <br />

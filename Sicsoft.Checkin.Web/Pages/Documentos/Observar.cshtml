@@ -225,6 +225,20 @@
                             </table>
                         </div>
                         <!-- /.col -->
+                           <div class="col-12  text-right">
+
+
+                                <div>
+                                    <p>Sub Total  : <span> @Math.Round(Model.Documento.Subtotal, 2).ToString("C",formato)</span> </p>
+                                    <p>Descuento  : <span> @Math.Round(Model.Documento.TotalDescuento, 2).ToString("C",formato)</span></p>
+                                    <p>Impuesto :  <span>  @Math.Round(Model.Documento.TotalImpuestos, 2).ToString("C",formato)</span></p>
+
+                                </div>
+                                <div class="total-payment">
+                                    <h3><b>Total :</b>  <span>  @Math.Round(Model.Documento.TotalCompra, 2).ToString("C",formato)</span></h3>
+                                </div>
+
+                            </div>
                     </div>
                     <!-- /.row -->
                     <!-- /.row -->
@@ -367,8 +381,23 @@
 
                                 </tbody>
                             </table>
+                             
                         </div>
                         <!-- /.col -->
+                         <div class="col-12  text-right">
+
+
+                                <div>
+                                    <p>Sub Total  : <span> @Math.Round(Model.Documento.Subtotal, 2).ToString("C",formato)</span> </p>
+                                    <p>Descuento  : <span> @Math.Round(Model.Documento.TotalDescuento, 2).ToString("C",formato)</span></p>
+                                    <p>Impuesto :  <span>  @Math.Round(Model.Documento.TotalImpuestos, 2).ToString("C",formato)</span></p>
+
+                                </div>
+                                <div class="total-payment">
+                                    <h3><b>Total :</b>  <span>  @Math.Round(Model.Documento.TotalCompra, 2).ToString("C",formato)</span></h3>
+                                </div>
+
+                            </div>
                     </div>
                     <!-- /.row -->
                     <!-- /.row -->

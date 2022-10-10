@@ -1,0 +1,13 @@
+﻿namespace NOVAAPP.Models
+{
+    public class MetodosPagosViewModel
+    {
+        public int id { get; set; }
+        public int idEncabezado { get; set; }
+        public decimal Monto { get; set; }
+        public string BIN { get; set; }
+        public string NumReferencia { get; set; }
+        public string NumCheque { get; set; }
+        public string Metodo { get; set; }
+    }
+}

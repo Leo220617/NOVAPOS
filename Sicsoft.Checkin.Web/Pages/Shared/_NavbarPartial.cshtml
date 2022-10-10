@@ -39,6 +39,21 @@
 
             }
 
+               @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "31").FirstOrDefault()))
+                {
+                    <li class="">
+
+                        <a asp-page="/Documentos/Index">
+                            <i class="mdi mdi-home-outline"></i> <span>Documentos</span>
+
+                        </a>
+
+                    </li>
+
+                }
+
+            }
+
          
 
 

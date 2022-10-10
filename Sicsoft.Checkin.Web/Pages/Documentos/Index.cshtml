@@ -1,0 +1,325 @@
+﻿@page
+@model NOVAAPP.Pages.Documentos.IndexModel
+@{
+    ViewData["Title"] = "Documentos";
+    NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
+    formato.CurrencySymbol = "";
+    formato.CurrencyGroupSeparator = ",";
+    formato.NumberDecimalSeparator = ".";
+}
+@using System.Globalization;
+@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@inject IHttpContextAccessor httpContextAccessor
+
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
+@section scripts{
+
+
+    <script>
+        $(document).ready(function() {
+
+
+
+
+        });
+
+
+    </script>
+}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Documentos
+        </h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+            <li class="breadcrumb-item active">Listado Documentos</li>
+        </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-sm-8"> <h4 class="box-title">Documentos</h4></div>
+                            <div class="col-sm-4"> <a asp-page="Nuevo" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Documento</a></div>
+
+                        </div>
+
+
+                    </div>
+                    <div class="box-body">
+                        <form method="get">
+                            <div class="row">
+                                <div class="col-sm-2 pr-1">
+                                    <div class="form-group">
+                                        <label>Fecha Inicial</label>
+                                        <input class="form-control " id="FecInicial" type="date" asp-for="filtro.FechaInicial">
+                                    </div>
+
+
+                                </div>
+
+                                <div class="col-sm-2 pl-1">
+                                    <div class="form-group">
+                                        <label>Fecha Final</label>
+                                        <input class="form-control" id="FecFinal" type="date" asp-for="filtro.FechaFinal">
+                                    </div>
+                                </div>
+
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label for="cyber">Tipo de Documento:</label>
+                                        <select class="form-control" id="selectTD" asp-for="filtro.CardCode" required>
+                                            <option value="01">Factura Electrónica</option>
+                                            <option value="04">Tiquete Electrónico</option>
+
+
+
+
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                   <div class="col-2">
+                                    <div class="form-group">
+                                        <label for="cyber">Cliente:</label>
+                                        <select class="form-control select2" id="ClienteF" asp-for="filtro.Codigo1" required>
+                                               <option value="0"> Seleccione</option>
+
+                                                    @foreach(var item in Model.Clientes)
+                                                    {
+                                                        <option value="@item.id"> @item.Codigo - @item.Nombre</option>
+                                                    }
+
+
+                                                </select>
+
+
+
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                    <div class="form-group">
+                                        <label for="cyber">Usuario:</label>
+                                        <select class="form-control select2" id="UsuarioF" asp-for="filtro.Codigo2" required>
+                                               <option value="0"> Seleccione</option>
+
+                                                    @foreach(var item in Model.Users)
+                                                    {
+                                                        <option value="@item.id">@item.Nombre</option>
+                                                    }
+
+
+                                                </select>
+
+
+
+
+
+                                      
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
+                                @*@ <div class="col-sm-3 pr-1">
+                            <div class="form-group">
+                            <label>Status</label>
+                            <select id="statusBodega" class="form-control" asp-for="filtro.Codigo3">
+                            <option value="-1">Seleccione</option>
+
+                            <option value="1">Pendiente Recibir</option>
+
+                            <option value="2">Recibiendo</option>
+                            <option value="3">Generado</option>
+                            <option value="4">En SAP y Faltante</option>
+                            <option value="5">En SAP Completo</option>
+
+
+
+
+                            </select>
+                            </div>
+
+
+                            </div>*@
+                                <div class="col-sm-2 pl-1" style="text-align: center; padding-top: 2%;">
+                                    <button title="Buscar" type="submit" class="btn btn-rounded btn-outline-primary"> <i class="fa fa-search"></i></button>
+                                </div>
+
+
+
+
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-sm-8"> <h4 class="box-title">Documentos</h4></div>
+                            <div class="col-sm-4">  </div>
+
+                        </div>
+
+
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+
+                                        <th>ID</th>
+
+                                        <th>Cliente</th>
+                                        <th>Fecha Creado</th>
+
+                                        <th>Tipo Doc</th>
+                                        <th>SubTotal</th>
+                                        <th>Descuento</th>
+                                        <th>Impuesto</th>
+                                        <th>Total</th>
+
+
+                                        <th>Generado Por</th>
+                                        
+
+                                        <th>Acción</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Listas)
+                                {
+                                    <tr>
+
+
+                                        <td>
+                                            @item.id
+                                        </td>
+
+                                        <td>
+                                            @( Model.Clientes.Where(a => a.id == item.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" :  Model.Clientes.Where(a => a.id == item.idCliente).FirstOrDefault().Codigo + " - " +  Model.Clientes.Where(a => a.id == item.idCliente).FirstOrDefault().Nombre)
+
+                                        <td>
+                                                @item.Fecha.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td>
+                                              @switch (item.TipoDocumento)
+                                            {
+                                                case "01":
+                                                    {
+                                                        <p>Factura Electrónica</p>
+                                                        break;
+                                                    }
+                                                case "04":
+                                                    {
+                                                        <p>Tiquete Electrónico</p>
+                                                        break;
+                                                    }
+                                                    }
+                                        </td>
+                                        <td>
+                                                @Math.Round(@item.Subtotal, 2).ToString("C",formato)
+                                        </td>
+                                        <td>
+                                                @Math.Round(@item.TotalDescuento, 2).ToString("C",formato)
+                                        </td>
+
+                                        <td>
+                                                @Math.Round(@item.TotalImpuestos, 2).ToString("C",formato)
+                                        </td>
+                                        <td>
+                                                @Math.Round(@item.TotalCompra, 2).ToString("C",formato)
+                                        </td>
+
+
+
+
+                                        <td>
+                                                @(Model.Users.Where(a => a.id == item.idUsuarioCreador).FirstOrDefault() == null ? "": Model.Users.Where(a => a.id == item.idUsuarioCreador).FirstOrDefault().Nombre )
+
+                                        </td>
+                                      
+
+
+
+                                        <td align="center" style="padding-top:15px;">
+                                                @if (item.Status == "0")
+                                                {
+                                                <a asp-page="./Editar" asp-route-id="@item.id" class="fa fa-edit icono"> </a>
+
+                                                }
+                                            &nbsp;
+                                            <a asp-page="./Observar" asp-route-id="@item.id" class="fa fa-info-circle icono"> </a> &nbsp;
+                                        </td>
+
+
+                                    </tr>
+
+                                }
+
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+
+                                    <th>ID</th>
+
+                                    <th>Cliente</th>
+                                    <th>Fecha Creado</th>
+
+                                    <th>Tipo Doc</th>
+                                    <th>SubTotal</th>
+                                    <th>Descuento</th>
+                                    <th>Impuesto</th>
+                                    <th>Total</th>
+
+
+                                    <th>Generado Por</th>
+                                    <th>Estado</th>
+
+                                    <th>Acción</th>
+
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->

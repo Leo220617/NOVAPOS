@@ -15,7 +15,6 @@ namespace NOVAAPP.Models
         public decimal TotalDescuento { get; set; }
         public decimal TotalCompra { get; set; }
         public decimal PorDescto { get; set; }
-        public DetOfertaViewModel[] Detalle { get; set; }
 
         public string Status { get; set; }
 
@@ -23,5 +22,9 @@ namespace NOVAAPP.Models
         public string Moneda { get; set; }
 
         public string TipoDocumento { get; set; }
+        public MetodosPagosViewModel[] MetodosPagos { get; set; }
+
+        public DetOfertaViewModel[] Detalle { get; set; }
+
     }
 }

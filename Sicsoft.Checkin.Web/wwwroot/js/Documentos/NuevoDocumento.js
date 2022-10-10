@@ -838,3 +838,80 @@ function ImprimirPantalla() {
         })
     }
 }
+
+
+//////Metodos pago
+function AbrirPago() {
+    try {
+        var Total = parseFloat(ReplaceLetra($("#totG").text()));
+        $("#totPago").text(Total);
+        $("#fatPago").text(Total);
+        onChangeMetodo();
+
+
+        $("#modalPagos").modal("show");
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar abrir pagos ' + e
+
+        })
+    }
+}
+function onChangeMetodo() {
+    try {
+        var Metodo = $("#MetodoSeleccionado").val();
+        var Total = parseFloat(ReplaceLetra($("#totG").text())) - parseFloat(ReplaceLetra($("#pagPago").text()));
+        $("#MontoPago").val(Total)
+        switch (Metodo) {
+            case "Efectivo":
+                {
+                    $(".TARJETADIV").hide();
+                    $(".OTRODIV").hide();
+                    $(".CHEQUEDIV").hide();
+
+                    break;
+                }
+            case "Tarjeta":
+                {
+                    $(".OTRODIV").hide();
+
+                    $(".TARJETADIV").show();
+                    $(".CHEQUEDIV").hide();
+
+                    break;
+                }
+            case "Cheque":
+                {
+                    $(".OTRODIV").hide();
+
+                    $(".TARJETADIV").hide();
+                    $(".CHEQUEDIV").show();
+                    break;
+                }
+            case "Otros":
+                {
+                    $(".TARJETADIV").hide();
+                    $(".CHEQUEDIV").hide();
+                    $(".OTRODIV").show();
+
+                    break;
+                }
+            default:
+                {
+                    $(".TARJETADIV").hide();
+                    $(".OTRODIV").hide();
+                    $(".CHEQUEDIV").hide();
+                    break;
+                }
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+}

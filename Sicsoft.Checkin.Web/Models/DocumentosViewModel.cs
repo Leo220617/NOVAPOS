@@ -7,6 +7,8 @@ namespace NOVAAPP.Models
         public int id { get; set; }
         public int idCliente { get; set; }
         public int idUsuarioCreador { get; set; }
+         
+
         public DateTime Fecha { get; set; }
         public DateTime FechaVencimiento { get; set; }
         public string Comentarios { get; set; }
@@ -25,7 +27,7 @@ namespace NOVAAPP.Models
         public int idCaja { get; set; }
         public MetodosPagosViewModel[] MetodosPagos { get; set; }
 
-        public DetOfertaViewModel[] Detalle { get; set; }
+        public DetDocumentoViewModel[] Detalle { get; set; }
 
     }
 }

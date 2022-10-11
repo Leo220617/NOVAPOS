@@ -262,7 +262,13 @@
                                                 }
                                             &nbsp;
                                             <a asp-page="./Observar" asp-route-id="@item.id" class="fa fa-info-circle icono"> </a> &nbsp;
-                                        </td>
+                                            &nbsp;
+                                            @if(item.Status== "0")
+                                                {
+                                                <a asp-page="/Documentos/Nuevo" asp-route-id="@item.id" title="Generar Venta" class="fa fa-exchange icono" style="color: #FFB700;"> </a>
+                                                    
+                                                }
+                                            </td>
 
 
                                     </tr>

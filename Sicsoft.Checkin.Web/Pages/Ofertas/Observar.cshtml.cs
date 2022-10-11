@@ -52,7 +52,10 @@ namespace NOVAAPP.Pages.Ofertas
                     return RedirectToPage("/NoPermiso");
                 }
                 Oferta = await service.ObtenerPorId(id);
-                Clientes = await serviceE.ObtenerLista("");
+                ParametrosFiltros filtro = new ParametrosFiltros();
+                filtro.Externo = true;
+                filtro.Activo = true;
+                Clientes = await serviceE.ObtenerLista(filtro);
                 Productos = await serviceP.ObtenerLista("");
                 Exoneraciones = await exoneracion.ObtenerLista("");
 

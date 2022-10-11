@@ -91,9 +91,38 @@ namespace NOVAAPP.Pages.Documentos
                 if(id != 0)
                 {
                     var Oferta = await serviceO.ObtenerPorId(id);
+                    Documento = new DocumentosViewModel();
                     Documento.idCliente = Oferta.idCliente;
                     Documento.idUsuarioCreador = Oferta.idUsuarioCreador;
-                    
+                    Documento.Comentarios = Oferta.Comentarios;
+                    Documento.Moneda = Oferta.Moneda;
+                    Documento.Subtotal = Oferta.Subtotal;
+                    Documento.TotalImpuestos = Oferta.TotalImpuestos;
+                    Documento.TotalDescuento = Oferta.TotalDescuento;
+                    Documento.TotalCompra = Oferta.TotalCompra;
+                    Documento.PorDescto = Oferta.PorDescto;
+                    var Tamaño = Oferta.Detalle.Length;
+                    Documento.Detalle = new DetDocumentoViewModel[Tamaño];
+
+                    var i = 0;
+                    foreach (var item in Oferta.Detalle)
+                    {
+                        Documento.Detalle[i] = new DetDocumentoViewModel();
+                        DetDocumentoViewModel det = new DetDocumentoViewModel();
+                        det.idProducto = item.idProducto;
+                        det.NumLinea = item.NumLinea;
+                        det.Cantidad = item.Cantidad;
+                        det.TotalImpuesto = item.TotalImpuesto;
+                        det.PrecioUnitario = item.PrecioUnitario;
+                        det.PorDescto = item.PorDescto;
+                        det.Descuento = item.Descuento;
+                        det.TotalLinea = item.TotalLinea;
+                        det.Cabys = item.Cabys;
+                        det.idExoneracion = item.idExoneracion;
+                        Documento.Detalle[i] = det;
+                        i++;
+                    }
+
                 }    
                     
 

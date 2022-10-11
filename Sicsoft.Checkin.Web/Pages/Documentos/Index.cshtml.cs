@@ -59,7 +59,7 @@ namespace NOVAAPP.Pages.Documentos
 
                     filtro.FechaInicial = DateTime.Now;
 
-                    filtro.FechaInicial = new DateTime(filtro.FechaInicial.Year, filtro.FechaInicial.Month, 1);
+                    //filtro.FechaInicial = new DateTime(filtro.FechaInicial.Year, filtro.FechaInicial.Month, 1);
 
 
                     DateTime primerDia = new DateTime(filtro.FechaInicial.Year, filtro.FechaInicial.Month, 1);
@@ -67,12 +67,13 @@ namespace NOVAAPP.Pages.Documentos
 
                     DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
 
-                    filtro.FechaFinal = ultimoDia;
+                    filtro.FechaFinal = DateTime.Now; //ultimoDia;
 
                     filtro.Codigo3 = 1;
                     filtro.ItemCode = "0";
 
                 }
+                filtro.Codigo3 =  Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault().ToString());
                 Listas = await service.ObtenerLista(filtro);
                 var Roles = await roles.ObtenerLista("");
                 var RolCajero = Roles.Where(a => a.NombreRol.ToLower().Contains("cajero".ToLower())).FirstOrDefault();

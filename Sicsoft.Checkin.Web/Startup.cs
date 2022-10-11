@@ -232,6 +232,10 @@ namespace Sicsoft.Checkin.Web
 .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Documentos"))
 .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
+            services.AddRefitClient<ICrudApi<CierreCajasViewModel, int>>()
+.ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/CierreCajas"))
+.AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+
             return services;
         }
     }

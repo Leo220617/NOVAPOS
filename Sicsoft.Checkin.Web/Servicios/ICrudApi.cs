@@ -46,6 +46,9 @@ namespace Sicsoft.Checkin.Web.Servicios
         [Get("/Consultar")]
         Task<TEntity> ObtenerPorId(int id);
 
+        [Get("/Consultar")]
+        Task<TEntity> ObtenerCierre(int id, DateTime Fecha);
+
         [Put("/Actualizar")]
         Task Editar( [Body]TEntity payload);
  

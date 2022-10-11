@@ -374,7 +374,7 @@
                         <div class="row no-print">
                             <div class="col-12">
                                 @*<button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>*@
-                                <button type="button" class="btn btn-success pull-right" onclick="    javascript: Generar()">
+                                <button type="button" class="btn btn-success pull-right" onclick="    javascript: AbrirPago()">
                                     <i class="fa fa-credit-card"></i> Generar
                                 </button>
 
@@ -623,6 +623,160 @@
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div class="modal modal-fill fade" data-backdrop="false" id="modalPagos" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 80%; max-width: 200%; padding-top: 5%;">
+            <div class="modal-header">
+                <h5 class="modal-title">Métodos de Pago</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <select id="MetodoSeleccionado" class="form-control" onchange="javascript: onChangeMetodo()">
+                            <option value="0">Seleccione</option>
+
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Tarjeta">Tarjeta</option>
+                            <option value="Cheque">Cheque</option>
+                            <option value="Otros">Otros</option>
+
+
+
+                        </select>
+                    </div>
+
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Monto</label>
+                            <input type="number" class="form-control" id="MontoPago" placeholder="Monto Pagado" value="1">
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="col-4 TARJETADIV">
+                        <div class="form-group">
+                            <label>BIN (últimos 6 números de la tarjeta)</label>
+                            <input type="number" class="form-control" id="BINPago" placeholder="BIN">
+
+
+                        </div>
+
+
+                    </div>
+                    <div class="col-4 TARJETADIV">
+                        <div class="form-group" >
+                            <label>Referencia Pago </label>
+                            <input type="text" maxlength="10" class="form-control" id="ReferenciaPago" placeholder="Referencia bancaria">
+
+
+                        </div>
+
+
+                    </div>
+                    <div class="col-4 CHEQUEDIV">
+                        <div class="form-group" >
+                            <label>Cheque </label>
+                            <input type="text" maxlength="50" class="form-control" id="ChequePago" placeholder="Cheque">
+
+
+                        </div>
+
+
+                    </div>
+                    <div class="col-4 OTRODIV">
+                        <div class="form-group" >
+                            <label>Nombre </label>
+                            <input type="text" maxlength="50" class="form-control" id="otroPago" placeholder="Nombre del método">
+
+
+                        </div>
+
+
+                    </div>
+                     <div class="col-4 EFECTIVODIV">
+                        <div class="form-group" >
+                            <label>Paga con:  </label>
+                            <input type="number"  class="form-control" id="PagadoCon" placeholder="Monto Efectivo">
+
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-sm-12 pl-1" style="text-align: right;">
+
+                        <a id="agregarPago" onclick="javascript: insertarPago() " class="btn btn-primary" style="color: white !important;">+</a>
+                    </div>
+
+                </div>
+
+                <br />
+                  <!-- Table row -->
+                    <div class="row">
+                        <div class="col-12 table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                   
+
+                                        <th>Método</th>
+                                        <th class="text-right">BIN</th>
+                                        <th class="text-right">Referencia</th>
+                                        <th class="text-right">Cheque</th> 
+                                        <th class="text-right">Total</th>
+                                        <th class="text-right">Eliminar</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyPago">
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                      <div class="row">
+                      <!-- /.col -->
+                        <div class="col-12 text-right">
+
+
+                            <div>
+                                <p>Total  : <span id="totPago">0</span> </p>
+                                <p>Faltante  : <span id="fatPago">0</span></p>
+                                <p>Pagado  : <span id="pagPago">0</span></p>
+                            
+
+                            </div>
+                            <div class="total-payment">
+                                <h3><b>Vuelto :</b>  <span id="vueltoPago">0 </span></h3>
+                            </div>
+
+                        </div>
+                        <!-- /.col -->
+                 </div>
+            </div>
+            <div class="modal-footer">
+                
+                <button type="button" class="btn btn-bold btn-pure btn-primary float-right" onclick="javascript: Generar()">Generar</button>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- /.modal -->
 <script>

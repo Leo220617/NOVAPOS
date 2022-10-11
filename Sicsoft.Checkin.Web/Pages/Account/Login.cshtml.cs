@@ -101,6 +101,8 @@ namespace Sicsoft.Checkin.Web
                 identity.AddClaim(new Claim("Caja", resultado.Caja.ToString()));
                 identity.AddClaim(new Claim("idCaja", resultado.idCaja.ToString()));
                 identity.AddClaim(new Claim("idCierre", resultado.idCierre.ToString()));
+                //identity.AddClaim(new Claim("Imagen", resultado.Imagen.ToString()));
+
 
 
 

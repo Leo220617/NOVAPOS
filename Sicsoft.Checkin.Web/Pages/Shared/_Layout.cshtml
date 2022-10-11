@@ -116,7 +116,9 @@
             <nav class="navbar navbar-static-top">
                 <!-- Sidebar toggle button-->
                 <div>
-
+                    <span><b>Sucursal:</b> @(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault())</span>
+                    &nbsp;
+                    <span><b>Caja:</b> @(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Caja").Select(s1 => s1.Value).FirstOrDefault())</span>
 
                 </div>
 

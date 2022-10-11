@@ -90,7 +90,9 @@ namespace NOVAAPP.Pages.Ofertas
                 filtro.Externo = true;
                 filtro.Activo = true;
                 Clientes = await clientes.ObtenerLista(filtro);
-                Productos = await productos.ObtenerLista("");
+
+                filtro.CardCode = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                Productos = await productos.ObtenerLista(filtro);
                 Cantones = await serviceC.ObtenerLista("");
                 Distritos = await serviceD.ObtenerLista("");
                 Barrios = await serviceB.ObtenerLista("");

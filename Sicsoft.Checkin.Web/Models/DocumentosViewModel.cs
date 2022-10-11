@@ -22,6 +22,7 @@ namespace NOVAAPP.Models
         public string Moneda { get; set; }
 
         public string TipoDocumento { get; set; }
+        public int idCaja { get; set; }
         public MetodosPagosViewModel[] MetodosPagos { get; set; }
 
         public DetOfertaViewModel[] Detalle { get; set; }

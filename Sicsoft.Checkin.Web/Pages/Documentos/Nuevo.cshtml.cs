@@ -90,7 +90,8 @@ namespace NOVAAPP.Pages.Documentos
                 filtro.Externo = true;
                 filtro.Activo = true;
                 Clientes = await clientes.ObtenerLista(filtro);
-                Productos = await productos.ObtenerLista("");
+                filtro.CardCode = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                Productos = await productos.ObtenerLista(filtro);
                 Cantones = await serviceC.ObtenerLista("");
                 Distritos = await serviceD.ObtenerLista("");
                 Barrios = await serviceB.ObtenerLista("");
@@ -155,6 +156,8 @@ namespace NOVAAPP.Pages.Documentos
 
             try
             {
+                recibidos.idCaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault().ToString());
+
                 recibidos.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
                 recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
                 var resp = await service.Agregar(recibidos);

@@ -23,6 +23,7 @@ var ProdCadena = [];
 var Exoneraciones = [];
 var Documento = [];
 var TipoCambio = [];
+var MetodosPagos = [];
 
 function Recuperar() {
     Cantones = JSON.parse($("#Cantones").val());
@@ -80,6 +81,96 @@ function RecuperarInformacion() {
             };
             ProdCadena.push(Producto);
         }
+        for (var i = 0; i < Documento.MetodosPagos.length; i++) {
+            var Metodo = Documento.MetodosPagos[i];
+            switch (Metodo.Metodo) {
+                case "Efectivo":
+                    {
+
+
+                        var Detalle = {
+                            id: 0,
+                            idEncabezado: 0,
+                            Monto: parseFloat(Metodo.Monto),
+                            BIN: "",
+                            NumReferencia: "",
+                            NumCheque: "",
+                            Metodo: "Efectivo",
+                            PagadoCon: parseFloat(0)
+                        };
+                        MetodosPagos.push(Detalle);
+
+                        break;
+                    }
+                case "Tarjeta":
+                    {
+                        var Detalle = {
+                            id: 0,
+                            idEncabezado: 0,
+                            Monto: parseFloat(Metodo.Monto),
+                            BIN: Metodo.BIN,
+                            NumReferencia: Metodo.NumReferencia,
+                            NumCheque: "",
+                            Metodo: "Tarjeta",
+                            PagadoCon: 0
+                        };
+                        MetodosPagos.push(Detalle);
+
+                        break;
+                    }
+                case "Cheque":
+                    {
+                        var Detalle = {
+                            id: 0,
+                            idEncabezado: 0,
+                            Monto: parseFloat(Metodo.Monto),
+                            BIN: "",
+                            NumReferencia: "",
+                            NumCheque: Metodo.NumCheque,
+                            Metodo: "Cheque",
+                            PagadoCon: 0
+                        };
+                        MetodosPagos.push(Detalle);
+                        break;
+                    }
+                case "Otros":
+                    {
+                        var Detalle = {
+                            id: 0,
+                            idEncabezado: 0,
+                            Monto: parseFloat(Metodo.Monto),
+                            BIN: "",
+                            NumReferencia: "",
+                            NumCheque: "",
+                            Metodo: Metodo.Metodo,
+                            PagadoCon: 0
+                        };
+                        MetodosPagos.push(Detalle);
+
+                        break;
+                    }
+                default:
+                    {
+                        var Detalle = {
+                            id: 0,
+                            idEncabezado: 0,
+                            Monto: parseFloat(Metodo.Monto),
+                            BIN: "",
+                            NumReferencia: "",
+                            NumCheque: "",
+                            Metodo: Metodo.Metodo,
+                            PagadoCon: 0
+                        };
+                        MetodosPagos.push(Detalle);
+                        break;
+                    }
+            }
+
+            
+
+        }
+        RellenaTablaPagos();
+        calcularPago();
         RellenaTabla();
         onChangeCliente();
 
@@ -724,6 +815,7 @@ function Generar() {
             CodSuc: "",
             Moneda: $("#selectMoneda").val(),
             TipoDocumento: $("#selectTD").val(),
+            MetodosPagos: MetodosPagos,
             Detalle: ProdCadena
         }
 
@@ -805,7 +897,12 @@ function Generar() {
                 }
             })
         } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Parece que faltan datos por llenar'
 
+            })
         }
 
     } catch (e) {
@@ -831,10 +928,21 @@ function validarDocumento(e) {
     else if (e.Detalle.length == 0 || e.Detalle == null) {
         return false;
     }
-
+    else if (e.MetodosPagos.length == 0 || e.MetodosPagos == null) {
+        return false;
+    } else if (sumArray(e.MetodosPagos) < e.TotalCompra) {
+        return false;
+    }
     else {
         return true;
     }
+}
+function sumArray(array) {
+    var suma = 0;
+    for (var i = 0; i < array.length; i++) {
+        suma += parseFloat(array[i].Monto);
+    }
+    return suma;
 }
 function BuscarCliente() {
     $.ajax({
@@ -894,6 +1002,395 @@ function ImprimirPantalla() {
             icon: 'error',
             title: 'Oops...',
             text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+        })
+    }
+}
+
+//////Metodos pago
+function AbrirPago() {
+    try {
+        var Total = parseFloat(ReplaceLetra($("#totG").text()));
+        $("#totPago").text(formatoDecimal(Total));
+        //$("#fatPago").text(formatoDecimal(Total));
+        onChangeMetodo();
+
+
+        $("#modalPagos").modal("show");
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar abrir pagos ' + e
+
+        })
+    }
+}
+function onChangeMetodo() {
+    try {
+        var Metodo = $("#MetodoSeleccionado").val();
+        var Total = parseFloat(ReplaceLetra($("#totG").text())) - parseFloat(ReplaceLetra($("#pagPago").text()));
+        $("#MontoPago").val(Total)
+        switch (Metodo) {
+            case "Efectivo":
+                {
+                    $(".TARJETADIV").hide();
+                    $(".OTRODIV").hide();
+                    $(".CHEQUEDIV").hide();
+                    $(".EFECTIVODIV").show();
+
+                    break;
+                }
+            case "Tarjeta":
+                {
+                    $(".OTRODIV").hide();
+                    $(".EFECTIVODIV").hide();
+
+                    $(".TARJETADIV").show();
+                    $(".CHEQUEDIV").hide();
+
+                    break;
+                }
+            case "Cheque":
+                {
+                    $(".OTRODIV").hide();
+                    $(".EFECTIVODIV").hide();
+
+                    $(".TARJETADIV").hide();
+                    $(".CHEQUEDIV").show();
+                    break;
+                }
+            case "Otros":
+                {
+                    $(".EFECTIVODIV").hide();
+
+                    $(".TARJETADIV").hide();
+                    $(".CHEQUEDIV").hide();
+                    $(".OTRODIV").show();
+
+                    break;
+                }
+            default:
+                {
+                    $(".EFECTIVODIV").hide();
+
+                    $(".TARJETADIV").hide();
+                    $(".OTRODIV").hide();
+                    $(".CHEQUEDIV").hide();
+                    break;
+                }
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+}
+function insertarPago() {
+    try {
+
+        var Metodo = $("#MetodoSeleccionado").val();
+        if (validarMetodo()) {
+            switch (Metodo) {
+                case "Efectivo":
+                    {
+
+
+                        var Detalle = {
+                            id: 0,
+                            idEncabezado: 0,
+                            Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
+                            BIN: "",
+                            NumReferencia: "",
+                            NumCheque: "",
+                            Metodo: "Efectivo",
+                            PagadoCon: parseFloat(ReplaceLetra($("#PagadoCon").val()))
+                        };
+                        MetodosPagos.push(Detalle);
+
+                        break;
+                    }
+                case "Tarjeta":
+                    {
+                        var Detalle = {
+                            id: 0,
+                            idEncabezado: 0,
+                            Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
+                            BIN: $("#BINPago").val(),
+                            NumReferencia: $("#ReferenciaPago").val(),
+                            NumCheque: "",
+                            Metodo: "Tarjeta",
+                            PagadoCon: 0
+                        };
+                        MetodosPagos.push(Detalle);
+
+                        break;
+                    }
+                case "Cheque":
+                    {
+                        var Detalle = {
+                            id: 0,
+                            idEncabezado: 0,
+                            Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
+                            BIN: "",
+                            NumReferencia: "",
+                            NumCheque: $("#ChequePago").val(),
+                            Metodo: "Cheque",
+                            PagadoCon: 0
+                        };
+                        MetodosPagos.push(Detalle);
+                        break;
+                    }
+                case "Otros":
+                    {
+                        var Detalle = {
+                            id: 0,
+                            idEncabezado: 0,
+                            Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
+                            BIN: "",
+                            NumReferencia: "",
+                            NumCheque: "",
+                            Metodo: "Otros | " + $("#otroPago").val(),
+                            PagadoCon: 0
+                        };
+                        MetodosPagos.push(Detalle);
+
+                        break;
+                    }
+                default:
+                    {
+
+                        break;
+                    }
+            }
+
+
+            $("#MetodoSeleccionado").val("0");
+            calcularPago();
+            onChangeMetodo();
+            RellenaTablaPagos();
+            LimpiarDatosPago();
+        } else {
+
+        }
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+}
+function LimpiarDatosPago() {
+    try {
+        $("#PagadoCon").val(0);
+        $("#otroPago").val("");
+        $("#ChequePago").val("");
+        $("#BINPago").val("");
+        $("#ReferenciaPago").val("");
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+}
+function validarMetodo() {
+    try {
+        var Metodo = $("#MetodoSeleccionado").val();
+        var Total = parseFloat(ReplaceLetra($("#totG").text())) - parseFloat(ReplaceLetra($("#pagPago").text()));
+
+        if (Total <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No se puede ingresar montos mayores a lo pagado'
+
+            })
+            return false;
+        }
+        switch (Metodo) {
+            case "Efectivo":
+                {
+                    if (parseFloat(ReplaceLetra($("#MontoPago").val())) <= 0 || $("#PagadoCon").val() == undefined || $("#PagadoCon").val() == 0 || $("#PagadoCon").val() < parseFloat(ReplaceLetra($("#MontoPago").val()))) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Parece que faltan datos por rellenar '
+
+                        })
+                        return false;
+                    } else {
+                        return true;
+                    }
+
+
+                    break;
+                }
+            case "Tarjeta":
+                {
+                    if (parseFloat(ReplaceLetra($("#MontoPago").val())) <= 0 || $("#BINPago").val() == undefined || $("#BINPago").val() == "") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Parece que faltan datos por rellenar '
+
+                        })
+                        return false;
+                    } else if (parseFloat(ReplaceLetra($("#ReferenciaPago").val())) <= 0 || $("#ReferenciaPago").val() == undefined || $("#ReferenciaPago").val() == "") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Parece que faltan datos por rellenar '
+
+                        })
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+
+                    break;
+                }
+            case "Cheque":
+                {
+                    if (parseFloat(ReplaceLetra($("#MontoPago").val())) <= 0 || $("#ChequePago").val() == undefined || $("#ChequePago").val() == "") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Parece que faltan datos por rellenar '
+
+                        })
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+                    break;
+                }
+            case "Otros":
+                {
+                    if (parseFloat(ReplaceLetra($("#MontoPago").val())) <= 0 || $("#otroPago").val() == undefined || $("#otroPago").val() == "") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Parece que faltan datos por rellenar '
+
+                        })
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+
+                    break;
+                }
+            default:
+                {
+                    return true;
+                    break;
+                }
+        }
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+}
+
+function RellenaTablaPagos() {
+    try {
+        var text = "";
+        $("#tbodyPago").html(text);
+
+        for (var i = 0; i < MetodosPagos.length; i++) {
+            text += "<tr>";
+            text += "<td class='text-center'> " + MetodosPagos[i].Metodo + " </td>";
+            text += "<td class='text-center'> " + MetodosPagos[i].BIN + " </td>";
+            text += "<td class='text-center'> " + MetodosPagos[i].NumReferencia + " </td>";
+            text += "<td class='text-center'> " + MetodosPagos[i].NumCheque + " </td>";
+            text += "<td class='text-rigth'> " + formatoDecimal(MetodosPagos[i].Monto) + " </td>";
+            text += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarPago(" + i + ") '> </a> </td>";
+            text += "</tr>";
+
+        }
+
+        $("#tbodyPago").html(text);
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+}
+
+
+function calcularPago() {
+    try {
+        var Total = parseFloat(ReplaceLetra($("#totG").text()));
+        var Faltante = 0;
+        var Pagado = 0;
+
+        var vuelto = 0;
+        $("#vueltoPago").text(formatoDecimal(vuelto.toFixed(2)));
+
+        for (var i = 0; i < MetodosPagos.length; i++) {
+            Pagado += MetodosPagos[i].Monto;
+            if (MetodosPagos[i].Metodo == "Efectivo") {
+                if (MetodosPagos[i].PagadoCon > 0) {
+                    vuelto += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
+
+                }
+            }
+        }
+
+
+        Faltante = Total - Pagado;
+
+        $("#fatPago").text(formatoDecimal(Faltante));
+        $("#pagPago").text(formatoDecimal(Pagado));
+        $("#vueltoPago").text(formatoDecimal(vuelto));
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+}
+
+function EliminarPago(i) {
+    try {
+
+        MetodosPagos.splice(i, 1);
+        calcularPago();
+        RellenaTablaPagos();
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
 
         })
     }

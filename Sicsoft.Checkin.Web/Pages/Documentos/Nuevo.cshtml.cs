@@ -28,6 +28,7 @@ namespace NOVAAPP.Pages.Documentos
         private readonly ICrudApi<ExoneracionesViewModel, int> exo;
         private readonly ICrudApi<GruposClientesViewModel, int> grupo;
         private readonly ICrudApi<TipoCambiosViewModel, int> tipoCambio;
+        private readonly ICrudApi<OfertasViewModel, int> serviceO; //API
 
 
 
@@ -61,7 +62,7 @@ namespace NOVAAPP.Pages.Documentos
         [BindProperty]
         public TipoCambiosViewModel[] TP { get; set; }
 
-        public NuevoModel(ICrudApi<DocumentosViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio) //CTOR 
+        public NuevoModel(ICrudApi<DocumentosViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<OfertasViewModel, int> serviceO) //CTOR 
         {
             this.service = service;
             this.serviceU = serviceU;
@@ -74,9 +75,10 @@ namespace NOVAAPP.Pages.Documentos
             this.exo = exo;
             this.grupo = grupo;
             this.tipoCambio = tipoCambio;
+            this.serviceO = serviceO;
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             try
             {
@@ -85,6 +87,16 @@ namespace NOVAAPP.Pages.Documentos
                 {
                     return RedirectToPage("/NoPermiso");
                 }
+
+                if(id != 0)
+                {
+                    var Oferta = await serviceO.ObtenerPorId(id);
+                    Documento.idCliente = Oferta.idCliente;
+                    Documento.idUsuarioCreador = Oferta.idUsuarioCreador;
+                    
+                }    
+                    
+
                 Impuestos = await serviceU.ObtenerLista("");
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;

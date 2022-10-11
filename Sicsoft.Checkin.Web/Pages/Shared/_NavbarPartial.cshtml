@@ -39,7 +39,7 @@
 
             }
 
-               @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "31").FirstOrDefault()))
+            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "31").FirstOrDefault()))
                 {
                     <li class="">
 
@@ -53,8 +53,21 @@
                 }
 
             }
+            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "35").FirstOrDefault()))
+                {
+                    <li class="">
 
-         
+                        <a asp-page="/CierreCajas/Editar">
+                            <i class="mdi mdi-file-document"></i> <span>Cierre Caja</span>
+
+                        </a>
+
+                    </li>
+
+                }
+
+            }
+
 
 
 

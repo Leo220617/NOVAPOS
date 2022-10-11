@@ -50,8 +50,8 @@ namespace Sicsoft.Checkin.Web
             {
                 Errores error = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
                 ModelState.AddModelError(string.Empty, error.Message);
-
-                return Page();
+                Sucursales = await sucursales.ObtenerLista("");
+                return new PageResult();
             }
         }
 
@@ -129,13 +129,18 @@ namespace Sicsoft.Checkin.Web
                 {
                     Errores error = JsonConvert.DeserializeObject<Errores>(exception.Content.ToString());
                     ModelState.AddModelError("User name", error.Message);
-                    return Page();
+                    Input.CodSuc = "0";
+
+                    Sucursales = await sucursales.ObtenerLista("");
+                    return new PageResult();
                 }
                 else
                 {
                     Errores error = JsonConvert.DeserializeObject<Errores>(exception.Content.ToString());
                     ModelState.AddModelError("User name", error.Message);
-                    return Page();
+                    Input.CodSuc = "0";
+                    Sucursales = await sucursales.ObtenerLista("");
+                    return new PageResult();
                 }
                
             }

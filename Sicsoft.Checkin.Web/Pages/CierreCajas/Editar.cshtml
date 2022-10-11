@@ -1,4 +1,350 @@
 ﻿@page
-@model NOVAAPP.Pages.CierreCajas.IndexModel
+@model NOVAAPP.Pages.CierreCajas.EditarModel
 @{
+    ViewData["Title"] = "Ofertas";
 }
+@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@using Sicsoft.Checkin.Web.Models;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
+@section styles{
+
+
+}
+@section scripts{
+
+
+    <script>
+        $(document).ready(function () {
+            jQuery(document).ready(function ($) {
+                Totalizado();
+            });
+
+
+
+            $(document).ready(function () {
+
+            });
+
+
+        });
+            function Totalizado() {
+                try {
+                    var TipoCambio = JSON.parse($("#TipoCambio").val());
+                    var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+
+                    var Colones = parseFloat($("#Colones").val());
+                    var Dolares = (parseFloat($("#Dolares").val()) * TipodeCambio.TipoCambio);
+                    var Totalizado = parseFloat((Colones + Dolares).toFixed(2));
+                    $("#TotalizadoMonedas").val(Totalizado);
+
+
+                    var TColones = parseFloat($("#TColones").val());
+                    var TDolares = parseFloat($("#TDolares").val());
+
+                    var FaltanteC = (TColones - Colones).toFixed(2);
+                    var FaltanteD = (TDolares - parseFloat($("#Dolares").val())).toFixed(2);
+
+
+                    $("#FColones").val(FaltanteC);
+                    $("#FDolares").val(FaltanteD);
+
+
+                } catch (e) {
+                    alert(e);
+                }
+            }
+    </script>
+
+
+}
+
+
+@using Newtonsoft.Json;
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Ofertas
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+        <li class="breadcrumb-item active">Generar Oferta</li>
+    </ol>
+</section>
+
+<section class="content ">
+    <div class="row">
+        <div class="col-12">
+
+
+
+
+
+
+            <!-- Content Header (Page header) -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-8">
+                            <h6 class="box-subtitle">Generar Cierre de Caja</h6>
+
+
+                        </div>
+                        <div class="col-4">
+
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <!-- title row -->
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="page-header mt-0">
+                                <h2 class="d-inline"><span class="font-size-24">Cierre Caja</span></h2>
+                                <div class="text-left">
+                                    <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label>Usuario</label>
+                                <input asp-for="Users.Nombre" class="form-control" readonly>
+
+
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label>Caja</label>
+                                <input asp-for="Caja" class="form-control" readonly>
+
+
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+            <div class="box">
+
+                <div class="box-body">
+                    <form method="post" id="formTipos" role="form" novalidate class="needs-validation " enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TC)" />
+
+                        <input hidden asp-for="Cierres.idCaja" />
+                        <input hidden asp-for="Cierres.FechaCaja" />
+                        <input hidden asp-for="Cierres.idUsuario" />
+                        <!-- title row -->
+                        <div class="row">
+                            <div class="col-6">
+
+                                <div class="form-group">
+                                    <label>Apertura Colones</label>
+                                    <input type="number" asp-for="Cierres.TotalAperturaColones" class="form-control">
+
+
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Apertura Dólares</label>
+                                    <input type="number" asp-for="Cierres.TotalAperturaFC" class="form-control">
+
+
+                                </div>
+                            </div>
+
+                            <!-- /.col -->
+                        </div>
+
+                        <!-- title row -->
+                        <div class="row">
+                            <div class="col-3">
+
+                                <div class="form-group">
+                                    <label>Efectivo Colones</label>
+                                    <input readonly asp-for="Cierres.EfectivoColones" class="form-control">
+
+
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label>Efectivo Dólares</label>
+                                    <input readonly asp-for="Cierres.EfectivoFC" class="form-control">
+
+
+                                </div>
+                            </div>
+                            <div class="col-3">
+
+                                <div class="form-group">
+                                    <label>Tarjetas Colones</label>
+                                    <input readonly asp-for="Cierres.TarjetasColones" class="form-control">
+
+
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label>Tarjetas Dólares</label>
+                                    <input readonly asp-for="Cierres.TarjetasFC" class="form-control">
+
+
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+
+
+                        <!-- title row -->
+                        <div class="row">
+                            <div class="col-3">
+
+                                <div class="form-group">
+                                    <label>Cheques Colones</label>
+                                    <input readonly asp-for="Cierres.ChequesColones" class="form-control">
+
+
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label>Cheques Dólares</label>
+                                    <input readonly asp-for="Cierres.ChequesFC" class="form-control">
+
+
+                                </div>
+                            </div>
+                            <div class="col-3">
+
+                                <div class="form-group">
+                                    <label>Otros Colones</label>
+                                    <input readonly asp-for="Cierres.OtrosMediosColones" class="form-control">
+
+
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label>Otros Dólares</label>
+                                    <input readonly asp-for="Cierres.OtrosMediosFC" class="form-control">
+
+
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <!-- title row -->
+                        <div class="row">
+                            <div class="col-6">
+
+                                <div class="form-group">
+                                    <label>Total Colones</label>
+                                    <input readonly asp-for="Cierres.TotalVendidoColones" id="TColones" class="form-control">
+
+
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Total Dólares</label>
+                                    <input readonly asp-for="Cierres.TotalVendidoFC" id="TDolares" class="form-control">
+
+
+                                </div>
+                            </div>
+
+                            <!-- /.col -->
+                            <!-- title row -->
+
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+
+                                <div class="form-group">
+                                    <label>Total Registrado Colones</label>
+                                    <input type="number" asp-for="Cierres.TotalRegistradoColones" id="Colones" class="form-control" onchange="javascript: Totalizado()">
+
+
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>Total Registrado Dólares</label>
+                                    <input type="number" asp-for="Cierres.TotalRegistradoFC" id="Dolares" class="form-control" onchange="javascript: Totalizado()">
+
+
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>Totalizado</label>
+                                    <input readonly asp-for="Cierres.TotalizadoMonedas" id="TotalizadoMonedas" class="form-control">
+
+
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+
+                                <div class="form-group">
+                                    <label>Faltantes Colones</label>
+                                    <input readonly   id="FColones" class="form-control"  >
+
+
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Faltantes Dólares</label>
+                                    <input readonly   id="FDolares" class="form-control"  >
+
+
+                                </div>
+                            </div>
+                            
+                            <!-- /.col -->
+                        </div>
+
+
+                        <div class="text-xs-right">
+                            <button type="submit" class="btn btn-info" title="Guardar Cambios">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+

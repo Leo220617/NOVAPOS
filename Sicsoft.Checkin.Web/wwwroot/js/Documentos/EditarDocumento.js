@@ -326,6 +326,16 @@ function onChangeCliente() {
     $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
 
     ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
+    ProdClientes = ProdClientes.sort(function (a, b) {
+        if (a.Stock < b.Stock) {
+            return 1;
+        }
+        if (a.Stock > b.Stock) {
+            return -1;
+        }
+        // a must be equal to b
+        return 0;
+    });
     RellenaProductos();
 
 }
@@ -349,6 +359,8 @@ function onChangeProducto() {
 
         ExoneracionxCliente();
     } else {
+        $("#cantidad").val(1);
+
         $("#inputPrecio").val(0);
         $("#inputCabys").val("");
         $("#impuesto").val(0);
@@ -706,54 +718,63 @@ function AgregarProductoTabla() {
             idExoneracion: $("#exoneracion").val(),
             PorExoneracion: 0
         };
-
-        if (Producto.Cabys.length >= 13) {
-
-
-            var ImpuestoTarifa = $("#impuesto").val();
-            var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
-
-            var calculoIMP = IMP.Tarifa;
-
-            Producto.Descuento = (Producto.Cantidad * Producto.PrecioUnitario) * (Producto.PorDescto / 100);
-            Producto.TotalImpuesto = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * (calculoIMP / 100);
-            //EX => Exoneracion
-            var EX = Exoneraciones.find(a => a.id == Producto.idExoneracion);
-            if (EX != undefined) {
-                var ValorExonerado = (EX.PorExon / 100);
-                var TarifaExonerado = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * ValorExonerado;
-                Producto.TotalImpuesto -= TarifaExonerado;
-                Producto.PorExoneracion = EX.PorExon;
-            }
-            //Termina Exoneracion
-
-
-            Producto.TotalLinea = (Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento + Producto.TotalImpuesto;
-
-            subtotalG += (Producto.Cantidad * Producto.PrecioUnitario);
-            impuestoG += Producto.TotalImpuesto;
-            descuentoG += Producto.Descuento;
-            totalG += Producto.TotalLinea;
-
-            $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
-            $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
-            $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
-            $("#totG").text(formatoDecimal(totalG.toFixed(2)));
-
-            ProdCadena.push(Producto);
-
-            RellenaTabla();
-            onChangeMoneda();
-
-            $("#ProductoSeleccionado").val("0").trigger('change.select2');
-        } else {
+        if ((PE.Stock - Producto.Cantidad) < 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Producto sin Cabys valido'
+                text: 'Producto sin stock valido'
 
             })
+        } else {
+            if (Producto.Cabys.length >= 13) {
+
+
+                var ImpuestoTarifa = $("#impuesto").val();
+                var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
+
+                var calculoIMP = IMP.Tarifa;
+
+                Producto.Descuento = (Producto.Cantidad * Producto.PrecioUnitario) * (Producto.PorDescto / 100);
+                Producto.TotalImpuesto = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * (calculoIMP / 100);
+                //EX => Exoneracion
+                var EX = Exoneraciones.find(a => a.id == Producto.idExoneracion);
+                if (EX != undefined) {
+                    var ValorExonerado = (EX.PorExon / 100);
+                    var TarifaExonerado = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * ValorExonerado;
+                    Producto.TotalImpuesto -= TarifaExonerado;
+                    Producto.PorExoneracion = EX.PorExon;
+                }
+                //Termina Exoneracion
+
+
+                Producto.TotalLinea = (Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento + Producto.TotalImpuesto;
+
+                subtotalG += (Producto.Cantidad * Producto.PrecioUnitario);
+                impuestoG += Producto.TotalImpuesto;
+                descuentoG += Producto.Descuento;
+                totalG += Producto.TotalLinea;
+
+                $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
+                $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
+                $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+                $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+
+                ProdCadena.push(Producto);
+
+                RellenaTabla();
+                onChangeMoneda();
+
+                $("#ProductoSeleccionado").val("0").trigger('change.select2');
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Producto sin Cabys valido'
+
+                })
+            }
         }
+      
     } catch (e) {
         Swal.fire({
             icon: 'error',

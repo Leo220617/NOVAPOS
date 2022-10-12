@@ -1,39 +1,39 @@
-﻿ 
-    $(document).ready(function() {
-        jQuery(document).ready(function ($) {
-            Recuperar();
-        });
+﻿
+$(document).ready(function () {
+    jQuery(document).ready(function ($) {
+        Recuperar();
+    });
 
 
 
-    $(document).ready(function() {
+    $(document).ready(function () {
 
     });
 
 
-        });
-    var Clientes = []; // variables globales
-    var Productos = [];
-    var ProdClientes = [];
-    var Impuestos = [];
-    var Cantones = [];
-    var Distritos = [];
-    var Barrios = [];
-    var ProdCadena = [];
+});
+var Clientes = []; // variables globales
+var Productos = [];
+var ProdClientes = [];
+var Impuestos = [];
+var Cantones = [];
+var Distritos = [];
+var Barrios = [];
+var ProdCadena = [];
 var Exoneraciones = [];
 var TipoCambio = [];
 
-    function Recuperar() {
-        Cantones = JSON.parse($("#Cantones").val());
+function Recuperar() {
+    Cantones = JSON.parse($("#Cantones").val());
     Distritos = JSON.parse($("#Distritos").val());
     Barrios = JSON.parse($("#Barrios").val());
     Clientes = JSON.parse($("#Clientes").val());
     Productos = JSON.parse($("#Productos").val());
     Impuestos = JSON.parse($("#Impuestos").val());
-        Exoneraciones = JSON.parse($("#Exoneraciones").val());
-        TipoCambio = JSON.parse($("#TipoCambio").val());
+    Exoneraciones = JSON.parse($("#Exoneraciones").val());
+    TipoCambio = JSON.parse($("#TipoCambio").val());
 
-        ExoneracionesCliente = [];
+    ExoneracionesCliente = [];
 
     RellenaClientes();
     RellenaExoneraciones();
@@ -102,34 +102,34 @@ function onChangeMoneda() {
     }
 }
 
-    function RellenaClientes() {
-            var html = "";
+function RellenaClientes() {
+    var html = "";
     $("#ClienteSeleccionado").html(html);
     html += "<option value='0' > Seleccione Cliente </option>";
 
     for (var i = 0; i < Clientes.length; i++) {
         html += "<option value='" + Clientes[i].id + "' > " + Clientes[i].Codigo + " - " + Clientes[i].Nombre + " </option>";
-            }
+    }
 
 
 
     $("#ClienteSeleccionado").html(html);
-        }
-    function RellenaProductos() {
+}
+function RellenaProductos() {
 
-            var html = "";
+    var html = "";
     $("#ProductoSeleccionado").html(html);
 
     html += "<option value='0' > Seleccione Producto </option>";
 
     for (var i = 0; i < ProdClientes.length; i++) {
         html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " </option>";
-            }
+    }
 
 
 
     $("#ProductoSeleccionado").html(html);
-        }
+}
 
 function RellenaExoneraciones() {
 
@@ -158,9 +158,9 @@ function RellenaExoneraciones() {
         $("#exoneracion").html(html);
 
 
-        
 
-       
+
+
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -169,21 +169,31 @@ function RellenaExoneraciones() {
 
         })
     }
-           
-        }
 
-    function onChangeCliente() {
-            var idCliente = $("#ClienteSeleccionado").val();
+}
 
-            var Cliente = Clientes.find(a => a.id == idCliente);
+function onChangeCliente() {
+    var idCliente = $("#ClienteSeleccionado").val();
+
+    var Cliente = Clientes.find(a => a.id == idCliente);
 
     $("#spanDireccion").text(Cliente.Sennas);
     $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
 
-            ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
-        RellenaProductos();
-     
+    ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
+    ProdClientes = ProdClientes.sort(function (a, b) {
+        if (a.Stock < b.Stock) {
+            return 1;
         }
+        if (a.Stock > b.Stock) {
+            return -1;
+        }
+        // a must be equal to b
+        return 0;
+    });
+    RellenaProductos();
+
+}
 
 function ExoneracionxCliente() {
     var idCliente = $("#ClienteSeleccionado").val();
@@ -191,10 +201,10 @@ function ExoneracionxCliente() {
 
     RellenaExoneraciones();
 }
-    function onChangeProducto() {
-            var idProducto = $("#ProductoSeleccionado").val();
+function onChangeProducto() {
+    var idProducto = $("#ProductoSeleccionado").val();
 
-            var Producto = ProdClientes.find(a => a.id == idProducto);
+    var Producto = ProdClientes.find(a => a.id == idProducto);
 
     if (Producto != undefined) {
         $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
@@ -202,50 +212,52 @@ function ExoneracionxCliente() {
         $("#impuesto").val(Producto.idImpuesto);
         $("#MonedaProducto").val(Producto.Moneda);
         ExoneracionxCliente();
-            } else {
+    } else {
+        $("#cantidad").val(1);
+
         $("#inputPrecio").val(0);
         $("#inputCabys").val("");
         $("#impuesto").val(0);
         $("#MonedaProducto").val("");
-            }
+    }
 
 
 
-        }
+}
 
-    function ModificaSelects(i) {
-            var codProvincia = parseInt($("#selectP").val());
+function ModificaSelects(i) {
+    var codProvincia = parseInt($("#selectP").val());
     var codCanton = parseInt($("#selectC").val());
     var codDistrito = parseInt($("#selectD").val());
 
     if (i == 0) {
         RellenaCantones(Cantones.filter(a => a.CodProvincia == codProvincia));
-                RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
-                RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+        RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
+        RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
 
-            }
+    }
 
     if (i == 1) {
         RellenaCantones(Cantones.filter(a => a.CodProvincia == codProvincia));
-                RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
-                RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+        RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
+        RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
 
-            }
+    }
     if (i == 2) {
 
         RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
-                RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+        RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
 
-            }
+    }
 
     if (i == 3) {
         RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
-            }
+    }
 
-        }
+}
 
-    function RellenaCantones(ListCantones) {
-            var sOptions = '';
+function RellenaCantones(ListCantones) {
+    var sOptions = '';
 
     $("#selectC").html('');
 
@@ -253,12 +265,12 @@ function ExoneracionxCliente() {
 
         sOptions += '<option value="' + ListCantones[i].CodCanton + '">' + ListCantones[i].NomCanton + '</option>';
 
-            }
+    }
     $("#selectC").html(sOptions);
-        }
+}
 
-    function RellenaDistritos(ListDistritos) {
-            var sOptions = '';
+function RellenaDistritos(ListDistritos) {
+    var sOptions = '';
 
     $("#selectD").html('');
 
@@ -266,12 +278,12 @@ function ExoneracionxCliente() {
 
         sOptions += '<option value="' + ListDistritos[i].CodDistrito + '">' + ListDistritos[i].NomDistrito + '</option>';
 
-            }
+    }
     $("#selectD").html(sOptions);
-        }
+}
 
-    function RellenaBarrios(ListBarrios) {
-            var sOptions = '';
+function RellenaBarrios(ListBarrios) {
+    var sOptions = '';
 
     $("#selectB").html('');
 
@@ -279,47 +291,47 @@ function ExoneracionxCliente() {
 
         sOptions += '<option value="' + ListBarrios[i].CodBarrio + '">' + ListBarrios[i].NomBarrio + '</option>';
 
-            }
+    }
     $("#selectB").html(sOptions);
-        }
+}
 
-    function AbrirModalAgregarCliente() {
-        $("#ModalAgregarCliente").modal("show");
-        }
+function AbrirModalAgregarCliente() {
+    $("#ModalAgregarCliente").modal("show");
+}
 
-    function validar(cliente) {
-            if (cliente.idListaPrecios == "" || cliente.idListaPrecios == null) {
-                return false;
-            } else if (cliente.Nombre == "" || cliente.Nombre == null) {
-                return false;
-            }
+function validar(cliente) {
+    if (cliente.idListaPrecios == "" || cliente.idListaPrecios == null) {
+        return false;
+    } else if (cliente.Nombre == "" || cliente.Nombre == null) {
+        return false;
+    }
     else if (cliente.Cedula == "" || cliente.Cedula == null) {
-                return false;
+        return false;
 
 
-            }  else if (cliente.Email == "" || cliente.Email == null) {
-                return false;
+    } else if (cliente.Email == "" || cliente.Email == null) {
+        return false;
 
-            } else if (cliente.Telefono == "" || cliente.Telefono == null) {
-                return false;
+    } else if (cliente.Telefono == "" || cliente.Telefono == null) {
+        return false;
 
-            } else if (cliente.Sennas == "" || cliente.Sennas == null) {
-                return false;
+    } else if (cliente.Sennas == "" || cliente.Sennas == null) {
+        return false;
 
-            }  else if (cliente.CorreoPublicitario == "" || cliente.CorreoPublicitario == null) {
-                return false;
+    } else if (cliente.CorreoPublicitario == "" || cliente.CorreoPublicitario == null) {
+        return false;
 
-            }  else if (cliente.idGrupo == "" || cliente.idGrupo == null) {
-                return false;
-            }
+    } else if (cliente.idGrupo == "" || cliente.idGrupo == null) {
+        return false;
+    }
 
     else {
-                return true;
-            }
-        }
+        return true;
+    }
+}
 
-    function LimpiarDatosCliente() {
-        $("#idListaP").val("1").trigger('change.select2');
+function LimpiarDatosCliente() {
+    $("#idListaP").val("1").trigger('change.select2');
     $("#idGrupo").val("1").trigger('change.select2');
     $("#Nombre").val("");
     $("#selectTP").val("1").trigger('change.select2');
@@ -329,154 +341,153 @@ function ExoneracionxCliente() {
     $("#selectP").val("1").trigger('change.select2');
     $("#Sennas").val("");
     $("#CorreoPublicitario").val("");
+}
+
+//Agregar Cliente
+function AgregarCliente() {
+    try {
+        var Cliente =
+        {
+            id: 0,
+            Codigo: "",
+            idListaPrecios: $("#idListaP").val(),
+            Nombre: $("#Nombre").val(),
+            TipoCedula: $("#selectTP").val(),
+            Cedula: $("#Cedula").val(),
+            Email: $("#Email").val(),
+            CorreoPublicitario: $("#CorreoPublicitario").val(),
+            idGrupo: $("#idGrupo").val(),
+            CodPais: "506",
+            Telefono: $("#Telefono").val(),
+            Provincia: $("#selectP").val(),
+            Canton: $("#selectC").val(),
+            Distrito: $("#selectD").val(),
+            Barrio: $("#selectB").val(),
+            Sennas: $("#Sennas").val(),
+            Saldo: 0,
+            Activo: true,
+            ProcesadoSAP: false,
+            idCondicionPago: 0
+        };
+
+        if (validar(Cliente)) {
+            Swal.fire({
+                title: '¿Desea guardar la información de este cliente?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: `Aceptar`,
+                denyButtonText: `Cancelar`,
+                customClass: {
+                    confirmButton: 'swalBtnColor',
+                    denyButton: 'swalDeny'
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    var recibidos = JSON.stringify(Cliente);
+
+                    $.ajax({
+                        type: 'POST',
+
+                        url: $("#urlCliente").val(),
+                        dataType: 'json',
+                        data: { recibidos: Cliente },
+                        headers: {
+                            RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (json) {
+
+
+                            console.log("resultado " + json.cliente);
+                            if (json.success == true) {
+                                Swal.fire({
+                                    title: "Ha sido generado con éxito",
+
+                                    icon: 'success',
+                                    showCancelButton: false,
+
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'swalBtnColor',
+
+                                    },
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        //Despues de insertar, ocupariamos el id del cliente en la bd 
+                                        //para entonces setearlo en el array de clientes
+
+                                        LimpiarDatosCliente();
+                                        $("#ModalAgregarCliente").modal("hide");
+
+                                        var ClienteInsertar =
+                                        {
+                                            id: json.cliente.id,
+                                            Codigo: json.cliente.codigo,
+                                            idListaPrecios: json.cliente.idListaPrecios,
+                                            Nombre: json.cliente.nombre,
+                                            TipoCedula: json.cliente.tipoCedula,
+                                            Cedula: json.cliente.cedula,
+                                            Email: json.cliente.email,
+                                            CorreoPublicitario: json.cliente.correoPublicitario,
+                                            idGrupo: json.cliente.idGrupo,
+                                            CodPais: json.cliente.codPais,
+                                            Telefono: json.cliente.telefono,
+                                            Provincia: json.cliente.provincia,
+                                            Canton: json.cliente.canton,
+                                            Distrito: json.cliente.distrito,
+                                            Barrio: json.cliente.barrio,
+                                            Sennas: json.cliente.sennas,
+                                            Saldo: json.cliente.saldo,
+                                            Activo: true,
+                                            ProcesadoSAP: false,
+                                            idCondicionPago: 0
+                                        };
+
+                                        Clientes.push(ClienteInsertar);
+                                        RellenaClientes();
+                                        $("#ClienteSeleccionado").val(json.cliente.id).trigger('change.select2');
+
+
+                                    }
+                                })
+
+                            } else {
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Ha ocurrido un error al intentar guardar'
+
+                                })
+                            }
+                        },
+
+                        beforeSend: function (xhr) {
+
+
+                        },
+                        complete: function () {
+
+                        },
+                        error: function (error) {
+
+
+                        }
+                    });
+                }
+            })
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Pareciera que aún falta un campo por llenar'
+
+            });
         }
 
-    //Agregar Cliente
-    function AgregarCliente() {
-            try {
-                var Cliente =
-    {
-        id: 0,
-    Codigo: "",
-    idListaPrecios: $("#idListaP").val(),
-    Nombre:  $("#Nombre").val(),
-    TipoCedula: $("#selectTP").val(),
-    Cedula: $("#Cedula").val(),
-                    Email: $("#Email").val(),
-                    CorreoPublicitario: $("#CorreoPublicitario").val(),
-                    idGrupo: $("#idGrupo").val(),
-    CodPais: "506",
-    Telefono: $("#Telefono").val(),
-    Provincia: $("#selectP").val(),
-    Canton: $("#selectC").val(),
-    Distrito: $("#selectD").val(),
-    Barrio: $("#selectB").val(),
-    Sennas: $("#Sennas").val(),
-    Saldo: 0,
-    Activo: true,
-    ProcesadoSAP: false,
-    idCondicionPago: 0
-                };
-
-    if (validar(Cliente)) {
-        Swal.fire({
-            title: '¿Desea guardar la información de este cliente?',
-            showDenyButton: true,
-            showCancelButton: false,
-            confirmButtonText: `Aceptar`,
-            denyButtonText: `Cancelar`,
-            customClass: {
-                confirmButton: 'swalBtnColor',
-                denyButton: 'swalDeny'
-            },
-        }).then((result) => {
-            if (result.isConfirmed) {
-
-                var recibidos = JSON.stringify(Cliente);
-
-                $.ajax({
-                    type: 'POST',
-
-                    url: $("#urlCliente").val(),
-                    dataType: 'json',
-                    data: { recibidos: Cliente },
-                    headers: {
-                        RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
-                    },
-                    success: function (json) {
 
 
-                        console.log("resultado " + json.cliente);
-                        if (json.success == true) {
-                            Swal.fire({
-                                title: "Ha sido generado con éxito",
-
-                                icon: 'success',
-                                showCancelButton: false,
-
-                                confirmButtonText: 'OK',
-                                customClass: {
-                                    confirmButton: 'swalBtnColor',
-
-                                },
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    //Despues de insertar, ocupariamos el id del cliente en la bd 
-                                    //para entonces setearlo en el array de clientes
-
-                                    LimpiarDatosCliente();
-                                    $("#ModalAgregarCliente").modal("hide");
-
-                                    var ClienteInsertar =
-                                    {
-                                        id: json.cliente.id,
-                                        Codigo: json.cliente.codigo,
-                                        idListaPrecios: json.cliente.idListaPrecios,
-                                        Nombre: json.cliente.nombre,
-                                        TipoCedula: json.cliente.tipoCedula,
-                                        Cedula: json.cliente.cedula,
-                                        Email: json.cliente.email,
-                                        CorreoPublicitario: json.cliente.correoPublicitario,
-                                        idGrupo: json.cliente.idGrupo,
-                                        CodPais: json.cliente.codPais,
-                                        Telefono: json.cliente.telefono,
-                                        Provincia: json.cliente.provincia,
-                                        Canton: json.cliente.canton,
-                                        Distrito: json.cliente.distrito,
-                                        Barrio: json.cliente.barrio,
-                                        Sennas: json.cliente.sennas,
-                                        Saldo: json.cliente.saldo,
-                                        Activo: true,
-                                        ProcesadoSAP: false,
-                                        idCondicionPago: 0
-                                    };
-
-                                    Clientes.push(ClienteInsertar);
-                                    RellenaClientes();
-                                    $("#ClienteSeleccionado").val(json.cliente.id).trigger('change.select2');
-
-
-                                }
-                            })
-
-                        } else {
-
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'Ha ocurrido un error al intentar guardar'
-
-                            })
-                        }
-                    },
-
-                    beforeSend: function (xhr) {
-
-
-                    },
-                    complete: function () {
-
-                    },
-                    error: function (error) {
-
-
-                    }
-                });
-            }
-        })
-    }else
-    {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Pareciera que aún falta un campo por llenar'
-
-        });
-                }
-
-
-
-            } catch (e) {
+    } catch (e) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -484,36 +495,36 @@ function ExoneracionxCliente() {
 
         })
     }
-        }
-    ///
-    function RellenaTabla() {
-            var html = "";
+}
+///
+function RellenaTabla() {
+    var html = "";
     $("#tbody").html(html);
 
 
     for (var i = 0; i < ProdCadena.length; i++) {
         html += "<tr>";
 
-    html += "<td> " + (i + 1) + " </td>";
+        html += "<td> " + (i + 1) + " </td>";
 
-    html += "<td > " + ProdCadena[i].Descripcion + " </td>";
-    html += "<td class='text-center'> " + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
-    html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
-    html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
-    html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-    html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+        html += "<td > " + ProdCadena[i].Descripcion + " </td>";
+        html += "<td class='text-center'> " + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
+        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
+        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
+        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
+        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
         html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
-    html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
+        html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
-    html += "</tr>";
-
-
-            }
+        html += "</tr>";
 
 
+    }
 
-$("#tbody").html(html);
-        }
+
+
+    $("#tbody").html(html);
+}
 function cantidadRepetidos(palabra, separador) {
 
 
@@ -543,6 +554,8 @@ function AgregarProductoTabla() {
         var id = $("#ProductoSeleccionado").val();
         var PE = ProdClientes.find(a => a.id == id);
 
+
+
         var Producto =
         {
             idEncabezado: 0,
@@ -560,6 +573,7 @@ function AgregarProductoTabla() {
             idExoneracion: $("#exoneracion").val(),
             PorExoneracion: 0
         };
+      
 
         if (Producto.Cabys.length >= 13) {
 
@@ -616,7 +630,7 @@ function AgregarProductoTabla() {
 
         })
     }
-   
+
 
 
 

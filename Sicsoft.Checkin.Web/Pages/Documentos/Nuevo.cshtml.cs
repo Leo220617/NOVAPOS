@@ -91,6 +91,7 @@ namespace NOVAAPP.Pages.Documentos
                 if(id != 0)
                 {
                     var Oferta = await serviceO.ObtenerPorId(id);
+                    await serviceO.Eliminar(id);
                     Documento = new DocumentosViewModel();
                     Documento.idCliente = Oferta.idCliente;
                     Documento.idUsuarioCreador = Oferta.idUsuarioCreador;
@@ -101,6 +102,7 @@ namespace NOVAAPP.Pages.Documentos
                     Documento.TotalDescuento = Oferta.TotalDescuento;
                     Documento.TotalCompra = Oferta.TotalCompra;
                     Documento.PorDescto = Oferta.PorDescto;
+                    Documento.Comentarios = "Basado en la oferta # " + id;
                     var Tamaño = Oferta.Detalle.Length;
                     Documento.Detalle = new DetDocumentoViewModel[Tamaño];
 

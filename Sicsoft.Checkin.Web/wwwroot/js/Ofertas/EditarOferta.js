@@ -232,6 +232,16 @@ function onChangeCliente() {
     $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
 
     ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
+    ProdClientes = ProdClientes.sort(function (a, b) {
+        if (a.Stock < b.Stock) {
+            return 1;
+        }
+        if (a.Stock > b.Stock) {
+            return -1;
+        }
+        // a must be equal to b
+        return 0;
+    });
     RellenaProductos();
 
 }
@@ -255,6 +265,8 @@ function onChangeProducto() {
 
         ExoneracionxCliente();
     } else {
+        $("#cantidad").val(1);
+
         $("#inputPrecio").val(0);
         $("#inputCabys").val("");
         $("#impuesto").val(0);

@@ -136,11 +136,24 @@ namespace Sicsoft.Checkin.Web
                 }
                 else
                 {
-                    Errores error = JsonConvert.DeserializeObject<Errores>(exception.Content.ToString());
-                    ModelState.AddModelError("User name", error.Message);
-                    Input.CodSuc = "0";
-                    Sucursales = await sucursales.ObtenerLista("");
-                    return new PageResult();
+                    try
+                    {
+                        Errores error = JsonConvert.DeserializeObject<Errores>(exception.Content.ToString());
+                        ModelState.AddModelError("User name", error.Message);
+                        Input.CodSuc = "0";
+                        Sucursales = await sucursales.ObtenerLista("");
+                        return new PageResult();
+                    }
+                    catch (Exception)
+                    {
+                     //   Errores error = JsonConvert.DeserializeObject<Errores>(exception.Content.ToString());
+                        ModelState.AddModelError("User name", exception.Message);
+                        Input.CodSuc = "0";
+                        Sucursales = await sucursales.ObtenerLista("");
+                        return new PageResult();
+
+                    }
+                    
                 }
                
             }

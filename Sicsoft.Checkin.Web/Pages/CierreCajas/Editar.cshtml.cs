@@ -53,8 +53,8 @@ namespace NOVAAPP.Pages.CierreCajas
                 }
                 var idcaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault());
                 var Fecha = DateTime.Now.Date;
-                Cierres = await service.ObtenerCierre(idcaja, Fecha);
                 var idCajero = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
+                Cierres = await service.ObtenerCierre(idcaja, Fecha, idCajero);
                 Users = await users.ObtenerPorId(idCajero);
                 Caja =  ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Caja").Select(s1 => s1.Value).FirstOrDefault();
 

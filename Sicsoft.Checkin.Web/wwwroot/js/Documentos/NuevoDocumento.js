@@ -731,6 +731,7 @@ function Generar() {
             id: 0,
             idCliente: $("#ClienteSeleccionado").val(),
             idUsuarioCreador: 0,
+            idOferta: Documento == null ? 0 : Documento.idOferta,
             Fecha: $("#Fecha").val(),
             FechaVencimiento: $("#Fecha").val(),
             Comentarios: $("#inputComentarios").val(),

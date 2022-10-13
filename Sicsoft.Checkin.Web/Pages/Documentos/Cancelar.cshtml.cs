@@ -83,6 +83,7 @@ namespace NOVAAPP.Pages.Documentos
                 }
 
                 Documento = await service.ObtenerPorId(id);
+                Documento.Comentarios = "Cancelacion de la factura # " + id;
                 Impuestos = await serviceU.ObtenerLista("");
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;
@@ -153,12 +154,14 @@ namespace NOVAAPP.Pages.Documentos
 
             try
             {
+                recibidos.id = 0;
                 recibidos.idCaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault().ToString());
 
                 recibidos.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
 
                 recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
-                await service.Editar(recibidos);
+                recibidos.MetodosPagos = new MetodosPagosViewModel[0];
+                await service.Agregar(recibidos);
 
                 var resp2 = new
                 {

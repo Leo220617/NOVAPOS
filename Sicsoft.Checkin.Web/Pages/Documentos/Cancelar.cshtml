@@ -59,8 +59,8 @@
                 <input hidden id="Documento" value="@JsonConvert.SerializeObject(Model.Documento)" />
                 <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
 
-                <input hidden id="urlGenerar" value="@Url.Page("Editar", "AgregarDocumento")" />
-                <input hidden id="urlCliente" value="@Url.Page("Editar", "AgregarCliente")" />
+                <input hidden id="urlGenerar" value="@Url.Page("Cancelar", "AgregarDocumento")" />
+                <input hidden id="urlCliente" value="@Url.Page("Cancelar", "AgregarCliente")" />
 
 
                 <!-- Content Header (Page header) -->
@@ -98,9 +98,9 @@
                                 <div class="form-group">
                                     <label>Tipo de Documento</label>
                                     <select disabled class="form-control" id="selectTD">
-                                       <option value="01">Factura Electrónica</option> 
+                                       
                                        <option selected value="03">Nota de Crédito</option> 
-                                <option value="04">Tiquete Electrónico</option> 
+                                
 
                                     </select>
 
@@ -162,14 +162,14 @@
                                             <th>#</th>
 
                                             <th>Descripción</th>
-                                            <th class="text-right">Cantidad</th>
-                                            <th class="text-right">Precio de Venta</th>
-                                            <th class="text-right">Descuento</th>
-                                            <th class="text-right">Impuesto</th>
-                                            <th class="text-right">% Exoneración</th>
+                                            <th class="text-center">Cantidad</th>
+                                            <th class="text-center">Precio de Venta</th>
+                                            <th class="text-center">Descuento</th>
+                                            <th class="text-center">Impuesto</th>
+                                            <th class="text-center">% Exoneración</th>
 
-                                            <th class="text-right">Total</th>
-                                            <th class="text-right">Eliminar</th>
+                                            <th class="text-center">Total</th>
+                                            <th class="text-center">Eliminar</th>
 
                                         </tr>
                                     </thead>

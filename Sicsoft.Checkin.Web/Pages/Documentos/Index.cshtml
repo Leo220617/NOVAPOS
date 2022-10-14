@@ -87,6 +87,7 @@
                                         <label for="cyber">Tipo de Documento:</label>
                                         <select class="form-control" id="selectTD" asp-for="filtro.CardCode" required>
                                             <option value="01">Factura Electrónica</option>
+                                            <option value="03">Nota de Crédito</option>
                                             <option value="04">Tiquete Electrónico</option>
 
 
@@ -222,6 +223,12 @@
                                                         <p>Factura Electrónica</p>
                                                         break;
                                                     }
+                                                       case "03":
+                                                    {
+                                                        <p>Nota de Crédito</p>
+                                                        break;
+                                                    }
+                                                    
                                                 case "04":
                                                     {
                                                         <p>Tiquete Electrónico</p>
@@ -267,9 +274,11 @@
                                                
                                             &nbsp;
                                             <a asp-page="./Observar" asp-route-id="@item.id" class="fa fa-info-circle icono"> </a> &nbsp;
-
-                                            <a asp-page="./Cancelar" asp-route-id="@item.id" class="fa  fa-window-close icono"> </a> &nbsp;
-                                        </td>
+                                            @if (item.TipoDocumento.ToLower().Contains("01".ToLower()) || item.TipoDocumento.ToLower().Contains("04".ToLower())){
+                                            
+                                                    <a asp-page="./Cancelar" asp-route-id="@item.id" class="fa  fa-window-close icono"> </a>
+                                                }
+                                            </td>
 
 
                                     </tr>

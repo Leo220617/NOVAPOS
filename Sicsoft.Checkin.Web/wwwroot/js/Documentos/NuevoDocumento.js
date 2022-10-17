@@ -1148,6 +1148,16 @@ function validarMetodo() {
             })
             return false;
         }
+
+        if (parseFloat($("#MontoPago").val()) > parseFloat(ReplaceLetra($("#fatPago").text()))) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No se puede ingresar montos mayores a lo faltante'
+
+            })
+            return false;
+        }
         switch (Metodo) {
             case "Efectivo":
                 {

@@ -26,25 +26,35 @@ var MetodosPagos = [];
 var Documento = [];
 
 function Recuperar() {
-    Cantones = JSON.parse($("#Cantones").val());
-    Distritos = JSON.parse($("#Distritos").val());
-    Barrios = JSON.parse($("#Barrios").val());
-    Clientes = JSON.parse($("#Clientes").val());
-    Productos = JSON.parse($("#Productos").val());
-    Impuestos = JSON.parse($("#Impuestos").val());
-    Exoneraciones = JSON.parse($("#Exoneraciones").val());
-    TipoCambio = JSON.parse($("#TipoCambio").val());
-    Documento = JSON.parse($("#Documento").val());
+    try {
+        Cantones = JSON.parse($("#Cantones").val());
+        Distritos = JSON.parse($("#Distritos").val());
+        Barrios = JSON.parse($("#Barrios").val());
+        Clientes = JSON.parse($("#Clientes").val());
+        Productos = JSON.parse($("#Productos").val());
+        Impuestos = JSON.parse($("#Impuestos").val());
+        Exoneraciones = JSON.parse($("#Exoneraciones").val());
+        TipoCambio = JSON.parse($("#TipoCambio").val());
+        Documento = JSON.parse($("#Documento").val());
 
-    ExoneracionesCliente = [];
+        ExoneracionesCliente = [];
 
-    RellenaClientes();
-    RellenaExoneraciones();
-    maskCedula();
-    if (Documento != null || Documento != undefined) {
-        RecuperarInformacion();
+        RellenaClientes();
+        RellenaExoneraciones();
+        maskCedula();
+        if (Documento != null || Documento != undefined) {
+            RecuperarInformacion();
 
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar ' + e.stack
+
+        })
     }
+    
 }
 function RecuperarInformacion() {
     try {
@@ -161,32 +171,51 @@ function onChangeMoneda() {
 
 
 function RellenaClientes() {
-    var html = "";
-    $("#ClienteSeleccionado").html(html);
-    html += "<option value='0' > Seleccione Cliente </option>";
+    try {
+        var html = "";
+        $("#ClienteSeleccionado").html(html);
+        html += "<option value='0' > Seleccione Cliente </option>";
 
-    for (var i = 0; i < Clientes.length; i++) {
-        html += "<option value='" + Clientes[i].id + "' > " + Clientes[i].Codigo + " - " + Clientes[i].Nombre + " </option>";
+        for (var i = 0; i < Clientes.length; i++) {
+            html += "<option value='" + Clientes[i].id + "' > " + Clientes[i].Codigo + " - " + Clientes[i].Nombre + " </option>";
+        }
+
+
+
+        $("#ClienteSeleccionado").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+        })
     }
-
-
-
-    $("#ClienteSeleccionado").html(html);
+   
 }
 function RellenaProductos() {
+    try {
+        var html = "";
+        $("#ProductoSeleccionado").html(html);
 
-    var html = "";
-    $("#ProductoSeleccionado").html(html);
+        html += "<option value='0' > Seleccione Producto </option>";
 
-    html += "<option value='0' > Seleccione Producto </option>";
+        for (var i = 0; i < ProdClientes.length; i++) {
+            html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " </option>";
+        }
 
-    for (var i = 0; i < ProdClientes.length; i++) {
-        html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " </option>";
+
+
+        $("#ProductoSeleccionado").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+        })
     }
-
-
-
-    $("#ProductoSeleccionado").html(html);
+   
 }
 
 function RellenaExoneraciones() {
@@ -231,25 +260,35 @@ function RellenaExoneraciones() {
 }
 
 function onChangeCliente() {
-    var idCliente = $("#ClienteSeleccionado").val();
+    try {
+        var idCliente = $("#ClienteSeleccionado").val();
 
-    var Cliente = Clientes.find(a => a.id == idCliente);
+        var Cliente = Clientes.find(a => a.id == idCliente);
 
-    $("#spanDireccion").text(Cliente.Sennas);
-    $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
+        $("#spanDireccion").text(Cliente.Sennas);
+        $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
 
-    ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
-    ProdClientes = ProdClientes.sort(function (a, b) {
-        if (a.Stock < b.Stock) {
-            return 1;
-        }
-        if (a.Stock > b.Stock) {
-            return -1;
-        }
-        // a must be equal to b
-        return 0;
-    });
-    RellenaProductos();
+        ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
+        ProdClientes = ProdClientes.sort(function (a, b) {
+            if (a.Stock < b.Stock) {
+                return 1;
+            }
+            if (a.Stock > b.Stock) {
+                return -1;
+            }
+            // a must be equal to b
+            return 0;
+        });
+        RellenaProductos();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+        })
+    }
+    
 
 }
 

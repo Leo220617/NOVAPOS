@@ -9,6 +9,7 @@ namespace NOVAAPP.Models
         public int idUsuarioCreador { get; set; }
         public int idOferta { get; set; }
 
+        public int idCondPago { get; set; }
         public DateTime Fecha { get; set; }
         public DateTime FechaVencimiento { get; set; }
         public string Comentarios { get; set; }

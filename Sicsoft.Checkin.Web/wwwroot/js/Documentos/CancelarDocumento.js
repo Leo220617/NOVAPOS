@@ -280,6 +280,7 @@ function Generar() {
             id: $("#id").val(),
             idCliente: $("#ClienteSeleccionado").val(),
             idUsuarioCreador: 0,
+            BaseEntry: $("#BaseEntry").val(),
             Fecha: $("#Fecha").val(),
             FechaVencimiento: $("#Fecha").val(),
             Comentarios: $("#inputComentarios").val(),
@@ -297,7 +298,7 @@ function Generar() {
 
         if (validarDocumento(EncDocumento)) {
             Swal.fire({
-                title: '¿Desea editar el documento?',
+                title: '¿Desea crear el documento de corrección?',
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: `Aceptar`,

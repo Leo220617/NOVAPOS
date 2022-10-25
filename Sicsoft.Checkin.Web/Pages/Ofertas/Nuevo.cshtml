@@ -57,6 +57,8 @@
                 <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
                 <input hidden id="Documento" value="@JsonConvert.SerializeObject(Model.Oferta)" />
 
+                 
+
 
                 <input hidden id="urlGenerar" value="@Url.Page("Nuevo", "AgregarOferta")" />
                 <input hidden id="urlCliente" value="@Url.Page("Nuevo", "AgregarCliente")" />
@@ -135,7 +137,10 @@
                                     <strong id="strongInfo">Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
                                 </address>
                             </div>
+                           
                             <div class="col-sm-4"> <a onclick="javascript: AbrirModalAgregarCliente()" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Cliente</a></div>
+                        
+                        
                         </div>
                         <!-- /.col -->
                         <!-- /.row -->

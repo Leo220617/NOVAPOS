@@ -58,6 +58,8 @@
                 <input hidden id="Exoneraciones" value="@JsonConvert.SerializeObject(Model.Exoneraciones)" />
                 <input hidden id="Documento" value="@JsonConvert.SerializeObject(Model.Documento)" />
                 <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
+                <input hidden id="BaseEntry" value="@Model.Documento.BaseEntry" />
+
 
                 <input hidden id="urlGenerar" value="@Url.Page("Cancelar", "AgregarDocumento")" />
                 <input hidden id="urlCliente" value="@Url.Page("Cancelar", "AgregarCliente")" />

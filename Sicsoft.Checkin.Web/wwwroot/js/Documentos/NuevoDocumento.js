@@ -25,6 +25,7 @@ var TipoCambio = [];
 var MetodosPagos = [];
 var Documento = [];
 var CB = [];
+var CP = [];
 
 function Recuperar() {
     try {
@@ -38,6 +39,7 @@ function Recuperar() {
         TipoCambio = JSON.parse($("#TipoCambio").val());
         Documento = JSON.parse($("#Documento").val());
         CB = JSON.parse($("#CB").val());
+        CP = JSON.parse($("#CP").val());
         ExoneracionesCliente = [];
 
         RellenaClientes();
@@ -266,6 +268,11 @@ function onChangeCliente() {
 
         var Cliente = Clientes.find(a => a.id == idCliente);
 
+        var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
+
+        RellenaCondiciones(CondP);
+
+
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
 
@@ -285,12 +292,42 @@ function onChangeCliente() {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Ha ocurrido un error al intentar imprimir ' + e
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
 
         })
     }
     
 
+}
+function RellenaCondiciones(CPS) {
+    try {
+        var text = "";
+        $("#selectCondPago").html(text);
+
+        var Contado = CP.find(a => a.Nombre == "Contado");
+
+        text += "<option value='" + Contado.id + "' selected> " + Contado.Nombre + " </option>";
+
+
+        for (var i = 0; i < CPS.length; i++) {
+            if (CPS[i].id != Contado.id) {
+                text += "<option value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+
+            }
+        }
+        
+
+        $("#selectCondPago").html(text);
+
+        
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
+
+        })
+    }
 }
 
 function ExoneracionxCliente() {
@@ -772,6 +809,7 @@ function Generar() {
             idCliente: $("#ClienteSeleccionado").val(),
             idUsuarioCreador: 0,
             idOferta: Documento == null ? 0 : Documento.idOferta,
+            idCondPago: $("#selectCondPago").val(),
             Fecha: $("#Fecha").val(),
             FechaVencimiento: $("#Fecha").val(),
             Comentarios: $("#inputComentarios").val(),
@@ -888,22 +926,47 @@ function Generar() {
 //
 
 function validarDocumento(e) {
-    if (e.idCliente == "0" || e.idCliente == null) {
-        return false;
-   } //else if (e.FechaVencimiento == "" || e.FechaVencimiento == null) {
-      //  return false;
-   // }
-    else if (e.Detalle.length == 0 || e.Detalle == null) {
-        return false;
+
+    try {
+        var Contado = CP.find(a => a.Nombre == "Contado");
+
+        if ($("#selectCondPago").val() == Contado.id) {
+            if (e.idCliente == "0" || e.idCliente == null) {
+                return false;
+            } //else if (e.FechaVencimiento == "" || e.FechaVencimiento == null) {
+            //  return false;
+            // }
+            else if (e.Detalle.length == 0 || e.Detalle == null) {
+                return false;
+            }
+            else if (e.MetodosPagos.length == 0 || e.MetodosPagos == null) {
+                return false;
+            } else if (sumArray(e.MetodosPagos) < e.TotalCompra) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        } else {
+            if (e.Detalle.length == 0 || e.Detalle == null) {
+                return false;
+            } else if (e.idCliente == "0" || e.idCliente == null) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+           
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar agregar ' + e
+
+        })
     }
-    else if (e.MetodosPagos.length == 0 || e.MetodosPagos == null) {
-        return false;
-    } else if ( sumArray(e.MetodosPagos)  < e.TotalCompra) {
-        return false;
-    }
-    else {
-        return true;
-    }
+   
 }
 
 function sumArray(array) {
@@ -980,13 +1043,22 @@ function ImprimirPantalla() {
 //////Metodos pago
 function AbrirPago() {
     try {
-        var Total = parseFloat(ReplaceLetra($("#totG").text()));
-        $("#totPago").text(formatoDecimal(Total));
-        $("#fatPago").text(formatoDecimal(Total));
-        onChangeMetodo();
-        RellenaCB();
+        var Contado = CP.find(a => a.Nombre == "Contado");
 
-        $("#modalPagos").modal("show");
+        if ($("#selectCondPago").val() == Contado.id) {
+            var Total = parseFloat(ReplaceLetra($("#totG").text()));
+            $("#totPago").text(formatoDecimal(Total));
+            $("#fatPago").text(formatoDecimal(Total));
+
+
+            onChangeMetodo();
+            RellenaCB();
+
+            $("#modalPagos").modal("show");
+        } else {
+            Generar();
+        }
+       
     } catch (e) {
         Swal.fire({
             icon: 'error',

@@ -1,11 +1,11 @@
 ﻿@page "{id}"
 @model NOVAAPP.Pages.Documentos.ObservarModel
 @{
-     ViewData["Title"] = "Documentos";
-       NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
-      formato.CurrencySymbol = "";
-        formato.CurrencyGroupSeparator = ",";
-        formato.NumberDecimalSeparator = ".";
+    ViewData["Title"] = "Documentos";
+    NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
+    formato.CurrencySymbol = "";
+    formato.CurrencyGroupSeparator = ",";
+    formato.NumberDecimalSeparator = ".";
 }
 @using Microsoft.AspNetCore.Http
 @using System;
@@ -27,145 +27,148 @@
 
 
 }
-@section scripts{
-   <script>
-       $(document).ready(function () {
-            jQuery(document).ready(function ($) {
-                  
+    @section scripts{
+    <script>
+        $(document).ready(function() {
+            jQuery(document).ready(function($) {
+
             });
 
 
 
-            $(document).ready(function () {
-                
+            $(document).ready(function() {
+
             });
 
 
         });
 
-         function ImprimirPantalla()
-        {
+        function ImprimirPantalla() {
             try {
-               // window.print();
+                // window.print();
                 var margins = {
                     top: 10,
                     bottom: 10,
                     left: 10,
                     width: 595
-                  };
-                
+                };
+
 
                 html = $(".html").html();
                 html2pdf(html, {
-                margin:1,
-                padding:0,
-                filename: 'Documento.pdf',
-                image: { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 2,  logging: true },
-                jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
-                class: ImprimirPantalla
-            });
+                    margin: 1,
+                    padding: 0,
+                    filename: 'Documento.pdf',
+                    image: { type: 'jpeg', quality: 1 },
+                    html2canvas: { scale: 2, logging: true },
+                    jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
+                    class: ImprimirPantalla
+                });
 
-            }catch(e)
-            {
+            } catch (e) {
                 console.log(e);
                 Swal.fire({
-                                     icon: 'error',
-                                     title: 'Oops...',
-                                     text: 'Ha ocurrido un error al intentar imprimir ' + e
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar imprimir ' + e
 
-                                 })
+                })
             }
         }
 
-   </script>
+    </script>
 }
 
 
-@using Newtonsoft.Json;
-@using System.Globalization
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <h1>
-       Documentos
-    </h1>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
-        <li class="breadcrumb-item active">Observar Documento</li>
-    </ol>
-</section>
+    @using Newtonsoft.Json;
+    @using System.Globalization
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Documentos
+        </h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+            <li class="breadcrumb-item active">Observar Documento</li>
+        </ol>
+    </section>
 
-<section class="content ">
-    <div class="row">
-        <div class="col-12">
+    <section class="content ">
+        <div class="row">
+            <div class="col-12">
 
-            <div class="box">
-                <div class="box-header with-border">
-                    <div class="row">
-                        <div class="col-8">
-                            <h6 class="box-subtitle">Observar Documento</h6>
-                           
-
-                        </div>
-                        <div class="col-4">
-                           <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
-
-                            &nbsp;
-
-                           
-
-                        </div>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <!-- title row -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="page-header mt-0">
-                                <h2 class="d-inline"><span class="font-size-24">Documento No: @Model.Documento.id</span></h2>
-                                <br />
-                                <div class="text-left">
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <h5> <b>Fecha</b> @Model.Documento.Fecha.ToString("dd/MM/yyyy")</h5>
-
-                                        </div>
-                                      
-                                        <div class="col-4">
-                                            <h5> <b>Tipo de Documento:</b>  @switch (Model.Documento.TipoDocumento)
-                                            {
-                                                case "01":
-                                                    {
-                                                        <b>Factura Electrónica</b>
-                                                        break;
-                                                    }
-                                                      case "03":
-                                                    {
-                                                        <p>Nota de Crédito</p>
-                                                        break;
-                                                    }
-                                                case "04":
-                                                    {
-                                                        <b>Tiquete Electrónico</b>
-                                                        break;
-                                                    }
-                                                    }</h5>
-
-                                        </div>
-                                         
-
-                                       
-
-                                        <div class="col-4">
-                                            <h5> <b>Moneda</b> @Model.Documento.Moneda</h5>
-
-                                        </div>
-                                          
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-8">
+                                <h6 class="box-subtitle">Observar Documento</h6>
 
 
-                                </div>
+                            </div>
+                            <div class="col-4">
+                                <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+
+                                &nbsp;
+
+
+
                             </div>
                         </div>
+                    </div>
+                    <div class="box-body">
+                        <!-- title row -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-header mt-0">
+                                    <h2 class="d-inline"><span class="font-size-24">Documento No: @Model.Documento.id</span></h2>
+                                    <br />
+                                    <div class="text-left">
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <h5> <b>Fecha: </b> @Model.Documento.Fecha.ToString("dd/MM/yyyy")</h5>
+
+                                            </div>
+
+                                            <div class="col-4">
+                                                <h5>
+                                                    <b>Tipo de Documento:</b>  @switch (Model.Documento.TipoDocumento)
+                                                {
+                                                    case "01":
+                                                        {
+                                                            <b>Factura Electrónica</b>
+                                                            break;
+                                                        }
+                                                    case "03":
+                                                        {
+                                                            <b>Nota de Crédito</b>
+                                                            break;
+                                                        }
+                                                    case "04":
+                                                        {
+                                                            <b>Tiquete Electrónico</b>
+                                                            break;
+                                                        }
+                                                }
+                                            </h5>
+
+                                        </div>
+
+
+
+
+                                        <div class="col-2">
+                                            <h5> <b>Moneda: </b> @Model.Documento.Moneda</h5>
+
+                                        </div>
+                                        <div class="col-3">
+                                            <h5> <b>Cond.Pago: </b> @(Model.CondicionesPago.Nombre)</h5>
+
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.col -->
                     </div>
@@ -175,7 +178,7 @@
                             <strong>Cliente</strong>
                             <address>
                                 <strong class="text-blue font-size-24"> @( Model.Clientes.Where(a => a.id == Model.Documento.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" : Model.Clientes.Where(a => a.id == Model.Documento.idCliente).FirstOrDefault().Codigo + " - "+ Model.Clientes.Where(a => a.id == Model.Documento.idCliente).FirstOrDefault().Nombre)   </strong>
-                                   
+
 
                             </address>
                         </div>
@@ -207,14 +210,14 @@
                                     @foreach (var item in Model.Documento.Detalle)
                                     {
                                         <tr>
-                                           <td>@item.NumLinea</td>
-                                           
-                                          
+                                            <td>@item.NumLinea</td>
+
+
                                             <td>  @( Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - "+ Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Nombre)   </td>
-                                    
+
                                             <td class="text-right">@(Math.Round(item.Cantidad))</td>
-                                           
-                                            
+
+
                                             <td class="text-center">@Math.Round(item.PrecioUnitario,2).ToString("C",formato)</td>
                                             <td class="text-center">@Math.Round(@item.PorDescto)%</td>
                                             <td class="text-center">@Math.Round(@item.Descuento,2).ToString("C",formato)</td>
@@ -230,24 +233,29 @@
                             </table>
                         </div>
                         <!-- /.col -->
-                           <div class="col-12  text-right">
+                        <div class="col-12  text-right">
 
 
-                                <div>
-                                    <p>Sub Total  : <span> @Math.Round(Model.Documento.Subtotal, 2).ToString("C",formato)</span> </p>
-                                    <p>Descuento  : <span> @Math.Round(Model.Documento.TotalDescuento, 2).ToString("C",formato)</span></p>
-                                    <p>Impuesto :  <span>  @Math.Round(Model.Documento.TotalImpuestos, 2).ToString("C",formato)</span></p>
-
-                                </div>
-                                <div class="total-payment">
-                                    <h3><b>Total :</b>  <span>  @Math.Round(Model.Documento.TotalCompra, 2).ToString("C",formato)</span></h3>
-                                </div>
+                            <div>
+                                <p>Sub Total  : <span> @Math.Round(Model.Documento.Subtotal, 2).ToString("C",formato)</span> </p>
+                                <p>Descuento  : <span> @Math.Round(Model.Documento.TotalDescuento, 2).ToString("C",formato)</span></p>
+                                <p>Impuesto :  <span>  @Math.Round(Model.Documento.TotalImpuestos, 2).ToString("C",formato)</span></p>
 
                             </div>
+                            <div class="total-payment">
+                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Documento.TotalCompra, 2).ToString("C",formato)</span></h3>
+                            </div>
+
+                        </div>
                     </div>
                     <!-- /.row -->
                     <!-- /.row -->
-
+                    @if(Model.Documento.MetodosPagos.Count() > 0)
+    {
+            <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#modalPagos">
+        Métodos de Pago
+    </button>
+    }
                 </div>
             </div>
 
@@ -258,26 +266,29 @@
                     <h4 class="box-title">Comentarios</h4>
                 </div>
                 <div class="box-body">
-                       <td>@Model.Documento.Comentarios</td>
-            
-                <!-- /.box-body -->
+                    <p>@Model.Documento.Comentarios</p>
+
+                    <!-- /.box-body -->
+                </div>
+
+
+
+
             </div>
-           
-
-
-
         </div>
     </div>
-    </div>
+
+ 
 
 
-<button id="print" class="btn btn-warning" type="button" onclick="javascript: ImprimirPantalla()"> <span><i class="fa fa-print"></i> Imprimir</span> </button>
+
+    <button id="print" class="btn btn-warning" type="button" onclick="javascript: ImprimirPantalla()"> <span><i class="fa fa-print"></i> Imprimir</span> </button>
 </section>
 
 
 
 <div class="html" hidden>
-     <div class="row">
+    <div class="row">
         <div class="col-12">
 
             <div class="box">
@@ -285,13 +296,10 @@
                     <div class="row">
                         <div class="col-8">
                             <h6 class="box-subtitle">Venta</h6>
-                           
+
 
                         </div>
                         <div class="col-4">
-                            
-                           
-
                         </div>
                     </div>
                 </div>
@@ -308,7 +316,7 @@
                                             <h5> <b>Fecha</b> @Model.Documento.Fecha.ToString("dd/MM/yyyy")</h5>
 
                                         </div>
-                                      
+
                                         <div class="col-4">
                                             <h5> <b>Fecha de Vencimiento</b> @Model.Documento.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
 
@@ -318,12 +326,12 @@
                                             <h5> <b>Moneda</b> @Model.Documento.Moneda</h5>
 
                                         </div>
-                                          
 
 
+
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </div>
                         <!-- /.col -->
                     </div>
@@ -333,7 +341,7 @@
                             <strong>Cliente</strong>
                             <address>
                                 <strong class="text-blue font-size-24">   @( Model.Clientes.Where(a => a.id == Model.Documento.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" : Model.Clientes.Where(a => a.id == Model.Documento.idCliente).FirstOrDefault().Codigo + " - " + Model.Clientes.Where(a => a.id == Model.Documento.idCliente).FirstOrDefault().Nombre)</strong>
-                                   
+
 
                             </address>
                         </div>
@@ -363,46 +371,46 @@
 
                                     @foreach (var item in Model.Documento.Detalle)
                                     {
-                                    <tr>
-                                        <td>@item.NumLinea</td>
+                                        <tr>
+                                            <td>@item.NumLinea</td>
 
 
-                                        <td>  @( Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - "+ Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Nombre)   </td>
+                                            <td>  @( Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - "+ Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Nombre)   </td>
 
-                                        <td class="text-right">@(Math.Round(item.Cantidad))</td>
+                                            <td class="text-right">@(Math.Round(item.Cantidad))</td>
 
 
-                                        <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
-                                        <td class="text-center">@Math.Round(@item.PorDescto) %</td>
-                                        <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>
-                                        <td class="text-center">@Math.Round(@item.TotalImpuesto, 2).ToString("C", formato)</td>
-                                        <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
+                                            <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
+                                            <td class="text-center">@Math.Round(@item.PorDescto) %</td>
+                                            <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>
+                                            <td class="text-center">@Math.Round(@item.TotalImpuesto, 2).ToString("C", formato)</td>
+                                            <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
 
-                                        <td class="text-center">@Math.Round(@item.TotalLinea, 2).ToString("C", formato)</td>
+                                            <td class="text-center">@Math.Round(@item.TotalLinea, 2).ToString("C", formato)</td>
 
-                                    </tr>
+                                        </tr>
                                     }
 
 
                                 </tbody>
                             </table>
-                             
+
                         </div>
                         <!-- /.col -->
-                         <div class="col-12  text-right">
+                        <div class="col-12  text-right">
 
 
-                                <div>
-                                    <p>Sub Total  : <span> @Math.Round(Model.Documento.Subtotal, 2).ToString("C",formato)</span> </p>
-                                    <p>Descuento  : <span> @Math.Round(Model.Documento.TotalDescuento, 2).ToString("C",formato)</span></p>
-                                    <p>Impuesto :  <span>  @Math.Round(Model.Documento.TotalImpuestos, 2).ToString("C",formato)</span></p>
-
-                                </div>
-                                <div class="total-payment">
-                                    <h3><b>Total :</b>  <span>  @Math.Round(Model.Documento.TotalCompra, 2).ToString("C",formato)</span></h3>
-                                </div>
+                            <div>
+                                <p>Sub Total  : <span> @Math.Round(Model.Documento.Subtotal, 2).ToString("C",formato)</span> </p>
+                                <p>Descuento  : <span> @Math.Round(Model.Documento.TotalDescuento, 2).ToString("C",formato)</span></p>
+                                <p>Impuesto :  <span>  @Math.Round(Model.Documento.TotalImpuestos, 2).ToString("C",formato)</span></p>
 
                             </div>
+                            <div class="total-payment">
+                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Documento.TotalCompra, 2).ToString("C",formato)</span></h3>
+                            </div>
+
+                        </div>
                     </div>
                     <!-- /.row -->
                     <!-- /.row -->
@@ -417,16 +425,74 @@
                     <h4 class="box-title">Comentarios</h4>
                 </div>
                 <div class="box-body">
-                       <span>@Model.Documento.Comentarios</span>
-            
-                <!-- /.box-body -->
+                    <span>@Model.Documento.Comentarios</span>
+
+                    <!-- /.box-body -->
+                </div>
+
+
+
+
             </div>
-           
 
 
 
         </div>
     </div>
-    </div>
 </div>
 
+
+
+<!-- Modal -->
+<div class="modal modal-fill fade" data-backdrop="false" id="modalPagos" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 80%; max-width: 200%;  ">
+            <div class="modal-header">
+                <h5 class="modal-title">Métodos de Pago</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <!-- Table row -->
+                <div class="row">
+                    <div class="col-12 table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+
+
+                                    <th>Método</th>
+                                    <th class="text-right">BIN</th>
+                                    <th class="text-right">Referencia</th>
+                                    <th class="text-right">Cheque</th>
+                                    <th class="text-right">Total</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="">
+                                @foreach (var item in Model.Documento.MetodosPagos)
+                                {
+                                    <tr>
+                                        <td>@item.Metodo</td>
+                                        <td>@item.BIN</td>
+                                        <td>@item.NumReferencia</td>
+                                        <td>@item.NumCheque</td>
+                                        <td>@item.Monto.ToString("N",formato)</td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- /.modal -->

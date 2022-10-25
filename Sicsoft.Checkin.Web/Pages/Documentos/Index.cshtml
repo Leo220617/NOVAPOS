@@ -274,7 +274,7 @@
                                                
                                             &nbsp;
                                             <a asp-page="./Observar" asp-route-id="@item.id" class="fa fa-info-circle icono"> </a> &nbsp;
-                                            @if (item.TipoDocumento.ToLower().Contains("01".ToLower()) || item.TipoDocumento.ToLower().Contains("04".ToLower())){
+                                            @if ((item.TipoDocumento.ToLower().Contains("01".ToLower()) || item.TipoDocumento.ToLower().Contains("04".ToLower()) )&& item.Status == "0"){
                                             
                                                     <a asp-page="./Cancelar" asp-route-id="@item.id" class="fa  fa-window-close icono"> </a>
                                                 }

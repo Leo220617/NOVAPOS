@@ -32,7 +32,7 @@ namespace Sicsoft.Checkin.Web
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
            .AddCookie(options =>
            {
-               options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+               options.ExpireTimeSpan = TimeSpan.FromMinutes(240);
            });
 
             services.AddHttpContextAccessor();
@@ -234,6 +234,10 @@ namespace Sicsoft.Checkin.Web
 
             services.AddRefitClient<ICrudApi<CierreCajasViewModel, int>>()
 .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/CierreCajas"))
+.AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+
+            services.AddRefitClient<ICrudApi<CuentasBancariasViewModel, int>>()
+.ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/CuentasBancarias"))
 .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
             return services;

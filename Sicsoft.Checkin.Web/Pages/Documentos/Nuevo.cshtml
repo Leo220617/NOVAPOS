@@ -56,6 +56,8 @@
                 <input hidden id="Exoneraciones" value="@JsonConvert.SerializeObject(Model.Exoneraciones)" />
                 <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
                 <input hidden id="Documento" value="@JsonConvert.SerializeObject(Model.Documento)" />
+                <input hidden id="CB" value="@JsonConvert.SerializeObject(Model.CB)" />
+
 
                 <input hidden id="urlGenerar" value="@Url.Page("Nuevo", "AgregarDocumento")" />
                 <input hidden id="urlCliente" value="@Url.Page("Nuevo", "AgregarCliente")" />
@@ -679,7 +681,7 @@
 
                     </div>
                     <div class="col-4 TARJETADIV">
-                        <div class="form-group" >
+                        <div class="form-group">
                             <label>Referencia Pago </label>
                             <input type="text" maxlength="10" class="form-control" id="ReferenciaPago" placeholder="Referencia bancaria">
 
@@ -689,7 +691,7 @@
 
                     </div>
                     <div class="col-4 CHEQUEDIV">
-                        <div class="form-group" >
+                        <div class="form-group">
                             <label>Cheque </label>
                             <input type="text" maxlength="50" class="form-control" id="ChequePago" placeholder="Cheque">
 
@@ -699,7 +701,7 @@
 
                     </div>
                     <div class="col-4 OTRODIV">
-                        <div class="form-group" >
+                        <div class="form-group">
                             <label>Nombre </label>
                             <input type="text" maxlength="50" class="form-control" id="otroPago" placeholder="Nombre del método">
 
@@ -708,17 +710,27 @@
 
 
                     </div>
-                     <div class="col-4 EFECTIVODIV">
-                        <div class="form-group" >
+                    <div class="col-4 EFECTIVODIV">
+                        <div class="form-group">
                             <label>Paga con:  </label>
-                            <input type="number"  class="form-control" id="PagadoCon" placeholder="Monto Efectivo">
+                            <input type="number" class="form-control" id="PagadoCon" placeholder="Monto Efectivo">
 
 
                         </div>
 
 
                     </div>
+                    <div class="col-4 ">
+                        <div class="form-group">
+                            <label>Cuenta Bancaria:  </label> <br />
+                            <select class="form-control select2" id="CuentaB">
+                            </select>
 
+
+                        </div>
+
+
+                    </div>
                     <div class="col-sm-12 pl-1" style="text-align: right;">
 
                         <a id="agregarPago" onclick="javascript: insertarPago() " class="btn btn-primary" style="color: white !important;">+</a>
@@ -727,52 +739,52 @@
                 </div>
 
                 <br />
-                  <!-- Table row -->
-                    <div class="row">
-                        <div class="col-12 table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                   
+                <!-- Table row -->
+                <div class="row">
+                    <div class="col-12 table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
 
-                                        <th>Método</th>
-                                        <th class="text-right">BIN</th>
-                                        <th class="text-right">Referencia</th>
-                                        <th class="text-right">Cheque</th> 
-                                        <th class="text-right">Total</th>
-                                        <th class="text-right">Eliminar</th>
 
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyPago">
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.col -->
+                                    <th>Método</th>
+                                    <th class="text-right">BIN</th>
+                                    <th class="text-right">Referencia</th>
+                                    <th class="text-right">Cheque</th>
+                                    <th class="text-right">Total</th>
+                                    <th class="text-right">Eliminar</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyPago">
+                            </tbody>
+                        </table>
                     </div>
-                    <!-- /.row -->
-                      <div class="row">
-                      <!-- /.col -->
-                        <div class="col-12 text-right">
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+                <div class="row">
+                    <!-- /.col -->
+                    <div class="col-12 text-right">
 
 
-                            <div>
-                                <p>Total  : <span id="totPago">0</span> </p>
-                                <p>Faltante  : <span id="fatPago">0</span></p>
-                                <p>Pagado  : <span id="pagPago">0</span></p>
-                            
+                        <div>
+                            <p>Total  : <span id="totPago">0</span> </p>
+                            <p>Faltante  : <span id="fatPago">0</span></p>
+                            <p>Pagado  : <span id="pagPago">0</span></p>
 
-                            </div>
-                            <div class="total-payment">
-                                <h3><b>Vuelto :</b>  <span id="vueltoPago">0 </span></h3>
-                            </div>
 
                         </div>
-                        <!-- /.col -->
-                 </div>
+                        <div class="total-payment">
+                            <h3><b>Vuelto :</b>  <span id="vueltoPago">0 </span></h3>
+                        </div>
+
+                    </div>
+                    <!-- /.col -->
+                </div>
             </div>
             <div class="modal-footer">
-                
+
                 <button type="button" class="btn btn-bold btn-pure btn-primary float-right" onclick="javascript: Generar()">Generar</button>
             </div>
         </div>

@@ -687,7 +687,7 @@ function Generar() {
 
         if (validarOferta(EncOferta)) {
             Swal.fire({
-                title: '¿Desea guardar la oferta?',
+                title: '¿Desea guardar la proforma?',
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: `Aceptar`,

@@ -24,6 +24,7 @@ var Exoneraciones = [];
 var TipoCambio = [];
 var MetodosPagos = [];
 var Documento = [];
+var CB = [];
 
 function Recuperar() {
     try {
@@ -36,7 +37,7 @@ function Recuperar() {
         Exoneraciones = JSON.parse($("#Exoneraciones").val());
         TipoCambio = JSON.parse($("#TipoCambio").val());
         Documento = JSON.parse($("#Documento").val());
-
+        CB = JSON.parse($("#CB").val());
         ExoneracionesCliente = [];
 
         RellenaClientes();
@@ -983,9 +984,31 @@ function AbrirPago() {
         $("#totPago").text(formatoDecimal(Total));
         $("#fatPago").text(formatoDecimal(Total));
         onChangeMetodo();
-
+        RellenaCB();
 
         $("#modalPagos").modal("show");
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar abrir pagos ' + e
+
+        })
+    }
+}
+function RellenaCB() {
+    try {
+        var text = '';
+        $("#CuentaB").html(text);
+
+        for (var i = 0; i < CB.length; i++) {
+
+            text += "<option value= '" + CB[i].id + "' > " + CB[i].Nombre +  " </option>";
+        }
+
+        $("#CuentaB").html(text);
+
+
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -1071,6 +1094,7 @@ function insertarPago() {
                         var Detalle = {
                             id: 0,
                             idEncabezado: 0,
+                            idCuentaBancaria: $("#CuentaB").val() ,
                             Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
                             BIN: "",
                             NumReferencia: "",
@@ -1087,6 +1111,7 @@ function insertarPago() {
                         var Detalle = {
                             id: 0,
                             idEncabezado: 0,
+                            idCuentaBancaria: $("#CuentaB").val(),
                             Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
                             BIN: $("#BINPago").val(),
                             NumReferencia: $("#ReferenciaPago").val(),
@@ -1103,6 +1128,7 @@ function insertarPago() {
                         var Detalle = {
                             id: 0,
                             idEncabezado: 0,
+                            idCuentaBancaria: $("#CuentaB").val(),
                             Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
                             BIN: "",
                             NumReferencia: "",
@@ -1118,6 +1144,7 @@ function insertarPago() {
                         var Detalle = {
                             id: 0,
                             idEncabezado: 0,
+                            idCuentaBancaria: $("#CuentaB").val(),
                             Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
                             BIN: "",
                             NumReferencia: "",
@@ -1142,6 +1169,7 @@ function insertarPago() {
             onChangeMetodo();
             RellenaTablaPagos();
             LimpiarDatosPago();
+            RellenaCB();
         } else {
            
         }
@@ -1193,6 +1221,15 @@ function validarMetodo() {
                 icon: 'error',
                 title: 'Oops...',
                 text: 'No se puede ingresar montos mayores a lo faltante'
+
+            })
+            return false;
+        }
+        if ($("#CuentaB").val() == "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Falta la cuenta bancaria'
 
             })
             return false;

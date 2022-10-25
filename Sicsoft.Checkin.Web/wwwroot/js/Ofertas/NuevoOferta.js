@@ -754,7 +754,7 @@ function Generar() {
 
         if (validarOferta(EncOferta)) {
             Swal.fire({
-                title: '¿Desea guardar la oferta?',
+                title: '¿Desea guardar la cotización?',
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: `Aceptar`,

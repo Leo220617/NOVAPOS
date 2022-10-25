@@ -24,7 +24,8 @@
 
         <ul class="sidebar-menu" data-widget="tree">
 
-            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "44").FirstOrDefault()))
+            @{
+                if (!string.IsNullOrEmpty(Roles.Where(a => a == "44").FirstOrDefault()))
                 {
                     <li class="">
 
@@ -39,7 +40,8 @@
 
             }
 
-            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "19").FirstOrDefault()))
+            @{
+                if (!string.IsNullOrEmpty(Roles.Where(a => a == "19").FirstOrDefault()))
                 {
                     <li class="">
 
@@ -54,7 +56,8 @@
 
             }
 
-            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "31").FirstOrDefault()))
+            @{
+                if (!string.IsNullOrEmpty(Roles.Where(a => a == "31").FirstOrDefault()))
                 {
                     <li class="">
 
@@ -68,7 +71,8 @@
                 }
 
             }
-            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "35").FirstOrDefault()))
+            @{
+                if (!string.IsNullOrEmpty(Roles.Where(a => a == "35").FirstOrDefault()))
                 {
                     <li class="">
 

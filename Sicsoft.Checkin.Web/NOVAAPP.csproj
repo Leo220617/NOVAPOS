@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Proformas\Index.cshtml" />
     <Content Remove="wwwroot\js\Documentos\EditarDocumento.js~RF33b1f000.TMP" />
     <Content Remove="wwwroot\js\Documentos\NuevoDocumento.js~RF33a8b758.TMP" />
   </ItemGroup>
@@ -14,6 +15,8 @@
   <ItemGroup>
     <None Remove="Pages\Documentos\Nuevo.cshtml~RF33a5c5be.TMP" />
     <None Remove="Pages\Documentos\Observar.cshtml~RF339ce72c.TMP" />
+    <None Remove="Pages\Proformas\Index.cshtml~RF1b2a977d.TMP" />
+    <None Remove="Pages\Proformas\Observar.cshtml.cs~RF1b4f85e5.TMP" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,11 +36,20 @@
 
   <ItemGroup>
     <None Include="Pages\Documentos\Cancelar.cshtml" />
+    <None Include="Pages\Proformas\Index.cshtml" />
     <None Include="wwwroot\assets\vendor_components\popper\.github\ISSUE_TEMPLATE.md" />
     <None Include="wwwroot\assets\vendor_components\popper\.github\PULL_REQUEST_TEMPLATE.md" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\Proformas\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Proformas\Index.cshtml" />
+  </ItemGroup>
 
 
 

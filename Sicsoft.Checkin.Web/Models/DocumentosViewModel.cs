@@ -25,6 +25,9 @@ namespace NOVAAPP.Models
 
         public string TipoDocumento { get; set; }
         public int idCaja { get; set; }
+
+        public int BaseEntry { get; set; }
+
         public MetodosPagosViewModel[] MetodosPagos { get; set; }
 
         public DetDocumentoViewModel[] Detalle { get; set; }

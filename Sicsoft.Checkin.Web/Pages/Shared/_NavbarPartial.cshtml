@@ -24,6 +24,21 @@
 
         <ul class="sidebar-menu" data-widget="tree">
 
+            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "44").FirstOrDefault()))
+                {
+                    <li class="">
+
+                        <a asp-page="/Proformas/Index">
+                            <i class="mdi mdi-currency-usd"></i> <span>Proformas</span>
+
+                        </a>
+
+                    </li>
+
+                }
+
+            }
+
             @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "19").FirstOrDefault()))
                 {
                     <li class="">

@@ -159,6 +159,8 @@ namespace NOVAAPP.Pages.Proformas
             {
                 recibidos.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
                 recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
+                recibidos.Tipo = "01";
+                recibidos.BaseEntry = 0;
                 var resp = await service.Agregar(recibidos);
 
                 var resp2 = new

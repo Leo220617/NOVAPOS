@@ -74,6 +74,7 @@ namespace NOVAAPP.Pages.Proformas
                     filtro.ItemCode = "0";
 
                 }
+                filtro.Categoria = "01";
                 Listas = await service.ObtenerLista(filtro);
                 var Roles = await roles.ObtenerLista("");
                 var RolCajero = Roles.Where(a => a.NombreRol.ToLower().Contains("cajero".ToLower())).FirstOrDefault();

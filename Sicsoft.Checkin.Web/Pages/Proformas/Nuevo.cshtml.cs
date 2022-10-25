@@ -85,6 +85,7 @@ namespace NOVAAPP.Pages.Proformas
                 {
                     return RedirectToPage("/NoPermiso");
                 }
+                 
                 Impuestos = await serviceU.ObtenerLista("");
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;

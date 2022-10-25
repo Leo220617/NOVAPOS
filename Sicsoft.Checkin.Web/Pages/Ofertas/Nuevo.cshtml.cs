@@ -76,7 +76,7 @@ namespace NOVAAPP.Pages.Ofertas
             this.tipoCambio = tipoCambio;
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             try
             {
@@ -85,6 +85,48 @@ namespace NOVAAPP.Pages.Ofertas
                 {
                     return RedirectToPage("/NoPermiso");
                 }
+
+                if (id != 0)
+                {
+                    var Ofertas = await service.ObtenerPorId(id);
+                    Oferta = new OfertasViewModel();
+                    Oferta.idCliente = Ofertas.idCliente;
+                    Oferta.CodSuc = Ofertas.CodSuc;
+                    Oferta.idUsuarioCreador = Ofertas.idUsuarioCreador;
+                    Oferta.Fecha = DateTime.Now;
+                    Oferta.FechaVencimiento = Ofertas.FechaVencimiento;
+                    Oferta.Moneda = Ofertas.Moneda;
+                    Oferta.Subtotal = Ofertas.Subtotal;
+                    Oferta.TotalImpuestos = Ofertas.TotalImpuestos;
+                    Oferta.TotalDescuento = Ofertas.TotalDescuento;
+                    Oferta.TotalCompra = Ofertas.TotalCompra;
+                    Oferta.PorDescto = Ofertas.PorDescto;
+                    Oferta.Comentarios = "Basado en la proforma # " + id;
+                    Oferta.BaseEntry = id;
+                    var Tamaño = Ofertas.Detalle.Length;
+                    Oferta.Detalle = new DetOfertaViewModel[Tamaño];
+
+                    var i = 0;
+                    foreach (var item in Ofertas.Detalle)
+                    {
+                        Oferta.Detalle[i] = new DetOfertaViewModel();
+                        DetOfertaViewModel det = new DetOfertaViewModel();
+                        det.idProducto = item.idProducto;
+                        det.NumLinea = item.NumLinea;
+                        det.Cantidad = item.Cantidad;
+                        det.TotalImpuesto = item.TotalImpuesto;
+                        det.PrecioUnitario = item.PrecioUnitario;
+                        det.PorDescto = item.PorDescto;
+                        det.Descuento = item.Descuento;
+                        det.TotalLinea = item.TotalLinea;
+                        det.Cabys = item.Cabys;
+                        det.idExoneracion = item.idExoneracion;
+                        Oferta.Detalle[i] = det;
+                        i++;
+                    }
+
+                }
+
                 Impuestos = await serviceU.ObtenerLista("");
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;
@@ -159,8 +201,13 @@ namespace NOVAAPP.Pages.Ofertas
             {
                 recibidos.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
                 recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
+                recibidos.Tipo = "02";
                 var resp = await service.Agregar(recibidos);
+                if (recibidos.BaseEntry > 0)
+                {
+                    await service.Eliminar(recibidos.BaseEntry);
 
+                }
                 var resp2 = new
                 {
                     success = true,

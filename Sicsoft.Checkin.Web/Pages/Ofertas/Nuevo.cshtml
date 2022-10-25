@@ -55,6 +55,8 @@
                 <input hidden id="Impuestos" value="@JsonConvert.SerializeObject(Model.Impuestos)" />
                 <input hidden id="Exoneraciones" value="@JsonConvert.SerializeObject(Model.Exoneraciones)" />
                 <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
+                <input hidden id="Documento" value="@JsonConvert.SerializeObject(Model.Oferta)" />
+
 
                 <input hidden id="urlGenerar" value="@Url.Page("Nuevo", "AgregarOferta")" />
                 <input hidden id="urlCliente" value="@Url.Page("Nuevo", "AgregarCliente")" />
@@ -85,6 +87,8 @@
                                     <div class="text-left">
                                         <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
                                         <input hidden id="Fecha" type="datetime" value="@DateTime.Now" />
+                                        <input hidden id="BaseEntry"   value="@Model.Oferta.BaseEntry" />
+
 
                                     </div>
 

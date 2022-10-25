@@ -93,6 +93,7 @@ namespace NOVAAPP.Pages.Documentos
                     var Oferta = await serviceO.ObtenerPorId(id);
                     Documento = new DocumentosViewModel();
                     Documento.idOferta = id;
+                    Documento.CodSuc = Oferta.CodSuc;
                     Documento.idCliente = Oferta.idCliente;
                     Documento.idUsuarioCreador = Oferta.idUsuarioCreador;
                     Documento.Comentarios = Oferta.Comentarios;
@@ -203,6 +204,7 @@ namespace NOVAAPP.Pages.Documentos
 
                 recibidos.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
                 recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
+                recibidos.BaseEntry = recibidos.idOferta;
                 var resp = await service.Agregar(recibidos);
 
                 if(recibidos.idOferta > 0)

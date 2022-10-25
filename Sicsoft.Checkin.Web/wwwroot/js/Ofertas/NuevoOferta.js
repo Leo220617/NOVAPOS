@@ -22,24 +22,90 @@ var Barrios = [];
 var ProdCadena = [];
 var Exoneraciones = [];
 var TipoCambio = [];
+var Documento = [];
 
 function Recuperar() {
-    Cantones = JSON.parse($("#Cantones").val());
-    Distritos = JSON.parse($("#Distritos").val());
-    Barrios = JSON.parse($("#Barrios").val());
-    Clientes = JSON.parse($("#Clientes").val());
-    Productos = JSON.parse($("#Productos").val());
-    Impuestos = JSON.parse($("#Impuestos").val());
-    Exoneraciones = JSON.parse($("#Exoneraciones").val());
-    TipoCambio = JSON.parse($("#TipoCambio").val());
+    try {
+        Cantones = JSON.parse($("#Cantones").val());
+        Distritos = JSON.parse($("#Distritos").val());
+        Barrios = JSON.parse($("#Barrios").val());
+        Clientes = JSON.parse($("#Clientes").val());
+        Productos = JSON.parse($("#Productos").val());
+        Impuestos = JSON.parse($("#Impuestos").val());
+        Exoneraciones = JSON.parse($("#Exoneraciones").val());
+        TipoCambio = JSON.parse($("#TipoCambio").val());
+        Documento = JSON.parse($("#Documento").val());
 
-    ExoneracionesCliente = [];
+        ExoneracionesCliente = [];
 
-    RellenaClientes();
-    RellenaExoneraciones();
-    maskCedula();
+        RellenaClientes();
+        RellenaExoneraciones();
+        maskCedula();
+        if (Documento != null || Documento != undefined) {
+            RecuperarInformacion();
+
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar ' + e.stack
+
+        })
+    }
+    
 }
+function RecuperarInformacion() {
+    try {
+        $("#ClienteSeleccionado").val(Documento.idCliente);
+        $("#Fecha").val(Documento.Fecha);
 
+        $("#selectMoneda").val(Documento.Moneda);
+    
+
+        $("#inputComentarios").val(Documento.Comentarios);
+        $("#subG").text(formatoDecimal(Documento.Subtotal.toFixed(2)));
+        $("#impG").text(formatoDecimal(Documento.TotalImpuestos.toFixed(2)));
+        $("#descG").text(formatoDecimal(Documento.TotalDescuento.toFixed(2)));
+        $("#totG").text(formatoDecimal(Documento.TotalCompra.toFixed(2)));
+        $("#descuento").text(formatoDecimal(Documento.PorDescto.toFixed(2)));
+
+        for (var i = 0; i < Documento.Detalle.length; i++) {
+            var PE = Productos.find(a => a.id == Documento.Detalle[i].idProducto);
+
+            var Producto =
+            {
+                idEncabezado: 0,
+                Descripcion: PE.Codigo + " - " + PE.Nombre,
+                Moneda: $("#selectMoneda").val(),
+                idProducto: PE.id,
+                NumLinea: 0,
+                Cantidad: parseFloat(Documento.Detalle[i].Cantidad.toFixed(2)),
+                TotalImpuesto: parseFloat(Documento.Detalle[i].TotalImpuesto.toFixed(2)),
+                PrecioUnitario: parseFloat(Documento.Detalle[i].PrecioUnitario.toFixed(2)),
+                PorDescto: parseFloat(Documento.Detalle[i].PorDescto.toFixed(2)),
+                Descuento: parseFloat(Documento.Detalle[i].Descuento.toFixed(2)),
+                TotalLinea: parseFloat(Documento.Detalle[i].TotalLinea.toFixed(2)),
+                Cabys: Documento.Detalle[i].Cabys,
+                idExoneracion: Documento.Detalle[i].Cabys,
+                PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon
+            };
+            ProdCadena.push(Producto);
+        }
+
+        RellenaTabla();
+        onChangeCliente();
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar informacion ' + e
+
+        })
+    }
+}
 function onChangeMoneda() {
     try {
 
@@ -682,6 +748,7 @@ function Generar() {
             PorDescto: parseFloat(ReplaceLetra($("#descuento").val())),
             CodSuc: "",
             Moneda: $("#selectMoneda").val(),
+            BaseEntry: $("#BaseEntry").val(),
             Detalle: ProdCadena
         }
 

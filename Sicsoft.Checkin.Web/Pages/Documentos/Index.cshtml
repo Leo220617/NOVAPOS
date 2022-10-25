@@ -98,109 +98,109 @@
                                     </div>
                                 </div>
 
-                                   <div class="col-2">
+                                <div class="col-2">
                                     <div class="form-group">
                                         <label for="cyber">Cliente:</label>
                                         <select class="form-control select2" id="ClienteF" asp-for="filtro.Codigo1" required>
-                                               <option value="0"> Seleccione</option>
+                                            <option value="0"> Seleccione</option>
 
-                                                    @foreach(var item in Model.Clientes)
-                                                    {
-                                                        <option value="@item.id"> @item.Codigo - @item.Nombre</option>
-                                                    }
-
-
-                                                </select>
+                                            @foreach (var item in Model.Clientes)
+                                        {
+                                            <option value="@item.id"> @item.Codigo - @item.Nombre</option>
+                                        }
 
 
-
-
-
-                                        </div>
-                                    </div>
-                                    <div class="col-2">
-                                    <div class="form-group">
-                                        <label for="cyber">Usuario:</label>
-                                        <select class="form-control select2" id="UsuarioF" asp-for="filtro.Codigo2" required>
-                                               <option value="0"> Seleccione</option>
-
-                                                    @foreach(var item in Model.Users)
-                                                    {
-                                                        <option value="@item.id">@item.Nombre</option>
-                                                    }
-
-
-                                                </select>
+                                    </select>
 
 
 
 
 
-                                      
-                                    </div>
                                 </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="cyber">Usuario:</label>
+                                    <select class="form-control select2" id="UsuarioF" asp-for="filtro.Codigo2" required>
+                                        <option value="0"> Seleccione</option>
+
+                                        @foreach (var item in Model.Users)
+                                        {
+                                            <option value="@item.id">@item.Nombre</option>
+                                        }
+
+
+                                    </select>
 
 
 
 
 
 
-
-                              
-                                <div class="col-sm-2 pl-1" style="text-align: center; padding-top: 2%;">
-                                    <button title="Buscar" type="submit" class="btn btn-rounded btn-outline-primary"> <i class="fa fa-search"></i></button>
                                 </div>
-
-
-
-
                             </div>
 
-                        </form>
-                    </div>
-                </div>
 
 
-                <div class="box">
-                    <div class="box-header with-border">
-                        <div class="row">
-                            <div class="col-sm-8"> <h4 class="box-title">Documentos</h4></div>
-                            <div class="col-sm-4">  </div>
+
+
+
+
+
+                            <div class="col-sm-2 pl-1" style="text-align: center; padding-top: 2%;">
+                                <button title="Buscar" type="submit" class="btn btn-rounded btn-outline-primary"> <i class="fa fa-search"></i></button>
+                            </div>
+
+
+
 
                         </div>
 
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-sm-8"> <h4 class="box-title">Documentos</h4></div>
+                        <div class="col-sm-4">  </div>
 
                     </div>
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <div class="table-responsive">
-                            <table id="example1" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-
-                                        <th>ID</th>
-
-                                        <th>Cliente</th>
-                                        <th>Fecha Creado</th>
-
-                                        <th>Tipo Doc</th>
-                                        <th>Moneda</th>
-
-                                        <th>SubTotal</th>
-                                        <th>Descuento</th>
-                                        <th>Impuesto</th>
-                                        <th>Total</th>
 
 
-                                        <th>Generado Por</th>
-                                        
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
 
-                                        <th>Acción</th>
+                                    <th>ID</th>
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model.Listas)
+                                    <th>Cliente</th>
+                                    <th>Fecha Creado</th>
+
+                                    <th>Tipo Doc</th>
+                                    <th>Moneda</th>
+
+                                    <th>SubTotal</th>
+                                    <th>Descuento</th>
+                                    <th>Impuesto</th>
+                                    <th>Total</th>
+
+
+                                    <th>Generado Por</th>
+
+
+                                    <th>Acción</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Listas)
                                 {
                                     <tr>
 
@@ -216,28 +216,28 @@
                                                 @item.Fecha.ToString("dd/MM/yyyy")
                                         </td>
                                         <td>
-                                              @switch (item.TipoDocumento)
-                                            {
-                                                case "01":
-                                                    {
+                                                @switch (item.TipoDocumento)
+                                                {
+                                                    case "01":
+                                                        {
                                                         <p>Factura Electrónica</p>
-                                                        break;
-                                                    }
-                                                       case "03":
-                                                    {
+                                                            break;
+                                                        }
+                                                    case "03":
+                                                        {
                                                         <p>Nota de Crédito</p>
-                                                        break;
-                                                    }
-                                                    
-                                                case "04":
-                                                    {
+                                                            break;
+                                                        }
+
+                                                    case "04":
+                                                        {
                                                         <p>Tiquete Electrónico</p>
-                                                        break;
-                                                    }
-                                                    }
+                                                            break;
+                                                        }
+                                                }
                                         </td>
-                                         <td>
-                                            @item.Moneda
+                                        <td>
+                                                @item.Moneda
                                         </td>
                                         <td>
                                                 @Math.Round(@item.Subtotal, 2).ToString("C",formato)
@@ -260,25 +260,26 @@
                                                 @(Model.Users.Where(a => a.id == item.idUsuarioCreador).FirstOrDefault() == null ? "": Model.Users.Where(a => a.id == item.idUsuarioCreador).FirstOrDefault().Nombre )
 
                                         </td>
-                                      
+
 
 
 
                                         <td align="center" style="padding-top:15px;">
-                                               
-                                             @if (!string.IsNullOrEmpty(Roles.Where(a => a == "34").FirstOrDefault()))
+
+                                                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "34").FirstOrDefault()))
                                                 {
-                                                    <a asp-page="./Editar" asp-route-id="@item.id" class="fa fa-edit icono"> </a>
+                                                <a asp-page="./Editar" asp-route-id="@item.id" class="fa fa-edit icono"> </a>
                                                 }
-                                                
-                                               
+
+
                                             &nbsp;
                                             <a asp-page="./Observar" asp-route-id="@item.id" class="fa fa-info-circle icono"> </a> &nbsp;
-                                            @if ((item.TipoDocumento.ToLower().Contains("01".ToLower()) || item.TipoDocumento.ToLower().Contains("04".ToLower()) )&& item.Status == "0"){
-                                            
-                                                    <a asp-page="./Cancelar" asp-route-id="@item.id" class="fa  fa-window-close icono"> </a>
+                                                @if ((item.TipoDocumento.ToLower().Contains("01".ToLower()) || item.TipoDocumento.ToLower().Contains("04".ToLower())) && item.Status == "0")
+                                                {
+
+                                                <a asp-page="./Cancelar" asp-route-id="@item.id" class="fa  fa-window-close icono"> </a>
                                                 }
-                                            </td>
+                                        </td>
 
 
                                     </tr>
@@ -296,7 +297,7 @@
                                     <th>Fecha Creado</th>
 
                                     <th>Tipo Doc</th>
-                                        <th>Moneda</th>
+                                    <th>Moneda</th>
 
                                     <th>SubTotal</th>
                                     <th>Descuento</th>
@@ -305,7 +306,7 @@
 
 
                                     <th>Generado Por</th>
-                                   
+
 
                                     <th>Acción</th>
 

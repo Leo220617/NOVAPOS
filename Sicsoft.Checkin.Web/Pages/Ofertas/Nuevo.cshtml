@@ -89,7 +89,7 @@
                                     <div class="text-left">
                                         <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
                                         <input hidden id="Fecha" type="datetime" value="@DateTime.Now" />
-                                        <input hidden id="BaseEntry"   value="@Model.Oferta.BaseEntry" />
+                                        <input hidden id="BaseEntry"   value="@(Model.Oferta == null ? 0 :Model.Oferta.BaseEntry )" />
 
 
                                     </div>

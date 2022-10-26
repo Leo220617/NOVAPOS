@@ -126,6 +126,8 @@ namespace NOVAAPP.Pages.Ofertas
                     }
 
                 }
+                 
+
 
                 Impuestos = await serviceU.ObtenerLista("");
                 ParametrosFiltros filtro = new ParametrosFiltros();

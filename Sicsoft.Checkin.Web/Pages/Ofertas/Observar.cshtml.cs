@@ -22,6 +22,7 @@ namespace NOVAAPP.Pages.Ofertas
         private readonly ICrudApi<ClientesViewModel, string> serviceE;
         private readonly ICrudApi<ProductosViewModel, string> serviceP;
         private readonly ICrudApi<ExoneracionesViewModel, int> exoneracion;
+        private readonly ICrudApi<CondicionesPagosViewModel, int> condiconesPago;
 
         [BindProperty]
         public ClientesViewModel[] Clientes { get; set; }
@@ -35,12 +36,16 @@ namespace NOVAAPP.Pages.Ofertas
         [BindProperty]
         public ExoneracionesViewModel[] Exoneraciones { get; set; }
 
-        public ObservarModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion)
+        [BindProperty]
+        public CondicionesPagosViewModel CondicionesPago { get; set; }
+
+        public ObservarModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago)
         {
             this.service = service;
             this.serviceE = serviceE;
             this.serviceP = serviceP;
             this.exoneracion = exoneracion;
+            this.condiconesPago = condiconesPago;
         }
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -51,10 +56,12 @@ namespace NOVAAPP.Pages.Ofertas
                 {
                     return RedirectToPage("/NoPermiso");
                 }
+                var CondPago = await condiconesPago.ObtenerLista("");
                 Oferta = await service.ObtenerPorId(id);
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;
                 filtro.Activo = true;
+                CondicionesPago = CondPago.Where(a => a.id == Oferta.idCondPago).FirstOrDefault();
                 Clientes = await serviceE.ObtenerLista(filtro);
                 Productos = await serviceP.ObtenerLista("");
                 Exoneraciones = await exoneracion.ObtenerLista("");

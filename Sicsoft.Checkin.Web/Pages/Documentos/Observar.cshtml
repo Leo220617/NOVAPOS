@@ -135,22 +135,22 @@
                                                 {
                                                     case "01":
                                                         {
-                                                            <b>Factura Electrónica</b>
+                                                            <p>Factura Electrónica</p>
                                                             break;
                                                         }
                                                     case "03":
                                                         {
-                                                            <b>Nota de Crédito</b>
+                                                            <p>Nota de Crédito</p>
                                                             break;
                                                         }
                                                     case "04":
                                                         {
-                                                            <b>Tiquete Electrónico</b>
+                                                            <p>Tiquete Electrónico</p>
                                                             break;
                                                         }
                                                 }
-                                            </h5>
 
+                                            </h5>
                                         </div>
 
 
@@ -250,12 +250,12 @@
                     </div>
                     <!-- /.row -->
                     <!-- /.row -->
-                    @if(Model.Documento.MetodosPagos.Count() > 0)
-    {
-            <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#modalPagos">
-        Métodos de Pago
-    </button>
-    }
+                    @if (Model.Documento.MetodosPagos.Count() > 0)
+                    {
+                        <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#modalPagos">
+                            Métodos de Pago
+                        </button>
+                    }
                 </div>
             </div>
 
@@ -278,7 +278,7 @@
         </div>
     </div>
 
- 
+
 
 
 

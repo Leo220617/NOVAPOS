@@ -23,6 +23,7 @@ var ProdCadena = [];
 var Exoneraciones = [];
 var Oferta = [];
 var TipoCambio = [];
+var CP = [];
 
 function Recuperar() {
     Cantones = JSON.parse($("#Cantones").val());
@@ -34,6 +35,7 @@ function Recuperar() {
     Exoneraciones = JSON.parse($("#Exoneraciones").val());
     Oferta = JSON.parse($("#Oferta").val());
     TipoCambio = JSON.parse($("#TipoCambio").val());
+    CP = JSON.parse($("#CP").val());
 
     ExoneracionesCliente = [];
 
@@ -81,6 +83,7 @@ function RecuperarInformacion() {
         }
         RellenaTabla();
         onChangeCliente();
+        $("#selectCondPago").val(Oferta.idCondPago);
 
 
     } catch (e) {
@@ -224,26 +227,69 @@ function RellenaExoneraciones() {
 }
 
 function onChangeCliente() {
-    var idCliente = $("#ClienteSeleccionado").val();
+    try {
+        var idCliente = $("#ClienteSeleccionado").val();
 
-    var Cliente = Clientes.find(a => a.id == idCliente);
+        var Cliente = Clientes.find(a => a.id == idCliente);
+        var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
 
-    $("#spanDireccion").text(Cliente.Sennas);
-    $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
+        RellenaCondiciones(CondP);
 
-    ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
-    ProdClientes = ProdClientes.sort(function (a, b) {
-        if (a.Stock < b.Stock) {
-            return 1;
+        $("#spanDireccion").text(Cliente.Sennas);
+        $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
+
+        ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
+        ProdClientes = ProdClientes.sort(function (a, b) {
+            if (a.Stock < b.Stock) {
+                return 1;
+            }
+            if (a.Stock > b.Stock) {
+                return -1;
+            }
+            // a must be equal to b
+            return 0;
+        });
+        RellenaProductos();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
+
+        })
+    }
+   
+
+}
+function RellenaCondiciones(CPS) {
+    try {
+        var text = "";
+        $("#selectCondPago").html(text);
+
+        var Contado = CP.find(a => a.Nombre == "Contado");
+
+        text += "<option value='" + Contado.id + "' selected> " + Contado.Nombre + " </option>";
+
+
+        for (var i = 0; i < CPS.length; i++) {
+            if (CPS[i].id != Contado.id) {
+                text += "<option value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+
+            }
         }
-        if (a.Stock > b.Stock) {
-            return -1;
-        }
-        // a must be equal to b
-        return 0;
-    });
-    RellenaProductos();
 
+
+        $("#selectCondPago").html(text);
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
+
+        })
+    }
 }
 
 function ExoneracionxCliente() {
@@ -733,12 +779,14 @@ function Generar() {
             PorDescto: parseFloat(ReplaceLetra($("#descuento").val())),
             CodSuc: "",
             Moneda: $("#selectMoneda").val(),
+            idCondPago: $("#selectCondPago").val(),
+            TipoDocumento: $("#selectTD").val(),
             Detalle: ProdCadena
         }
 
         if (validarOferta(EncOferta)) {
             Swal.fire({
-                title: '¿Desea editar la oferta?',
+                title: '¿Desea editar la proforma?',
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: `Aceptar`,

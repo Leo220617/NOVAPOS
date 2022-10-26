@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model NOVAAPP.Pages.Ofertas.EditarModel
 @{
-    ViewData["Title"] = "Cotizaciones";
+    ViewData["Title"] = "Órdenes de Venta";
 }
 @using Microsoft.AspNetCore.Http
 @using System;
@@ -36,11 +36,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Cotización
+            Orden de Venta
         </h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
-            <li class="breadcrumb-item active">Editar Cotización</li>
+            <li class="breadcrumb-item active">Editar Orden de Venta</li>
         </ol>
     </section>
 
@@ -58,7 +58,7 @@
                 <input hidden id="Exoneraciones" value="@JsonConvert.SerializeObject(Model.Exoneraciones)" />
                 <input hidden id="Oferta" value="@JsonConvert.SerializeObject(Model.Oferta)" />
                 <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
-
+                <input hidden id="CP" value="@JsonConvert.SerializeObject(Model.CP)" />
                 <input hidden id="urlGenerar" value="@Url.Page("Editar", "AgregarOferta")" />
                 <input hidden id="urlCliente" value="@Url.Page("Editar", "AgregarCliente")" />
 
@@ -68,7 +68,7 @@
                     <div class="box-header with-border">
                         <div class="row">
                             <div class="col-8">
-                                <h6 class="box-subtitle">Editar Cotización</h6>
+                                <h6 class="box-subtitle">Editar Orden de Venta</h6>
 
 
                             </div>
@@ -82,9 +82,9 @@
                     <div class="box-body">
                         <!-- title row -->
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-3">
                                 <div class="page-header mt-0">
-                                    <h2 class="d-inline"><span class="font-size-24">Cotización</span></h2>
+                                    <h2 class="d-inline"><span class="font-size-24">Orden de Venta</span></h2>
                                     <div class="text-left">
                                         <h5>Fecha <span class="font-size-18">@Model.Oferta.Fecha.ToString("dd MMM yyy")</span></h5>
                                         <input hidden id="Fecha" type="datetime" value="@DateTime.Now" />
@@ -98,6 +98,21 @@
                                 <div class="form-group">
                                     <label>Fecha Vencimiento</label>
                                     <input type="date" class="form-control" id="fechaVencimiento" value="@Model.Oferta.FechaVencimiento.ToString("yyyy-MM-dd")">
+
+
+                                </div>
+                            </div>
+
+                               <div class="col-3">
+                                <div class="form-group">
+                                    <label>Tipo de Documento</label>
+                                    <select class="form-control" id="selectTD">
+                                        <option value="01">Factura Electrónica</option>
+
+                                        <option value="04">Tiquete Electrónico</option>
+
+
+                                    </select>
 
 
                                 </div>
@@ -134,7 +149,15 @@
                                     <strong id="strongInfo">Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
                                 </address>
                             </div>
-                            <div class="col-sm-4"> <a onclick="javascript: AbrirModalAgregarCliente()" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Cliente</a></div>
+
+                              <div class="col-sm-3">
+                                <label>Cond. Pago</label>
+                                    <select class="form-control" id="selectCondPago"  >
+                                        
+
+                                    </select>
+                            </div>
+                            <div class="col-sm-3"> <a onclick="javascript: AbrirModalAgregarCliente()" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Cliente</a></div>
                         </div>
                         <!-- /.col -->
                         <!-- /.row -->

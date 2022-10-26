@@ -26,6 +26,7 @@ namespace NOVAAPP.Pages.Proformas
         private readonly ICrudApi<GruposClientesViewModel, int> grupo;
 
         private readonly ICrudApi<TipoCambiosViewModel, int> tipoCambio;
+        private readonly ICrudApi<CondicionesPagosViewModel, int> serviceCP; //API
 
 
         [BindProperty]
@@ -57,7 +58,9 @@ namespace NOVAAPP.Pages.Proformas
         [BindProperty]
         public TipoCambiosViewModel[] TP { get; set; }
 
-        public EditarModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio) //CTOR 
+        [BindProperty]
+        public CondicionesPagosViewModel[] CP { get; set; }
+        public EditarModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP) //CTOR 
         {
             this.service = service;
             this.serviceU = serviceU;
@@ -70,6 +73,7 @@ namespace NOVAAPP.Pages.Proformas
             this.exo = exo;
             this.grupo = grupo;
             this.tipoCambio = tipoCambio;
+            this.serviceCP = serviceCP;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -83,6 +87,7 @@ namespace NOVAAPP.Pages.Proformas
                 }
 
                 Oferta = await service.ObtenerPorId(id);
+                CP = await serviceCP.ObtenerLista("");
                 Impuestos = await serviceU.ObtenerLista("");
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;

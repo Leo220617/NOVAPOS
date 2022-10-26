@@ -1,11 +1,11 @@
 ﻿@page "{id}"
 @model NOVAAPP.Pages.Ofertas.ObservarModel
 @{
-     ViewData["Title"] = "Ofertas";
-       NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
-      formato.CurrencySymbol = "";
-        formato.CurrencyGroupSeparator = ",";
-        formato.NumberDecimalSeparator = ".";
+    ViewData["Title"] = "Órdenes de Venta";
+    NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
+    formato.CurrencySymbol = "";
+    formato.CurrencyGroupSeparator = ",";
+    formato.NumberDecimalSeparator = ".";
 }
 @using Microsoft.AspNetCore.Http
 @using System;
@@ -27,148 +27,186 @@
 
 
 }
-@section scripts{
-   <script>
-       $(document).ready(function () {
-            jQuery(document).ready(function ($) {
-                  
+    @section scripts{
+    <script>
+        $(document).ready(function() {
+            jQuery(document).ready(function($) {
+
             });
 
 
 
-            $(document).ready(function () {
-                
+            $(document).ready(function() {
+
             });
 
 
         });
 
-         function ImprimirPantalla()
-        {
+        function ImprimirPantalla() {
             try {
-               // window.print();
+                // window.print();
                 var margins = {
                     top: 10,
                     bottom: 10,
                     left: 10,
                     width: 595
-                  };
-                
+                };
+
 
                 html = $(".html").html();
                 html2pdf(html, {
-                margin:1,
-                padding:0,
-                filename: 'OfertaVenta.pdf',
-                image: { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 2,  logging: true },
-                jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
-                class: ImprimirPantalla
-            });
+                    margin: 1,
+                    padding: 0,
+                    filename: 'OfertaVenta.pdf',
+                    image: { type: 'jpeg', quality: 1 },
+                    html2canvas: { scale: 2, logging: true },
+                    jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
+                    class: ImprimirPantalla
+                });
 
-            }catch(e)
-            {
+            } catch (e) {
                 console.log(e);
                 Swal.fire({
-                                     icon: 'error',
-                                     title: 'Oops...',
-                                     text: 'Ha ocurrido un error al intentar imprimir ' + e
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar imprimir ' + e
 
-                                 })
+                })
             }
         }
 
-   </script>
+    </script>
 }
 
 
-@using Newtonsoft.Json;
-@using System.Globalization
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <h1>
-       Ofertas
-    </h1>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
-        <li class="breadcrumb-item active">Observar Oferta</li>
-    </ol>
-</section>
+    @using Newtonsoft.Json;
+    @using System.Globalization
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Orden de Venta
+        </h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+            <li class="breadcrumb-item active">Observar Orden de Venta</li>
+        </ol>
+    </section>
 
-<section class="content ">
-    <div class="row">
-        <div class="col-12">
+    <section class="content ">
+        <div class="row">
+            <div class="col-12">
 
-            <div class="box">
-                <div class="box-header with-border">
-                    <div class="row">
-                        <div class="col-8">
-                            <h6 class="box-subtitle">Observar Oferta</h6>
-                           
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-8">
+                                <h6 class="box-subtitle">Observar Orden de Venta</h6>
 
-                        </div>
-                        <div class="col-4">
-                           <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
 
-                            &nbsp;
+                            </div>
+                            <div class="col-4">
+                                <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
 
-                           
+                                &nbsp;
 
+
+
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="box-body">
-                    <!-- title row -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="page-header mt-0">
-                                <h2 class="d-inline"><span class="font-size-24">Oferta No: @Model.Oferta.id</span></h2>
-                                <br />
-                                <div class="text-left">
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
+                    <div class="box-body">
+                        <!-- title row -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-header mt-0">
+                                    <h2 class="d-inline"><span class="font-size-24">Orden de Venta No: @Model.Oferta.id</span></h2>
+                                    <br />
+                                    <div class="text-left">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
+
+                                            </div>
+
+                                            <div class="col-4">
+                                                <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
+
+                                            </div>
+
+
+                                            <div class="col-4">
+                                                <h5>
+                                                    <b>Estado:</b>@if (Model.Oferta.Status == "0")
+                                                {
+                                                    <span class="badge badge-pill badge-success">Abierto</span>
+
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-pill badge-danger">Cerrado</span>
+                                                }
+                                            </h5>
 
                                         </div>
-                                      
-                                        <div class="col-3">
-                                            <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
+                                         <div class="col-4">
+                                            <h5>
+                                                <b>Tipo de Documento:</b>  @switch (Model.Oferta.TipoDocumento)
+                                                {
+                                                    case "01":
+                                                        {
+                                                            <p>Factura Electrónica</p>
+                                                            break;
+                                                        }
+                                                    case "03":
+                                                        {
+                                                            <p>Nota de Crédito</p>
+                                                            break;
+                                                        }
+                                                    case "04":
+                                                        {
+                                                            <p>Tiquete Electrónico</p>
+                                                            break;
+                                                        }
+                                                }
+                                            </h5>
 
                                         </div>
-                                         
 
-                                        <div class="col-3">
-                                            <h5> <b>Estado:</b>@if(Model.Oferta.Status == "0")
-                                            {
-                                                <span class="badge badge-pill badge-success">Abierto</span>
-
-                                            }else
-                                            {
-                                                <span class="badge badge-pill badge-danger">Cerrado</span>
-                                            }</h5>
-
-                                        </div>
-
-                                        <div class="col-3">
+                                        <div class="col-4">
                                             <h5> <b>Moneda</b> @Model.Oferta.Moneda</h5>
 
                                         </div>
-                                          
+
+                                        <div class="col-4">
+                                            <h5> <b>Cond.Pago: </b> @(Model.CondicionesPago.Nombre)</h5>
+
+                                        </div>
+
+                                       
+
+
+
+                                    </div>
+
+
+
 
 
                                 </div>
                             </div>
                         </div>
-                        </div>
                         <!-- /.col -->
                     </div>
+
+                    
                     <!-- info row -->
                     <div class="row invoice-info">
                         <div class="col-md-8 invoice-col">
                             <strong>Cliente</strong>
                             <address>
                                 <strong class="text-blue font-size-24"> @( Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" : Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault().Codigo + " - "+ Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault().Nombre)   </strong>
-                                   
+
 
                             </address>
                         </div>
@@ -200,14 +238,14 @@
                                     @foreach (var item in Model.Oferta.Detalle)
                                     {
                                         <tr>
-                                           <td>@item.NumLinea</td>
-                                           
-                                          
+                                            <td>@item.NumLinea</td>
+
+
                                             <td>  @( Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - "+ Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Nombre)   </td>
-                                    
+
                                             <td class="text-right">@(Math.Round(item.Cantidad))</td>
-                                           
-                                            
+
+
                                             <td class="text-center">@Math.Round(item.PrecioUnitario,2).ToString("C",formato)</td>
                                             <td class="text-center">@Math.Round(@item.PorDescto)%</td>
                                             <td class="text-center">@Math.Round(@item.Descuento,2).ToString("C",formato)</td>
@@ -223,20 +261,20 @@
                             </table>
                         </div>
                         <!-- /.col -->
-                                 <div class="col-12  text-right">
+                        <div class="col-12  text-right">
 
 
-                                <div>
-                                    <p>Sub Total  : <span> @Math.Round(Model.Oferta.Subtotal, 2).ToString("C",formato)</span> </p>
-                                    <p>Descuento  : <span> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>
-                                    <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C",formato)</span></p>
-
-                                </div>
-                                <div class="total-payment">
-                                    <h3><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra, 2).ToString("C",formato)</span></h3>
-                                </div>
+                            <div>
+                                <p>Sub Total  : <span> @Math.Round(Model.Oferta.Subtotal, 2).ToString("C",formato)</span> </p>
+                                <p>Descuento  : <span> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>
+                                <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C",formato)</span></p>
 
                             </div>
+                            <div class="total-payment">
+                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra, 2).ToString("C",formato)</span></h3>
+                            </div>
+
+                        </div>
                     </div>
                     <!-- /.row -->
                     <!-- /.row -->
@@ -251,40 +289,37 @@
                     <h4 class="box-title">Comentarios</h4>
                 </div>
                 <div class="box-body">
-                       <td>@Model.Oferta.Comentarios</td>
-            
-                <!-- /.box-body -->
+                    <td>@Model.Oferta.Comentarios</td>
+
+                    <!-- /.box-body -->
+                </div>
+
+
+
+
             </div>
-           
-
-
-
         </div>
     </div>
-    </div>
 
 
-<button id="print" class="btn btn-warning" type="button" onclick="javascript: ImprimirPantalla()"> <span><i class="fa fa-print"></i> Imprimir</span> </button>
+    <button id="print" class="btn btn-warning" type="button" onclick="javascript: ImprimirPantalla()"> <span><i class="fa fa-print"></i> Imprimir</span> </button>
 </section>
 
 
 
 <div class="html" hidden>
-     <div class="row">
+    <div class="row">
         <div class="col-12">
 
             <div class="box">
                 <div class="box-header with-border">
                     <div class="row">
                         <div class="col-8">
-                            <h6 class="box-subtitle">Cotización</h6>
-                           
+                            <h6 class="box-subtitle">Orden de Venta</h6>
+
 
                         </div>
                         <div class="col-4">
-                            
-                           
-
                         </div>
                     </div>
                 </div>
@@ -293,7 +328,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="page-header mt-0">
-                                <h2 class="d-inline"><span class="font-size-24">Cotización No: @Model.Oferta.id</span></h2>
+                                <h2 class="d-inline"><span class="font-size-24">Orden de Venta No: @Model.Oferta.id</span></h2>
                                 <br />
                                 <div class="text-left">
                                     <div class="row">
@@ -301,7 +336,7 @@
                                             <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
 
                                         </div>
-                                      
+
                                         <div class="col-4">
                                             <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
 
@@ -311,12 +346,12 @@
                                             <h5> <b>Moneda</b> @Model.Oferta.Moneda</h5>
 
                                         </div>
-                                          
 
 
+
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </div>
                         <!-- /.col -->
                     </div>
@@ -326,7 +361,7 @@
                             <strong>Cliente</strong>
                             <address>
                                 <strong class="text-blue font-size-24">   @( Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" : Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault().Codigo + " - " + Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault().Nombre)</strong>
-                                   
+
 
                             </address>
                         </div>
@@ -356,24 +391,24 @@
 
                                     @foreach (var item in Model.Oferta.Detalle)
                                     {
-                                    <tr>
-                                        <td>@item.NumLinea</td>
+                                        <tr>
+                                            <td>@item.NumLinea</td>
 
 
-                                        <td>  @( Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - "+ Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Nombre)   </td>
+                                            <td>  @( Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - "+ Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Nombre)   </td>
 
-                                        <td class="text-right">@(Math.Round(item.Cantidad))</td>
+                                            <td class="text-right">@(Math.Round(item.Cantidad))</td>
 
 
-                                        <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
-                                        <td class="text-center">@Math.Round(@item.PorDescto) %</td>
-                                        <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>
-                                        <td class="text-center">@Math.Round(@item.TotalImpuesto, 2).ToString("C", formato)</td>
-                                        <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
+                                            <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
+                                            <td class="text-center">@Math.Round(@item.PorDescto) %</td>
+                                            <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>
+                                            <td class="text-center">@Math.Round(@item.TotalImpuesto, 2).ToString("C", formato)</td>
+                                            <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
 
-                                        <td class="text-center">@Math.Round(@item.TotalLinea, 2).ToString("C", formato)</td>
+                                            <td class="text-center">@Math.Round(@item.TotalLinea, 2).ToString("C", formato)</td>
 
-                                    </tr>
+                                        </tr>
                                     }
 
 
@@ -381,20 +416,20 @@
                             </table>
                         </div>
                         <!-- /.col -->
-                             <div class="col-12  text-right">
+                        <div class="col-12  text-right">
 
 
-                                <div>
-                                    <p>Sub Total  : <span> @Math.Round(Model.Oferta.Subtotal, 2).ToString("C",formato)</span> </p>
-                                    <p>Descuento  : <span> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>
-                                    <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C",formato)</span></p>
-
-                                </div>
-                                <div class="total-payment">
-                                    <h3><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra, 2).ToString("C",formato)</span></h3>
-                                </div>
+                            <div>
+                                <p>Sub Total  : <span> @Math.Round(Model.Oferta.Subtotal, 2).ToString("C",formato)</span> </p>
+                                <p>Descuento  : <span> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>
+                                <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C",formato)</span></p>
 
                             </div>
+                            <div class="total-payment">
+                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra, 2).ToString("C",formato)</span></h3>
+                            </div>
+
+                        </div>
                     </div>
                     <!-- /.row -->
                     <!-- /.row -->
@@ -409,16 +444,16 @@
                     <h4 class="box-title">Comentarios</h4>
                 </div>
                 <div class="box-body">
-                       <span>@Model.Oferta.Comentarios</span>
-            
-                <!-- /.box-body -->
+                    <span>@Model.Oferta.Comentarios</span>
+
+                    <!-- /.box-body -->
+                </div>
+
+
+
+
             </div>
-           
-
-
-
         </div>
-    </div>
     </div>
 </div>
 

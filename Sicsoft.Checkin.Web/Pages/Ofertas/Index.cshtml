@@ -1,7 +1,7 @@
 ﻿@page
 @model NOVAAPP.Pages.Ofertas.IndexModel
 @{
-    ViewData["Title"] = "Cotizaciones";
+    ViewData["Title"] = "Órdenes de Venta";
     NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
     formato.CurrencySymbol = "";
     formato.CurrencyGroupSeparator = ",";
@@ -41,11 +41,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Cotizaciones
+            Orden de Venta
         </h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
-            <li class="breadcrumb-item active">Listado Cotizaciones</li>
+            <li class="breadcrumb-item active">Listado Órdenes de Venta</li>
         </ol>
     </section>
     <!-- Main content -->
@@ -56,8 +56,8 @@
                 <div class="box">
                     <div class="box-header with-border">
                         <div class="row">
-                            <div class="col-sm-8"> <h4 class="box-title">Cotizaciones</h4></div>
-                            <div class="col-sm-4"> <a asp-page="Nuevo" asp-route-id="0" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Oferta</a></div>
+                            <div class="col-sm-8"> <h4 class="box-title">Órdenes de Venta</h4></div>
+                            <div class="col-sm-4"> <a asp-page="Nuevo" asp-route-id="0" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Orden de Venta</a></div>
 
                         </div>
 
@@ -162,7 +162,7 @@
                 <div class="box">
                     <div class="box-header with-border">
                         <div class="row">
-                            <div class="col-sm-8"> <h4 class="box-title">Cotizaciones</h4></div>
+                            <div class="col-sm-8"> <h4 class="box-title">Órdenes de Venta</h4></div>
                             <div class="col-sm-4">  </div>
 
                         </div>

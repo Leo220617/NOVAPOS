@@ -23,6 +23,7 @@ var ProdCadena = [];
 var Exoneraciones = [];
 var TipoCambio = [];
 var Documento = [];
+var CP = [];
 
 function Recuperar() {
     try {
@@ -35,6 +36,7 @@ function Recuperar() {
         Exoneraciones = JSON.parse($("#Exoneraciones").val());
         TipoCambio = JSON.parse($("#TipoCambio").val());
         Documento = JSON.parse($("#Documento").val());
+        CP = JSON.parse($("#CP").val());
 
         ExoneracionesCliente = [];
 
@@ -53,7 +55,7 @@ function Recuperar() {
 
         })
     }
-    
+
 }
 function RecuperarInformacion() {
     try {
@@ -61,7 +63,7 @@ function RecuperarInformacion() {
         $("#Fecha").val(Documento.Fecha);
 
         $("#selectMoneda").val(Documento.Moneda);
-    
+
 
         $("#inputComentarios").val(Documento.Comentarios);
         $("#subG").text(formatoDecimal(Documento.Subtotal.toFixed(2)));
@@ -239,28 +241,71 @@ function RellenaExoneraciones() {
 }
 
 function onChangeCliente() {
-    var idCliente = $("#ClienteSeleccionado").val();
+    try {
+        var idCliente = $("#ClienteSeleccionado").val();
 
-    var Cliente = Clientes.find(a => a.id == idCliente);
+        var Cliente = Clientes.find(a => a.id == idCliente);
 
-    $("#spanDireccion").text(Cliente.Sennas);
-    $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
+        var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
 
-    ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
-    ProdClientes = ProdClientes.sort(function (a, b) {
-        if (a.Stock < b.Stock) {
-            return 1;
-        }
-        if (a.Stock > b.Stock) {
-            return -1;
-        }
-        // a must be equal to b
-        return 0;
-    });
-    RellenaProductos();
+        RellenaCondiciones(CondP);
+        $("#spanDireccion").text(Cliente.Sennas);
+        $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
+
+        ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
+        ProdClientes = ProdClientes.sort(function (a, b) {
+            if (a.Stock < b.Stock) {
+                return 1;
+            }
+            if (a.Stock > b.Stock) {
+                return -1;
+            }
+            // a must be equal to b
+            return 0;
+        });
+        RellenaProductos();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
+
+        })
+    }
+    
 
 }
 
+function RellenaCondiciones(CPS) {
+    try {
+        var text = "";
+        $("#selectCondPago").html(text);
+
+        var Contado = CP.find(a => a.Nombre == "Contado");
+
+        text += "<option value='" + Contado.id + "' selected> " + Contado.Nombre + " </option>";
+
+
+        for (var i = 0; i < CPS.length; i++) {
+            if (CPS[i].id != Contado.id) {
+                text += "<option value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+
+            }
+        }
+
+
+        $("#selectCondPago").html(text);
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
+
+        })
+    }
+}
 function ExoneracionxCliente() {
     var idCliente = $("#ClienteSeleccionado").val();
     ExoneracionesCliente = Exoneraciones.filter(a => a.idCliente == idCliente && a.Activo == true);
@@ -639,7 +684,7 @@ function AgregarProductoTabla() {
             idExoneracion: $("#exoneracion").val(),
             PorExoneracion: 0
         };
-      
+
 
         if (Producto.Cabys.length >= 13) {
 
@@ -738,6 +783,7 @@ function Generar() {
             id: 0,
             idCliente: $("#ClienteSeleccionado").val(),
             idUsuarioCreador: 0,
+            idCondPago: $("#selectCondPago").val(),
             Fecha: $("#Fecha").val(),
             FechaVencimiento: $("#fechaVencimiento").val(),
             Comentarios: $("#inputComentarios").val(),
@@ -748,13 +794,14 @@ function Generar() {
             PorDescto: parseFloat(ReplaceLetra($("#descuento").val())),
             CodSuc: "",
             Moneda: $("#selectMoneda").val(),
+            TipoDocumento: $("#selectTD").val(),
             BaseEntry: $("#BaseEntry").val(),
             Detalle: ProdCadena
         }
 
         if (validarOferta(EncOferta)) {
             Swal.fire({
-                title: '¿Desea guardar la cotización?',
+                title: '¿Desea guardar la orden de venta?',
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: `Aceptar`,
@@ -848,19 +895,41 @@ function Generar() {
 //
 
 function validarOferta(e) {
-    if (e.idCliente == "0" || e.idCliente == null) {
-        return false;
-    } else if (e.FechaVencimiento == "" || e.FechaVencimiento == null) {
-        return false;
-    }
-    else if (e.Detalle.length == 0 || e.Detalle == null) {
-        return false;
-    }
+    try {
+        var Contado = CP.find(a => a.Nombre == "Contado");
 
-    else {
-        return true;
+        if ($("#selectCondPago").val() == Contado.id) {
+            if (e.idCliente == "0" || e.idCliente == null) {
+                return false;
+            }
+            if (e.idCliente == "0" || e.idCliente == null) {
+                return false;
+            } else if (e.FechaVencimiento == "" || e.FechaVencimiento == null) {
+                return false;
+            }
+            else if (e.Detalle.length == 0 || e.Detalle == null) {
+                return false;
+            }
+
+            else {
+                return true;
+            }
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar agregar ' + e
+
+        })
     }
+    
+
+
 }
+
+
+
 function BuscarCliente() {
     $.ajax({
         type: 'GET',

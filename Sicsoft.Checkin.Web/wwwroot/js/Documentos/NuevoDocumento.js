@@ -57,7 +57,7 @@ function Recuperar() {
 
         })
     }
-    
+
 }
 function RecuperarInformacion() {
     try {
@@ -96,7 +96,7 @@ function RecuperarInformacion() {
             };
             ProdCadena.push(Producto);
         }
-       
+
         RellenaTabla();
         onChangeCliente();
 
@@ -134,9 +134,9 @@ function onChangeMoneda() {
                     ProdCadena[i].TotalImpuesto = ProdCadena[i].TotalImpuesto / TipodeCambio.TipoCambio;
                     ProdCadena[i].TotalLinea = ProdCadena[i].TotalLinea / TipodeCambio.TipoCambio;
 
-                   
 
-                    
+
+
 
                 } else {
 
@@ -145,9 +145,9 @@ function onChangeMoneda() {
                     ProdCadena[i].Descuento = ProdCadena[i].Descuento * TipodeCambio.TipoCambio;
                     ProdCadena[i].TotalImpuesto = ProdCadena[i].TotalImpuesto * TipodeCambio.TipoCambio;
                     ProdCadena[i].TotalLinea = ProdCadena[i].TotalLinea * TipodeCambio.TipoCambio;
-                  
+
                 }
-                
+
 
             }
 
@@ -194,7 +194,7 @@ function RellenaClientes() {
 
         })
     }
-   
+
 }
 function RellenaProductos() {
     try {
@@ -218,7 +218,7 @@ function RellenaProductos() {
 
         })
     }
-   
+
 }
 
 function RellenaExoneraciones() {
@@ -296,7 +296,7 @@ function onChangeCliente() {
 
         })
     }
-    
+
 
 }
 function RellenaCondiciones(CPS) {
@@ -315,11 +315,11 @@ function RellenaCondiciones(CPS) {
 
             }
         }
-        
+
 
         $("#selectCondPago").html(text);
 
-        
+
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -764,7 +764,7 @@ function AgregarProductoTabla() {
                 })
             }
         }
-        
+
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -853,7 +853,7 @@ function Generar() {
                         success: function (json) {
 
 
-                            console.log("resultado " + json.Documento);
+                            console.log("resultado " + json.documento);
                             if (json.success == true) {
                                 Swal.fire({
                                     title: "Ha sido generado con éxito",
@@ -870,7 +870,7 @@ function Generar() {
                                     if (result.isConfirmed) {
                                         //Despues de insertar, ocupariamos el id del cliente en la bd 
                                         //para entonces setearlo en el array de clientes
-
+                                        ImprimirTiquete(json.documento);
                                         window.location.href = window.location.href.split("/Nuevo")[0];
 
 
@@ -956,7 +956,7 @@ function validarDocumento(e) {
                 return true;
             }
         }
-           
+
 
     } catch (e) {
         Swal.fire({
@@ -966,7 +966,7 @@ function validarDocumento(e) {
 
         })
     }
-   
+
 }
 
 function sumArray(array) {
@@ -1058,7 +1058,7 @@ function AbrirPago() {
         } else {
             Generar();
         }
-       
+
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -1075,7 +1075,7 @@ function RellenaCB() {
 
         for (var i = 0; i < CB.length; i++) {
 
-            text += "<option value= '" + CB[i].id + "' > " + CB[i].Nombre +  " </option>";
+            text += "<option value= '" + CB[i].id + "' > " + CB[i].Nombre + " </option>";
         }
 
         $("#CuentaB").html(text);
@@ -1161,12 +1161,12 @@ function insertarPago() {
             switch (Metodo) {
                 case "Efectivo":
                     {
-                        
+
 
                         var Detalle = {
                             id: 0,
                             idEncabezado: 0,
-                            idCuentaBancaria: $("#CuentaB").val() ,
+                            idCuentaBancaria: $("#CuentaB").val(),
                             Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
                             BIN: "",
                             NumReferencia: "",
@@ -1175,7 +1175,7 @@ function insertarPago() {
                             PagadoCon: parseFloat(ReplaceLetra($("#PagadoCon").val()))
                         };
                         MetodosPagos.push(Detalle);
-                        
+
                         break;
                     }
                 case "Tarjeta":
@@ -1234,7 +1234,7 @@ function insertarPago() {
                         break;
                     }
             }
-            
+
 
             $("#MetodoSeleccionado").val("0");
             calcularPago();
@@ -1243,9 +1243,9 @@ function insertarPago() {
             LimpiarDatosPago();
             RellenaCB();
         } else {
-           
+
         }
-       
+
 
     } catch (e) {
         Swal.fire({
@@ -1282,7 +1282,7 @@ function validarMetodo() {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'No se puede ingresar montos mayores a lo pagado' 
+                text: 'No se puede ingresar montos mayores a lo pagado'
 
             })
             return false;
@@ -1309,7 +1309,7 @@ function validarMetodo() {
         switch (Metodo) {
             case "Efectivo":
                 {
-                    if (parseFloat(ReplaceLetra($("#MontoPago").val())) <= 0 || $("#PagadoCon").val() == undefined || $("#PagadoCon").val() == 0 || $("#PagadoCon").val() < parseFloat(ReplaceLetra($("#MontoPago").val())) ) {
+                    if (parseFloat(ReplaceLetra($("#MontoPago").val())) <= 0 || $("#PagadoCon").val() == undefined || $("#PagadoCon").val() == 0 || $("#PagadoCon").val() < parseFloat(ReplaceLetra($("#MontoPago").val()))) {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
@@ -1334,8 +1334,7 @@ function validarMetodo() {
 
                         })
                         return false;
-                    } else if (parseFloat(ReplaceLetra($("#ReferenciaPago").val())) <= 0 || $("#ReferenciaPago").val() == undefined || $("#ReferenciaPago").val() == "")
-                    {
+                    } else if (parseFloat(ReplaceLetra($("#ReferenciaPago").val())) <= 0 || $("#ReferenciaPago").val() == undefined || $("#ReferenciaPago").val() == "") {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
@@ -1360,7 +1359,7 @@ function validarMetodo() {
 
                         })
                         return false;
-                    }  
+                    }
                     else {
                         return true;
                     }
@@ -1436,28 +1435,28 @@ function calcularPago() {
         var Total = parseFloat(ReplaceLetra($("#totG").text()));
         var Faltante = 0;
         var Pagado = 0;
-        
-        var vuelto = 0; 
+
+        var vuelto = 0;
         $("#vueltoPago").text(formatoDecimal(vuelto.toFixed(2)));
 
         for (var i = 0; i < MetodosPagos.length; i++) {
             Pagado += MetodosPagos[i].Monto;
             if (MetodosPagos[i].Metodo == "Efectivo") {
-                
+
                 if (MetodosPagos[i].PagadoCon > 0) {
                     vuelto += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
 
                 }
             }
         }
-       
+
 
         Faltante = Total - Pagado;
 
         $("#fatPago").text(formatoDecimal(Faltante));
         $("#pagPago").text(formatoDecimal(Pagado));
         $("#vueltoPago").text(formatoDecimal(vuelto));
-        
+
 
     } catch (e) {
         Swal.fire({
@@ -1476,6 +1475,78 @@ function EliminarPago(i) {
         calcularPago();
         RellenaTablaPagos();
 
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+}
+
+function ImprimirTiquete(Documento) {
+    try {
+
+         
+
+        var ventana = window.open('', 'PRINT', 'height=400,width=600');
+        var texto = " <!DOCTYPE html><html><body><div style='color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; margin:0pt; text-indent: 0pt;text-align: left; width: 25%;' ><center><p style='color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; line-height: 5px; padding-top: 4pt;text-indent: 0pt;'>Nueva Cultura Novagro SA</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; line-height: 5px; padding-top: 4pt; text-indent: 0pt;'>Cedula Juridica: 3-101-376551</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; line-height: 5px; padding-top: 4pt; text-indent: 0pt;'>Telefax: 24731056</p><a style='color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; '>info@novagrocr.com  </a>&nbsp;&nbsp;<a style='color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; '>www.novagrocr.com  </a></center><hr> </hr><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt; ' >FECHA FACT: </a>&nbsp;&nbsp;<a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' > @Fecha </a><br><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >FACTURA </a><br><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >ELECTRÓNICA </a>&nbsp;&nbsp;<a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' > @NumFactura </a><br><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >N° INTERNO: <span style='font-weight: bold;'>CO-Pital</span>  <span>@NumInterno</span></a><br><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >VENDEDOR:</a><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >@Vendedor </a><br><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >COD CLIENTE:</a><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >@CodCliente </a><br><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >CLIENTE:</a><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt; font-weight: bold;' >@NombreCliente</a><hr> </hr><table><thead ><tr><th>CANT </th><th>NOM</th><th>PRECIO </th><th>TOTAL </th></tr></thead><tbody>@Tabla</tbody></table><hr> </hr><table><tbody><tr><td> <a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;' >SUBTOTAL </a></td><td></td><td>  <a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;' >@SubTotal </a></td></tr><tr><td> <a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;' >DESCUENTO </a></td><td>  </td><td>  <a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;' >@TotalDescuento </a></td></tr><tr><td> <a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;' >IVA </a></td><td> </td><td>   <a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;' >@TotalImpuestos </a></td></tr><tr><td> <a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;' >TOTAL </a></td><td> </td><td><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;font-weight: bold;'> @Total</a> </a></td></tr></tbody></table><hr> </hr><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;'>GRACIAS POR SU COMPRA</p><hr> </hr><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; font-weight: bold;'>FIRMA Y CEDULA</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; font-weight: bold;'>Comprobante Fiscal:</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;' >@NumComprobante</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;'>1. Para toda devolución es indispensable la factura</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;'>original.</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;'> 2. No se aceptan devoluciones si las marcas del  rayados,</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;'>fabricante o los  articulos son alterados, quebrados,.</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;'>golpeados, desarmados o modificados.</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;'>3. Para reclamos se cuenta con 3 días habiles</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;'>4. Factura genera una tasa de mora del 3% mensual.</p><br><p style='color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;'>* Gravado 13% ** Gravado 10% </p><p style='color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;'>Autorizado mediante resolución No</p><p style='color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;'>DGT-R-48-2016 del 7 de octubre de 2016.</p></div></body></html>";
+        texto = texto.replace("@Fecha", Documento.fecha.split("T")[0]);
+        texto = texto.replace("@NumInterno", Documento.id);
+        texto = texto.replace("CO-Pital", "");
+
+        if (Documento.tipoDocumento == "04") {
+            texto = texto.replace("FACTURA","TIQUETE");
+
+        }
+        texto = texto.replace("@CodCliente"," " + Documento.idCliente);
+
+        var Cli = Clientes.find(a => a.id == Documento.idCliente);
+        texto = texto.replace("@NombreCliente", Cli.Nombre);
+        texto = texto.replace("@Vendedor", "");
+
+
+        var tabla = "";
+
+        for (var i = 0; i < Documento.detalle.length; i++) {
+
+            var Prod = Productos.find(a => a.id == Documento.detalle[i].idProducto)
+
+            tabla += "<tr>";
+            tabla += "<td>" + Documento.detalle[i].cantidad + " </td>";
+            tabla += "<td style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;'>" + Prod.Nombre + " </td>";
+            tabla += "<td>" + formatoDecimal(Documento.detalle[i].precioUnitario)  + " </td>";
+            tabla += "<td>" + formatoDecimal(Documento.detalle[i].totalLinea)  + " </td>";
+
+
+
+
+            tabla += "</tr>";
+
+        }
+        texto = texto.replace("@Tabla", tabla);
+
+        if (Documento.moneda == "CRC") {
+            texto = texto.replace("@SubTotal","₡" + formatoDecimal(Documento.subtotal));
+            texto = texto.replace("@TotalDescuento", "₡" + formatoDecimal(Documento.totalDescuento));
+            texto = texto.replace("@TotalImpuestos", "₡" + formatoDecimal(Documento.totalImpuestos));
+            texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.totalCompra));
+        } else {
+            texto = texto.replace("@SubTotal", "$" + formatoDecimal(Documento.subtotal));
+            texto = texto.replace("@TotalDescuento", "$" + formatoDecimal(Documento.totalDescuento));
+            texto = texto.replace("@TotalImpuestos", "$" + formatoDecimal(Documento.totalImpuestos));
+            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.totalCompra));
+        }
+        
+
+
+
+        ventana.document.write(texto); 
+        ventana.document.close();
+        ventana.focus();
+        ventana.print();
+        ventana.close();
     } catch (e) {
         Swal.fire({
             icon: 'error',

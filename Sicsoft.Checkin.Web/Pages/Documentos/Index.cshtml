@@ -184,6 +184,7 @@
                                     <th>Fecha Creado</th>
 
                                     <th>Tipo Doc</th>
+                                    <th>Condición Pago</th>
                                     <th>Moneda</th>
 
                                     <th>SubTotal</th>
@@ -235,6 +236,10 @@
                                                             break;
                                                         }
                                                 }
+                                        </td>
+                                        <td>
+                                                @(Model.Condicion.Where(a => a.id == item.idCondPago).FirstOrDefault() == null ? "": Model.Condicion.Where(a => a.id == item.idCondPago).FirstOrDefault().Nombre )
+
                                         </td>
                                         <td>
                                                 @item.Moneda
@@ -297,6 +302,7 @@
                                     <th>Fecha Creado</th>
 
                                     <th>Tipo Doc</th>
+                                     <th>Condición Pago</th>
                                     <th>Moneda</th>
 
                                     <th>SubTotal</th>

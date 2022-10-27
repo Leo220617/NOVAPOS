@@ -20,6 +20,7 @@ namespace NOVAAPP.Pages.Documentos
         private readonly ICrudApi<ClientesViewModel, string> clientes;
         private readonly ICrudApi<RolesViewModel, int> roles;
         private readonly ICrudApi<UsuariosSucursalesViewModel, int> usuc;
+        private readonly ICrudApi<CondicionesPagosViewModel, int> cond;
 
 
         [BindProperty]
@@ -30,16 +31,20 @@ namespace NOVAAPP.Pages.Documentos
         [BindProperty]
         public ClientesViewModel[] Clientes { get; set; }
 
+        [BindProperty]
+        public CondicionesPagosViewModel[] Condicion { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
 
-        public IndexModel(ICrudApi<DocumentosViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<UsuariosViewModel, int> serviceU, ICrudApi<RolesViewModel, int> roles, ICrudApi<UsuariosSucursalesViewModel, int> usuc)
+        public IndexModel(ICrudApi<DocumentosViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<UsuariosViewModel, int> serviceU, ICrudApi<RolesViewModel, int> roles, ICrudApi<UsuariosSucursalesViewModel, int> usuc, ICrudApi<CondicionesPagosViewModel, int> cond)
         {
             this.service = service;
             this.clientes = clientes;
             this.serviceU = serviceU;
             this.roles = roles;
             this.usuc = usuc;
+            this.cond = cond;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -96,6 +101,8 @@ namespace NOVAAPP.Pages.Documentos
                 filtro2.Externo = true;
 
                 Clientes = await clientes.ObtenerLista(filtro2);
+
+                Condicion = await cond.ObtenerLista("");
 
                 return Page();
             }

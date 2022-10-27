@@ -68,7 +68,7 @@
                     <div class="box-header with-border">
                         <div class="row">
                             <div class="col-8">
-                                <h6 class="box-subtitle">Editar Oferta</h6>
+                                <h6 class="box-subtitle">Editar Proforma</h6>
 
 
                             </div>
@@ -87,7 +87,7 @@
                                     <h2 class="d-inline"><span class="font-size-24">Cotización</span></h2>
                                     <div class="text-left">
                                         <h5>Fecha <span class="font-size-18">@Model.Oferta.Fecha.ToString("dd MMM yyy")</span></h5>
-                                        <input hidden id="Fecha" type="datetime" value="@DateTime.Now" />
+                                        <input hidden id="Fecha"  type="datetime" value="@DateTime.Now" />
 
                                     </div>
 
@@ -97,7 +97,7 @@
                             <div class="col-3">
                                 <div class="form-group">
                                     <label>Fecha Vencimiento</label>
-                                    <input type="date" class="form-control" id="fechaVencimiento" value="@Model.Oferta.FechaVencimiento.ToString("yyyy-MM-dd")">
+                                    <input type="date" class="form-control" id="fechaVencimiento" readonly value="@Model.Oferta.FechaVencimiento.ToString("yyyy-MM-dd")">
 
 
                                 </div>

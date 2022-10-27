@@ -183,7 +183,22 @@ function onChangeCliente() {
 
         var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
 
-        RellenaCondiciones(CondP);
+        //Preguntarle a CP cual es la de 30 dias
+
+        var Cond30 = CP.filter(a => a.Dias <= CondP[0].Dias).sort(function (a, b) {
+            if (a.Dias > b.Dias) {
+                return 1;
+            }
+            if (a.Dias < b.Dias) {
+                return -1;
+            }
+            // a must be equal to b
+            return 0;
+        });
+
+        
+
+        RellenaCondiciones(Cond30);
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
 
@@ -215,16 +230,16 @@ function RellenaCondiciones(CPS) {
         var text = "";
         $("#selectCondPago").html(text);
 
-        var Contado = CP.find(a => a.Nombre == "Contado");
+        //var Contado = CP.find(a => a.Nombre == "Contado");
 
-        text += "<option value='" + Contado.id + "' selected> " + Contado.Nombre + " </option>";
+        //text += "<option value='" + Contado.id + "' selected> " + Contado.Nombre + " </option>";
 
 
         for (var i = 0; i < CPS.length; i++) {
-            if (CPS[i].id != Contado.id) {
+            
                 text += "<option value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
 
-            }
+           
         }
 
 
@@ -256,6 +271,7 @@ function onChangeProducto() {
         $("#inputCabys").val(Producto.Cabys);
         $("#impuesto").val(Producto.idImpuesto);
         $("#MonedaProducto").val(Producto.Moneda);
+       
         ExoneracionxCliente();
     } else {
         $("#cantidad").val(1);
@@ -264,6 +280,7 @@ function onChangeProducto() {
         $("#inputCabys").val("");
         $("#impuesto").val(0);
         $("#MonedaProducto").val("");
+        $("#descuento").val(0);
     }
 
 

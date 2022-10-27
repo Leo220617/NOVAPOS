@@ -235,7 +235,20 @@ function onChangeCliente() {
         var Cliente = Clientes.find(a => a.id == idCliente);
         var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
 
-        RellenaCondiciones(CondP);
+        //Preguntarle a CP cual es la de 30 dias
+
+        var Cond30 = CP.filter(a => a.Dias <= CondP[0].Dias).sort(function (a, b) {
+            if (a.Dias > b.Dias) {
+                return 1;
+            }
+            if (a.Dias < b.Dias) {
+                return -1;
+            }
+            // a must be equal to b
+            return 0;
+        });
+
+        RellenaCondiciones(Cond30);
 
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
@@ -319,6 +332,7 @@ function onChangeProducto() {
         $("#inputCabys").val("");
         $("#impuesto").val(0);
         $("#MonedaProducto").val("");
+        $("#descuento").val(0);
 
     }
 

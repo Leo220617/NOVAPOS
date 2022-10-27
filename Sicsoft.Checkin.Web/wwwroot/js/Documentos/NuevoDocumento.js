@@ -989,6 +989,11 @@ function BuscarCliente() {
             if (result.nombre != undefined) {
                 $("#Nombre").val(result.nombre);
                 $("#selectTP").val(result.tipoIdentificacion);
+                $("#Nombre").attr("readonly", "readonly");
+
+
+            } else {
+                $("#Nombre").removeAttr("readonly");
             }
 
 

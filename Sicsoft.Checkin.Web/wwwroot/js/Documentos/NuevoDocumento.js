@@ -344,154 +344,244 @@ function RellenaCondiciones(CPS) {
 }
 
 function ExoneracionxCliente() {
-    var idCliente = $("#ClienteSeleccionado").val();
-    ExoneracionesCliente = Exoneraciones.filter(a => a.idCliente == idCliente && a.Activo == true);
 
-    RellenaExoneraciones();
-}
-function onChangeProducto() {
-    var idProducto = $("#ProductoSeleccionado").val();
+    try {
+        var idCliente = $("#ClienteSeleccionado").val();
+        ExoneracionesCliente = Exoneraciones.filter(a => a.idCliente == idCliente && a.Activo == true);
 
-    var Producto = ProdClientes.find(a => a.id == idProducto);
+        RellenaExoneraciones();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
 
-    if (Producto != undefined) {
-        $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
-        $("#inputCabys").val(Producto.Cabys);
-        $("#impuesto").val(Producto.idImpuesto);
-        $("#MonedaProducto").val(Producto.Moneda);
-
-        ExoneracionxCliente();
-    } else {
-        $("#cantidad").val(1);
-
-        $("#inputPrecio").val(0);
-        $("#inputCabys").val("");
-        $("#impuesto").val(0);
-        $("#MonedaProducto").val("");
-        $("#descuento").val(0);
-
+        })
     }
 
+}
+function onChangeProducto() {
+    try {
+        var idProducto = $("#ProductoSeleccionado").val();
+
+        var Producto = ProdClientes.find(a => a.id == idProducto);
+
+        if (Producto != undefined) {
+            $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
+            $("#inputCabys").val(Producto.Cabys);
+            $("#impuesto").val(Producto.idImpuesto);
+            $("#MonedaProducto").val(Producto.Moneda);
+
+            ExoneracionxCliente();
+        } else {
+            $("#cantidad").val(1);
+
+            $("#inputPrecio").val(0);
+            $("#inputCabys").val("");
+            $("#impuesto").val(0);
+            $("#MonedaProducto").val("");
+            $("#descuento").val(0);
+
+        }
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
+
+        })
+    }
 
 
 }
 
 function ModificaSelects(i) {
-    var codProvincia = parseInt($("#selectP").val());
-    var codCanton = parseInt($("#selectC").val());
-    var codDistrito = parseInt($("#selectD").val());
+    try {
+        var codProvincia = parseInt($("#selectP").val());
+        var codCanton = parseInt($("#selectC").val());
+        var codDistrito = parseInt($("#selectD").val());
 
-    if (i == 0) {
-        RellenaCantones(Cantones.filter(a => a.CodProvincia == codProvincia));
-        RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
-        RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+        if (i == 0) {
+            RellenaCantones(Cantones.filter(a => a.CodProvincia == codProvincia));
+            RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
+            RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
 
+        }
+
+        if (i == 1) {
+            RellenaCantones(Cantones.filter(a => a.CodProvincia == codProvincia));
+            RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
+            RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+
+        }
+        if (i == 2) {
+
+            RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
+            RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+
+        }
+
+        if (i == 3) {
+            RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
+
+        })
     }
 
-    if (i == 1) {
-        RellenaCantones(Cantones.filter(a => a.CodProvincia == codProvincia));
-        RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
-        RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
-
-    }
-    if (i == 2) {
-
-        RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
-        RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
-
-    }
-
-    if (i == 3) {
-        RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
-    }
 
 }
 
 function RellenaCantones(ListCantones) {
-    var sOptions = '';
+    try {
+        var sOptions = '';
 
-    $("#selectC").html('');
+        $("#selectC").html('');
 
-    for (var i = 0; i < ListCantones.length; i++) {
+        for (var i = 0; i < ListCantones.length; i++) {
 
-        sOptions += '<option value="' + ListCantones[i].CodCanton + '">' + ListCantones[i].NomCanton + '</option>';
+            sOptions += '<option value="' + ListCantones[i].CodCanton + '">' + ListCantones[i].NomCanton + '</option>';
 
+        }
+        $("#selectC").html(sOptions);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
+
+        })
     }
-    $("#selectC").html(sOptions);
+
 }
 
 function RellenaDistritos(ListDistritos) {
-    var sOptions = '';
+    try {
+        var sOptions = '';
 
-    $("#selectD").html('');
+        $("#selectD").html('');
 
-    for (var i = 0; i < ListDistritos.length; i++) {
+        for (var i = 0; i < ListDistritos.length; i++) {
 
-        sOptions += '<option value="' + ListDistritos[i].CodDistrito + '">' + ListDistritos[i].NomDistrito + '</option>';
+            sOptions += '<option value="' + ListDistritos[i].CodDistrito + '">' + ListDistritos[i].NomDistrito + '</option>';
 
+        }
+        $("#selectD").html(sOptions);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
+
+        })
     }
-    $("#selectD").html(sOptions);
+
 }
 
 function RellenaBarrios(ListBarrios) {
-    var sOptions = '';
+    try {
+        var sOptions = '';
 
-    $("#selectB").html('');
+        $("#selectB").html('');
 
-    for (var i = 0; i < ListBarrios.length; i++) {
+        for (var i = 0; i < ListBarrios.length; i++) {
 
-        sOptions += '<option value="' + ListBarrios[i].CodBarrio + '">' + ListBarrios[i].NomBarrio + '</option>';
+            sOptions += '<option value="' + ListBarrios[i].CodBarrio + '">' + ListBarrios[i].NomBarrio + '</option>';
 
+        }
+        $("#selectB").html(sOptions);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
+
+        })
     }
-    $("#selectB").html(sOptions);
+
 }
 
 function AbrirModalAgregarCliente() {
-    $("#ModalAgregarCliente").modal("show");
+    try {
+        $("#ModalAgregarCliente").modal("show");
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
+
+        })
+    }
+
 }
 
 function validar(cliente) {
-    if (cliente.idListaPrecios == "" || cliente.idListaPrecios == null) {
-        return false;
-    } else if (cliente.Nombre == "" || cliente.Nombre == null) {
-        return false;
+    try {
+        if (cliente.idListaPrecios == "" || cliente.idListaPrecios == null) {
+            return false;
+        } else if (cliente.Nombre == "" || cliente.Nombre == null) {
+            return false;
+        }
+        else if (cliente.Cedula == "" || cliente.Cedula == null) {
+            return false;
+
+
+        } else if (cliente.Email == "" || cliente.Email == null) {
+            return false;
+
+        } else if (cliente.Telefono == "" || cliente.Telefono == null) {
+            return false;
+
+        } else if (cliente.Sennas == "" || cliente.Sennas == null) {
+            return false;
+
+        } else if (cliente.CorreoPublicitario == "" || cliente.CorreoPublicitario == null) {
+            return false;
+
+        } else if (cliente.idGrupo == "" || cliente.idGrupo == null) {
+            return false;
+        }
+
+        else {
+            return true;
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
+
+        })
     }
-    else if (cliente.Cedula == "" || cliente.Cedula == null) {
-        return false;
 
-
-    } else if (cliente.Email == "" || cliente.Email == null) {
-        return false;
-
-    } else if (cliente.Telefono == "" || cliente.Telefono == null) {
-        return false;
-
-    } else if (cliente.Sennas == "" || cliente.Sennas == null) {
-        return false;
-
-    } else if (cliente.CorreoPublicitario == "" || cliente.CorreoPublicitario == null) {
-        return false;
-
-    } else if (cliente.idGrupo == "" || cliente.idGrupo == null) {
-        return false;
-    }
-
-    else {
-        return true;
-    }
 }
 
 function LimpiarDatosCliente() {
-    $("#idListaP").val("1").trigger('change.select2');
-    $("#idGrupo").val("1").trigger('change.select2');
-    $("#Nombre").val("");
-    $("#selectTP").val("1").trigger('change.select2');
-    $("#Cedula").val("");
-    $("#Email").val("");
-    $("#Telefono").val("");
-    $("#selectP").val("1").trigger('change.select2');
-    $("#Sennas").val("");
-    $("#CorreoPublicitario").val("");
+    try {
+        $("#idListaP").val("1").trigger('change.select2');
+        $("#idGrupo").val("1").trigger('change.select2');
+        $("#Nombre").val("");
+        $("#selectTP").val("1").trigger('change.select2');
+        $("#Cedula").val("");
+        $("#Email").val("");
+        $("#Telefono").val("");
+        $("#selectP").val("1").trigger('change.select2');
+        $("#Sennas").val("");
+        $("#CorreoPublicitario").val("");
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
+
+        })
+    }
+
 }
 
 //Agregar Cliente
@@ -649,32 +739,41 @@ function AgregarCliente() {
 }
 ///
 function RellenaTabla() {
-    var html = "";
-    $("#tbody").html(html);
+    try {
+        var html = "";
+        $("#tbody").html(html);
 
 
-    for (var i = 0; i < ProdCadena.length; i++) {
-        html += "<tr>";
+        for (var i = 0; i < ProdCadena.length; i++) {
+            html += "<tr>";
 
-        html += "<td> " + (i + 1) + " </td>";
+            html += "<td> " + (i + 1) + " </td>";
 
-        html += "<td > " + ProdCadena[i].Descripcion + " </td>";
-        html += "<td class='text-center'> " + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
-        html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
+            html += "<td > " + ProdCadena[i].Descripcion + " </td>";
+            html += "<td class='text-center'> " + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
+            html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
-        html += "</tr>";
+            html += "</tr>";
 
 
+        }
+
+
+
+        $("#tbody").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar agregar ' + e
+        })
     }
 
-
-
-    $("#tbody").html(html);
 }
 function cantidadRepetidos(palabra, separador) {
 
@@ -791,26 +890,36 @@ function AgregarProductoTabla() {
 }
 
 function EliminarProducto(i) {
+    try {
+        var Producto = ProdCadena[i];
 
-    var Producto = ProdCadena[i];
 
 
+        var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
+        var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
+        var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
+        var totalG = parseFloat(ReplaceLetra($("#totG").text()));
 
-    var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
-    var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
-    var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
-    var totalG = parseFloat(ReplaceLetra($("#totG").text()));
+        subtotalG -= (Producto.Cantidad * Producto.PrecioUnitario);
+        impuestoG -= Producto.TotalImpuesto;
+        descuentoG -= Producto.Descuento;
+        totalG -= Producto.TotalLinea;
+        $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
+        $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
+        $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+        $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+        ProdCadena.splice(i, 1);
+        RellenaTabla();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
 
-    subtotalG -= (Producto.Cantidad * Producto.PrecioUnitario);
-    impuestoG -= Producto.TotalImpuesto;
-    descuentoG -= Producto.Descuento;
-    totalG -= Producto.TotalLinea;
-    $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
-    $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
-    $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
-    $("#totG").text(formatoDecimal(totalG.toFixed(2)));
-    ProdCadena.splice(i, 1);
-    RellenaTabla();
+        })
+    }
+
+
 }
 
 //Generar
@@ -1507,7 +1616,7 @@ function EliminarPago(i) {
 function ImprimirTiquete(Documento) {
     try {
 
-         
+
 
         var ventana = window.open('', 'PRINT', 'height=400,width=600');
         var texto = " <!DOCTYPE html><html><body><div style='color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; margin:0pt; text-indent: 0pt;text-align: left; width: 25%;' ><center><p style='color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; line-height: 5px; padding-top: 4pt;text-indent: 0pt;'>Nueva Cultura Novagro SA</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; line-height: 5px; padding-top: 4pt; text-indent: 0pt;'>Cedula Juridica: 3-101-376551</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; line-height: 5px; padding-top: 4pt; text-indent: 0pt;'>Telefax: 24731056</p><a style='color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; '>info@novagrocr.com  </a>&nbsp;&nbsp;<a style='color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; '>www.novagrocr.com  </a></center><hr> </hr><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt; ' >FECHA FACT: </a>&nbsp;&nbsp;<a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' > @Fecha </a><br><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >FACTURA </a><br><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >ELECTRÓNICA </a>&nbsp;&nbsp;<a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' > @NumFactura </a><br><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >N° INTERNO: <span style='font-weight: bold;'>CO-Pital</span>  <span>@NumInterno</span></a><br><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >VENDEDOR:</a><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >@Vendedor </a><br><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >COD CLIENTE:</a><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >@CodCliente </a><br><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;' >CLIENTE:</a><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt; font-weight: bold;' >@NombreCliente</a><hr> </hr><table><thead ><tr><th>CANT </th><th>NOM</th><th>PRECIO </th><th>TOTAL </th></tr></thead><tbody>@Tabla</tbody></table><hr> </hr><table><tbody><tr><td> <a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;' >SUBTOTAL </a></td><td></td><td>  <a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;' >@SubTotal </a></td></tr><tr><td> <a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;' >DESCUENTO </a></td><td>  </td><td>  <a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;' >@TotalDescuento </a></td></tr><tr><td> <a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;' >IVA </a></td><td> </td><td>   <a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;' >@TotalImpuestos </a></td></tr><tr><td> <a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;' >TOTAL </a></td><td> </td><td><a style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;font-weight: bold;'> @Total</a> </a></td></tr></tbody></table><hr> </hr><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;'>GRACIAS POR SU COMPRA</p><hr> </hr><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; font-weight: bold;'>FIRMA Y CEDULA</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 8pt; font-weight: bold;'>Comprobante Fiscal:</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;' >@NumComprobante</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;'>1. Para toda devolución es indispensable la factura</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;'>original.</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;'> 2. No se aceptan devoluciones si las marcas del  rayados,</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;'>fabricante o los  articulos son alterados, quebrados,.</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;'>golpeados, desarmados o modificados.</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;'>3. Para reclamos se cuenta con 3 días habiles</p><p style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7pt;'>4. Factura genera una tasa de mora del 3% mensual.</p><br><p style='color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;'>* Gravado 13% ** Gravado 10% </p><p style='color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;'>Autorizado mediante resolución No</p><p style='color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 7.5pt;'>DGT-R-48-2016 del 7 de octubre de 2016.</p></div></body></html>";
@@ -1516,10 +1625,10 @@ function ImprimirTiquete(Documento) {
         texto = texto.replace("CO-Pital", "");
 
         if (Documento.tipoDocumento == "04") {
-            texto = texto.replace("FACTURA","TIQUETE");
+            texto = texto.replace("FACTURA", "TIQUETE");
 
         }
-        texto = texto.replace("@CodCliente"," " + Documento.idCliente);
+        texto = texto.replace("@CodCliente", " " + Documento.idCliente);
 
         var Cli = Clientes.find(a => a.id == Documento.idCliente);
         texto = texto.replace("@NombreCliente", Cli.Nombre);
@@ -1535,8 +1644,8 @@ function ImprimirTiquete(Documento) {
             tabla += "<tr>";
             tabla += "<td>" + Documento.detalle[i].cantidad + " </td>";
             tabla += "<td style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;'>" + Prod.Nombre + " </td>";
-            tabla += "<td>" + formatoDecimal(Documento.detalle[i].precioUnitario)  + " </td>";
-            tabla += "<td>" + formatoDecimal(Documento.detalle[i].totalLinea)  + " </td>";
+            tabla += "<td>" + formatoDecimal(Documento.detalle[i].precioUnitario) + " </td>";
+            tabla += "<td>" + formatoDecimal(Documento.detalle[i].totalLinea) + " </td>";
 
 
 
@@ -1547,7 +1656,7 @@ function ImprimirTiquete(Documento) {
         texto = texto.replace("@Tabla", tabla);
 
         if (Documento.moneda == "CRC") {
-            texto = texto.replace("@SubTotal","₡" + formatoDecimal(Documento.subtotal));
+            texto = texto.replace("@SubTotal", "₡" + formatoDecimal(Documento.subtotal));
             texto = texto.replace("@TotalDescuento", "₡" + formatoDecimal(Documento.totalDescuento));
             texto = texto.replace("@TotalImpuestos", "₡" + formatoDecimal(Documento.totalImpuestos));
             texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.totalCompra));
@@ -1557,11 +1666,11 @@ function ImprimirTiquete(Documento) {
             texto = texto.replace("@TotalImpuestos", "$" + formatoDecimal(Documento.totalImpuestos));
             texto = texto.replace("@Total", "$" + formatoDecimal(Documento.totalCompra));
         }
-        
 
 
 
-        ventana.document.write(texto); 
+
+        ventana.document.write(texto);
         ventana.document.close();
         ventana.focus();
         ventana.print();

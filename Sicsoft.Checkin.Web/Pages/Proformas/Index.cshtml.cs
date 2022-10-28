@@ -82,7 +82,8 @@ namespace NOVAAPP.Pages.Proformas
 
 
                 Users = await serviceU.ObtenerLista("");
-                Users = Users.Where(a => a.idRol == RolCajero.idRol).ToArray();
+                //Users = Users.Where(a => a.idRol == RolCajero.idRol).ToArray();
+                Users = Users.Where(a => a.novapos == true).ToArray();
 
                 foreach (var item in Users)
                 {

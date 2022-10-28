@@ -83,9 +83,10 @@ namespace NOVAAPP.Pages.Ofertas
 
 
                 Users = await serviceU.ObtenerLista("");
-                Users = Users.Where(a => a.idRol == RolCajero.idRol).ToArray();
-                  
-                foreach(var item in Users)
+                //Users = Users.Where(a => a.idRol == RolCajero.idRol).ToArray();
+                Users = Users.Where(a => a.novapos == true).ToArray();
+
+                foreach (var item in Users)
                 {
                     
                     if(UsuariosSucursales.Where(a => a.idUsuario == item.id).FirstOrDefault() == null)

@@ -29,24 +29,34 @@ var CP = [];
 
 
 function Recuperar() {
-    Cantones = JSON.parse($("#Cantones").val());
-    Distritos = JSON.parse($("#Distritos").val());
-    Barrios = JSON.parse($("#Barrios").val());
-    Clientes = JSON.parse($("#Clientes").val());
-    Productos = JSON.parse($("#Productos").val());
-    Impuestos = JSON.parse($("#Impuestos").val());
-    Exoneraciones = JSON.parse($("#Exoneraciones").val());
-    Documento = JSON.parse($("#Documento").val());
-    TipoCambio = JSON.parse($("#TipoCambio").val());
-    CB = JSON.parse($("#CB").val());
-    CP = JSON.parse($("#CP").val());
+    try {
+        Cantones = JSON.parse($("#Cantones").val());
+        Distritos = JSON.parse($("#Distritos").val());
+        Barrios = JSON.parse($("#Barrios").val());
+        Clientes = JSON.parse($("#Clientes").val());
+        Productos = JSON.parse($("#Productos").val());
+        Impuestos = JSON.parse($("#Impuestos").val());
+        Exoneraciones = JSON.parse($("#Exoneraciones").val());
+        Documento = JSON.parse($("#Documento").val());
+        TipoCambio = JSON.parse($("#TipoCambio").val());
+        CB = JSON.parse($("#CB").val());
+        CP = JSON.parse($("#CP").val());
 
-    ExoneracionesCliente = [];
+        ExoneracionesCliente = [];
 
-    RellenaClientes();
-    RellenaExoneraciones();
-    maskCedula();
-    RecuperarInformacion();
+        RellenaClientes();
+        RellenaExoneraciones();
+        maskCedula();
+        RecuperarInformacion();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar ' + e
+
+        })
+    }
+   
 }
 
 function RecuperarInformacion() {
@@ -253,32 +263,52 @@ function onChangeMoneda() {
 }
 
 function RellenaClientes() {
-    var html = "";
-    $("#ClienteSeleccionado").html(html);
-    html += "<option value='0' > Seleccione Cliente </option>";
+    try {
+        var html = "";
+        $("#ClienteSeleccionado").html(html);
+        html += "<option value='0' > Seleccione Cliente </option>";
 
-    for (var i = 0; i < Clientes.length; i++) {
-        html += "<option value='" + Clientes[i].id + "' > " + Clientes[i].Codigo + " - " + Clientes[i].Nombre + " </option>";
+        for (var i = 0; i < Clientes.length; i++) {
+            html += "<option value='" + Clientes[i].id + "' > " + Clientes[i].Codigo + " - " + Clientes[i].Nombre + " </option>";
+        }
+
+
+
+        $("#ClienteSeleccionado").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar ' + e
+
+        })
     }
-
-
-
-    $("#ClienteSeleccionado").html(html);
+   
 }
 function RellenaProductos() {
+    try {
+        var html = "";
+        $("#ProductoSeleccionado").html(html);
 
-    var html = "";
-    $("#ProductoSeleccionado").html(html);
+        html += "<option value='0' > Seleccione Producto </option>";
 
-    html += "<option value='0' > Seleccione Producto </option>";
+        for (var i = 0; i < ProdClientes.length; i++) {
+            html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " </option>";
+        }
 
-    for (var i = 0; i < ProdClientes.length; i++) {
-        html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " </option>";
+
+
+        $("#ProductoSeleccionado").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar ' + e
+
+        })
     }
 
-
-
-    $("#ProductoSeleccionado").html(html);
+   
 }
 
 function RellenaExoneraciones() {
@@ -323,41 +353,51 @@ function RellenaExoneraciones() {
 }
 
 function onChangeCliente() {
-    var idCliente = $("#ClienteSeleccionado").val();
+    try {
+        var idCliente = $("#ClienteSeleccionado").val();
 
-    var Cliente = Clientes.find(a => a.id == idCliente);
-    var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
+        var Cliente = Clientes.find(a => a.id == idCliente);
+        var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
 
-    //Preguntarle a CP cual es la de 30 dias
+        //Preguntarle a CP cual es la de 30 dias
 
-    var Cond30 = CP.filter(a => a.Dias <= CondP[0].Dias).sort(function (a, b) {
-        if (a.Dias > b.Dias) {
-            return 1;
-        }
-        if (a.Dias < b.Dias) {
-            return -1;
-        }
-        // a must be equal to b
-        return 0;
-    });
+        var Cond30 = CP.filter(a => a.Dias <= CondP[0].Dias).sort(function (a, b) {
+            if (a.Dias > b.Dias) {
+                return 1;
+            }
+            if (a.Dias < b.Dias) {
+                return -1;
+            }
+            // a must be equal to b
+            return 0;
+        });
 
-    RellenaCondiciones(Cond30);
+        RellenaCondiciones(Cond30);
 
-    $("#spanDireccion").text(Cliente.Sennas);
-    $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
+        $("#spanDireccion").text(Cliente.Sennas);
+        $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
 
-    ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
-    ProdClientes = ProdClientes.sort(function (a, b) {
-        if (a.Stock < b.Stock) {
-            return 1;
-        }
-        if (a.Stock > b.Stock) {
-            return -1;
-        }
-        // a must be equal to b
-        return 0;
-    });
-    RellenaProductos();
+        ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
+        ProdClientes = ProdClientes.sort(function (a, b) {
+            if (a.Stock < b.Stock) {
+                return 1;
+            }
+            if (a.Stock > b.Stock) {
+                return -1;
+            }
+            // a must be equal to b
+            return 0;
+        });
+        RellenaProductos();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar ' + e
+
+        })
+    }
+   
 
 }
 function RellenaCondiciones(CPS) {
@@ -397,28 +437,38 @@ function ExoneracionxCliente() {
     RellenaExoneraciones();
 }
 function onChangeProducto() {
-    var idProducto = $("#ProductoSeleccionado").val();
+    try {
+        var idProducto = $("#ProductoSeleccionado").val();
 
-    var Producto = ProdClientes.find(a => a.id == idProducto);
+        var Producto = ProdClientes.find(a => a.id == idProducto);
 
-    if (Producto != undefined) {
-        $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
-        $("#inputCabys").val(Producto.Cabys);
-        $("#impuesto").val(Producto.idImpuesto);
-        $("#MonedaProducto").val(Producto.Moneda);
+        if (Producto != undefined) {
+            $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
+            $("#inputCabys").val(Producto.Cabys);
+            $("#impuesto").val(Producto.idImpuesto);
+            $("#MonedaProducto").val(Producto.Moneda);
 
-        ExoneracionxCliente();
-    } else {
-        $("#cantidad").val(1);
+            ExoneracionxCliente();
+        } else {
+            $("#cantidad").val(1);
 
-        $("#inputPrecio").val(0);
-        $("#inputCabys").val("");
-        $("#impuesto").val(0);
-        $("#MonedaProducto").val("");
-        $("#descuento").val(0);
+            $("#inputPrecio").val(0);
+            $("#inputCabys").val("");
+            $("#impuesto").val(0);
+            $("#MonedaProducto").val("");
+            $("#descuento").val(0);
 
+        }
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar ' + e
+
+        })
     }
-
+   
 
 
 }
@@ -498,47 +548,67 @@ function AbrirModalAgregarCliente() {
 }
 
 function validar(cliente) {
-    if (cliente.idListaPrecios == "" || cliente.idListaPrecios == null) {
-        return false;
-    } else if (cliente.Nombre == "" || cliente.Nombre == null) {
-        return false;
+    try {
+        if (cliente.idListaPrecios == "" || cliente.idListaPrecios == null) {
+            return false;
+        } else if (cliente.Nombre == "" || cliente.Nombre == null) {
+            return false;
+        }
+        else if (cliente.Cedula == "" || cliente.Cedula == null) {
+            return false;
+
+
+        } else if (cliente.Email == "" || cliente.Email == null) {
+            return false;
+
+        } else if (cliente.Telefono == "" || cliente.Telefono == null) {
+            return false;
+
+        } else if (cliente.Sennas == "" || cliente.Sennas == null) {
+            return false;
+
+        } else if (cliente.CorreoPublicitario == "" || cliente.CorreoPublicitario == null) {
+            return false;
+
+        } else if (cliente.idGrupo == "" || cliente.idGrupo == null) {
+            return false;
+        }
+
+        else {
+            return true;
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar ' + e
+
+        })
     }
-    else if (cliente.Cedula == "" || cliente.Cedula == null) {
-        return false;
-
-
-    } else if (cliente.Email == "" || cliente.Email == null) {
-        return false;
-
-    } else if (cliente.Telefono == "" || cliente.Telefono == null) {
-        return false;
-
-    } else if (cliente.Sennas == "" || cliente.Sennas == null) {
-        return false;
-
-    } else if (cliente.CorreoPublicitario == "" || cliente.CorreoPublicitario == null) {
-        return false;
-
-    } else if (cliente.idGrupo == "" || cliente.idGrupo == null) {
-        return false;
-    }
-
-    else {
-        return true;
-    }
+   
 }
 
 function LimpiarDatosCliente() {
-    $("#idListaP").val("1").trigger('change.select2');
-    $("#idGrupo").val("1").trigger('change.select2');
-    $("#Nombre").val("");
-    $("#selectTP").val("1").trigger('change.select2');
-    $("#Cedula").val("");
-    $("#Email").val("");
-    $("#Telefono").val("");
-    $("#selectP").val("1").trigger('change.select2');
-    $("#Sennas").val("");
-    $("#CorreoPublicitario").val("");
+    try {
+        $("#idListaP").val("1").trigger('change.select2');
+        $("#idGrupo").val("1").trigger('change.select2');
+        $("#Nombre").val("");
+        $("#selectTP").val("1").trigger('change.select2');
+        $("#Cedula").val("");
+        $("#Email").val("");
+        $("#Telefono").val("");
+        $("#selectP").val("1").trigger('change.select2');
+        $("#Sennas").val("");
+        $("#CorreoPublicitario").val("");
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar ' + e
+
+        })
+    }
+  
 }
 
 //Agregar Cliente
@@ -696,32 +766,42 @@ function AgregarCliente() {
 }
 ///
 function RellenaTabla() {
-    var html = "";
-    $("#tbody").html(html);
+    try {
+        var html = "";
+        $("#tbody").html(html);
 
 
-    for (var i = 0; i < ProdCadena.length; i++) {
-        html += "<tr>";
+        for (var i = 0; i < ProdCadena.length; i++) {
+            html += "<tr>";
 
-        html += "<td> " + (i + 1) + " </td>";
+            html += "<td> " + (i + 1) + " </td>";
 
-        html += "<td > " + ProdCadena[i].Descripcion + " </td>";
-        html += "<td class='text-center'> " + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
-        html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
+            html += "<td > " + ProdCadena[i].Descripcion + " </td>";
+            html += "<td class='text-center'> " + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
+            html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
-        html += "</tr>";
+            html += "</tr>";
 
 
+        }
+
+
+
+        $("#tbody").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar agregar ' + e
+
+        })
     }
-
-
-
-    $("#tbody").html(html);
+   
 }
 function cantidadRepetidos(palabra, separador) {
 
@@ -729,16 +809,26 @@ function cantidadRepetidos(palabra, separador) {
     return palabra.split(separador).length - 1;
 }
 function ReplaceLetra(palabra) {
-    var cantidad = cantidadRepetidos(palabra, ",");
-    for (var i = 0; i < cantidad; i++) {
-        palabra = palabra.replace(",", "");
-    }
+    try {
+        var cantidad = cantidadRepetidos(palabra, ",");
+        for (var i = 0; i < cantidad; i++) {
+            palabra = palabra.replace(",", "");
+        }
 
-    //var cantidad2 = cantidadRepetidos(palabra, ".");
-    //for (var i = 0; i < cantidad2; i++) {
-    //    palabra = palabra.replace(".", "");
-    //}
-    return palabra;
+        //var cantidad2 = cantidadRepetidos(palabra, ".");
+        //for (var i = 0; i < cantidad2; i++) {
+        //    palabra = palabra.replace(".", "");
+        //}
+        return palabra;
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar agregar ' + e
+
+        })
+    }
+   
 }
 
 
@@ -845,26 +935,35 @@ function AgregarProductoTabla() {
 }
 
 function EliminarProducto(i) {
+    try {
+        var Producto = ProdCadena[i];
 
-    var Producto = ProdCadena[i];
 
 
+        var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
+        var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
+        var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
+        var totalG = parseFloat(ReplaceLetra($("#totG").text()));
 
-    var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
-    var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
-    var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
-    var totalG = parseFloat(ReplaceLetra($("#totG").text()));
+        subtotalG -= (Producto.Cantidad * Producto.PrecioUnitario);
+        impuestoG -= Producto.TotalImpuesto;
+        descuentoG -= Producto.Descuento;
+        totalG -= Producto.TotalLinea;
+        $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
+        $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
+        $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+        $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+        ProdCadena.splice(i, 1);
+        RellenaTabla();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar ' + e
 
-    subtotalG -= (Producto.Cantidad * Producto.PrecioUnitario);
-    impuestoG -= Producto.TotalImpuesto;
-    descuentoG -= Producto.Descuento;
-    totalG -= Producto.TotalLinea;
-    $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
-    $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
-    $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
-    $("#totG").text(formatoDecimal(totalG.toFixed(2)));
-    ProdCadena.splice(i, 1);
-    RellenaTabla();
+        })
+    }
+ 
 }
 
 //Generar
@@ -1036,11 +1135,21 @@ function validarDocumento(e) {
 
 }
 function sumArray(array) {
-    var suma = 0;
-    for (var i = 0; i < array.length; i++) {
-        suma += parseFloat(array[i].Monto);
+    try {
+        var suma = 0;
+        for (var i = 0; i < array.length; i++) {
+            suma += parseFloat(array[i].Monto);
+        }
+        return suma;
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar ' + e
+
+        })
     }
-    return suma;
+    
 }
 function BuscarCliente() {
     $.ajax({

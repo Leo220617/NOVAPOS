@@ -171,32 +171,51 @@ function onChangeMoneda() {
 }
 
 function RellenaClientes() {
-    var html = "";
-    $("#ClienteSeleccionado").html(html);
-    html += "<option value='0' > Seleccione Cliente </option>";
+    try {
+        var html = "";
+        $("#ClienteSeleccionado").html(html);
+        html += "<option value='0' > Seleccione Cliente </option>";
 
-    for (var i = 0; i < Clientes.length; i++) {
-        html += "<option value='" + Clientes[i].id + "' > " + Clientes[i].Codigo + " - " + Clientes[i].Nombre + " </option>";
+        for (var i = 0; i < Clientes.length; i++) {
+            html += "<option value='" + Clientes[i].id + "' > " + Clientes[i].Codigo + " - " + Clientes[i].Nombre + " </option>";
+        }
+
+
+
+        $("#ClienteSeleccionado").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
     }
-
-
-
-    $("#ClienteSeleccionado").html(html);
+   
 }
 function RellenaProductos() {
+    try {
+        var html = "";
+        $("#ProductoSeleccionado").html(html);
 
-    var html = "";
-    $("#ProductoSeleccionado").html(html);
+        html += "<option value='0' > Seleccione Producto </option>";
 
-    html += "<option value='0' > Seleccione Producto </option>";
+        for (var i = 0; i < ProdClientes.length; i++) {
+            html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " </option>";
+        }
 
-    for (var i = 0; i < ProdClientes.length; i++) {
-        html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " </option>";
+
+
+        $("#ProductoSeleccionado").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
     }
-
-
-
-    $("#ProductoSeleccionado").html(html);
+    
 }
 
 function RellenaExoneraciones() {
@@ -320,152 +339,242 @@ function RellenaCondiciones(CPS) {
     }
 }
 function ExoneracionxCliente() {
-    var idCliente = $("#ClienteSeleccionado").val();
-    ExoneracionesCliente = Exoneraciones.filter(a => a.idCliente == idCliente && a.Activo == true);
+    try {
+        var idCliente = $("#ClienteSeleccionado").val();
+        ExoneracionesCliente = Exoneraciones.filter(a => a.idCliente == idCliente && a.Activo == true);
 
-    RellenaExoneraciones();
+        RellenaExoneraciones();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+    
 }
 function onChangeProducto() {
-    var idProducto = $("#ProductoSeleccionado").val();
+    try {
+        var idProducto = $("#ProductoSeleccionado").val();
 
-    var Producto = ProdClientes.find(a => a.id == idProducto);
+        var Producto = ProdClientes.find(a => a.id == idProducto);
 
-    if (Producto != undefined) {
-        $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
-        $("#inputCabys").val(Producto.Cabys);
-        $("#impuesto").val(Producto.idImpuesto);
-        $("#MonedaProducto").val(Producto.Moneda);
-        ExoneracionxCliente();
-    } else {
-        $("#cantidad").val(1);
+        if (Producto != undefined) {
+            $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
+            $("#inputCabys").val(Producto.Cabys);
+            $("#impuesto").val(Producto.idImpuesto);
+            $("#MonedaProducto").val(Producto.Moneda);
+            ExoneracionxCliente();
+        } else {
+            $("#cantidad").val(1);
 
-        $("#inputPrecio").val(0);
-        $("#inputCabys").val("");
-        $("#impuesto").val(0);
-        $("#MonedaProducto").val("");
-        $("#descuento").val(0);
+            $("#inputPrecio").val(0);
+            $("#inputCabys").val("");
+            $("#impuesto").val(0);
+            $("#MonedaProducto").val("");
+            $("#descuento").val(0);
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
     }
+    
 
 
 
 }
 
 function ModificaSelects(i) {
-    var codProvincia = parseInt($("#selectP").val());
-    var codCanton = parseInt($("#selectC").val());
-    var codDistrito = parseInt($("#selectD").val());
+    try {
+        var codProvincia = parseInt($("#selectP").val());
+        var codCanton = parseInt($("#selectC").val());
+        var codDistrito = parseInt($("#selectD").val());
 
-    if (i == 0) {
-        RellenaCantones(Cantones.filter(a => a.CodProvincia == codProvincia));
-        RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
-        RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+        if (i == 0) {
+            RellenaCantones(Cantones.filter(a => a.CodProvincia == codProvincia));
+            RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
+            RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
 
+        }
+
+        if (i == 1) {
+            RellenaCantones(Cantones.filter(a => a.CodProvincia == codProvincia));
+            RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
+            RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+
+        }
+        if (i == 2) {
+
+            RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
+            RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+
+        }
+
+        if (i == 3) {
+            RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
     }
-
-    if (i == 1) {
-        RellenaCantones(Cantones.filter(a => a.CodProvincia == codProvincia));
-        RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
-        RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
-
-    }
-    if (i == 2) {
-
-        RellenaDistritos(Distritos.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton));
-        RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
-
-    }
-
-    if (i == 3) {
-        RellenaBarrios(Barrios.filter(a => a.CodProvincia == codProvincia && a.CodCanton == codCanton && a.CodDistrito == codDistrito));
-    }
+    
 
 }
 
 function RellenaCantones(ListCantones) {
-    var sOptions = '';
+    try {
+        var sOptions = '';
 
-    $("#selectC").html('');
+        $("#selectC").html('');
 
-    for (var i = 0; i < ListCantones.length; i++) {
+        for (var i = 0; i < ListCantones.length; i++) {
 
-        sOptions += '<option value="' + ListCantones[i].CodCanton + '">' + ListCantones[i].NomCanton + '</option>';
+            sOptions += '<option value="' + ListCantones[i].CodCanton + '">' + ListCantones[i].NomCanton + '</option>';
 
+        }
+        $("#selectC").html(sOptions);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
     }
-    $("#selectC").html(sOptions);
+    
 }
 
 function RellenaDistritos(ListDistritos) {
-    var sOptions = '';
+    try {
+        var sOptions = '';
 
-    $("#selectD").html('');
+        $("#selectD").html('');
 
-    for (var i = 0; i < ListDistritos.length; i++) {
+        for (var i = 0; i < ListDistritos.length; i++) {
 
-        sOptions += '<option value="' + ListDistritos[i].CodDistrito + '">' + ListDistritos[i].NomDistrito + '</option>';
+            sOptions += '<option value="' + ListDistritos[i].CodDistrito + '">' + ListDistritos[i].NomDistrito + '</option>';
 
+        }
+        $("#selectD").html(sOptions);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
     }
-    $("#selectD").html(sOptions);
+    
 }
 
 function RellenaBarrios(ListBarrios) {
-    var sOptions = '';
+    try {
+        var sOptions = '';
 
-    $("#selectB").html('');
+        $("#selectB").html('');
 
-    for (var i = 0; i < ListBarrios.length; i++) {
+        for (var i = 0; i < ListBarrios.length; i++) {
 
-        sOptions += '<option value="' + ListBarrios[i].CodBarrio + '">' + ListBarrios[i].NomBarrio + '</option>';
+            sOptions += '<option value="' + ListBarrios[i].CodBarrio + '">' + ListBarrios[i].NomBarrio + '</option>';
 
+        }
+        $("#selectB").html(sOptions);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
     }
-    $("#selectB").html(sOptions);
+    
 }
 
 function AbrirModalAgregarCliente() {
-    $("#ModalAgregarCliente").modal("show");
+    try {
+        $("#ModalAgregarCliente").modal("show");
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+    
 }
 
 function validar(cliente) {
-    if (cliente.idListaPrecios == "" || cliente.idListaPrecios == null) {
-        return false;
-    } else if (cliente.Nombre == "" || cliente.Nombre == null) {
-        return false;
+    try {
+        if (cliente.idListaPrecios == "" || cliente.idListaPrecios == null) {
+            return false;
+        } else if (cliente.Nombre == "" || cliente.Nombre == null) {
+            return false;
+        }
+        else if (cliente.Cedula == "" || cliente.Cedula == null) {
+            return false;
+
+
+        } else if (cliente.Email == "" || cliente.Email == null) {
+            return false;
+
+        } else if (cliente.Telefono == "" || cliente.Telefono == null) {
+            return false;
+
+        } else if (cliente.Sennas == "" || cliente.Sennas == null) {
+            return false;
+
+        } else if (cliente.CorreoPublicitario == "" || cliente.CorreoPublicitario == null) {
+            return false;
+
+        } else if (cliente.idGrupo == "" || cliente.idGrupo == null) {
+            return false;
+        }
+
+        else {
+            return true;
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
     }
-    else if (cliente.Cedula == "" || cliente.Cedula == null) {
-        return false;
-
-
-    } else if (cliente.Email == "" || cliente.Email == null) {
-        return false;
-
-    } else if (cliente.Telefono == "" || cliente.Telefono == null) {
-        return false;
-
-    } else if (cliente.Sennas == "" || cliente.Sennas == null) {
-        return false;
-
-    } else if (cliente.CorreoPublicitario == "" || cliente.CorreoPublicitario == null) {
-        return false;
-
-    } else if (cliente.idGrupo == "" || cliente.idGrupo == null) {
-        return false;
-    }
-
-    else {
-        return true;
-    }
+   
 }
 
 function LimpiarDatosCliente() {
-    $("#idListaP").val("1").trigger('change.select2');
-    $("#idGrupo").val("1").trigger('change.select2');
-    $("#Nombre").val("");
-    $("#selectTP").val("1").trigger('change.select2');
-    $("#Cedula").val("");
-    $("#Email").val("");
-    $("#Telefono").val("");
-    $("#selectP").val("1").trigger('change.select2');
-    $("#Sennas").val("");
-    $("#CorreoPublicitario").val("");
+    try {
+        $("#idListaP").val("1").trigger('change.select2');
+        $("#idGrupo").val("1").trigger('change.select2');
+        $("#Nombre").val("");
+        $("#selectTP").val("1").trigger('change.select2');
+        $("#Cedula").val("");
+        $("#Email").val("");
+        $("#Telefono").val("");
+        $("#selectP").val("1").trigger('change.select2');
+        $("#Sennas").val("");
+        $("#CorreoPublicitario").val("");
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+
 }
 
 //Agregar Cliente
@@ -623,37 +732,56 @@ function AgregarCliente() {
 }
 ///
 function RellenaTabla() {
-    var html = "";
-    $("#tbody").html(html);
+    try {
+        var html = "";
+        $("#tbody").html(html);
 
 
-    for (var i = 0; i < ProdCadena.length; i++) {
-        html += "<tr>";
+        for (var i = 0; i < ProdCadena.length; i++) {
+            html += "<tr>";
 
-        html += "<td> " + (i + 1) + " </td>";
+            html += "<td> " + (i + 1) + " </td>";
 
-        html += "<td > " + ProdCadena[i].Descripcion + " </td>";
-        html += "<td class='text-center'> " + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
-        html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
+            html += "<td > " + ProdCadena[i].Descripcion + " </td>";
+            html += "<td class='text-center'> " + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
+            html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
-        html += "</tr>";
+            html += "</tr>";
 
 
+        }
+
+
+
+        $("#tbody").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
     }
-
-
-
-    $("#tbody").html(html);
+    
 }
 function cantidadRepetidos(palabra, separador) {
+    try {
+        return palabra.split(separador).length - 1;
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
 
+        })
+    }
 
-    return palabra.split(separador).length - 1;
+   
 }
 function ReplaceLetra(palabra) {
     var cantidad = cantidadRepetidos(palabra, ",");
@@ -766,26 +894,35 @@ function AgregarProductoTabla() {
 }
 
 function EliminarProducto(i) {
+    try {
+        var Producto = ProdCadena[i];
 
-    var Producto = ProdCadena[i];
 
 
+        var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
+        var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
+        var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
+        var totalG = parseFloat(ReplaceLetra($("#totG").text()));
 
-    var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
-    var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
-    var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
-    var totalG = parseFloat(ReplaceLetra($("#totG").text()));
+        subtotalG -= (Producto.Cantidad * Producto.PrecioUnitario);
+        impuestoG -= Producto.TotalImpuesto;
+        descuentoG -= Producto.Descuento;
+        totalG -= Producto.TotalLinea;
+        $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
+        $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
+        $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+        $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+        ProdCadena.splice(i, 1);
+        RellenaTabla();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
 
-    subtotalG -= (Producto.Cantidad * Producto.PrecioUnitario);
-    impuestoG -= Producto.TotalImpuesto;
-    descuentoG -= Producto.Descuento;
-    totalG -= Producto.TotalLinea;
-    $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
-    $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
-    $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
-    $("#totG").text(formatoDecimal(totalG.toFixed(2)));
-    ProdCadena.splice(i, 1);
-    RellenaTabla();
+        })
+    }
+ 
 }
 
 //Generar

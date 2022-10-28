@@ -28,21 +28,31 @@ var TipoCambio = [];
 var MetodosPagos = [];
 
 function Recuperar() {
-    Cantones = JSON.parse($("#Cantones").val());
-    Distritos = JSON.parse($("#Distritos").val());
-    Barrios = JSON.parse($("#Barrios").val());
-    Clientes = JSON.parse($("#Clientes").val());
-    Productos = JSON.parse($("#Productos").val());
-    Impuestos = JSON.parse($("#Impuestos").val());
-    Exoneraciones = JSON.parse($("#Exoneraciones").val());
-    Documento = JSON.parse($("#Documento").val());
-    TipoCambio = JSON.parse($("#TipoCambio").val());
+    try {
+        Cantones = JSON.parse($("#Cantones").val());
+        Distritos = JSON.parse($("#Distritos").val());
+        Barrios = JSON.parse($("#Barrios").val());
+        Clientes = JSON.parse($("#Clientes").val());
+        Productos = JSON.parse($("#Productos").val());
+        Impuestos = JSON.parse($("#Impuestos").val());
+        Exoneraciones = JSON.parse($("#Exoneraciones").val());
+        Documento = JSON.parse($("#Documento").val());
+        TipoCambio = JSON.parse($("#TipoCambio").val());
 
-    ExoneracionesCliente = [];
+        ExoneracionesCliente = [];
 
-    RellenaClientes();
-  
-    RecuperarInformacion();
+        RellenaClientes();
+
+        RecuperarInformacion();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar ' + e
+
+        })
+    }
+   
 }
 
 function RecuperarInformacion() {
@@ -98,88 +108,127 @@ function RecuperarInformacion() {
  
 
 function RellenaClientes() {
-    var html = "";
-    $("#ClienteSeleccionado").html(html);
-    html += "<option value='0' > Seleccione Cliente </option>";
+    try {
+        var html = "";
+        $("#ClienteSeleccionado").html(html);
+        html += "<option value='0' > Seleccione Cliente </option>";
 
-    for (var i = 0; i < Clientes.length; i++) {
-        html += "<option value='" + Clientes[i].id + "' > " + Clientes[i].Codigo + " - " + Clientes[i].Nombre + " </option>";
+        for (var i = 0; i < Clientes.length; i++) {
+            html += "<option value='" + Clientes[i].id + "' > " + Clientes[i].Codigo + " - " + Clientes[i].Nombre + " </option>";
+        }
+
+
+
+        $("#ClienteSeleccionado").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar rellenar ' + e
+
+        })
     }
-
-
-
-    $("#ClienteSeleccionado").html(html);
+   
 }
 function RellenaProductos() {
+    try {
+        var html = "";
+        $("#ProductoSeleccionado").html(html);
 
-    var html = "";
-    $("#ProductoSeleccionado").html(html);
+        html += "<option value='0' > Seleccione Producto </option>";
 
-    html += "<option value='0' > Seleccione Producto </option>";
+        for (var i = 0; i < ProdClientes.length; i++) {
+            html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " </option>";
+        }
 
-    for (var i = 0; i < ProdClientes.length; i++) {
-        html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " </option>";
+
+
+        $("#ProductoSeleccionado").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar rellenar ' + e
+
+        })
     }
-
-
-
-    $("#ProductoSeleccionado").html(html);
+   
 }
 
  
 
 function onChangeCliente() {
-    var idCliente = $("#ClienteSeleccionado").val();
+    try {
+        var idCliente = $("#ClienteSeleccionado").val();
 
-    var Cliente = Clientes.find(a => a.id == idCliente);
+        var Cliente = Clientes.find(a => a.id == idCliente);
 
-    $("#spanDireccion").text(Cliente.Sennas);
-    $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
+        $("#spanDireccion").text(Cliente.Sennas);
+        $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
 
-    ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
-    ProdClientes = ProdClientes.sort(function (a, b) {
-        if (a.Stock < b.Stock) {
-            return 1;
-        }
-        if (a.Stock > b.Stock) {
-            return -1;
-        }
-        // a must be equal to b
-        return 0;
-    });
-    RellenaProductos();
-    ValidarTotales();
+        ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
+        ProdClientes = ProdClientes.sort(function (a, b) {
+            if (a.Stock < b.Stock) {
+                return 1;
+            }
+            if (a.Stock > b.Stock) {
+                return -1;
+            }
+            // a must be equal to b
+            return 0;
+        });
+        RellenaProductos();
+        ValidarTotales();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar cliente ' + e
+
+        })
+    }
+   
 
 }
 
  
 function RellenaTabla() {
-    var html = "";
-    $("#tbody").html(html);
+    try {
+        var html = "";
+        $("#tbody").html(html);
 
 
-    for (var i = 0; i < ProdCadena.length; i++) {
-        html += "<tr>";
+        for (var i = 0; i < ProdCadena.length; i++) {
+            html += "<tr>";
 
-        html += "<td> " + (i + 1) + " </td>";
+            html += "<td> " + (i + 1) + " </td>";
 
-        html += "<td > " + ProdCadena[i].Descripcion + " </td>";
-        html += "<td class='text-center'> <input onchange='javascript: onChangeCantidadProducto("+i+")' type='number' id='" + i + "_Prod' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) +"' min='1'/>  </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
-        html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
-        html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
+            html += "<td > " + ProdCadena[i].Descripcion + " </td>";
+            html += "<td class='text-center'> <input onchange='javascript: onChangeCantidadProducto(" + i + ")' type='number' id='" + i + "_Prod' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + "' min='1'/>  </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
+            html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
-        html += "</tr>";
+            html += "</tr>";
 
 
+        }
+
+
+
+        $("#tbody").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
+
+        })
     }
-
-
-
-    $("#tbody").html(html);
+   
 }
 
 function onChangeCantidadProducto(i) {
@@ -249,26 +298,35 @@ function ValidarTotales() {
 }
 
 function EliminarProducto(i) {
+    try {
+        var Producto = ProdCadena[i];
 
-    var Producto = ProdCadena[i];
 
 
+        var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
+        var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
+        var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
+        var totalG = parseFloat(ReplaceLetra($("#totG").text()));
 
-    var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
-    var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
-    var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
-    var totalG = parseFloat(ReplaceLetra($("#totG").text()));
+        subtotalG -= (Producto.Cantidad * Producto.PrecioUnitario);
+        impuestoG -= Producto.TotalImpuesto;
+        descuentoG -= Producto.Descuento;
+        totalG -= Producto.TotalLinea;
+        $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
+        $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
+        $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+        $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+        ProdCadena.splice(i, 1);
+        RellenaTabla();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
 
-    subtotalG -= (Producto.Cantidad * Producto.PrecioUnitario);
-    impuestoG -= Producto.TotalImpuesto;
-    descuentoG -= Producto.Descuento;
-    totalG -= Producto.TotalLinea;
-    $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
-    $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
-    $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
-    $("#totG").text(formatoDecimal(totalG.toFixed(2)));
-    ProdCadena.splice(i, 1);
-    RellenaTabla();
+        })
+    }
+   
 }
 
 //Generar
@@ -397,44 +455,78 @@ function Generar() {
 //
 
 function validarDocumento(e) {
-    if (e.idCliente == "0" || e.idCliente == null) {
-        return false;
-    } else if (e.FechaVencimiento == "" || e.FechaVencimiento == null) {
-        return false;
+    try {
+        if (e.idCliente == "0" || e.idCliente == null) {
+            return false;
+        } else if (e.FechaVencimiento == "" || e.FechaVencimiento == null) {
+            return false;
+        }
+        else if (e.Detalle.length == 0 || e.Detalle == null) {
+            return false;
+        }
+
+        else {
+            return true;
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
+
+        })
     }
-    else if (e.Detalle.length == 0 || e.Detalle == null) {
-        return false;
-    }
-    
-    else {
-        return true;
-    }
+   
 }
 function sumArray(array) {
-    var suma = 0;
-    for (var i = 0; i < array.length; i++) {
-        suma += parseFloat(array[i].Monto);
+    try {
+        var suma = 0;
+        for (var i = 0; i < array.length; i++) {
+            suma += parseFloat(array[i].Monto);
+        }
+        return suma;
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
+
+        })
     }
-    return suma;
+  
 }
  
 
 function cantidadRepetidos(palabra, separador) {
+    try {
+        return palabra.split(separador).length - 1;
+    } catch (e) {
 
-
-    return palabra.split(separador).length - 1;
-}
-function ReplaceLetra(palabra) {
-    var cantidad = cantidadRepetidos(palabra, ",");
-    for (var i = 0; i < cantidad; i++) {
-        palabra = palabra.replace(",", "");
     }
 
-    //var cantidad2 = cantidadRepetidos(palabra, ".");
-    //for (var i = 0; i < cantidad2; i++) {
-    //    palabra = palabra.replace(".", "");
-    //}
-    return palabra;
+   
+}
+function ReplaceLetra(palabra) {
+    try {
+        var cantidad = cantidadRepetidos(palabra, ",");
+        for (var i = 0; i < cantidad; i++) {
+            palabra = palabra.replace(",", "");
+        }
+
+        //var cantidad2 = cantidadRepetidos(palabra, ".");
+        //for (var i = 0; i < cantidad2; i++) {
+        //    palabra = palabra.replace(".", "");
+        //}
+        return palabra;
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
+
+        })
+    }
+    
 }
 
  

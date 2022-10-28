@@ -107,7 +107,7 @@ namespace NOVAAPP.Pages.Ofertas
                     Oferta.TotalDescuento = Ofertas.TotalDescuento;
                     Oferta.TotalCompra = Ofertas.TotalCompra;
                     Oferta.PorDescto = Ofertas.PorDescto;
-                    Oferta.Comentarios = "Basado en la proforma # " + id;
+                    Oferta.Comentarios = Oferta.Comentarios + " | Basado en la proforma # " + id;
                     Oferta.BaseEntry = id;
                     var Tamaño = Ofertas.Detalle.Length;
                     Oferta.Detalle = new DetOfertaViewModel[Tamaño];

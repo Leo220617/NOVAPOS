@@ -115,7 +115,7 @@ namespace NOVAAPP.Pages.Documentos
                     Documento.TotalDescuento = Oferta.TotalDescuento;
                     Documento.TotalCompra = Oferta.TotalCompra;
                     Documento.PorDescto = Oferta.PorDescto;
-                    Documento.Comentarios = "Basado en la oferta # " + id;
+                    Documento.Comentarios = Oferta.Comentarios +  " | Basado en la oferta # " + id;
                     var Tamaño = Oferta.Detalle.Length;
                     Documento.Detalle = new DetDocumentoViewModel[Tamaño];
 

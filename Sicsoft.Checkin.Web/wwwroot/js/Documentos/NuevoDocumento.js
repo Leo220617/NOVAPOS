@@ -27,6 +27,36 @@ var Documento = [];
 var CB = [];
 var CP = [];
 
+function HideP() {
+    try {
+        $("#boxP").hide();
+        $("#AgregarC").hide();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar ' + e.stack
+
+        })
+    }
+   
+}
+function ReadOnlyC(){
+    try {
+        $("#boxC").attr("readonly", "readonly");
+        $("#selectCondPago").attr("disabled", "disabled");
+        $("#selectMoneda").attr("disabled", "disabled");
+        $("#ClienteSeleccionado").attr("disabled", "disabled");
+        $("#selectCondPago").attr("disabled", "disabled");
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar ' + e.stack
+
+        })
+    }
+}
 function Recuperar() {
     try {
         Cantones = JSON.parse($("#Cantones").val());
@@ -45,8 +75,14 @@ function Recuperar() {
         RellenaClientes();
         RellenaExoneraciones();
         maskCedula();
+       
         if (Documento != null || Documento != undefined) {
             RecuperarInformacion();
+            HideP();
+            ReadOnlyC();
+            
+            // HIDDEN por medio de jquery lo de agregar productos y poner readonly el resto de cosas
+            // Puede ser un metodo nuevo o hacerlo todo chorreado aqui 
 
         }
     } catch (e) {

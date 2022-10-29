@@ -1266,6 +1266,7 @@ function onChangeMetodo() {
                     $(".OTRODIV").hide();
                     $(".CHEQUEDIV").hide();
                     $(".EFECTIVODIV").show();
+                    $(".TRANSFERENCIADIV").hide();
 
                     break;
                 }
@@ -1275,7 +1276,19 @@ function onChangeMetodo() {
                     $(".EFECTIVODIV").hide();
 
                     $(".TARJETADIV").show();
+                    $(".TRANSFERENCIADIV").show();
                     $(".CHEQUEDIV").hide();
+
+                    break;
+                }
+            case "Transferencia":
+                {
+                    $(".OTRODIV").hide();
+                    $(".EFECTIVODIV").hide();
+
+                    $(".TARJETADIV").hide();
+                    $(".CHEQUEDIV").hide();
+                    $(".TRANSFERENCIADIV").show();
 
                     break;
                 }
@@ -1286,6 +1299,8 @@ function onChangeMetodo() {
 
                     $(".TARJETADIV").hide();
                     $(".CHEQUEDIV").show();
+                    $(".TRANSFERENCIADIV").hide();
+
                     break;
                 }
             case "Otros":
@@ -1295,6 +1310,7 @@ function onChangeMetodo() {
                     $(".TARJETADIV").hide();
                     $(".CHEQUEDIV").hide();
                     $(".OTRODIV").show();
+                    $(".TRANSFERENCIADIV").hide();
 
                     break;
                 }
@@ -1353,6 +1369,23 @@ function insertarPago() {
                             NumReferencia: $("#ReferenciaPago").val(),
                             NumCheque: "",
                             Metodo: "Tarjeta",
+                            PagadoCon: 0
+                        };
+                        MetodosPagos.push(Detalle);
+
+                        break;
+                    }
+                case "Transferencia":
+                    {
+                        var Detalle = {
+                            id: 0,
+                            idEncabezado: 0,
+                            idCuentaBancaria: $("#CuentaB").val(),
+                            Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
+                            BIN: "",
+                            NumReferencia: $("#ReferenciaPago").val(),
+                            NumCheque: "",
+                            Metodo: "Transferencia",
                             PagadoCon: 0
                         };
                         MetodosPagos.push(Detalle);
@@ -1499,6 +1532,23 @@ function validarMetodo() {
                         })
                         return false;
                     } else if (parseFloat(ReplaceLetra($("#ReferenciaPago").val())) <= 0 || $("#ReferenciaPago").val() == undefined || $("#ReferenciaPago").val() == "") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Parece que faltan datos por rellenar '
+
+                        })
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+
+                    break;
+                }
+            case "Transferencia":
+                {
+                      if (parseFloat(ReplaceLetra($("#ReferenciaPago").val())) <= 0 || $("#ReferenciaPago").val() == undefined || $("#ReferenciaPago").val() == "") {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',

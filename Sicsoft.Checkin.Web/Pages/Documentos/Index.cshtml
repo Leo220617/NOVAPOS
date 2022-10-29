@@ -140,6 +140,27 @@
                                 </div>
                             </div>
 
+                             <div class="col-2">
+                                    <div class="form-group">
+                                        <label for="cyber">Cond Pago:</label>
+                                        <select class="form-control select2" id="Condicion" asp-for="filtro.Codigo4" required>
+                                               <option value="0"> Seleccione</option>
+
+                                                    @foreach(var item in Model.Condicion)
+                                                    {
+                                                        <option value="@item.id">@item.Nombre</option>
+                                                    }
+
+
+                                                </select>
+
+
+
+
+
+                                      
+                                    </div>
+                                </div>
 
 
 
@@ -147,7 +168,8 @@
 
 
 
-                            <div class="col-sm-2 pl-1" style="text-align: center; padding-top: 2%;">
+
+                            <div class="col-sm-12 pl-1" style="text-align: right; padding-top: 2%;">
                                 <button title="Buscar" type="submit" class="btn btn-rounded btn-outline-primary"> <i class="fa fa-search"></i></button>
                             </div>
 

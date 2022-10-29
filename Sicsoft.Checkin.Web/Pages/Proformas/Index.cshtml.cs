@@ -20,7 +20,7 @@ namespace NOVAAPP.Pages.Proformas
         private readonly ICrudApi<ClientesViewModel, string> clientes;
         private readonly ICrudApi<RolesViewModel, int> roles;
         private readonly ICrudApi<UsuariosSucursalesViewModel, int> usuc;
-
+        private readonly ICrudApi<CondicionesPagosViewModel, int> condicion;
 
 
         [BindProperty]
@@ -31,16 +31,20 @@ namespace NOVAAPP.Pages.Proformas
         [BindProperty]
         public ClientesViewModel[] Clientes { get; set; }
 
+        [BindProperty]
+        public CondicionesPagosViewModel[] Condicion { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
 
-        public IndexModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<UsuariosViewModel, int> serviceU, ICrudApi<RolesViewModel, int> roles, ICrudApi<UsuariosSucursalesViewModel, int> usuc)
+        public IndexModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<UsuariosViewModel, int> serviceU, ICrudApi<RolesViewModel, int> roles, ICrudApi<UsuariosSucursalesViewModel, int> usuc, ICrudApi<CondicionesPagosViewModel, int> condicion)
         {
             this.service = service;
             this.clientes = clientes;
             this.serviceU = serviceU;
             this.roles = roles;
             this.usuc = usuc;
+            this.condicion = condicion;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -82,6 +86,7 @@ namespace NOVAAPP.Pages.Proformas
 
 
                 Users = await serviceU.ObtenerLista("");
+                Condicion = await condicion.ObtenerLista("");
                 //Users = Users.Where(a => a.idRol == RolCajero.idRol).ToArray();
                 Users = Users.Where(a => a.novapos == true).ToArray();
 

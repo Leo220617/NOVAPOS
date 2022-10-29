@@ -952,7 +952,7 @@ function Generar() {
 
         if (validarOferta(EncOferta)) {
             Swal.fire({
-                title: '¿Desea guardar la orden de venta?',
+                title: '¿Desea guardar la proforma?',
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: `Aceptar`,

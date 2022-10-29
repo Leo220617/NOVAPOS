@@ -950,7 +950,7 @@ function Generar() {
 
         if (validarOferta(EncOferta)) {
             Swal.fire({
-                title: '¿Desea editar la orden de venta?',
+                title: '¿Desea editar la proforma?',
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: `Aceptar`,

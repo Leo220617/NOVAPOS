@@ -29,6 +29,7 @@ namespace NOVAAPP.Pages.Ofertas
         private readonly ICrudApi<GruposClientesViewModel, int> grupo;
         private readonly ICrudApi<TipoCambiosViewModel, int> tipoCambio;
         private readonly ICrudApi<CondicionesPagosViewModel, int> serviceCP; //API
+        private readonly ICrudApi<VendedoresViewModel, int> vendedor;
 
 
 
@@ -65,8 +66,11 @@ namespace NOVAAPP.Pages.Ofertas
         [BindProperty]
         public CondicionesPagosViewModel[] CP { get; set; }
 
+        [BindProperty]
+        public VendedoresViewModel[] Vendedores { get; set; }
 
-        public NuevoModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos,ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP) //CTOR 
+
+        public NuevoModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos,ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor) //CTOR 
         {
             this.service = service;
             this.serviceU = serviceU;
@@ -80,6 +84,7 @@ namespace NOVAAPP.Pages.Ofertas
             this.grupo = grupo;
             this.tipoCambio = tipoCambio;
             this.serviceCP = serviceCP;
+            this.vendedor = vendedor;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -134,7 +139,7 @@ namespace NOVAAPP.Pages.Ofertas
                 }
 
                 CP = await serviceCP.ObtenerLista("");
-
+                Vendedores = await vendedor.ObtenerLista("");
                 Impuestos = await serviceU.ObtenerLista("");
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;

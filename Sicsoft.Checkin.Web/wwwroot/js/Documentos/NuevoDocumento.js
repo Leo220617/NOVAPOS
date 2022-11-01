@@ -26,6 +26,8 @@ var MetodosPagos = [];
 var Documento = [];
 var CB = [];
 var CP = [];
+var Vendedores = [];
+
 
 function HideP() {
     try {
@@ -63,6 +65,7 @@ function Recuperar() {
         Distritos = JSON.parse($("#Distritos").val());
         Barrios = JSON.parse($("#Barrios").val());
         Clientes = JSON.parse($("#Clientes").val());
+        Vendedores = JSON.parse($("#Vendedores").val());
         Productos = JSON.parse($("#Productos").val());
         Impuestos = JSON.parse($("#Impuestos").val());
         Exoneraciones = JSON.parse($("#Exoneraciones").val());
@@ -73,6 +76,8 @@ function Recuperar() {
         ExoneracionesCliente = [];
 
         RellenaClientes();
+        RellenaVendedores();
+
         RellenaExoneraciones();
         maskCedula();
        
@@ -98,6 +103,7 @@ function Recuperar() {
 function RecuperarInformacion() {
     try {
         $("#ClienteSeleccionado").val(Documento.idCliente);
+        $("#selectVendedor").val(Documento.idVendedor);
         $("#Fecha").val(Documento.Fecha);
 
         $("#selectMoneda").val(Documento.Moneda);
@@ -208,6 +214,29 @@ function onChangeMoneda() {
     }
 }
 
+function RellenaVendedores() {
+    try {
+        var html = "";
+        $("#selectVendedor").html(html);
+        html += "<option value='0' > Seleccione Vendedor </option>";
+
+        for (var i = 0; i < Vendedores.length; i++) {
+            html += "<option value='" + Vendedores[i].id + "' > " + Vendedores[i].CodSAP + " - " + Vendedores[i].Nombre + " </option>";
+        }
+
+
+
+        $("#selectVendedor").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+
+}
 
 function RellenaClientes() {
     try {
@@ -966,6 +995,7 @@ function Generar() {
         var EncDocumento = {
             id: 0,
             idCliente: $("#ClienteSeleccionado").val(),
+            idVendedor: $("#selectVendedor").val(),
             idUsuarioCreador: 0,
             idOferta: Documento == null ? 0 : Documento.idOferta,
             idCondPago: $("#selectCondPago").val(),

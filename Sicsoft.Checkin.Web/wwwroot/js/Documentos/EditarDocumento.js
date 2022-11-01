@@ -26,6 +26,7 @@ var TipoCambio = [];
 var MetodosPagos = [];
 var CB = [];
 var CP = [];
+var Vendedores = [];
 
 
 function Recuperar() {
@@ -34,6 +35,7 @@ function Recuperar() {
         Distritos = JSON.parse($("#Distritos").val());
         Barrios = JSON.parse($("#Barrios").val());
         Clientes = JSON.parse($("#Clientes").val());
+        Vendedores = JSON.parse($("#Vendedores").val());
         Productos = JSON.parse($("#Productos").val());
         Impuestos = JSON.parse($("#Impuestos").val());
         Exoneraciones = JSON.parse($("#Exoneraciones").val());
@@ -45,6 +47,7 @@ function Recuperar() {
         ExoneracionesCliente = [];
 
         RellenaClientes();
+        RellenaVendedores();
         RellenaExoneraciones();
         maskCedula();
         RecuperarInformacion();
@@ -66,6 +69,7 @@ function RecuperarInformacion() {
 
         $("#selectMoneda").val(Documento.Moneda);
         $("#selectTD").val(Documento.TipoDocumento);
+        $("#selectVendedor").val(Documento.idVendedor);
 
         $("#inputComentarios").val(Documento.Comentarios);
         $("#subG").text(formatoDecimal(Documento.Subtotal.toFixed(2)));
@@ -261,7 +265,29 @@ function onChangeMoneda() {
         })
     }
 }
+function RellenaVendedores() {
+    try {
+        var html = "";
+        $("#selectVendedor").html(html);
+        html += "<option value='0' > Seleccione Vendedor </option>";
 
+        for (var i = 0; i < Vendedores.length; i++) {
+            html += "<option value='" + Vendedores[i].id + "' > " + Vendedores[i].CodSAP + " - " + Vendedores[i].Nombre + " </option>";
+        }
+
+
+
+        $("#selectVendedor").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+
+}
 function RellenaClientes() {
     try {
         var html = "";
@@ -974,6 +1000,7 @@ function Generar() {
         var EncDocumento = {
             id: $("#id").val(),
             idCliente: $("#ClienteSeleccionado").val(),
+            idVendedor: $("#selectVendedor").val(),
             idUsuarioCreador: 0,
             idCondPago: $("#selectCondPago").val(),
 

@@ -24,6 +24,7 @@ var Exoneraciones = [];
 var TipoCambio = [];
 var Documento = [];
 var CP = [];
+var Vendedores = [];
 
 function Recuperar() {
     try {
@@ -31,6 +32,7 @@ function Recuperar() {
         Distritos = JSON.parse($("#Distritos").val());
         Barrios = JSON.parse($("#Barrios").val());
         Clientes = JSON.parse($("#Clientes").val());
+        Vendedores = JSON.parse($("#Vendedores").val());
         Productos = JSON.parse($("#Productos").val());
         Impuestos = JSON.parse($("#Impuestos").val());
         Exoneraciones = JSON.parse($("#Exoneraciones").val());
@@ -41,6 +43,7 @@ function Recuperar() {
         ExoneracionesCliente = [];
 
         RellenaClientes();
+        RellenaVendedores();
         RellenaExoneraciones();
         maskCedula();
         if (Documento != null || Documento != undefined) {
@@ -63,7 +66,7 @@ function RecuperarInformacion() {
         $("#Fecha").val(Documento.Fecha);
 
         $("#selectMoneda").val(Documento.Moneda);
-
+        $("#selectVendedor").val(Documento.idVendedor);
 
         $("#inputComentarios").val(Documento.Comentarios);
         $("#subG").text(formatoDecimal(Documento.Subtotal.toFixed(2)));
@@ -168,6 +171,30 @@ function onChangeMoneda() {
 
         })
     }
+}
+
+function RellenaVendedores() {
+    try {
+        var html = "";
+        $("#selectVendedor").html(html);
+        html += "<option value='0' > Seleccione Vendedor </option>";
+
+        for (var i = 0; i < Vendedores.length; i++) {
+            html += "<option value='" + Vendedores[i].id + "' > " + Vendedores[i].CodSAP + " - " + Vendedores[i].Nombre + " </option>";
+        }
+
+
+
+        $("#selectVendedor").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+
 }
 
 function RellenaClientes() {
@@ -935,6 +962,7 @@ function Generar() {
             idCliente: $("#ClienteSeleccionado").val(),
             idUsuarioCreador: 0,
             idCondPago: $("#selectCondPago").val(),
+            idVendedor: $("#selectVendedor").val(),
             Fecha: $("#Fecha").val(),
             FechaVencimiento: $("#fechaVencimiento").val(),
             Comentarios: $("#inputComentarios").val(),

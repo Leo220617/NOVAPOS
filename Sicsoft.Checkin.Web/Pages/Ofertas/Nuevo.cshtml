@@ -51,6 +51,7 @@
                 <input hidden id="Distritos" value="@JsonConvert.SerializeObject(Model.Distritos)" />
                 <input hidden id="Barrios" value="@JsonConvert.SerializeObject(Model.Barrios)" />
                 <input hidden id="Clientes" value="@JsonConvert.SerializeObject(Model.Clientes)" />
+                 <input hidden id="Vendedores" value="@JsonConvert.SerializeObject(Model.Vendedores)" />
                 <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
                 <input hidden id="Impuestos" value="@JsonConvert.SerializeObject(Model.Impuestos)" />
                 <input hidden id="Exoneraciones" value="@JsonConvert.SerializeObject(Model.Exoneraciones)" />
@@ -155,6 +156,13 @@
                               <div class="col-sm-3">
                                 <label>Cond. Pago</label>
                                     <select class="form-control" id="selectCondPago"  >
+                                        
+
+                                    </select>
+                            </div>
+                             <div class="col-sm-3">
+                                <label>Vendedor</label>
+                                    <select class="form-control select2" id="selectVendedor" asp-for="Oferta.idVendedor" >
                                         
 
                                     </select>

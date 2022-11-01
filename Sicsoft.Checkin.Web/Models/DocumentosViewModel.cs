@@ -29,6 +29,8 @@ namespace NOVAAPP.Models
 
         public int BaseEntry { get; set; }
 
+        public int idVendedor { get; set; }
+
         public MetodosPagosViewModel[] MetodosPagos { get; set; }
 
         public DetDocumentoViewModel[] Detalle { get; set; }

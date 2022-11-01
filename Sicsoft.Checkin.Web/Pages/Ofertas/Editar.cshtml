@@ -57,6 +57,7 @@
                 <input hidden id="Impuestos" value="@JsonConvert.SerializeObject(Model.Impuestos)" />
                 <input hidden id="Exoneraciones" value="@JsonConvert.SerializeObject(Model.Exoneraciones)" />
                 <input hidden id="Oferta" value="@JsonConvert.SerializeObject(Model.Oferta)" />
+                 <input hidden id="Vendedores" value="@JsonConvert.SerializeObject(Model.Vendedores)" />
                 <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
                 <input hidden id="CP" value="@JsonConvert.SerializeObject(Model.CP)" />
                 <input hidden id="urlGenerar" value="@Url.Page("Editar", "AgregarOferta")" />
@@ -153,6 +154,13 @@
                               <div class="col-sm-3">
                                 <label>Cond. Pago</label>
                                     <select class="form-control" id="selectCondPago"  >
+                                        
+
+                                    </select>
+                            </div>
+                             <div class="col-sm-3">
+                                <label>Vendedor</label>
+                                    <select class="form-control select2" id="selectVendedor" asp-for="Oferta.idVendedor" >
                                         
 
                                     </select>

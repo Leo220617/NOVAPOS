@@ -24,6 +24,7 @@ var Exoneraciones = [];
 var Oferta = [];
 var TipoCambio = [];
 var CP = [];
+var Vendedores = [];
 
 function Recuperar() {
     try {
@@ -31,6 +32,7 @@ function Recuperar() {
         Distritos = JSON.parse($("#Distritos").val());
         Barrios = JSON.parse($("#Barrios").val());
         Clientes = JSON.parse($("#Clientes").val());
+        Vendedores = JSON.parse($("#Vendedores").val());
         Productos = JSON.parse($("#Productos").val());
         Impuestos = JSON.parse($("#Impuestos").val());
         Exoneraciones = JSON.parse($("#Exoneraciones").val());
@@ -41,6 +43,7 @@ function Recuperar() {
         ExoneracionesCliente = [];
 
         RellenaClientes();
+        RellenaVendedores();
         RellenaExoneraciones();
         maskCedula();
         RecuperarInformacion();
@@ -59,6 +62,7 @@ function RecuperarInformacion() {
     try {
        
         $("#ClienteSeleccionado").val(Oferta.idCliente);
+        $("#selectVendedor").val(Oferta.idVendedor);
         $("#Fecha").val(Oferta.Fecha);
         $("#selectMoneda").val(Oferta.Moneda);
 
@@ -166,6 +170,30 @@ function onChangeMoneda() {
 
         })
     }
+}
+
+function RellenaVendedores() {
+    try {
+        var html = "";
+        $("#selectVendedor").html(html);
+        html += "<option value='0' > Seleccione Vendedor </option>";
+
+        for (var i = 0; i < Vendedores.length; i++) {
+            html += "<option value='" + Vendedores[i].id + "' > " + Vendedores[i].CodSAP + " - " + Vendedores[i].Nombre + " </option>";
+        }
+
+
+
+        $("#selectVendedor").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+
 }
 function RellenaClientes() {
     try {
@@ -932,6 +960,7 @@ function Generar() {
         var EncOferta = {
             id: $("#id").val(),
             idCliente: $("#ClienteSeleccionado").val(),
+            idVendedor: $("#selectVendedor").val(),
             idUsuarioCreador: 0,
             Fecha: $("#Fecha").val(),
             FechaVencimiento: $("#fechaVencimiento").val(),

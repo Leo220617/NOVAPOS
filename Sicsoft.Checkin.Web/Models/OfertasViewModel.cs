@@ -27,5 +27,7 @@ namespace NOVAAPP.Models
         public string TipoDocumento { get; set; }
 
         public int idCondPago { get; set; }
+
+        public int idVendedor { get; set; }
     }
 }

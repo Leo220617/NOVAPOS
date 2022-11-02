@@ -97,131 +97,153 @@
                                     </div>
                                 </div>
 
-                                   <div class="col-2">
+                                <div class="col-2">
                                     <div class="form-group">
                                         <label for="cyber">Cliente:</label>
                                         <select class="form-control select2" id="ClienteF" asp-for="filtro.Codigo1" required>
-                                               <option value="0"> Seleccione</option>
+                                            <option value="0"> Seleccione</option>
 
-                                                    @foreach(var item in Model.Clientes)
-                                                    {
-                                                        <option value="@item.id"> @item.Codigo - @item.Nombre</option>
-                                                    }
-
-
-                                                </select>
+                                            @foreach (var item in Model.Clientes)
+                                        {
+                                            <option value="@item.id"> @item.Codigo - @item.Nombre</option>
+                                        }
 
 
-
-
-
-                                        </div>
-                                    </div>
-                                    <div class="col-2">
-                                    <div class="form-group">
-                                        <label for="cyber">Usuario:</label>
-                                        <select class="form-control select2" id="UsuarioF" asp-for="filtro.Codigo2" required>
-                                               <option value="0"> Seleccione</option>
-
-                                                    @foreach(var item in Model.Users)
-                                                    {
-                                                        <option value="@item.id">@item.Nombre</option>
-                                                    }
-
-
-                                                </select>
+                                    </select>
 
 
 
 
 
-                                      
-                                    </div>
                                 </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="cyber">Usuario:</label>
+                                    <select class="form-control select2" id="UsuarioF" asp-for="filtro.Codigo2" required>
+                                        <option value="0"> Seleccione</option>
 
-                                 <div class="col-2">
-                                    <div class="form-group">
-                                        <label for="cyber">Cond Pago:</label>
-                                        <select class="form-control select2" id="Condicion" asp-for="filtro.Codigo3" required>
-                                               <option value="0"> Seleccione</option>
-
-                                                    @foreach(var item in Model.Condicion)
-                                                    {
-                                                        <option value="@item.id">@item.Nombre</option>
-                                                    }
-
-
-                                                </select>
+                                        @foreach (var item in Model.Users)
+                                        {
+                                            <option value="@item.id">@item.Nombre</option>
+                                        }
 
 
+                                    </select>
 
 
 
-                                      
-                                    </div>
+
+
+
                                 </div>
-
-
-
-
-
-
- 
-                                <div class="col-sm-12 pl-1" style="text-align: right; padding-top: 2%;">
-                                    <button title="Buscar" type="submit" class="btn btn-rounded btn-outline-primary"> <i class="fa fa-search"></i></button>
-                                </div>
-
-
-
-
                             </div>
 
-                        </form>
-                    </div>
-                </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="cyber">Cond Pago:</label>
+                                    <select class="form-control select2" id="Condicion" asp-for="filtro.Codigo3" required>
+                                        <option value="0"> Seleccione</option>
+
+                                        @foreach (var item in Model.Condicion)
+                                        {
+                                            <option value="@item.id">@item.Nombre</option>
+                                        }
 
 
-                <div class="box">
-                    <div class="box-header with-border">
-                        <div class="row">
-                            <div class="col-sm-8"> <h4 class="box-title">Órdenes de Venta</h4></div>
-                            <div class="col-sm-4">  </div>
+                                    </select>
+
+
+
+
+
+
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="cyber">Vendedor:</label>
+                                    <select class="form-control select2" id="Vendedor" asp-for="filtro.Codigo4" required>
+                                        <option value="0"> Seleccione</option>
+
+                                        @foreach (var item in Model.Vendedor)
+                                        {
+                                            <option value="@item.id">@item.Nombre</option>
+                                        }
+
+
+                                    </select>
+
+
+
+
+
+
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+                            <div class="col-sm-10 pl-1" style="text-align: right; padding-top: 2%;">
+                                <button title="Buscar" type="submit" class="btn btn-rounded btn-outline-primary"> <i class="fa fa-search"></i></button>
+                            </div>
+
+
+
 
                         </div>
 
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-sm-8"> <h4 class="box-title">Órdenes de Venta</h4></div>
+                        <div class="col-sm-4">  </div>
 
                     </div>
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <div class="table-responsive">
-                            <table id="example1" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-
-                                        <th>ID</th>
-
-                                        <th>Cliente</th>
-                                        <th>Fecha Creado</th>
-
-                                        <th>Fecha Vencimiento</th>
-                                        <th>Condición Pago</th>
-                                        <th>Moneda</th>
-
-                                        <th>SubTotal</th>
-                                        <th>Descuento</th>
-                                        <th>Impuesto</th>
-                                        <th>Total</th>
 
 
-                                        <th>Generado Por</th>
-                                        <th>Estado</th>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
 
-                                        <th>Acción</th>
+                                    <th>ID</th>
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model.Listas)
+                                    <th>Cliente</th>
+                                    <th>Vendedor</th>
+                                    <th>Fecha Creado</th>
+
+                                    <th>Fecha Vencimiento</th>
+                                    <th>Condición Pago</th>
+                                    <th>Moneda</th>
+
+                                    <th>SubTotal</th>
+                                    <th>Descuento</th>
+                                    <th>Impuesto</th>
+                                    <th>Total</th>
+
+
+                                    <th>Generado Por</th>
+                                    <th>Estado</th>
+
+                                    <th>Acción</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Listas)
                                 {
                                     <tr>
 
@@ -232,71 +254,76 @@
 
                                         <td>
                                             @( Model.Clientes.Where(a => a.id == item.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" :  Model.Clientes.Where(a => a.id == item.idCliente).FirstOrDefault().Codigo + " - " +  Model.Clientes.Where(a => a.id == item.idCliente).FirstOrDefault().Nombre)
-
-                                        <td>
-                                                @item.Fecha.ToString("dd/MM/yyyy")
-                                        </td>
-                                        <td>
-                                                @item.FechaVencimiento.ToString("dd/MM/yyyy")
-                                        </td>
-                                        <td>
-                                                @(Model.Condicion.Where(a => a.id == item.idCondPago).FirstOrDefault() == null ? "": Model.Condicion.Where(a => a.id == item.idCondPago).FirstOrDefault().Nombre )
-
-                                        </td>
-                                        <td>
-                                                @item.Moneda
-                                        </td>
-                                        <td>
-                                                @Math.Round(@item.Subtotal, 2).ToString("C",formato)
-                                        </td>
-                                        <td>
-                                                @Math.Round(@item.TotalDescuento, 2).ToString("C",formato)
                                         </td>
 
                                         <td>
-                                                @Math.Round(@item.TotalImpuestos, 2).ToString("C",formato)
-                                        </td>
-                                        <td>
-                                                @Math.Round(@item.TotalCompra, 2).ToString("C",formato)
-                                        </td>
-
-
-
-
-                                        <td>
-                                             @(Model.Users.Where(a => a.id == item.idUsuarioCreador).FirstOrDefault() == null ? "": Model.Users.Where(a => a.id == item.idUsuarioCreador).FirstOrDefault().Nombre )
-                                           
+                                            @(Model.Vendedor.Where(a => a.id == item.idVendedor).FirstOrDefault() == null ? "Vendedor Inexistente": Model.Vendedor.Where(a => a.id == item.idVendedor).FirstOrDefault().Nombre )
 
                                         </td>
                                         <td>
-                                                @if (item.Status == "0")
-                                                {
+                                            @item.Fecha.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td>
+                                            @item.FechaVencimiento.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td>
+                                            @(Model.Condicion.Where(a => a.id == item.idCondPago).FirstOrDefault() == null ? "": Model.Condicion.Where(a => a.id == item.idCondPago).FirstOrDefault().Nombre )
+
+                                        </td>
+                                        <td>
+                                            @item.Moneda
+                                        </td>
+                                        <td>
+                                            @Math.Round(@item.Subtotal, 2).ToString("C",formato)
+                                        </td>
+                                        <td>
+                                            @Math.Round(@item.TotalDescuento, 2).ToString("C",formato)
+                                        </td>
+
+                                        <td>
+                                            @Math.Round(@item.TotalImpuestos, 2).ToString("C",formato)
+                                        </td>
+                                        <td>
+                                            @Math.Round(@item.TotalCompra, 2).ToString("C",formato)
+                                        </td>
+
+
+
+
+                                        <td>
+                                            @(Model.Users.Where(a => a.id == item.idUsuarioCreador).FirstOrDefault() == null ? "": Model.Users.Where(a => a.id == item.idUsuarioCreador).FirstOrDefault().Nombre )
+
+
+                                        </td>
+                                        <td>
+                                            @if (item.Status == "0")
+                                            {
                                                 <span class="badge badge-pill badge-success">Abierto</span>
 
-                                                }
-                                                else
-                                                {
+                                            }
+                                            else
+                                            {
                                                 <span class="badge badge-pill badge-danger">Cerrado</span>
-                                                }
+                                            }
                                         </td>
 
 
 
                                         <td align="center" style="padding-top:15px;">
-                                                @if (item.Status == "0")
-                                                {
+                                            @if (item.Status == "0")
+                                            {
                                                 <a asp-page="./Editar" asp-route-id="@item.id" class="fa fa-edit icono"> </a>
 
-                                                }
+                                            }
                                             &nbsp;
                                             <a asp-page="./Observar" asp-route-id="@item.id" class="fa fa-info-circle icono"> </a> &nbsp;
                                             &nbsp;
-                                            @if(item.Status== "0")
-                                                {
+                                            @if (item.Status == "0")
+                                            {
                                                 <a asp-page="/Documentos/Nuevo" asp-route-id="@item.id" title="Generar Venta" class="fa fa-exchange icono" style="color: #FFB700;"> </a>
-                                                    
-                                                }
-                                            </td>
+
+                                            }
+                                        </td>
 
 
                                     </tr>
@@ -311,11 +338,12 @@
                                     <th>ID</th>
 
                                     <th>Cliente</th>
+                                    <th>Vendedor</th>
                                     <th>Fecha Creado</th>
 
                                     <th>Fecha Vencimiento</th>
                                     <th>Condición Pago</th>
-                                        <th>Moneda</th>
+                                    <th>Moneda</th>
 
                                     <th>SubTotal</th>
                                     <th>Descuento</th>

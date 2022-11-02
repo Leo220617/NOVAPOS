@@ -21,6 +21,7 @@ namespace NOVAAPP.Pages.Ofertas
         private readonly ICrudApi<RolesViewModel, int> roles;
         private readonly ICrudApi<UsuariosSucursalesViewModel, int> usuc;
         private readonly ICrudApi<CondicionesPagosViewModel, int> condicion;
+        private readonly ICrudApi<VendedoresViewModel, int> vendedor;
 
 
 
@@ -35,10 +36,13 @@ namespace NOVAAPP.Pages.Ofertas
         [BindProperty]
         public CondicionesPagosViewModel[] Condicion { get; set; }
 
+        [BindProperty]
+        public VendedoresViewModel[] Vendedor { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
 
-        public IndexModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<UsuariosViewModel, int> serviceU, ICrudApi<RolesViewModel, int> roles, ICrudApi<UsuariosSucursalesViewModel, int> usuc, ICrudApi<CondicionesPagosViewModel, int> condicion)
+        public IndexModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<UsuariosViewModel, int> serviceU, ICrudApi<RolesViewModel, int> roles, ICrudApi<UsuariosSucursalesViewModel, int> usuc, ICrudApi<CondicionesPagosViewModel, int> condicion, ICrudApi<VendedoresViewModel, int> vendedor)
         {
             this.service = service;
             this.clientes = clientes;
@@ -46,6 +50,7 @@ namespace NOVAAPP.Pages.Ofertas
             this.roles = roles;
             this.usuc = usuc;
             this.condicion = condicion;
+            this.vendedor = vendedor;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -76,13 +81,14 @@ namespace NOVAAPP.Pages.Ofertas
                     filtro.FechaFinal = ultimoDia;
 
                     filtro.Codigo3 = 1;
+                    filtro.Codigo4 = 0;
                     filtro.ItemCode = "0";
 
                 }
                 filtro.Categoria = "02";
 
                 Listas = await service.ObtenerLista(filtro);
-              
+                Vendedor = await vendedor.ObtenerLista("");
                 var Roles = await roles.ObtenerLista("");
                 var RolCajero = Roles.Where(a => a.NombreRol.ToLower().Contains("cajero".ToLower())).FirstOrDefault();
                 var UsuariosSucursales = await usuc.ObtenerLista(filtro);

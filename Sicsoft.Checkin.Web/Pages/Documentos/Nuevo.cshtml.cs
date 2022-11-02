@@ -112,6 +112,7 @@ namespace NOVAAPP.Pages.Documentos
                     Documento.idOferta = id;
                     Documento.CodSuc = Oferta.CodSuc;
                     Documento.idCliente = Oferta.idCliente;
+                    Documento.idVendedor = Oferta.idVendedor;
                     Documento.idUsuarioCreador = Oferta.idUsuarioCreador;
                     Documento.Comentarios = Oferta.Comentarios;
                     Documento.Moneda = Oferta.Moneda;

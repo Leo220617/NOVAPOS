@@ -21,6 +21,7 @@ namespace NOVAAPP.Pages.Documentos
         private readonly ICrudApi<RolesViewModel, int> roles;
         private readonly ICrudApi<UsuariosSucursalesViewModel, int> usuc;
         private readonly ICrudApi<CondicionesPagosViewModel, int> cond;
+        private readonly ICrudApi<VendedoresViewModel, int> vendedor;
 
 
         [BindProperty]
@@ -30,6 +31,8 @@ namespace NOVAAPP.Pages.Documentos
         public UsuariosViewModel[] Users { get; set; }
         [BindProperty]
         public ClientesViewModel[] Clientes { get; set; }
+        [BindProperty]
+        public VendedoresViewModel[] Vendedor { get; set; }
 
         [BindProperty]
         public CondicionesPagosViewModel[] Condicion { get; set; }
@@ -37,7 +40,7 @@ namespace NOVAAPP.Pages.Documentos
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
 
-        public IndexModel(ICrudApi<DocumentosViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<UsuariosViewModel, int> serviceU, ICrudApi<RolesViewModel, int> roles, ICrudApi<UsuariosSucursalesViewModel, int> usuc, ICrudApi<CondicionesPagosViewModel, int> cond)
+        public IndexModel(ICrudApi<DocumentosViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<UsuariosViewModel, int> serviceU, ICrudApi<RolesViewModel, int> roles, ICrudApi<UsuariosSucursalesViewModel, int> usuc, ICrudApi<CondicionesPagosViewModel, int> cond, ICrudApi<VendedoresViewModel, int> vendedor)
         {
             this.service = service;
             this.clientes = clientes;
@@ -45,6 +48,7 @@ namespace NOVAAPP.Pages.Documentos
             this.roles = roles;
             this.usuc = usuc;
             this.cond = cond;
+            this.vendedor = vendedor;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -75,6 +79,7 @@ namespace NOVAAPP.Pages.Documentos
                     filtro.FechaFinal = DateTime.Now; //ultimoDia;
 
                     filtro.Codigo3 = 1;
+                    filtro.Codigo5 = 0;
                     filtro.ItemCode = "0";
 
                 }
@@ -85,6 +90,7 @@ namespace NOVAAPP.Pages.Documentos
                 var UsuariosSucursales = await usuc.ObtenerLista(filtro);
 
                 Users = await serviceU.ObtenerLista("");
+                Vendedor = await vendedor.ObtenerLista("");
 
                 // Users = Users.Where(a => a.idRol == RolCajero.idRol).ToArray();
                 Users = Users.Where(a => a.novapos ==true).ToArray();

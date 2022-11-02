@@ -72,5 +72,43 @@ namespace NOVAAPP.Models
 
        
         public decimal TransferenciasDolares { get; set; }
+
+   
+        public decimal EfectivoColonesC { get; set; }
+
+
+        public decimal ChequesColonesC { get; set; }
+
+     
+        public decimal TarjetasColonesC { get; set; }
+
+        public decimal OtrosMediosColonesC { get; set; }
+
+       
+      
+
+
+
+        public decimal EfectivoFCC { get; set; }
+
+    
+        public decimal ChequesFCC { get; set; }
+
+    
+        public decimal TarjetasFCC { get; set; }
+
+    
+        public decimal OtrosMediosFCC { get; set; }
+
+  
+      
+
+
+
+
+        public decimal TransferenciasColonesC { get; set; }
+
+
+        public decimal TransferenciasDolaresC { get; set; }
     }
 }

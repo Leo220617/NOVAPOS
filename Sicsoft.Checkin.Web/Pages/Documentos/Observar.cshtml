@@ -129,7 +129,7 @@
 
                                             </div>
 
-                                            <div class="col-4">
+                                            <div class="col-3">
                                                 <h5>
                                                     <b>Tipo de Documento:</b>  @switch (Model.Documento.TipoDocumento)
                                                 {
@@ -153,6 +153,11 @@
                                             </h5>
                                         </div>
 
+                                          <div class="col-2">
+                                            <h5> <b>Vendedor: </b> @(Model.Vendedor.Nombre)</h5>
+
+                                        </div>
+
 
 
 
@@ -160,7 +165,7 @@
                                             <h5> <b>Moneda: </b> @Model.Documento.Moneda</h5>
 
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-2">
                                             <h5> <b>Cond.Pago: </b> @(Model.CondicionesPago.Nombre)</h5>
 
                                         </div>

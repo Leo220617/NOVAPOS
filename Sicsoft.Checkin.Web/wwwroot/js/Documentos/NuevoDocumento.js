@@ -50,6 +50,7 @@ function ReadOnlyC(){
         $("#selectMoneda").attr("disabled", "disabled");
         $("#ClienteSeleccionado").attr("disabled", "disabled");
         $("#selectCondPago").attr("disabled", "disabled");
+        $("#selectVendedor").attr("disabled", "disabled");
     } catch (e) {
         Swal.fire({
             icon: 'error',

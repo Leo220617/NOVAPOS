@@ -22,6 +22,7 @@ namespace NOVAAPP.Pages.Ofertas
         private readonly ICrudApi<UsuariosSucursalesViewModel, int> usuc;
         private readonly ICrudApi<CondicionesPagosViewModel, int> condicion;
         private readonly ICrudApi<VendedoresViewModel, int> vendedor;
+     
 
 
 
@@ -39,6 +40,8 @@ namespace NOVAAPP.Pages.Ofertas
         [BindProperty]
         public VendedoresViewModel[] Vendedor { get; set; }
 
+    
+
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
 
@@ -51,6 +54,7 @@ namespace NOVAAPP.Pages.Ofertas
             this.usuc = usuc;
             this.condicion = condicion;
             this.vendedor = vendedor;
+          
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -80,15 +84,22 @@ namespace NOVAAPP.Pages.Ofertas
 
                     filtro.FechaFinal = ultimoDia;
 
-                    filtro.Codigo3 = 1;
+
+                    filtro.Codigo2 = 0;
+                    filtro.Codigo3 = 0;
                     filtro.Codigo4 = 0;
                     filtro.ItemCode = "0";
+                    filtro.CardName = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
+
 
                 }
                 filtro.Categoria = "02";
 
                 Listas = await service.ObtenerLista(filtro);
-                Vendedor = await vendedor.ObtenerLista("");
+                Vendedor = await vendedor.ObtenerLista(filtro);
+
+             
+                
                 var Roles = await roles.ObtenerLista("");
                 var RolCajero = Roles.Where(a => a.NombreRol.ToLower().Contains("cajero".ToLower())).FirstOrDefault();
                 var UsuariosSucursales = await usuc.ObtenerLista(filtro);
@@ -98,6 +109,8 @@ namespace NOVAAPP.Pages.Ofertas
                 Condicion = await condicion.ObtenerLista("");
                 //Users = Users.Where(a => a.idRol == RolCajero.idRol).ToArray();
                 Users = Users.Where(a => a.novapos == true).ToArray();
+              
+
 
                 foreach (var item in Users)
                 {

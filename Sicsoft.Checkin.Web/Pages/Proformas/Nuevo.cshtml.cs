@@ -100,9 +100,10 @@ namespace NOVAAPP.Pages.Proformas
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;
                 filtro.Activo = true;
+                filtro.CardCode = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 Clientes = await clientes.ObtenerLista(filtro);
 
-                filtro.CardCode = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                filtro.CardName = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 Productos = await productos.ObtenerLista(filtro);
                 Cantones = await serviceC.ObtenerLista("");
                 Distritos = await serviceD.ObtenerLista("");
@@ -112,7 +113,7 @@ namespace NOVAAPP.Pages.Proformas
                 Grupos = await grupo.ObtenerLista("");
                 filtro.FechaInicial = DateTime.Now.Date;
                 TP = await tipoCambio.ObtenerLista(filtro);
-                Vendedores = await vendedor.ObtenerLista("");
+                Vendedores = await vendedor.ObtenerLista(filtro);
                 return Page();
             }
             catch (Exception ex)

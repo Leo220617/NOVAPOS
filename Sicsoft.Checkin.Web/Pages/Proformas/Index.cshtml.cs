@@ -79,14 +79,17 @@ namespace NOVAAPP.Pages.Proformas
 
                     filtro.FechaFinal = ultimoDia;
 
-                    filtro.Codigo3 = 1;
-                    filtro.ItemCode = "0";
+
+                    filtro.Codigo2 = 0;
+                    filtro.Codigo3 = 0;
                     filtro.Codigo4 = 0;
-                  
+                    filtro.ItemCode = "0";
+                    filtro.CardName = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+
                 }
                 filtro.Categoria = "01";
                 Listas = await service.ObtenerLista(filtro);
-                Vendedor = await vendedor.ObtenerLista("");
+                Vendedor = await vendedor.ObtenerLista(filtro);
                 var Roles = await roles.ObtenerLista("");
                 var RolCajero = Roles.Where(a => a.NombreRol.ToLower().Contains("cajero".ToLower())).FirstOrDefault();
                 var UsuariosSucursales = await usuc.ObtenerLista(filtro);

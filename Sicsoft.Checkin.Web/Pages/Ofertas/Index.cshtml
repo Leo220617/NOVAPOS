@@ -57,8 +57,11 @@
                     <div class="box-header with-border">
                         <div class="row">
                             <div class="col-sm-8"> <h4 class="box-title">Órdenes de Venta</h4></div>
+                            
+                                                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "20").FirstOrDefault()))
+                                                {
                             <div class="col-sm-4"> <a asp-page="Nuevo" asp-route-id="0" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Orden de Venta</a></div>
-
+                              }
                         </div>
 
 
@@ -310,7 +313,7 @@
 
 
                                         <td align="center" style="padding-top:15px;">
-                                            @if (item.Status == "0")
+                                            @if (item.Status == "0" && !string.IsNullOrEmpty(Roles.Where(a => a == "29").FirstOrDefault()))
                                             {
                                                 <a asp-page="./Editar" asp-route-id="@item.id" class="fa fa-edit icono"> </a>
 
@@ -318,7 +321,7 @@
                                             &nbsp;
                                             <a asp-page="./Observar" asp-route-id="@item.id" class="fa fa-info-circle icono"> </a> &nbsp;
                                             &nbsp;
-                                            @if (item.Status == "0")
+                                            @if (item.Status == "0" && !string.IsNullOrEmpty(Roles.Where(a => a == "33").FirstOrDefault()))
                                             {
                                                 <a asp-page="/Documentos/Nuevo" asp-route-id="@item.id" title="Generar Venta" class="fa fa-exchange icono" style="color: #FFB700;"> </a>
 

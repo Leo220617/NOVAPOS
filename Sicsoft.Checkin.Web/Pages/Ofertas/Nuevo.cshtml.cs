@@ -140,11 +140,12 @@ namespace NOVAAPP.Pages.Ofertas
                 }
 
                 CP = await serviceCP.ObtenerLista("");
-                Vendedores = await vendedor.ObtenerLista("");
+                
                 Impuestos = await serviceU.ObtenerLista("");
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;
                 filtro.Activo = true;
+                filtro.CardName = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
                 Clientes = await clientes.ObtenerLista(filtro);
 
                 filtro.CardCode = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
@@ -157,6 +158,7 @@ namespace NOVAAPP.Pages.Ofertas
                 Grupos = await grupo.ObtenerLista("");
                 filtro.FechaInicial = DateTime.Now.Date;
                 TP = await tipoCambio.ObtenerLista(filtro);
+                Vendedores = await vendedor.ObtenerLista(filtro);
                 return Page();
             }
             catch (Exception ex)

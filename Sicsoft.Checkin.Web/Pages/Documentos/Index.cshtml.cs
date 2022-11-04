@@ -81,6 +81,7 @@ namespace NOVAAPP.Pages.Documentos
                     filtro.Codigo3 = 1;
                     filtro.Codigo5 = 0;
                     filtro.ItemCode = "0";
+                    filtro.CardName = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
 
                 }
                 filtro.Codigo3 =  Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault().ToString());
@@ -90,7 +91,7 @@ namespace NOVAAPP.Pages.Documentos
                 var UsuariosSucursales = await usuc.ObtenerLista(filtro);
 
                 Users = await serviceU.ObtenerLista("");
-                Vendedor = await vendedor.ObtenerLista("");
+                Vendedor = await vendedor.ObtenerLista(filtro);
 
                 // Users = Users.Where(a => a.idRol == RolCajero.idRol).ToArray();
                 Users = Users.Where(a => a.novapos ==true).ToArray();

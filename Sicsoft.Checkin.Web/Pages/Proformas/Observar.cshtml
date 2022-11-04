@@ -135,7 +135,14 @@
                                             </div>
 
 
-                                            <div class="col-4">
+                                              <div class="col-4">
+                                            <h5> <b>Vendedor: </b> @(Model.Vendedor.Nombre)</h5>
+
+                                        </div>
+                                         <br />
+                                        <br />
+                                        <br />
+                                            <div class="col-3">
                                                 <h5>
                                                     <b>Estado:</b>@if (Model.Oferta.Status == "0")
                                                 {
@@ -149,7 +156,7 @@
                                             </h5>
 
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <h5>
                                                 <b>Tipo de Documento:</b>  @switch (Model.Oferta.TipoDocumento)
                                                 {
@@ -173,11 +180,11 @@
 
                                         </div>
 
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <h5> <b>Moneda</b> @Model.Oferta.Moneda</h5>
 
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <h5> <b>Cond.Pago: </b> @(Model.CondicionesPago.Nombre)</h5>
 
                                         </div>

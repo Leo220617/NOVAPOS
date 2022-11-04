@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +22,7 @@ namespace NOVAAPP.Pages.Ofertas
         private readonly ICrudApi<ProductosViewModel, string> serviceP;
         private readonly ICrudApi<ExoneracionesViewModel, int> exoneracion;
         private readonly ICrudApi<CondicionesPagosViewModel, int> condiconesPago;
+        private readonly ICrudApi<VendedoresViewModel, int> vendedor;
 
         [BindProperty]
         public ClientesViewModel[] Clientes { get; set; }
@@ -39,13 +39,17 @@ namespace NOVAAPP.Pages.Ofertas
         [BindProperty]
         public CondicionesPagosViewModel CondicionesPago { get; set; }
 
-        public ObservarModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago)
+        [BindProperty]
+        public VendedoresViewModel Vendedor { get; set; }
+
+        public ObservarModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor)
         {
             this.service = service;
             this.serviceE = serviceE;
             this.serviceP = serviceP;
             this.exoneracion = exoneracion;
             this.condiconesPago = condiconesPago;
+            this.vendedor = vendedor;
         }
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -58,10 +62,12 @@ namespace NOVAAPP.Pages.Ofertas
                 }
                 var CondPago = await condiconesPago.ObtenerLista("");
                 Oferta = await service.ObtenerPorId(id);
+                var Vendedores = await vendedor.ObtenerLista("");
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;
                 filtro.Activo = true;
                 CondicionesPago = CondPago.Where(a => a.id == Oferta.idCondPago).FirstOrDefault();
+                Vendedor = Vendedores.Where(a => a.id == Oferta.idVendedor).FirstOrDefault();
                 Clientes = await serviceE.ObtenerLista(filtro);
                 Productos = await serviceP.ObtenerLista("");
                 Exoneraciones = await exoneracion.ObtenerLista("");

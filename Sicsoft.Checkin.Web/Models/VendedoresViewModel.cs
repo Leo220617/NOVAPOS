@@ -12,5 +12,7 @@
 
        
         public string CodSuc { get; set; }
+
+        public bool Activo { get; set; }
     }
 }

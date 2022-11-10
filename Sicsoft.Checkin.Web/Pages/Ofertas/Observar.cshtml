@@ -338,26 +338,72 @@
                             <div class="page-header mt-0">
                                 <h2 class="d-inline"><span class="font-size-24">Orden de Venta No: @Model.Oferta.id</span></h2>
                                 <br />
-                                <div class="text-left">
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
+                              <div class="text-left">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
+
+                                            </div>
+
+                                            <div class="col-4">
+                                                <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
+
+                                            </div>
+
+                                              <div class="col-4">
+                                            <h5> <b>Vendedor: </b> @(Model.Vendedor.Nombre)</h5>
+
+                                        </div>
+                                        <br />
+                                        <br />
+                                        <br />
+                                       
+                                       
+
+                                         <div class="col-3">
+                                            <h5>
+                                                <b>Tipo de Documento:</b>  @switch (Model.Oferta.TipoDocumento)
+                                                {
+                                                    case "01":
+                                                        {
+                                                            <p>Factura Electrónica</p>
+                                                            break;
+                                                        }
+                                                    case "03":
+                                                        {
+                                                            <p>Nota de Crédito</p>
+                                                            break;
+                                                        }
+                                                    case "04":
+                                                        {
+                                                            <p>Tiquete Electrónico</p>
+                                                            break;
+                                                        }
+                                                }
+                                            </h5>
 
                                         </div>
 
-                                        <div class="col-4">
-                                            <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
-
-                                        </div>
-
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <h5> <b>Moneda</b> @Model.Oferta.Moneda</h5>
 
                                         </div>
 
+                                        <div class="col-3">
+                                            <h5> <b>Cond.Pago: </b> @(Model.CondicionesPago.Nombre)</h5>
+
+                                        </div>
+
+                                       
+
 
 
                                     </div>
+
+
+
+
+
                                 </div>
                             </div>
                         </div>

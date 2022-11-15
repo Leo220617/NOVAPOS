@@ -27,15 +27,98 @@
 @section scripts{
 
 
-    <script>
+      <script>
         $(document).ready(function() {
 
 
 
 
         });
+        var ids = 0;
+        function onClickModal(id) {
+            try {
+                ids = id;
+                Swal.fire({
+                    title: '¿Desea sincronizar a SAP?',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: `Aceptar`,
+                    denyButtonText: `Cancelar`,
+                    customClass: {
+                        confirmButton: 'swalBtnColor',
+                        denyButton: 'swalDeny'
+                    },
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
 
+                        SincronizarSAP();
 
+                    }
+                })
+            } catch (e) {
+                console.log(e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+                })
+            }
+
+        }
+
+        function SincronizarSAP() {
+            try {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: '@Url.Page("Index", "SincronizarSAP")',
+                    data: { id: ids },
+                    success: function(result) {
+                        $("#divProcesando").modal("hide");
+                        console.log(result);
+                        if (result == false) {
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Ha ocurrido un error al intentar sincronizar a SAP'
+
+                            })
+
+                        } else {
+                            Swal.fire({
+                                title: "Ha sido sincronizado a SAP con éxito",
+
+                                icon: 'success',
+                                showCancelButton: false,
+                                customClass: {
+                                    confirmButton: 'swalBtnColor',
+
+                                },
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            })
+                        }
+                    },
+                    beforeSend: function() {
+                        $("#divProcesando").modal("show");
+                    }
+                })
+            } catch (e) {
+                console.log(e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar sincronizar a SAP ' + e
+
+                })
+            }
+        }
     </script>
 }
     <!-- Content Header (Page header) -->
@@ -184,6 +267,10 @@
 
                                 </div>
                             </div>
+                             <div class="col-2 " style="text-align: center; padding-top: 2%;">
+                                <input type="checkbox" id="md_checkbox_1" class="chk-col-red" asp-for="filtro.Procesado" onclick="this.form.submit()" />
+                                <label for="md_checkbox_1">Procesado SAP</label>
+                            </div>
 
 
 
@@ -239,8 +326,9 @@
 
 
                                     <th>Generado Por</th>
-                                    <th>Estado</th>
 
+                                    <th>Estado</th>
+                                    <th>Procesado SAP</th>
                                     <th>Acción</th>
 
                                 </tr>
@@ -309,6 +397,17 @@
                                                 <span class="badge badge-pill badge-danger">Cerrado</span>
                                             }
                                         </td>
+                                         <td>
+                                            @if (item.ProcesadaSAP)
+                                            {
+                                                <span class="badge badge-pill badge-success">Procesado</span>
+
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-pill badge-danger">Sin Procesar</span>
+                                            }
+                                        </td>
 
 
 
@@ -325,6 +424,10 @@
                                             {
                                                 <a asp-page="/Documentos/Nuevo" asp-route-id="@item.id" title="Generar Venta" class="fa fa-exchange icono" style="color: #FFB700;"> </a>
 
+                                            }
+                                              @if (item.ProcesadaSAP == false)
+                                            {
+                                                <a onclick="javascript: onClickModal('@item.id')" title="Insertar a SAP"><img src="/sapX.png" /></a>
                                             }
                                         </td>
 
@@ -356,7 +459,7 @@
 
                                     <th>Generado Por</th>
                                     <th>Estado</th>
-
+                                    <th>Procesado SAP</th>
                                     <th>Acción</th>
 
                                 </tr>

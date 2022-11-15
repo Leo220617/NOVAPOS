@@ -961,9 +961,10 @@ function EliminarProducto(i) {
 
 //Generar
 function Generar() {
+   
     try {
 
-
+        
         var EncOferta = {
             id: 0,
             idCliente: $("#ClienteSeleccionado").val(),
@@ -998,8 +999,8 @@ function Generar() {
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
-
-
+                    $("#divProcesando").modal("show");
+                 
 
                     $.ajax({
                         type: 'POST',
@@ -1011,10 +1012,11 @@ function Generar() {
                             RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                         },
                         success: function (json) {
-
+                           
 
                             console.log("resultado " + json.Oferta);
                             if (json.success == true) {
+                                $("#divProcesando").modal("hide");
                                 Swal.fire({
                                     title: "Ha sido generado con éxito",
 
@@ -1038,7 +1040,7 @@ function Generar() {
                                 })
 
                             } else {
-
+                                
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
@@ -1048,12 +1050,11 @@ function Generar() {
                             }
                         },
 
-                        beforeSend: function (xhr) {
-
-
+                        beforeSend: function () {
+                            $("#divProcesando").modal("show");
                         },
                         complete: function () {
-
+                           
                         },
                         error: function (error) {
 
@@ -1062,6 +1063,7 @@ function Generar() {
                     });
                 }
             })
+
         } else {
 
         }

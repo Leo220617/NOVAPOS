@@ -34,5 +34,9 @@
 
        
         public string Correo { get; set; }
+
+        public int SerieFECO { get; set; }
+
+        public int SerieFECR { get; set; }
     }
 }

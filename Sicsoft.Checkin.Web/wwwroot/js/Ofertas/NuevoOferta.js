@@ -954,6 +954,7 @@ function EliminarProducto(i) {
 
 //Generar
 function Generar() {
+    $("#divProcesando").modal("show");
     try {
 
 
@@ -991,7 +992,7 @@ function Generar() {
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
-
+                    $("#divProcesando").modal("show");
 
 
                     $.ajax({
@@ -1004,10 +1005,11 @@ function Generar() {
                             RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                         },
                         success: function (json) {
-
+                          
 
                             console.log("resultado " + json.Oferta);
                             if (json.success == true) {
+                                $("#divProcesando").modal("hide");
                                 Swal.fire({
                                     title: "Ha sido generado con éxito",
 
@@ -1031,7 +1033,7 @@ function Generar() {
                                 })
 
                             } else {
-
+                               
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
@@ -1041,9 +1043,8 @@ function Generar() {
                             }
                         },
 
-                        beforeSend: function (xhr) {
-
-
+                        beforeSend: function () {
+                           
                         },
                         complete: function () {
 

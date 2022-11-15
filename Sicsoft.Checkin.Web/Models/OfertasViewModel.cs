@@ -29,5 +29,7 @@ namespace NOVAAPP.Models
         public int idCondPago { get; set; }
 
         public int idVendedor { get; set; }
+
+        public bool ProcesadaSAP { get; set; }
     }
 }

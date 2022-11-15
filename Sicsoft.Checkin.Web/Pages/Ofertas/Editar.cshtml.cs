@@ -111,6 +111,7 @@ namespace NOVAAPP.Pages.Ofertas
                 filtro.FechaInicial = DateTime.Now.Date;
                 TP = await tipoCambio.ObtenerLista(filtro);
                 Vendedores = await vendedor.ObtenerLista(filtro);
+                Vendedores = Vendedores.Where(a => a.Activo == true).ToArray();
                 return Page();
             }
             catch (Exception ex)

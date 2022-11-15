@@ -990,7 +990,7 @@ function Generar() {
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
-
+                    $("#divProcesando").modal("show");
 
 
                     $.ajax({
@@ -1007,6 +1007,7 @@ function Generar() {
 
                             console.log("resultado " + json.Oferta);
                             if (json.success == true) {
+                                $("#divProcesando").modal("hide");
                                 Swal.fire({
                                     title: "Ha sido generado con éxito",
 

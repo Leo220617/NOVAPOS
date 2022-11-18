@@ -1094,7 +1094,10 @@ function validarOferta(e) {
             else {
                 return true;
             }
+        } else {
+            return true;
         }
+        
     } catch (e) {
         Swal.fire({
             icon: 'error',

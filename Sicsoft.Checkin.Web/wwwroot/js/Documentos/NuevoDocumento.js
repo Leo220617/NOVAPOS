@@ -1299,6 +1299,7 @@ function onChangeMetodo() {
                     $(".CHEQUEDIV").hide();
                     $(".EFECTIVODIV").show();
                     $(".TRANSFERENCIADIV").hide();
+                    $(".CUENTADIV").hide();
 
                     break;
                 }
@@ -1310,6 +1311,7 @@ function onChangeMetodo() {
                     $(".TARJETADIV").show();
                     $(".TRANSFERENCIADIV").show();
                     $(".CHEQUEDIV").hide();
+                    $(".CUENTADIV").show();
 
                     break;
                 }
@@ -1321,6 +1323,7 @@ function onChangeMetodo() {
                     $(".TARJETADIV").hide();
                     $(".CHEQUEDIV").hide();
                     $(".TRANSFERENCIADIV").show();
+                    $(".CUENTADIV").show();
 
                     break;
                 }
@@ -1332,6 +1335,7 @@ function onChangeMetodo() {
                     $(".TARJETADIV").hide();
                     $(".CHEQUEDIV").show();
                     $(".TRANSFERENCIADIV").hide();
+                    $(".CUENTADIV").hide();
 
                     break;
                 }
@@ -1343,6 +1347,7 @@ function onChangeMetodo() {
                     $(".CHEQUEDIV").hide();
                     $(".OTRODIV").show();
                     $(".TRANSFERENCIADIV").hide();
+                    $(".CUENTADIV").show();
 
                     break;
                 }

@@ -26,7 +26,6 @@ var Documento = [];
 var CP = [];
 var Vendedores = [];
 
-
 function Recuperar() {
     try {
         Cantones = JSON.parse($("#Cantones").val());
@@ -40,13 +39,11 @@ function Recuperar() {
         TipoCambio = JSON.parse($("#TipoCambio").val());
         Documento = JSON.parse($("#Documento").val());
         CP = JSON.parse($("#CP").val());
-        
 
         ExoneracionesCliente = [];
 
         RellenaClientes();
         RellenaVendedores();
-       
         RellenaExoneraciones();
         maskCedula();
         if (Documento != null || Documento != undefined) {
@@ -70,7 +67,6 @@ function RecuperarInformacion() {
 
         $("#selectMoneda").val(Documento.Moneda);
         $("#selectVendedor").val(Documento.idVendedor);
-
 
         $("#inputComentarios").val(Documento.Comentarios);
         $("#subG").text(formatoDecimal(Documento.Subtotal.toFixed(2)));
@@ -176,6 +172,7 @@ function onChangeMoneda() {
         })
     }
 }
+
 function RellenaVendedores() {
     try {
         var html = "";
@@ -338,8 +335,6 @@ function onChangeCliente() {
 
 }
 
-
-
 function RellenaCondiciones(CPS) {
     try {
         var text = "";
@@ -359,8 +354,6 @@ function RellenaCondiciones(CPS) {
 
 
         $("#selectCondPago").html(text);
-
-
 
 
     } catch (e) {
@@ -961,10 +954,10 @@ function EliminarProducto(i) {
 
 //Generar
 function Generar() {
-   
+    $("#divProcesando").modal("show");
     try {
 
-        
+
         var EncOferta = {
             id: 0,
             idCliente: $("#ClienteSeleccionado").val(),
@@ -988,7 +981,7 @@ function Generar() {
 
         if (validarOferta(EncOferta)) {
             Swal.fire({
-                title: '¿Desea guardar la proforma?',
+                title: '¿Desea guardar la orden de venta?',
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: `Aceptar`,
@@ -1000,7 +993,7 @@ function Generar() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $("#divProcesando").modal("show");
-                 
+
 
                     $.ajax({
                         type: 'POST',
@@ -1012,7 +1005,7 @@ function Generar() {
                             RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                         },
                         success: function (json) {
-                           
+
 
                             console.log("resultado " + json.Oferta);
                             if (json.success == true) {
@@ -1040,7 +1033,7 @@ function Generar() {
                                 })
 
                             } else {
-                                
+
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
@@ -1051,10 +1044,10 @@ function Generar() {
                         },
 
                         beforeSend: function () {
-                            $("#divProcesando").modal("show");
+
                         },
                         complete: function () {
-                           
+
                         },
                         error: function (error) {
 
@@ -1063,7 +1056,6 @@ function Generar() {
                     });
                 }
             })
-
         } else {
 
         }
@@ -1102,6 +1094,8 @@ function validarOferta(e) {
             else {
                 return true;
             }
+        } else {
+            return true;
         }
     } catch (e) {
         Swal.fire({

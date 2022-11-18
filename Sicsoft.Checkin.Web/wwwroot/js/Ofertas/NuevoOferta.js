@@ -1076,7 +1076,7 @@ function Generar() {
 
 function validarOferta(e) {
     try {
-        var Contado = CP.find(a => a.Nombre == "Contado");
+    var Contado = CP.find(a => a.Nombre == "Contado");
 
         if ($("#selectCondPago").val() == Contado.id) {
             if (e.idCliente == "0" || e.idCliente == null) {
@@ -1094,6 +1094,8 @@ function validarOferta(e) {
             else {
                 return true;
             }
+        } else {
+            return true;
         }
     } catch (e) {
         Swal.fire({

@@ -268,10 +268,10 @@
 
 
                             </div>
-                            <div class="col-2 " style="text-align: center; padding-top: 2%;">
+                         @*   <div class="col-2 " style="text-align: center; padding-top: 2%;">
                                 <input type="checkbox" id="md_checkbox_1" class="chk-col-red" asp-for="filtro.Procesado" onclick="this.form.submit()" />
                                 <label for="md_checkbox_1">Procesado SAP</label>
-                            </div>
+                            </div>*@
 
 
 
@@ -326,7 +326,7 @@
 
                                     <th>Generado Por</th>
                                     <th>Estado</th>
-                                    <th>Procesado SAP</th>
+                                 @*   <th>Procesado SAP</th>*@
                                     
 
                                 </tr>
@@ -354,10 +354,10 @@
                                                 <a asp-page="/Ofertas/Nuevo" asp-route-id="@item.id" title="Generar Venta" class="fa fa-exchange icono" style="color: #FFB700;"> </a>
 
                                             }
-                                            @if (item.ProcesadaSAP == false)
+                                           @* @if (item.ProcesadaSAP == false)
                                             {
                                                 <a onclick="javascript: onClickModal('@item.id')" title="Insertar a SAP"><img src="/sapX.png" /></a>
-                                            }
+                                            }*@
                                         </td>
                                         <td>
                                             @( Model.Clientes.Where(a => a.id == item.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" :  Model.Clientes.Where(a => a.id == item.idCliente).FirstOrDefault().Codigo + " - " +  Model.Clientes.Where(a => a.id == item.idCliente).FirstOrDefault().Nombre)
@@ -413,7 +413,7 @@
                                             }
                                         </td>
 
-                                        <td>
+                                    @*    <td>
                                             @if (item.ProcesadaSAP)
                                             {
                                                 <span class="badge badge-pill badge-success">Procesado</span>
@@ -424,7 +424,7 @@
                                                 <span class="badge badge-pill badge-danger">Sin Procesar</span>
                                             }
                                         </td>
-
+*@
 
 
                                       
@@ -457,7 +457,7 @@
 
                                     <th>Generado Por</th>
                                     <th>Estado</th>
-                                    <th>Procesado SAP</th>
+                                  @*  <th>Procesado SAP</th>*@
 
                                     
 

@@ -31,6 +31,9 @@ namespace NOVAAPP.Models
 
         public int idVendedor { get; set; }
 
+        public bool ProcesadaSAP { get; set; }
+
+        public bool PagoProcesadaSAP { get; set; }
         public MetodosPagosViewModel[] MetodosPagos { get; set; }
 
         public DetDocumentoViewModel[] Detalle { get; set; }

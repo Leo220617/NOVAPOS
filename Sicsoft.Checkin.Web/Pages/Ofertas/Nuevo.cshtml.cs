@@ -115,6 +115,7 @@ namespace NOVAAPP.Pages.Ofertas
                     Oferta.PorDescto = Ofertas.PorDescto;
                     Oferta.Comentarios = Ofertas.Comentarios + " | Basado en la proforma # " + id;
                     Oferta.BaseEntry = id;
+                    Oferta.idCondPago = Ofertas.idCondPago;
                     var Tamaño = Ofertas.Detalle.Length;
                     Oferta.Detalle = new DetOfertaViewModel[Tamaño];
 

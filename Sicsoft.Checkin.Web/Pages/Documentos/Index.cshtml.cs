@@ -77,7 +77,7 @@ namespace NOVAAPP.Pages.Documentos
                     DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
 
                     filtro.FechaFinal = DateTime.Now; //ultimoDia;
-
+                   
                     filtro.Codigo3 = 1;
                     filtro.Codigo5 = 0;
                     filtro.ItemCode = "0";
@@ -143,6 +143,24 @@ namespace NOVAAPP.Pages.Documentos
             catch (Exception ex)
             {
                 return new JsonResult(false);
+            }
+        }
+        public async Task<IActionResult> OnGetSincronizarSAP(int id)
+        {
+            try
+            {
+
+                await service.SincronizarSAP(id);
+                return new JsonResult(true);
+            }
+            catch (ApiException ex)
+            {
+                return new JsonResult(false);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(false);
+
             }
         }
     }

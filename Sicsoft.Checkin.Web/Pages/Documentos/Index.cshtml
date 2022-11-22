@@ -27,15 +27,98 @@
 @section scripts{
 
 
-    <script>
+       <script>
         $(document).ready(function() {
 
 
 
 
         });
+        var ids = 0;
+        function onClickModal(id) {
+            try {
+                ids = id;
+                Swal.fire({
+                    title: '¿Desea sincronizar a SAP?',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: `Aceptar`,
+                    denyButtonText: `Cancelar`,
+                    customClass: {
+                        confirmButton: 'swalBtnColor',
+                        denyButton: 'swalDeny'
+                    },
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
 
+                        SincronizarSAP();
 
+                    }
+                })
+            } catch (e) {
+                console.log(e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+                })
+            }
+
+        }
+
+        function SincronizarSAP() {
+            try {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: '@Url.Page("Index", "SincronizarSAP")',
+                    data: { id: ids },
+                    success: function(result) {
+                        $("#divProcesando").modal("hide");
+                        console.log(result);
+                        if (result == false) {
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Ha ocurrido un error al intentar sincronizar a SAP'
+
+                            })
+
+                        } else {
+                            Swal.fire({
+                                title: "Ha sido sincronizado a SAP con éxito",
+
+                                icon: 'success',
+                                showCancelButton: false,
+                                customClass: {
+                                    confirmButton: 'swalBtnColor',
+
+                                },
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            })
+                        }
+                    },
+                    beforeSend: function() {
+                        $("#divProcesando").modal("show");
+                    }
+                })
+            } catch (e) {
+                console.log(e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar sincronizar a SAP ' + e
+
+                })
+            }
+        }
     </script>
 }
     <!-- Content Header (Page header) -->
@@ -162,6 +245,8 @@
                                 </div>
                             </div>
 
+                               
+
                             <div class="col-2">
                                 <div class="form-group">
                                     <label for="cyber">Vendedor:</label>
@@ -183,21 +268,33 @@
 
                                 </div>
                             </div>
-                             <div class="col-2">
-                                    <div class="form-group">
-                                        <label for="cyber">Estado:</label>
-                                        <select class="form-control" id="Estado" asp-for="filtro.ItemCode" required>
-                                            <option value="0">Abierta</option>
-                                            <option value="1">Cerrada</option>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="cyber">Estado:</label>
+                                    <select class="form-control" id="Estado" asp-for="filtro.ItemCode" required>
+                                        <option value="0">Abierta</option>
+                                        <option value="1">Cerrada</option>
 
 
 
 
 
-                                        </select>
-                                    </div>
+                                    </select>
                                 </div>
+                            </div>
 
+                           
+
+                               <div class="col-2 " style="text-align: center; padding-top: 2%;">
+                                <input type="checkbox" id="md_checkbox_1" class="chk-col-red" asp-for="filtro.Procesado" onclick="this.form.submit()" />
+                                <label for="md_checkbox_1"> Procesado SAP</label>
+                            </div>
+
+                            
+                            @*   <div class="col-2 " style="text-align: center; padding-top: 2%;">
+                                <input type="checkbox" id="md_checkbox_1" class="chk-col-red" asp-for="filtro.PagoProcesado" onclick="this.form.submit()" />
+                                <label for="md_checkbox_1"> Pago Procesado SAP</label>
+                            </div>*@
 
 
 
@@ -252,7 +349,8 @@
 
                                     <th>Total</th>
                                     <th>Estado</th>
-
+                                    <th>Procesado SAP</th>
+                                    <th>Pago SAP</th>
                                     <th>Generado Por</th>
 
 
@@ -283,6 +381,10 @@
                                             {
 
                                                 <a asp-page="./Cancelar" asp-route-id="@item.id" class="fa  fa-window-close icono"> </a>
+                                            }
+                                            @if (item.ProcesadaSAP == false)
+                                            {
+                                                <a onclick="javascript: onClickModal('@item.id')" title="Insertar a SAP"><img src="/sapX.png" /></a>
                                             }
                                         </td>
                                         <td>
@@ -337,7 +439,7 @@
                                             @Math.Round(@item.TotalCompra, 2).ToString("C",formato)
                                         </td>
 
-                                         <td>
+                                        <td>
                                             @if (item.Status == "0")
                                             {
                                                 <span class="badge badge-pill badge-success">Abierto</span>
@@ -348,7 +450,28 @@
                                                 <span class="badge badge-pill badge-danger">Cerrado</span>
                                             }
                                         </td>
+                                          <td>
+                                            @if (item.ProcesadaSAP)
+                                            {
+                                                <span class="badge badge-pill badge-success">Procesado</span>
 
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-pill badge-danger">Sin Procesar</span>
+                                            }
+                                        </td>
+                                          <td>
+                                            @if (item.PagoProcesadaSAP)
+                                            {
+                                                <span class="badge badge-pill badge-success">Procesado</span>
+
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-pill badge-danger">Sin Procesar</span>
+                                            }
+                                        </td>
 
                                         <td>
                                             @(Model.Users.Where(a => a.id == item.idUsuarioCreador).FirstOrDefault() == null ? "": Model.Users.Where(a => a.id == item.idUsuarioCreador).FirstOrDefault().Nombre )
@@ -384,8 +507,9 @@
                                     <th>Descuento</th>
                                     <th>Impuesto</th>
                                     <th>Total</th>
-                                     <th>Estado</th>
-
+                                    <th>Estado</th>
+                                    <th>Procesado SAP</th>
+                                    <th>Pago SAP</th>
                                     <th>Generado Por</th>
 
 

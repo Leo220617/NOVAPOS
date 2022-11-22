@@ -109,7 +109,7 @@ function RecuperarInformacion() {
 
         $("#selectMoneda").val(Documento.Moneda);
         $("#selectTD").val("01");
-
+        $("#selectCondPago").val(Documento.idCondPago);
         $("#inputComentarios").val(Documento.Comentarios);
         $("#subG").text(formatoDecimal(Documento.Subtotal.toFixed(2)));
         $("#impG").text(formatoDecimal(Documento.TotalImpuestos.toFixed(2)));
@@ -380,17 +380,26 @@ function onChangeCliente() {
 }
 function RellenaCondiciones(CPS) {
     try {
+        var valorCondicion = Documento != null || Documento != undefined ? Documento.idCondPago : 0;
         var text = "";
         $("#selectCondPago").html(text);
 
         var Contado = CP.find(a => a.Nombre == "Contado");
 
-        text += "<option value='" + Contado.id + "' selected> " + Contado.Nombre + " </option>";
+
+
+        text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
 
 
         for (var i = 0; i < CPS.length; i++) {
             if (CPS[i].id != Contado.id) {
-                text += "<option value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+                if (valorCondicion == CPS[i].id) {
+                    text += "<option selected value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+
+                } else {
+                    text += "<option value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+
+                }
 
             }
         }

@@ -27,5 +27,7 @@ namespace InversionGloblalWeb.Models
 
         public bool Procesado { get; set; }
 
+        public bool PagoProcesado { get; set; }
+
     }
 }

@@ -28,5 +28,7 @@ namespace NOVAAPP.Models
         public bool Activo { get; set; }
 
         public bool novapos { get; set; }
+
+        public int idVendedor { get; set; }
     }
 }

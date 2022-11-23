@@ -30,7 +30,7 @@ namespace NOVAAPP.Pages.Proformas
         private readonly ICrudApi<TipoCambiosViewModel, int> tipoCambio;
         private readonly ICrudApi<CondicionesPagosViewModel, int> serviceCP; //API
         private readonly ICrudApi<VendedoresViewModel, int> vendedor;
-
+        private readonly ICrudApi<UsuariosViewModel, int> usuario;
 
 
 
@@ -67,9 +67,15 @@ namespace NOVAAPP.Pages.Proformas
         public CondicionesPagosViewModel[] CP { get; set; }
 
         [BindProperty]
+        public UsuariosViewModel USU { get; set; }
+
+        [BindProperty]
+        public int idVendedor { get; set; }
+
+        [BindProperty]
         public VendedoresViewModel[] Vendedores { get; set; }
 
-        public NuevoModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor) //CTOR 
+        public NuevoModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<UsuariosViewModel, int> usuario) //CTOR 
         {
             this.service = service;
             this.serviceU = serviceU;
@@ -84,6 +90,7 @@ namespace NOVAAPP.Pages.Proformas
             this.tipoCambio = tipoCambio;
             this.serviceCP = serviceCP;
             this.vendedor = vendedor;
+            this.usuario = usuario;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -96,6 +103,9 @@ namespace NOVAAPP.Pages.Proformas
                     return RedirectToPage("/NoPermiso");
                 }
                 CP = await serviceCP.ObtenerLista("");
+                var idUsuario = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
+                USU = await usuario.ObtenerPorId(idUsuario);
+                idVendedor = USU.idVendedor;
                 Impuestos = await serviceU.ObtenerLista("");
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;

@@ -23,6 +23,7 @@ var ProdCadena = [];
 var Exoneraciones = [];
 var TipoCambio = [];
 var Documento = [];
+var USU = [];
 var CP = [];
 var Vendedores = [];
 
@@ -39,6 +40,7 @@ function Recuperar() {
         TipoCambio = JSON.parse($("#TipoCambio").val());
         Documento = JSON.parse($("#Documento").val());
         CP = JSON.parse($("#CP").val());
+        USU = JSON.parse($("#USU").val());
 
         ExoneracionesCliente = [];
 
@@ -177,11 +179,20 @@ function onChangeMoneda() {
 function RellenaVendedores() {
     try {
         var html = "";
+        var idVendedor = $("#USU").val();
+
         $("#selectVendedor").html(html);
         html += "<option value='0' > Seleccione Vendedor </option>";
 
         for (var i = 0; i < Vendedores.length; i++) {
-            html += "<option value='" + Vendedores[i].id + "' > " + Vendedores[i].CodSAP + " - " + Vendedores[i].Nombre + " </option>";
+            if (Vendedores[i].id == idVendedor) {
+                html += "<option selected value='" + Vendedores[i].id + "' > " + Vendedores[i].CodSAP + " - " + Vendedores[i].Nombre + " </option>";
+
+            } else {
+                html += "<option value='" + Vendedores[i].id + "' > " + Vendedores[i].CodSAP + " - " + Vendedores[i].Nombre + " </option>";
+
+            }
+
         }
 
 
@@ -219,7 +230,7 @@ function RellenaClientes() {
 
         })
     }
-   
+
 }
 function RellenaProductos() {
     try {
@@ -243,7 +254,7 @@ function RellenaProductos() {
 
         })
     }
-    
+
 }
 
 function RellenaExoneraciones() {
@@ -332,7 +343,7 @@ function onChangeCliente() {
 
         })
     }
-    
+
 
 }
 
@@ -343,11 +354,11 @@ function RellenaCondiciones(CPS) {
         $("#selectCondPago").html(text);
 
         var Contado = CP.find(a => a.Nombre == "Contado");
-       
-     
-       
+
+
+
         text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
-       
+
 
         for (var i = 0; i < CPS.length; i++) {
             if (CPS[i].id != Contado.id) {
@@ -389,7 +400,7 @@ function ExoneracionxCliente() {
 
         })
     }
-    
+
 }
 function onChangeProducto() {
     try {
@@ -420,7 +431,7 @@ function onChangeProducto() {
 
         })
     }
-    
+
 
 
 
@@ -463,7 +474,7 @@ function ModificaSelects(i) {
 
         })
     }
-    
+
 
 }
 
@@ -487,7 +498,7 @@ function RellenaCantones(ListCantones) {
 
         })
     }
-    
+
 }
 
 function RellenaDistritos(ListDistritos) {
@@ -510,7 +521,7 @@ function RellenaDistritos(ListDistritos) {
 
         })
     }
-    
+
 }
 
 function RellenaBarrios(ListBarrios) {
@@ -533,7 +544,7 @@ function RellenaBarrios(ListBarrios) {
 
         })
     }
-    
+
 }
 
 function AbrirModalAgregarCliente() {
@@ -547,7 +558,7 @@ function AbrirModalAgregarCliente() {
 
         })
     }
-    
+
 }
 
 function validar(cliente) {
@@ -588,7 +599,7 @@ function validar(cliente) {
 
         })
     }
-   
+
 }
 
 function LimpiarDatosCliente() {
@@ -780,7 +791,7 @@ function RellenaTabla() {
             html += "<td> " + (i + 1) + " </td>";
 
             html += "<td > " + ProdCadena[i].Descripcion + " </td>";
-            html += "<td class='text-center'> " + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
+            html += "<td class='text-center'> <input onchange='javascript: onChangeCantidadProducto(" + i + ")' type='number' id='" + i + "_Prod' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + "' min='1'/>  </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
@@ -804,7 +815,7 @@ function RellenaTabla() {
 
         })
     }
-    
+
 }
 function cantidadRepetidos(palabra, separador) {
     try {
@@ -818,7 +829,7 @@ function cantidadRepetidos(palabra, separador) {
         })
     }
 
-   
+
 }
 function ReplaceLetra(palabra) {
     var cantidad = cantidadRepetidos(palabra, ",");
@@ -863,54 +874,62 @@ function AgregarProductoTabla() {
             idExoneracion: $("#exoneracion").val(),
             PorExoneracion: 0
         };
-
-
-        if (Producto.Cabys.length >= 13) {
-
-
-            var ImpuestoTarifa = $("#impuesto").val();
-            var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
-
-            var calculoIMP = IMP.Tarifa;
-
-            Producto.Descuento = (Producto.Cantidad * Producto.PrecioUnitario) * (Producto.PorDescto / 100);
-            Producto.TotalImpuesto = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * (calculoIMP / 100);
-            //EX => Exoneracion
-            var EX = Exoneraciones.find(a => a.id == Producto.idExoneracion);
-            if (EX != undefined) {
-                var ValorExonerado = (EX.PorExon / 100);
-                var TarifaExonerado = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * ValorExonerado;
-                Producto.TotalImpuesto -= TarifaExonerado;
-                Producto.PorExoneracion = EX.PorExon;
-            }
-            //Termina Exoneracion
-
-
-            Producto.TotalLinea = (Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento + Producto.TotalImpuesto;
-
-            subtotalG += (Producto.Cantidad * Producto.PrecioUnitario);
-            impuestoG += Producto.TotalImpuesto;
-            descuentoG += Producto.Descuento;
-            totalG += Producto.TotalLinea;
-
-            $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
-            $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
-            $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
-            $("#totG").text(formatoDecimal(totalG.toFixed(2)));
-
-            ProdCadena.push(Producto);
-
-            RellenaTabla();
-            onChangeMoneda();
-
-            $("#ProductoSeleccionado").val("0").trigger('change.select2');
-        } else {
+        if ((PE.Stock - Producto.Cantidad) < 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Producto sin Cabys valido'
+                text: 'Producto sin stock valido'
 
             })
+        } else {
+
+            if (Producto.Cabys.length >= 13) {
+
+
+                var ImpuestoTarifa = $("#impuesto").val();
+                var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
+
+                var calculoIMP = IMP.Tarifa;
+
+                Producto.Descuento = (Producto.Cantidad * Producto.PrecioUnitario) * (Producto.PorDescto / 100);
+                Producto.TotalImpuesto = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * (calculoIMP / 100);
+                //EX => Exoneracion
+                var EX = Exoneraciones.find(a => a.id == Producto.idExoneracion);
+                if (EX != undefined) {
+                    var ValorExonerado = (EX.PorExon / 100);
+                    var TarifaExonerado = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * ValorExonerado;
+                    Producto.TotalImpuesto -= TarifaExonerado;
+                    Producto.PorExoneracion = EX.PorExon;
+                }
+                //Termina Exoneracion
+
+
+                Producto.TotalLinea = (Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento + Producto.TotalImpuesto;
+
+                subtotalG += (Producto.Cantidad * Producto.PrecioUnitario);
+                impuestoG += Producto.TotalImpuesto;
+                descuentoG += Producto.Descuento;
+                totalG += Producto.TotalLinea;
+
+                $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
+                $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
+                $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+                $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+
+                ProdCadena.push(Producto);
+
+                RellenaTabla();
+                onChangeMoneda();
+
+                $("#ProductoSeleccionado").val("0").trigger('change.select2');
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Producto sin Cabys valido'
+
+                })
+            }
         }
     } catch (e) {
         Swal.fire({
@@ -959,7 +978,7 @@ function EliminarProducto(i) {
 
         })
     }
- 
+
 }
 
 //Generar
@@ -1015,7 +1034,7 @@ function Generar() {
                             RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                         },
                         success: function (json) {
-                          
+
 
                             console.log("resultado " + json.Oferta);
                             if (json.success == true) {
@@ -1043,7 +1062,7 @@ function Generar() {
                                 })
 
                             } else {
-                               
+
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
@@ -1054,7 +1073,7 @@ function Generar() {
                         },
 
                         beforeSend: function () {
-                           
+
                         },
                         complete: function () {
 
@@ -1086,7 +1105,7 @@ function Generar() {
 
 function validarOferta(e) {
     try {
-    var Contado = CP.find(a => a.Nombre == "Contado");
+        var Contado = CP.find(a => a.Nombre == "Contado");
 
         if ($("#selectCondPago").val() == Contado.id) {
             if (e.idCliente == "0" || e.idCliente == null) {
@@ -1099,6 +1118,17 @@ function validarOferta(e) {
             }
             else if (e.Detalle.length == 0 || e.Detalle == null) {
                 return false;
+            }
+            if (e.idVendedor == "0" || e.idVendedor == null) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar agregar, falta el vendedor '
+
+                })
+                return false;
+
+
             }
 
             else {
@@ -1115,12 +1145,75 @@ function validarOferta(e) {
 
         })
     }
-    
+
 
 
 }
 
 
+function onChangeCantidadProducto(i) {
+    try {
+        ProdCadena[i].Cantidad = parseFloat($("#" + i + "_Prod").val()).toFixed(2);
+        ValidarTotales();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
+
+        })
+    }
+}
+function ValidarTotales() {
+    try {
+        var subtotalG = 0;
+        var impuestoG = 0;
+        var descuentoG = 0;
+        var totalG = 0;
+
+        for (var i = 0; i < ProdCadena.length; i++) {
+            var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+            var ImpuestoTarifa = PE.idImpuesto;
+            var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
+
+            var calculoIMP = IMP.Tarifa;
+
+            ProdCadena[i].Descuento = (ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) * (ProdCadena[i].PorDescto / 100);
+            ProdCadena[i].TotalImpuesto = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * (calculoIMP / 100);
+            //EX => Exoneracion
+            var EX = Exoneraciones.find(a => a.id == ProdCadena[i].idExoneracion);
+            if (EX != undefined) {
+                var ValorExonerado = (EX.PorExon / 100);
+                var TarifaExonerado = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * ValorExonerado;
+                ProdCadena[i].TotalImpuesto -= TarifaExonerado;
+                ProdCadena[i].PorExoneracion = EX.PorExon;
+            }
+            //Termina Exoneracion
+            ProdCadena[i].TotalLinea = (ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento + ProdCadena[i].TotalImpuesto;
+
+
+            subtotalG += (ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario);
+            impuestoG += ProdCadena[i].TotalImpuesto;
+            descuentoG += ProdCadena[i].Descuento;
+            totalG += ProdCadena[i].TotalLinea;
+
+        }
+
+        $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
+        $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
+        $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+        $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+
+        RellenaTabla();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
+
+        })
+    }
+}
 
 function BuscarCliente() {
     $.ajax({

@@ -381,6 +381,7 @@ function ExoneracionxCliente() {
     }
 
 }
+
 function onChangeProducto() {
     try {
         var idProducto = $("#ProductoSeleccionado").val();
@@ -774,6 +775,7 @@ function RellenaTabla() {
             html += "<td > " + ProdCadena[i].Descripcion + " </td>";
             html += "<td class='text-center'> <input onchange='javascript: onChangeCantidadProducto(" + i + ")' type='number' id='" + i + "_Prod' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + "' min='1'/>  </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
+            html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
@@ -1120,7 +1122,19 @@ function validarOferta(e) {
     }
 
 }
+function onChangeDescuentoProducto(i) {
+    try {
+        ProdCadena[i].PorDescto = parseFloat($("#" + i + "_Prod2").val()).toFixed(2);
+        ValidarTotales();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
 
+        })
+    }
+}
 function onChangeCantidadProducto(i) {
     try {
         ProdCadena[i].Cantidad = parseFloat($("#" + i + "_Prod").val()).toFixed(2);

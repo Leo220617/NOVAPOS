@@ -98,12 +98,17 @@ function RecuperarInformacion() {
                 idExoneracion: Documento.Detalle[i].Cabys,
                 PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon
             };
+          
             ProdCadena.push(Producto);
+        
+         
         }
 
         RellenaTabla();
         onChangeCliente();
 
+        
+      
 
     } catch (e) {
         Swal.fire({
@@ -793,6 +798,8 @@ function RellenaTabla() {
             html += "<td > " + ProdCadena[i].Descripcion + " </td>";
             html += "<td class='text-center'> <input onchange='javascript: onChangeCantidadProducto(" + i + ")' type='number' id='" + i + "_Prod' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + "' min='1'/>  </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
+
+            html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
@@ -853,6 +860,7 @@ function AgregarProductoTabla() {
         var totalG = parseFloat(ReplaceLetra($("#totG").text()));
 
         var id = $("#ProductoSeleccionado").val();
+        var id = $("#ProductoSeleccionado").val();
         var PE = ProdClientes.find(a => a.id == id);
 
 
@@ -875,12 +883,34 @@ function AgregarProductoTabla() {
             PorExoneracion: 0
         };
         if ((PE.Stock - Producto.Cantidad) < 0) {
-            Swal.fire({
+            Swal.fire({ 
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Producto sin stock valido'
 
             })
+
+
+
+        }
+
+        else if (Producto.Cantidad <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Cantidad Invalida'
+
+            })
+
+        }
+        else if (Producto.PorDescto < 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Descuento Invalido'
+
+            })
+
         } else {
 
             if (Producto.Cabys.length >= 13) {
@@ -1151,10 +1181,69 @@ function validarOferta(e) {
 }
 
 
+function onChangeDescuentoProducto(i) {
+    try {
+        ProdCadena[i].PorDescto = parseFloat($("#" + i + "_Prod2").val()).toFixed(2);
+
+        if (ProdCadena[i].PorDescto >= 0) {
+            ValidarTotales();
+        }
+        else if (ProdCadena[i].PorDescto < 0) {
+            ProdCadena[i].PorDescto = 0;
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Descuento Invalido'
+
+            })
+
+        }
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
+
+        })
+    }
+}
+
 function onChangeCantidadProducto(i) {
     try {
+
+        var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+        ;
         ProdCadena[i].Cantidad = parseFloat($("#" + i + "_Prod").val()).toFixed(2);
-        ValidarTotales();
+
+        if (ProdCadena[i].Cantidad > 0 && (PE.Stock - ProdCadena[i].Cantidad) >= 0) {
+            ValidarTotales();
+        }
+        else if ((PE.Stock- ProdCadena[i].Cantidad) < 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Producto sin stock valido, el stock es de' + ' ' + PE.Stock 
+
+            })
+
+
+
+        }
+        else if (ProdCadena[i].Cantidad <= 0) {
+            ProdCadena[i].Cantidad = 1;
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Cantidad Invalida'
+
+            })
+        }
+
+
+
+
+
     } catch (e) {
         Swal.fire({
             icon: 'error',

@@ -26,9 +26,9 @@
     @section scripts{
 
 
-   <script src="/js/Ofertas/NuevoOferta.js"></script>
- 
-   
+    <script src="/js/Ofertas/NuevoOferta.js"></script>
+
+
 }
 
 
@@ -51,16 +51,16 @@
                 <input hidden id="Distritos" value="@JsonConvert.SerializeObject(Model.Distritos)" />
                 <input hidden id="Barrios" value="@JsonConvert.SerializeObject(Model.Barrios)" />
                 <input hidden id="Clientes" value="@JsonConvert.SerializeObject(Model.Clientes)" />
-                 <input hidden id="Vendedores" value="@JsonConvert.SerializeObject(Model.Vendedores)" />
+                <input hidden id="Vendedores" value="@JsonConvert.SerializeObject(Model.Vendedores)" />
                 <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
                 <input hidden id="Impuestos" value="@JsonConvert.SerializeObject(Model.Impuestos)" />
                 <input hidden id="Exoneraciones" value="@JsonConvert.SerializeObject(Model.Exoneraciones)" />
                 <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
                 <input hidden id="Documento" value="@JsonConvert.SerializeObject(Model.Oferta)" />
-                 <input hidden id="CP" value="@JsonConvert.SerializeObject(Model.CP)" />
-                  <input hidden id="USU" value="@JsonConvert.SerializeObject(Model.idVendedor)" />
+                <input hidden id="CP" value="@JsonConvert.SerializeObject(Model.CP)" />
+                <input hidden id="USU" value="@JsonConvert.SerializeObject(Model.idVendedor)" />
 
-                 
+
 
 
                 <input hidden id="urlGenerar" value="@Url.Page("Nuevo", "AgregarOferta")" />
@@ -92,7 +92,7 @@
                                     <div class="text-left">
                                         <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
                                         <input hidden id="Fecha" type="datetime" value="@DateTime.Now" />
-                                        <input hidden id="BaseEntry"   value="@(Model.Oferta == null ? 0 :Model.Oferta.BaseEntry )" />
+                                        <input hidden id="BaseEntry" value="@(Model.Oferta == null ? 0 :Model.Oferta.BaseEntry )" />
 
 
                                     </div>
@@ -108,7 +108,7 @@
 
                                 </div>
                             </div>
-                               <div class="col-3">
+                            <div class="col-3">
                                 <div class="form-group">
                                     <label>Tipo de Documento</label>
                                     <select class="form-control" id="selectTD">
@@ -137,7 +137,7 @@
                             <!-- /.col -->
                         </div>
                         <!-- info row -->
-                         <div class="col-sm-3" style="text-align: right"> <a onclick="javascript: AbrirModalAgregarCliente()" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Cliente</a></div>
+                        <div class="col-sm-3" style="text-align: right"> <a onclick="javascript: AbrirModalAgregarCliente()" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Cliente</a></div>
                         <div class="row invoice-info">
                             <div class="col-md-6 invoice-col">
                                 <strong>Para</strong>
@@ -155,23 +155,19 @@
                                     <strong id="strongInfo">Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
                                 </address>
                             </div>
-                              <div class="col-sm-3">
+                            <div class="col-sm-3">
                                 <label>Cond. Pago</label>
-                                    <select class="form-control" id="selectCondPago"  >
-                                        
-
-                                    </select>
+                                <select class="form-control" id="selectCondPago">
+                                </select>
                             </div>
-                             <div class="col-sm-3">
+                            <div class="col-sm-3">
                                 <label>Vendedor</label>
-                                    <select class="form-control select2" id="selectVendedor" asp-for="Oferta.idVendedor" >
-                                        
-
-                                    </select>
+                                <select class="form-control select2" id="selectVendedor" asp-for="Oferta.idVendedor">
+                                </select>
                             </div>
-                         
-                        
-                        
+
+
+
                         </div>
                         <!-- /.col -->
                         <!-- /.row -->
@@ -235,187 +231,188 @@
                                                     <select id="impuesto" disabled class="form-control " style="width: 100%">
                                                         <option value="0">Seleccione</option>
                                                         @foreach (var item in Model.Impuestos)
-                                                        {
-                                                            <option value="@item.id">@Math.Round(@item.Tarifa, 2)%</option>
+                                                    {
+                                                        <option value="@item.id">@Math.Round(@item.Tarifa, 2)%</option>
 
-                                                        }
-                                                    </select>
-
-                                                </div>
-
+                                                    }
+                                                </select>
 
                                             </div>
-                                            <div class="col-3">
-                                                <div class="form-group">
-                                                    <label>% Descuento</label>
-                                                    <input type="number" class="form-control" id="descuento" placeholder="Descuento" value="0">
 
 
-                                                </div>
-
-
-                                            </div>
-                                             <div class="col-3">
-                                                <div class="form-group">
-                                                    <label>Moneda</label>
-                                                    <input type="text" class="form-control" id="MonedaProducto" readonly placeholder="Moneda"  >
-
-
-                                                </div>
-
-
-                                            </div>
                                         </div>
-
-                                        <br />
-
-                                        <div class="row">
-                                            <div class="col-md-3 pr-1">
-                                                <div class="form-group">
-                                                    <label>Precio de Venta</label>
-                                                    <input id="inputPrecio" disabled type="number" class="form-control" placeholder="Precio Unitario" value="0">
-
-
-                                                </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>% Descuento</label>
+                                                <input type="number" class="form-control" id="descuento" placeholder="Descuento" value="0">
 
 
                                             </div>
 
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Cabys</label>
-                                                    <input id="inputCabys" disabled type="text" maxlength="13" class="form-control" placeholder="Cabys">
 
-
-                                                </div>
-
-
-                                            </div>
-                                            <div class="col-md-3 pr-1">
-                                                <div class="form-group">
-                                                    <label>Doc. Exoneración</label>
-                                                    <select id="exoneracion" class="form-control " disabled style="width: 100%">
-                                                        <option value="0">Seleccione</option>
-
-                                                    </select>
-
-                                                </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label>Moneda</label>
+                                                <input type="text" class="form-control" id="MonedaProducto" readonly placeholder="Moneda">
 
 
                                             </div>
-                                            <div class="col-sm-12 pl-1" style="text-align: right;">
 
-                                                <a id="agregar" onclick="javascript: AgregarProductoTabla();" class="btn btn-primary" style="color: white !important;">+ Agregar </a>
+
+                                        </div>
+                                    </div>
+
+                                    <br />
+
+                                    <div class="row">
+                                        <div class="col-md-3 pr-1">
+                                            <div class="form-group">
+                                                <label>Precio de Venta</label>
+                                                <input id="inputPrecio" disabled type="number" class="form-control" placeholder="Precio Unitario" value="0">
+
+
                                             </div>
-
 
 
                                         </div>
 
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Cabys</label>
+                                                <input id="inputCabys" disabled type="text" maxlength="13" class="form-control" placeholder="Cabys">
+
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-md-3 pr-1">
+                                            <div class="form-group">
+                                                <label>Doc. Exoneración</label>
+                                                <select id="exoneracion" class="form-control " disabled style="width: 100%">
+                                                    <option value="0">Seleccione</option>
+
+                                                </select>
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-sm-12 pl-1" style="text-align: right;">
+
+                                            <a id="agregar" onclick="javascript: AgregarProductoTabla();" class="btn btn-primary" style="color: white !important;">+ Agregar </a>
+                                        </div>
 
 
 
                                     </div>
+
+
+
+
                                 </div>
                             </div>
-
-
-
-
-
-
-
-
                         </div>
-                    </div>
-                </div>
 
 
-                <div class="box">
-                    <div class="box-body">
-                        <!-- Table row -->
-                        <div class="row">
-                            <div class="col-12 table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-
-                                            <th>Descripción</th>
-                                            <th class="text-right">Cantidad</th>
-                                            <th class="text-right">Precio de Venta</th>
-                                            <th class="text-right">Descuento</th>
-                                            <th class="text-right">Impuesto</th>
-                                            <th class="text-right">% Exoneración</th>
-
-                                            <th class="text-right">Total</th>
-                                            <th class="text-right">Eliminar</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbody">
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.col -->
-                        </div>
-                        <!-- /.row -->
-
-                        <div class="row">
-                            <!-- accepted payments column -->
-                            <div class="col-12 col-sm-6">
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-12 col-sm-6 text-right">
 
 
-                                <div>
-                                    <p>Sub Total  : <span id="subG">0</span> </p>
-                                    <p>Descuento  : <span id="descG">0</span></p>
-                                    <p>Impuesto :  <span id="impG"> 0</span></p>
 
-                                </div>
-                                <div class="total-payment">
-                                    <h3><b>Total :</b>  <span id="totG">0 </span></h3>
-                                </div>
 
-                            </div>
-                            <!-- /.col -->
-                        </div>
-                        <!-- /.row -->
+
 
                     </div>
                 </div>
-
-
-                <div class="box">
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-sm-6">
-
-                                <div class="form-group">
-                                    <label>Comentarios</label>
-                                    <textarea id="inputComentarios" class="form-control"></textarea>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                        <!-- this row will not appear when printing -->
-                        <div class="row no-print">
-                            <div class="col-12">
-                                @*<button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>*@
-                                <button type="button" class="btn btn-success pull-right" onclick="    javascript: Generar()">
-                                    <i class="fa fa-credit-card"></i> Generar
-                                </button>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
+
+
+            <div class="box">
+                <div class="box-body">
+                    <!-- Table row -->
+                    <div class="row">
+                        <div class="col-12 table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+
+                                        <th>Descripción</th>
+                                        <th class="text-right">Cantidad</th>
+                                        <th class="text-right">Precio de Venta</th>
+                                        <th class="text-right"> % Descuento</th>
+                                        <th class="text-right">Descuento</th>
+                                        <th class="text-right">Impuesto</th>
+                                        <th class="text-right">% Exoneración</th>
+
+                                        <th class="text-right">Total</th>
+                                        <th class="text-right">Eliminar</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+
+                    <div class="row">
+                        <!-- accepted payments column -->
+                        <div class="col-12 col-sm-6">
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-12 col-sm-6 text-right">
+
+
+                            <div>
+                                <p>Sub Total  : <span id="subG">0</span> </p>
+                                <p>Descuento  : <span id="descG">0</span></p>
+                                <p>Impuesto :  <span id="impG"> 0</span></p>
+
+                            </div>
+                            <div class="total-payment">
+                                <h3><b>Total :</b>  <span id="totG">0 </span></h3>
+                            </div>
+
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+
+                </div>
+            </div>
+
+
+            <div class="box">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+
+                            <div class="form-group">
+                                <label>Comentarios</label>
+                                <textarea id="inputComentarios" class="form-control"></textarea>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- this row will not appear when printing -->
+                    <div class="row no-print">
+                        <div class="col-12">
+                            @*<button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>*@
+                            <button type="button" class="btn btn-success pull-right" onclick="    javascript: Generar()">
+                                <i class="fa fa-credit-card"></i> Generar
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </section>
 
@@ -597,20 +594,21 @@
                         <div class="form-group">
                             <h5>Lista de Precio<span class="text-danger">*</span></h5>
 
-                            <select class="form-control"  id="idListaP">
+                            <select class="form-control" id="idListaP">
                                 <option value="0">Seleccione</option>
 
                                 @foreach (var item in Model.PrecioLista)
                                 {
-                                    if(item.Nombre.ToLower().Contains("lista de precios 01".ToLower()))
+                                    if (item.Nombre.ToLower().Contains("lista de precios 01".ToLower()))
                                     {
                                         <option value="@item.id" selected>@item.Nombre</option>
 
 
-                                    }else
+                                    }
+                                    else
                                     {
                                         <option value="@item.id">@item.Nombre</option>
-                                        
+
                                     }
                                 }
 
@@ -626,7 +624,7 @@
                         <div class="form-group">
                             <h5>Grupo<span class="text-danger">*</span></h5>
 
-                            <select class="form-control"  id="idGrupo">
+                            <select class="form-control" id="idGrupo">
                                 <option value="0">Seleccione</option>
 
                                 @foreach (var item in Model.Grupos)
@@ -662,7 +660,7 @@
         $("#Telefono").mask("9999-9999");
         var TC = $("#selectTP").val();
 
-        switch  (TC) {
+        switch (TC) {
             case "01":
                 {
                     $("#Cedula").mask("999999999");
@@ -680,10 +678,10 @@
     function validarCedula() {
         var TC = $("#selectTP").val();
 
-        switch  (TC) {
+        switch (TC) {
             case "01":
                 {
-                    if  ($("#Cedula").val().length < 9) {
+                    if ($("#Cedula").val().length < 9) {
 
                         $("#Cedula").focus();
                         $("#Cedula").select();
@@ -693,7 +691,7 @@
                 }
             case "02":
                 {
-                    if  ($("#Cedula").val().length < 10) {
+                    if ($("#Cedula").val().length < 10) {
 
                         $("#Cedula").focus();
                         $("#Cedula").select();

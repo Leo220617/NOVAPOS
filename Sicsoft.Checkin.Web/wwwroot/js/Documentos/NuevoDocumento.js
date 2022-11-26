@@ -142,13 +142,92 @@ function RecuperarInformacion() {
 
         RellenaTabla();
         onChangeCliente();
-
+        ValidarStocks();
 
     } catch (e) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+        })
+    }
+}
+
+function ValidarStocks() {
+    try {
+        for (var i = 0; i < Documento.Detalle.length; i++) {
+            var PE = Productos.find(a => a.id == Documento.Detalle[i].idProducto);
+            if ((PE.Stock - ProdCadena[i].Cantidad) < 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'El producto' + ' ' + ProdCadena[i].Descripcion + ' ' + 'NO tiene' + ' ' + ProdCadena[i].Cantidad + '' + ' unidades en stock, el stock real es de' + ' ' + PE.Stock
+
+                })
+                ProdCadena[i].Cantidad = PE.Stock;
+
+            }
+
+
+        }
+        ValidarTotales();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar informacion ' + e
+
+        })
+    }
+
+}
+function ValidarTotales() {
+    try {
+        var subtotalG = 0;
+        var impuestoG = 0;
+        var descuentoG = 0;
+        var totalG = 0;
+
+        for (var i = 0; i < ProdCadena.length; i++) {
+            var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+            var ImpuestoTarifa = PE.idImpuesto;
+            var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
+
+            var calculoIMP = IMP.Tarifa;
+
+            ProdCadena[i].Descuento = (ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) * (ProdCadena[i].PorDescto / 100);
+            ProdCadena[i].TotalImpuesto = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * (calculoIMP / 100);
+            //EX => Exoneracion
+            var EX = Exoneraciones.find(a => a.id == ProdCadena[i].idExoneracion);
+            if (EX != undefined) {
+                var ValorExonerado = (EX.PorExon / 100);
+                var TarifaExonerado = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * ValorExonerado;
+                ProdCadena[i].TotalImpuesto -= TarifaExonerado;
+                ProdCadena[i].PorExoneracion = EX.PorExon;
+            }
+            //Termina Exoneracion
+            ProdCadena[i].TotalLinea = (ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento + ProdCadena[i].TotalImpuesto;
+
+
+            subtotalG += (ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario);
+            impuestoG += ProdCadena[i].TotalImpuesto;
+            descuentoG += ProdCadena[i].Descuento;
+            totalG += ProdCadena[i].TotalLinea;
+
+        }
+
+        $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
+        $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
+        $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+        $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+
+        RellenaTabla();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
 
         })
     }
@@ -903,7 +982,25 @@ function AgregarProductoTabla() {
                 text: 'Producto sin stock valido'
 
             })
-        } else {
+        } else if (Producto.Cantidad <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Cantidad Invalida'
+
+            })
+            Producto.Cantidad = 1;
+        }
+        else if (Producto.PorDescto < 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Descuento Invalido'
+
+            })
+
+        }
+        else {
             if (Producto.Cabys.length >= 13) {
 
 

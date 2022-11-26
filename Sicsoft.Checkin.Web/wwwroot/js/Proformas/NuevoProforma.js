@@ -1191,6 +1191,8 @@ function onChangeDescuentoProducto(i) {
                 text: 'Descuento Invalido'
 
             })
+            ProdCadena[i].PorDescto = 0;
+            ValidarTotales();
 
         }
       
@@ -1219,6 +1221,8 @@ function onChangeCantidadProducto(i) {
                 text: 'Cantidad Invalida'
 
             })
+            ProdCadena[i].Cantidad = 1;
+            ValidarTotales();
         }
 
        

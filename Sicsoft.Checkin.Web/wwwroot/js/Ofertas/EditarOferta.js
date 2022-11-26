@@ -99,6 +99,7 @@ function RecuperarInformacion() {
         }
         RellenaTabla();
         onChangeCliente();
+        ValidarStocks();
         $("#selectCondPago").val(Oferta.idCondPago);
         
 
@@ -110,6 +111,35 @@ function RecuperarInformacion() {
 
         })
     }
+}
+
+function ValidarStocks() {
+    try {
+        for (var i = 0; i < Documento.Detalle.length; i++) {
+            var PE = Productos.find(a => a.id == Documento.Detalle[i].idProducto);
+            if ((PE.Stock - ProdCadena[i].Cantidad) < 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'El producto' + ' ' + ProdCadena[i].Descripcion + ' ' + 'NO tiene' + ' ' + ProdCadena[i].Cantidad + '' + ' unidades en stock, el stock real es de' + ' ' + PE.Stock
+
+                })
+                ProdCadena[i].Cantidad = PE.Stock;
+
+            }
+
+
+        }
+        ValidarTotales();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar informacion ' + e
+
+        })
+    }
+
 }
 function onChangeMoneda() {
     try {
@@ -1130,7 +1160,22 @@ function validarOferta(e) {
 function onChangeDescuentoProducto(i) {
     try {
         ProdCadena[i].PorDescto = parseFloat($("#" + i + "_Prod2").val()).toFixed(2);
-        ValidarTotales();
+
+        if (ProdCadena[i].PorDescto >= 0) {
+            ValidarTotales();
+        }
+        else if (ProdCadena[i].PorDescto < 0) {
+            ProdCadena[i].PorDescto = 0;
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Descuento Invalido'
+
+            })
+            ProdCadena[i].PorDescto = 0;
+            ValidarTotales();
+        }
+
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -1140,10 +1185,45 @@ function onChangeDescuentoProducto(i) {
         })
     }
 }
+
 function onChangeCantidadProducto(i) {
     try {
+
+        var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+        ;
         ProdCadena[i].Cantidad = parseFloat($("#" + i + "_Prod").val()).toFixed(2);
-        ValidarTotales();
+
+        if (ProdCadena[i].Cantidad > 0 && (PE.Stock - ProdCadena[i].Cantidad) >= 0) {
+            ValidarTotales();
+        }
+        else if ((PE.Stock - ProdCadena[i].Cantidad) < 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Producto sin stock valido, el stock es de' + ' ' + PE.Stock
+
+            })
+            ProdCadena[i].Cantidad = PE.Stock;
+            ValidarTotales();
+
+        }
+        else if (ProdCadena[i].Cantidad <= 0) {
+            ProdCadena[i].Cantidad = 1;
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Cantidad Invalida'
+
+            })
+            ProdCadena[i].Cantidad = 1;
+            ValidarTotales();
+
+        }
+
+
+
+
+
     } catch (e) {
         Swal.fire({
             icon: 'error',

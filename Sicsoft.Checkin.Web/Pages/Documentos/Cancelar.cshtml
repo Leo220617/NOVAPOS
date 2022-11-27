@@ -59,6 +59,8 @@
                 <input hidden id="Documento" value="@JsonConvert.SerializeObject(Model.Documento)" />
                 <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
                 <input hidden id="BaseEntry" value="@Model.Documento.BaseEntry" />
+                <input hidden id="CondPago" value="@Model.Documento.idCondPago" />
+
 
 
                 <input hidden id="urlGenerar" value="@Url.Page("Cancelar", "AgregarDocumento")" />

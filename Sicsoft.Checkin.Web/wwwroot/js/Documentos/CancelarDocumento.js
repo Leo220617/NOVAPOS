@@ -339,6 +339,8 @@ function Generar() {
             idCliente: $("#ClienteSeleccionado").val(),
             idUsuarioCreador: 0,
             BaseEntry: $("#BaseEntry").val(),
+            idCondPago: $("#CondPago").val(),
+
             Fecha: $("#Fecha").val(),
             FechaVencimiento: $("#Fecha").val(),
             Comentarios: $("#inputComentarios").val(),

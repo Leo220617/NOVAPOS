@@ -1852,6 +1852,10 @@ function ImprimirTiquete(Documento) {
         texto = texto.replace("@Fecha", Documento.fecha.split("T")[0]);
         texto = texto.replace("@NumInterno", Documento.id);
         texto = texto.replace("CO-Pital", "");
+        texto = texto.replace("@NumComprobante", Documento.consecutivoHacienda);
+        texto = texto.replace("@NumFactura", Documento.id);
+
+        
 
         if (Documento.tipoDocumento == "04") {
             texto = texto.replace("FACTURA", "TIQUETE");
@@ -1861,7 +1865,7 @@ function ImprimirTiquete(Documento) {
 
         var Cli = Clientes.find(a => a.id == Documento.idCliente);
         texto = texto.replace("@NombreCliente", Cli.Nombre);
-        texto = texto.replace("@Vendedor", "");
+        texto = texto.replace("@Vendedor", Vendedores.find(a => a.id == $("#selectVendedor").val()).Nombre);
 
 
         var tabla = "";

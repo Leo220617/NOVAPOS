@@ -124,28 +124,28 @@
                                     <br />
                                     <div class="text-left">
                                         <div class="row">
-                                            <div class="col-3">
+                                            <div class="col-4">
                                                 <h5> <b>Fecha: </b> @Model.Documento.Fecha.ToString("dd/MM/yyyy")</h5>
 
                                             </div>
 
-                                            <div class="col-3">
+                                            <div class="col-4">
                                                 <h5>
                                                     <b>Tipo de Documento:</b>  @switch (Model.Documento.TipoDocumento)
                                                 {
                                                     case "01":
                                                         {
-                                                            <p>Factura Electrónica</p>
+                                                            <b>Factura Electrónica</b>
                                                             break;
                                                         }
                                                     case "03":
                                                         {
-                                                            <p>Nota de Crédito</p>
+                                                            <b>Nota de Crédito</b>
                                                             break;
                                                         }
                                                     case "04":
                                                         {
-                                                            <p>Tiquete Electrónico</p>
+                                                            <b>Tiquete Electrónico</b>
                                                             break;
                                                         }
                                                 }
@@ -153,22 +153,40 @@
                                             </h5>
                                         </div>
 
-                                          <div class="col-2">
+
+                                        <div class="col-4">
                                             <h5> <b>Vendedor: </b> @(Model.Vendedor.Nombre)</h5>
 
                                         </div>
 
 
-
-
-                                        <div class="col-2">
+                                        <br />
+                                     
+                                        <div class="col-3">
+                                        </div>
+                                        <div class="col-3">
                                             <h5> <b>Moneda: </b> @Model.Documento.Moneda</h5>
 
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-3">
+                                        </div>
+                                        <div class="col-3">
                                             <h5> <b>Cond.Pago: </b> @(Model.CondicionesPago.Nombre)</h5>
 
                                         </div>
+
+                                        <br />
+                                     
+                                        <div class="col-6">
+                                            <h5> <b>Clave Hacienda: </b> @(Model.Documento.ClaveHacienda)</h5>
+
+                                        </div>
+
+                                        <div class="col-6">
+                                            <h5> <b>Consecutivo Hacienda: </b> @(Model.Documento.ConsecutivoHacienda)</h5>
+
+                                        </div>
+
 
 
                                     </div>
@@ -311,24 +329,72 @@
                 <div class="box-body">
                     <!-- title row -->
                     <div class="row">
-                        <div class="col-12">
-                            <div class="page-header mt-0">
-                                <h2 class="d-inline"><span class="font-size-24">Cotización No: @Model.Documento.id</span></h2>
-                                <br />
-                                <div class="text-left">
-                                    <div class="row">
+                         <div class="col-12">
+                                <div class="page-header mt-0">
+                                    <h2 class="d-inline"><span class="font-size-24">Documento No: @Model.Documento.id</span></h2>
+                                    <br />
+                                    <div class="text-left">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <h5> <b>Fecha: </b> @Model.Documento.Fecha.ToString("dd/MM/yyyy")</h5>
+
+                                            </div>
+
+                                            <div class="col-4">
+                                                <h5>
+                                                    <b>Tipo de Documento:</b>  @switch (Model.Documento.TipoDocumento)
+                                                {
+                                                    case "01":
+                                                        {
+                                                            <b>Factura Electrónica</b>
+                                                            break;
+                                                        }
+                                                    case "03":
+                                                        {
+                                                            <b>Nota de Crédito</b>
+                                                            break;
+                                                        }
+                                                    case "04":
+                                                        {
+                                                            <b>Tiquete Electrónico</b>
+                                                            break;
+                                                        }
+                                                }
+
+                                            </h5>
+                                        </div>
+
+
                                         <div class="col-4">
-                                            <h5> <b>Fecha</b> @Model.Documento.Fecha.ToString("dd/MM/yyyy")</h5>
+                                            <h5> <b>Vendedor: </b> @(Model.Vendedor.Nombre)</h5>
 
                                         </div>
 
-                                        <div class="col-4">
-                                            <h5> <b>Fecha de Vencimiento</b> @Model.Documento.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
+
+                                        <br />
+                                     
+                                        <div class="col-3">
+                                        </div>
+                                        <div class="col-3">
+                                            <h5> <b>Moneda: </b> @Model.Documento.Moneda</h5>
+
+                                        </div>
+                                        <div class="col-3">
+                                        </div>
+                                        <div class="col-3">
+                                            <h5> <b>Cond.Pago: </b> @(Model.CondicionesPago.Nombre)</h5>
 
                                         </div>
 
-                                        <div class="col-4">
-                                            <h5> <b>Moneda</b> @Model.Documento.Moneda</h5>
+                                        <br />
+                                     
+                                        <div class="col-6">
+                                            <h5> <b>Clave Hacienda: </b> @(Model.Documento.ClaveHacienda)</h5>
+
+                                        </div>
+
+                                        <div class="col-6">
+                                            <h5> <b>Consecutivo Hacienda: </b> @(Model.Documento.ConsecutivoHacienda)</h5>
 
                                         </div>
 

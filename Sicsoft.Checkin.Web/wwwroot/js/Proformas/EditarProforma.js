@@ -25,6 +25,7 @@ var Oferta = [];
 var TipoCambio = [];
 var CP = [];
 var Vendedores = [];
+var DES = [];
 
 function Recuperar() {
     try {
@@ -39,6 +40,7 @@ function Recuperar() {
         Oferta = JSON.parse($("#Oferta").val());
         TipoCambio = JSON.parse($("#TipoCambio").val());
         CP = JSON.parse($("#CP").val());
+        DES = JSON.parse($("#DES").val());
 
         ExoneracionesCliente = [];
 
@@ -865,8 +867,17 @@ function AgregarProductoTabla() {
             idExoneracion: $("#exoneracion").val(),
             PorExoneracion: 0
         };
+        var Descuento = $("#DES").val();
+         if (Producto.PorDescto > Descuento) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Usted no puede aplicar este descuento, el descuento máximo asignado a su usuario es de' + ' ' + parseFloat(Descuento).toFixed(2) + '%'
 
-        if (Producto.Cabys.length >= 13) {
+            })
+
+        }
+        else if (Producto.Cabys.length >= 13) {
 
 
             var ImpuestoTarifa = $("#impuesto").val();
@@ -1125,10 +1136,12 @@ function validarOferta(e) {
 function onChangeDescuentoProducto(i) {
     try {
         ProdCadena[i].PorDescto = parseFloat($("#" + i + "_Prod2").val()).toFixed(2);
+        var Descuento = $("#DES").val();
 
-        if (ProdCadena[i].PorDescto >= 0) {
+        if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento) {
             ValidarTotales();
         }
+
         else if (ProdCadena[i].PorDescto < 0) {
             ProdCadena[i].PorDescto = 0;
             Swal.fire({
@@ -1139,7 +1152,16 @@ function onChangeDescuentoProducto(i) {
             })
             ProdCadena[i].PorDescto = 0;
             ValidarTotales();
+        }
+        else if (ProdCadena[i].PorDescto > Descuento) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Usted no puede aplicar este descuento, el descuento máximo asignado a su usuario es de' + ' ' + parseFloat(Descuento).toFixed(2) + '%'
 
+            })
+            ProdCadena[i].PorDescto = 0;
+            ValidarTotales();
         }
 
     } catch (e) {

@@ -30,5 +30,7 @@ namespace NOVAAPP.Models
         public bool novapos { get; set; }
 
         public int idVendedor { get; set; }
+
+        public decimal Descuento { get; set; }
     }
 }

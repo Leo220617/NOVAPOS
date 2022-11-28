@@ -70,6 +70,12 @@ namespace NOVAAPP.Pages.Proformas
         public UsuariosViewModel USU { get; set; }
 
         [BindProperty]
+        public UsuariosViewModel DES { get; set; }
+
+        [BindProperty]
+        public decimal Descuento { get; set; }
+
+        [BindProperty]
         public int idVendedor { get; set; }
 
         [BindProperty]
@@ -105,7 +111,10 @@ namespace NOVAAPP.Pages.Proformas
                 CP = await serviceCP.ObtenerLista("");
                 var idUsuario = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
                 USU = await usuario.ObtenerPorId(idUsuario);
+                DES = await usuario.ObtenerPorId(idUsuario);
+
                 idVendedor = USU.idVendedor;
+                Descuento = DES.Descuento;
                 Impuestos = await serviceU.ObtenerLista("");
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;

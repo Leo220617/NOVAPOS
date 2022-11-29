@@ -27,6 +27,7 @@ var Documento = [];
 var CB = [];
 var CP = [];
 var Vendedores = [];
+var DES = [];
 
 
 function HideP() {
@@ -74,6 +75,7 @@ function Recuperar() {
         Documento = JSON.parse($("#Documento").val());
         CB = JSON.parse($("#CB").val());
         CP = JSON.parse($("#CP").val());
+        DES = JSON.parse($("#DES").val());
         ExoneracionesCliente = [];
 
         RellenaClientes();
@@ -975,6 +977,8 @@ function AgregarProductoTabla() {
             idExoneracion: $("#exoneracion").val(),
             PorExoneracion: 0
         };
+        var Descuento = parseFloat($("#DES").val());
+
         if ((PE.Stock - Producto.Cantidad) < 0) {
             Swal.fire({
                 icon: 'error',
@@ -999,8 +1003,19 @@ function AgregarProductoTabla() {
 
             })
 
+         } 
+
+        if (Producto.PorDescto > Descuento) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Usted no puede aplicar este descuento, el descuento máximo asignado a su usuario es de' + ' ' + parseFloat(Descuento).toFixed(2) + '%'
+
+            })
+
         }
-        else {
+
+        else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) > 0)) {
             if (Producto.Cabys.length >= 13) {
 
 

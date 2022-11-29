@@ -2,7 +2,7 @@
 @model NOVAAPP.Pages.CierreCajas.EditarModel
 @{
     ViewData["Title"] = "Cierre Cajas";
-     NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
+    NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
     formato.CurrencySymbol = "";
     formato.CurrencyGroupSeparator = ",";
     formato.NumberDecimalSeparator = ".";
@@ -27,416 +27,470 @@
 
 
 }
-@section scripts{
+    @section scripts{
 
 
     <script>
-        $(document).ready(function () {
-            jQuery(document).ready(function ($) {
+        $(document).ready(function() {
+            jQuery(document).ready(function($) {
                 Totalizado();
             });
 
 
 
-            $(document).ready(function () {
+            $(document).ready(function() {
 
             });
 
 
         });
-            function Totalizado() {
-                try {
-                    var TipoCambio = JSON.parse($("#TipoCambio").val());
-                    var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
-
-                    var Colones = parseFloat($("#Colones").val());
-                    var Dolares = (parseFloat($("#Dolares").val()) * TipodeCambio.TipoCambio);
-                    var Totalizado = parseFloat((Colones + Dolares).toFixed(2));
-                    $("#TotalizadoMonedas").val(Totalizado);
-
-
-                    var TColones = parseFloat($("#TColones").val());
-                    var TDolares = parseFloat($("#TDolares").val());
-
-                    var FaltanteC = (TColones - Colones).toFixed(2);
-                    var FaltanteD = (TDolares - parseFloat($("#Dolares").val())).toFixed(2);
-
-
-                    $("#FColones").val(FaltanteC);
-                    $("#FDolares").val(FaltanteD);
-
-
-                } catch (e) {
-                    alert(e);
+        function sleep(milliseconds) {
+            var start = new Date().getTime();
+            for (var i = 0; i < 1e7; i++) {
+                if ((new Date().getTime() - start) > milliseconds) {
+                    break;
                 }
             }
+        }
+        function Totalizado() {
+            try {
+                var TipoCambio = JSON.parse($("#TipoCambio").val());
+                var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+
+                var Colones = parseFloat($("#Colones").val());
+                var Dolares = (parseFloat($("#Dolares").val()) * TipodeCambio.TipoCambio);
+                var Totalizado = parseFloat((Colones + Dolares).toFixed(2));
+                $("#TotalizadoMonedas").val(Totalizado);
+
+
+                var TColones = parseFloat($("#TColones").val());
+                var TDolares = parseFloat($("#TDolares").val());
+
+                var FaltanteC = (TColones - Colones).toFixed(2);
+                var FaltanteD = (TDolares - parseFloat($("#Dolares").val())).toFixed(2);
+
+
+                $("#FColones").val(FaltanteC);
+                $("#FDolares").val(FaltanteD);
+
+
+            } catch (e) {
+                alert(e);
+            }
+        }
+
+        function Imprimir() {
+            try {
+                var margins = {
+                    top: 10,
+                    bottom: 10,
+                    left: 10,
+                    width: 595
+                };
+
+
+                html = $("#html2").html();
+                html2pdf(html, {
+                    margin: 1,
+                    padding: 0,
+                    filename: 'Cierre.pdf',
+                    image: { type: 'jpeg', quality: 1 },
+                    html2canvas: { scale: 2, logging: true },
+                    jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
+                    class: Imprimir
+                });
+            } catch (e) {
+                alert(e);
+
+            }
+        }
+
+        function Generar() {
+            try {
+
+
+
+                Imprimir();
+
+                Swal.fire({
+                    title: 'Se descargara un reporte en pdf',
+                    text: "",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $("#formTipos").submit();
+                    }
+                })
+
+
+            } catch (e) {
+                alert(e);
+            }
+        }
     </script>
 
 
 }
 
 
-@using Newtonsoft.Json;
-@using System.Globalization
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <h1>
-        Cierre Cajas
-    </h1>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
-        <li class="breadcrumb-item active">Generar Cierre</li>
-    </ol>
-</section>
-
-<section class="content ">
-    <div class="row">
-        <div class="col-12">
-
-
-
-
-
-
-            <!-- Content Header (Page header) -->
-            <div class="box">
-                <div class="box-header with-border">
-                    <div class="row">
-                        <div class="col-8">
-                            <h6 class="box-subtitle">Generar Cierre de Caja</h6>
-
-
-                        </div>
-                        <div class="col-4">
-
-
-
-                        </div>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <!-- title row -->
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="page-header mt-0">
-                                <h2 class="d-inline"><span class="font-size-24">Cierre Caja</span></h2>
-                                <div class="text-left">
-                                    <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
-
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label>Usuario</label>
-                                <input asp-for="Users.Nombre" class="form-control" readonly>
-
-
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label>Caja</label>
-                                <input asp-for="Caja" class="form-control" readonly>
-
-
-                            </div>
-                        </div>
-                        <!-- /.col -->
-                    </div>
-
-
-                </div>
-
-            </div>
-
-
-
-            <div class="box">
-
-                <div class="box-body">
-                    <form method="post" id="formTipos" role="form" novalidate class="needs-validation " enctype="multipart/form-data">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TC)" />
-
-                        <input hidden asp-for="Cierres.idCaja" />
-                        <input hidden asp-for="Cierres.FechaCaja" />
-                        <input hidden asp-for="Cierres.idUsuario" />
-                        <!-- title row -->
-                        <div class="row">
-                            <div class="col-6">
-
-                                <div class="form-group">
-                                    <label>Apertura Colones</label>
-                                    <input type="number" asp-for="Cierres.TotalAperturaColones" class="form-control">
-
-
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label>Apertura Dólares</label>
-                                    <input type="number" asp-for="Cierres.TotalAperturaFC" class="form-control">
-
-
-                                </div>
-                            </div>
-
-                            <!-- /.col -->
-                        </div>
-
-                        <!-- title row -->
-                        <div class="row">
-                            <div class="col-3">
-
-                                <div class="form-group">
-                                    <label>Efectivo Colones</label>
-                                    <input  asp-for="Cierres.EfectivoColonesC" class="form-control">
-
-
-                                </div>
-                            </div>
-
-                             <div class="col-3">
-
-                                <div class="form-group">
-                                    <label>Tarjetas Colones</label>
-                                    <input  asp-for="Cierres.TarjetasColonesC" class="form-control">
-
-
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label>Efectivo Dólares</label>
-                                    <input  asp-for="Cierres.EfectivoFCC" class="form-control">
-
-
-                                </div>
-                            </div>
-                           
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label>Tarjetas Dólares</label>
-                                    <input  asp-for="Cierres.TarjetasFCC" class="form-control">
-
-
-                                </div>
-                            </div>
-                            <!-- /.col -->
-                        </div>
-
-
-                        <!-- title row -->
-                        <div class="row" hidden>
-                            <div class="col-3">
-
-                                <div class="form-group">
-                                    <label>Cheques Colones</label>
-                                    <input  asp-for="Cierres.ChequesColonesC" class="form-control">
-
-
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label>Cheques Dólares</label>
-                                    <input  asp-for="Cierres.ChequesFCC" class="form-control">
-
-
-                                </div>
-                            </div>
-                            <div class="col-3">
-
-                                <div class="form-group">
-                                    <label>Otros Colones</label>
-                                    <input  asp-for="Cierres.OtrosMediosColonesC" class="form-control">
-
-
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label>Otros Dólares</label>
-                                    <input  asp-for="Cierres.OtrosMediosFCC" class="form-control">
-
-
-                                </div>
-                            </div>
-                            <!-- /.col -->
-                        </div>
-                         <div class="row">
-                            <div class="col-6">
-
-                                <div class="form-group">
-                                    <label>Transferencias Colones</label>
-                                    <input  asp-for="Cierres.TransferenciasColonesC"  class="form-control">
-
-
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label>Transferencias Dólares</label>
-                                    <input  asp-for="Cierres.TransferenciasDolaresC"  class="form-control">
-
-
-                                </div>
-                            </div>
-
-                            <!-- /.col -->
-                            <!-- title row -->
-
-                        </div>
-                        <!-- title row -->
-                        <div class="row" hidden>
-                            <div class="col-6">
-
-                                <div class="form-group">
-                                    <label>Total Colones</label>
-                                    <input  asp-for="Cierres.TotalVendidoColones" id="TColones" class="form-control">
-
-
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label>Total Dólares</label>
-                                    <input  asp-for="Cierres.TotalVendidoFC" id="TDolares" class="form-control">
-
-
-                                </div>
-                            </div>
-
-                            <!-- /.col -->
-                            <!-- title row -->
-
-                        </div>
-                        <div class="row">
-                            <div class="col-4">
-
-                                <div class="form-group">
-                                    <label>Total Registrado Colones</label>
-                                    <input type="number" asp-for="Cierres.TotalRegistradoColones" id="Colones" class="form-control" onchange="javascript: Totalizado()">
-
-
-                                </div>
-                            </div>
-                             <div class="col-4">
-                                <div class="form-group">
-                                    <label>Totalizado</label>
-                                    <input  asp-for="Cierres.TotalizadoMonedas" readonly id="TotalizadoMonedas" class="form-control">
-
-
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="form-group">
-                                    <label>Total Registrado Dólares</label>
-                                    <input type="number" asp-for="Cierres.TotalRegistradoFC" id="Dolares" class="form-control" onchange="javascript: Totalizado()">
-
-
-                                </div>
-                            </div>
-                           
-                            <!-- /.col -->
-                        </div>
-
-                        <div class="row" hidden>
-                            <div class="col-6">
-
-                                <div class="form-group">
-                                    <label>Faltantes Colones</label>
-                                    <input    id="FColones" class="form-control"  >
-
-
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label>Faltantes Dólares</label>
-                                    <input  id="FDolares" class="form-control"  >
-
-
-                                </div>
-                            </div>
-                            
-                            <!-- /.col -->
-                        </div>
-
-
-                        <div class="text-xs-right">
-                            <button type="submit" class="btn btn-info" title="Guardar Cambios">Generar Cierre</button>
-                        </div>
-                    </form>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</section>
-
-
-
-<div class="html" hidden>
-    <div class="box-body">
-        <!-- title row -->
+    @using Newtonsoft.Json;
+    @using System.Globalization
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Cierre Cajas
+        </h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+            <li class="breadcrumb-item active">Generar Cierre</li>
+        </ol>
+    </section>
+
+    <section class="content ">
         <div class="row">
-            <div class="col-6">
-                <div class="page-header mt-0">
-                    <h2 class="d-inline"><span class="font-size-24">Cierre Caja</span></h2>
-                    <div class="text-left">
-                        <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
+            <div class="col-12">
+
+
+
+
+
+
+                <!-- Content Header (Page header) -->
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-8">
+                                <h6 class="box-subtitle">Generar Cierre de Caja</h6>
+
+
+                            </div>
+                            <div class="col-4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <!-- title row -->
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="page-header mt-0">
+                                    <h2 class="d-inline"><span class="font-size-24">Cierre Caja</span></h2>
+                                    <div class="text-left">
+                                        <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label>Usuario</label>
+                                    <input asp-for="Users.Nombre" class="form-control" readonly>
+
+
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label>Caja</label>
+                                    <input asp-for="Caja" class="form-control" readonly>
+
+
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                        </div>
 
 
                     </div>
 
                 </div>
 
-            </div>
-            <div class="col-2">
-                <div class="form-group">
-                    <label>Usuario</label>
-                    <h6> @Model.Users.Nombre </h6>
 
+
+                <div class="box">
+
+                    <div class="box-body">
+                        <form method="post" id="formTipos" role="form" novalidate class="needs-validation " enctype="multipart/form-data">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TC)" />
+
+                            <input hidden asp-for="Cierres.idCaja" />
+                            <input hidden asp-for="Cierres.FechaCaja" />
+                            <input hidden asp-for="Cierres.idUsuario" />
+                            <!-- title row -->
+                            <div class="row">
+                                <div class="col-6">
+
+                                    <div class="form-group">
+                                        <label>Apertura Colones</label>
+                                        <input type="number" asp-for="Cierres.TotalAperturaColones" class="form-control">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Apertura Dólares</label>
+                                        <input type="number" asp-for="Cierres.TotalAperturaFC" class="form-control">
+
+
+                                    </div>
+                                </div>
+
+                                <!-- /.col -->
+                            </div>
+
+                            <!-- title row -->
+                            <div class="row">
+                                <div class="col-3">
+
+                                    <div class="form-group">
+                                        <label>Efectivo Colones</label>
+                                        <input asp-for="Cierres.EfectivoColonesC" class="form-control">
+
+
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+
+                                    <div class="form-group">
+                                        <label>Tarjetas Colones</label>
+                                        <input asp-for="Cierres.TarjetasColonesC" class="form-control">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label>Efectivo Dólares</label>
+                                        <input asp-for="Cierres.EfectivoFCC" class="form-control">
+
+
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label>Tarjetas Dólares</label>
+                                        <input asp-for="Cierres.TarjetasFCC" class="form-control">
+
+
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+
+
+                            <!-- title row -->
+                            <div class="row" hidden>
+                                <div class="col-3">
+
+                                    <div class="form-group">
+                                        <label>Cheques Colones</label>
+                                        <input asp-for="Cierres.ChequesColonesC" class="form-control">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label>Cheques Dólares</label>
+                                        <input asp-for="Cierres.ChequesFCC" class="form-control">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-3">
+
+                                    <div class="form-group">
+                                        <label>Otros Colones</label>
+                                        <input asp-for="Cierres.OtrosMediosColonesC" class="form-control">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label>Otros Dólares</label>
+                                        <input asp-for="Cierres.OtrosMediosFCC" class="form-control">
+
+
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+
+                                    <div class="form-group">
+                                        <label>Transferencias Colones</label>
+                                        <input asp-for="Cierres.TransferenciasColonesC" class="form-control">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Transferencias Dólares</label>
+                                        <input asp-for="Cierres.TransferenciasDolaresC" class="form-control">
+
+
+                                    </div>
+                                </div>
+
+                                <!-- /.col -->
+                                <!-- title row -->
+
+                            </div>
+                            <!-- title row -->
+                            <div class="row" hidden>
+                                <div class="col-6">
+
+                                    <div class="form-group">
+                                        <label>Total Colones</label>
+                                        <input asp-for="Cierres.TotalVendidoColones" id="TColones" class="form-control">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Total Dólares</label>
+                                        <input asp-for="Cierres.TotalVendidoFC" id="TDolares" class="form-control">
+
+
+                                    </div>
+                                </div>
+
+                                <!-- /.col -->
+                                <!-- title row -->
+
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+
+                                    <div class="form-group">
+                                        <label>Total Registrado Colones</label>
+                                        <input type="number" asp-for="Cierres.TotalRegistradoColones" id="Colones" class="form-control" onchange="javascript: Totalizado()">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label>Totalizado</label>
+                                        <input asp-for="Cierres.TotalizadoMonedas" readonly id="TotalizadoMonedas" class="form-control">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label>Total Registrado Dólares</label>
+                                        <input type="number" asp-for="Cierres.TotalRegistradoFC" id="Dolares" class="form-control" onchange="javascript: Totalizado()">
+
+
+                                    </div>
+                                </div>
+
+                                <!-- /.col -->
+                            </div>
+
+                            <div class="row" hidden>
+                                <div class="col-6">
+
+                                    <div class="form-group">
+                                        <label>Faltantes Colones</label>
+                                        <input id="FColones" class="form-control">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Faltantes Dólares</label>
+                                        <input id="FDolares" class="form-control">
+
+
+                                    </div>
+                                </div>
+
+                                <!-- /.col -->
+                            </div>
+
+
+                            <div class="text-xs-right">
+                                <button type="button" onclick="javascript: Generar()" class="btn btn-info" title="Guardar Cambios">Generar Cierre</button>
+                            </div>
+                        </form>
+                    </div>
 
                 </div>
             </div>
-            <div class="col-2">
-                <div class="form-group">
-                    <label>Caja</label>
-                    <h6>@( Model.Cajos.Where(a => a.id == Model.Cierres.idCaja).FirstOrDefault() == null ? "Caja Inexistente" :  Model.Cajos.Where(a => a.id == Model.Cierres.idCaja).FirstOrDefault().Nombre) </h6>
-
-
-                </div>
-            </div>
-
-            <div class="col-2">
-                <div class="form-group">
-                    <label>IP</label>
-                    <h6>@Model.Cierres.IP </h6>
-
-
-                </div>
-            </div>
-            <!-- /.col -->
         </div>
+    </section>
 
 
-    </div>
-    <div class="box">
 
+    <div id="html2" hidden>
         <div class="box-body">
-            <form method="post" id="formTipos" role="form" novalidate class="needs-validation " enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!-- title row -->
+            <div class="row">
+                <div class="col-6">
+                    <div class="page-header mt-0">
+                        <h2 class="d-inline"><span class="font-size-24">Cierre Caja</span></h2>
+                        <div class="text-left">
+                            <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <label>Usuario</label>
+                        <h6> @Model.Users.Nombre </h6>
+
+
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="form-group">
+                        <label>Caja</label>
+                        <h6>@( Model.Cajos.Where(a => a.id == Model.Cierres.idCaja).FirstOrDefault() == null ? "Caja Inexistente" :  Model.Cajos.Where(a => a.id == Model.Cierres.idCaja).FirstOrDefault().Nombre) </h6>
+
+
+                    </div>
+                </div>
+
+                <div class="col-2">
+                    <div class="form-group">
+                        <label>IP</label>
+                        <h6>@Model.Cierres.IP </h6>
+
+
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+
+
+        </div>
+        <div class="box">
+
+            <div class="box-body">
+
                 <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TC)" />
 
-                <input hidden asp-for="Cierres.idCaja" />
-                <input hidden asp-for="Cierres.FechaCaja" />
-                <input hidden asp-for="Cierres.idUsuario" />
                 <!-- title row -->
                 <div class="row">
 
@@ -780,54 +834,54 @@
 
 
 
-            </form>
-        </div>
-        <div class="row">
-            <div class="col-12">
 
-                <div class="box">
+            </div>
+            <div class="row">
+                <div class="col-12">
 
-                    <div class="box-body">
-                        <!-- title row -->
-                        <!-- info row -->
-                        <div class="row invoice-info">
-                            <div class="col-md-4 invoice-col">
+                    <div class="box">
 
-                                <address>
-                                    <strong class="text-blue font-size-24">Métodos Pagos </strong>
+                        <div class="box-body">
+                            <!-- title row -->
+                            <!-- info row -->
+                            <div class="row invoice-info">
+                                <div class="col-md-4 invoice-col">
+
+                                    <address>
+                                        <strong class="text-blue font-size-24">Métodos Pagos </strong>
 
 
-                                </address>
+                                    </address>
+                                </div>
+
+                                <!-- /.col -->
                             </div>
-
-                            <!-- /.col -->
-                        </div>
-                        <!-- /.row -->
-                        <!-- Table row -->
-                        <div class="row">
-                            <div class="col-12 table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr class="bg-pale-info">
-                                            <th class="text-center">Método </th>
-                                            <th class="text-center">Factura</th>
-                                            <th class="text-center">Pago</th>
-                                            <th class="text-center">Banco</th>
-                                            <th class="text-center">Cuenta</th>
-                                            <th class="text-center">Referencia</th>
-                                            <th class="text-center">Moneda</th>
-                                            <th class="text-center">Total</th>
+                            <!-- /.row -->
+                            <!-- Table row -->
+                            <div class="row">
+                                <div class="col-12 table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr class="bg-pale-info">
+                                                <th class="text-center">Método </th>
+                                                <th class="text-center">Factura</th>
+                                                <th class="text-center">Pago</th>
+                                                <th class="text-center">Banco</th>
+                                                <th class="text-center">Cuenta</th>
+                                                <th class="text-center">Referencia</th>
+                                                <th class="text-center">Moneda</th>
+                                                <th class="text-center">Total</th>
 
 
 
 
 
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
 
-                                        @foreach (var item2 in Model.Pagos.GroupBy(a => a.Metodo))
+                                            @foreach (var item2 in Model.Pagos.GroupBy(a => a.Metodo))
                                         {
 
                                             @foreach (var item in item2)
@@ -937,4 +991,3 @@
 
 
 <!-- Content Header (Page header) -->
-

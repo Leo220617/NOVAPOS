@@ -108,9 +108,9 @@
         function Generar() {
             try {
 
+                Rellenar();
 
 
-                Imprimir();
 
                 Swal.fire({
                     title: 'Se descargara un reporte en pdf',
@@ -122,7 +122,7 @@
                     confirmButtonText: 'Ok'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $("#formTipos").submit();
+                         $("#formTipos").submit();
                     }
                 })
 
@@ -131,6 +131,60 @@
                 alert(e);
             }
         }
+
+        function Rellenar() {
+            try {
+                var TipoCambio = JSON.parse($("#TipoCambio").val());
+                var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+
+                var EfectivoColones = parseFloat($("#EfectivoColonesC").val());
+                var TarjetaColones = parseFloat($("#TarjetaColonesC").val());
+                var EfectivoDolares = parseFloat($("#EfectivoColonesC").val());
+                var TarjetaDolares = parseFloat($("#TarjetaDolaresC").val());
+                var ChequesColones = parseFloat($("#ChequesColonesC").val());
+                var ChequesDolares = parseFloat($("#ChequesDolaresC").val());
+                var OtrosMediosColones = parseFloat($("#OtrosMediosColonesC").val());
+                var OtrosMediosFC = parseFloat($("#OtrosMediosFCC").val());
+                var TransferenciasColones = parseFloat($("#TransferenciasColonesC").val());
+                var TransferenciasDolares = parseFloat($("#TransferenciasDolaresC").val());
+                var Colones = parseFloat($("#Colones").val());
+                var Dolares = parseFloat($("#Dolares").val());
+                var Totalizado = parseFloat((Colones + (Dolares * TipodeCambio.TipoCambio)).toFixed(2));
+                var FaltanteCol = parseFloat($("#FColones").val());
+                var FaltanteDol = parseFloat($("#FDolares").val());
+
+                $("#EfecColC").text("₡" + formatoDecimal(EfectivoColones.toFixed(2)));
+                $("#TarjColC").text("₡" + formatoDecimal(TarjetaColones.toFixed(2)));
+                $("#EfecDoC").text("$" + formatoDecimal(EfectivoDolares.toFixed(2)));
+                $("#TarjDolC").text("$" + formatoDecimal(TarjetaDolares.toFixed(2)));
+                $("#CheColC").text("₡" + formatoDecimal(ChequesColones.toFixed(2)));
+                $("#CheqDolC").text("$" + formatoDecimal(ChequesDolares.toFixed(2)));
+                $("#OtroColC").text("₡" + formatoDecimal(OtrosMediosColones.toFixed(2)));
+                $("#OtroDolC").text("$" + formatoDecimal(OtrosMediosFC.toFixed(2)));
+                $("#TranColC").text("₡" + formatoDecimal(TransferenciasColones.toFixed(2)));
+                $("#TranDolC").text("$" + formatoDecimal(TransferenciasDolares.toFixed(2)));
+                $("#TotalRegisCol").text("₡" + formatoDecimal(Colones.toFixed(2)));
+                $("#TotalRegisDol").text("$" + formatoDecimal(Dolares.toFixed(2)));
+                $("#Total").text("₡" + formatoDecimal(Totalizado.toFixed(2)));
+                $("#FColonesC").text("₡" + formatoDecimal(FaltanteCol.toFixed(2)));
+                $("#FDolaresC").text("$" + formatoDecimal(FaltanteDol.toFixed(2)));
+
+
+
+                Imprimir();
+
+            }
+            catch (e) {
+                console.log(e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Error ' + e
+
+                })
+            }
+        }
+
     </script>
 
 
@@ -229,7 +283,7 @@
 
                                     <div class="form-group">
                                         <label>Apertura Colones</label>
-                                        <input type="number" asp-for="Cierres.TotalAperturaColones" class="form-control">
+                                        <input type="number" asp-for="Cierres.TotalAperturaColones" readonly class="form-control">
 
 
                                     </div>
@@ -252,7 +306,7 @@
 
                                     <div class="form-group">
                                         <label>Efectivo Colones</label>
-                                        <input asp-for="Cierres.EfectivoColonesC" class="form-control">
+                                        <input id="EfectivoColonesC" asp-for="Cierres.EfectivoColonesC" class="form-control">
 
 
                                     </div>
@@ -262,7 +316,7 @@
 
                                     <div class="form-group">
                                         <label>Tarjetas Colones</label>
-                                        <input asp-for="Cierres.TarjetasColonesC" class="form-control">
+                                        <input id="TarjetaColonesC" asp-for="Cierres.TarjetasColonesC" class="form-control">
 
 
                                     </div>
@@ -270,7 +324,7 @@
                                 <div class="col-3">
                                     <div class="form-group">
                                         <label>Efectivo Dólares</label>
-                                        <input asp-for="Cierres.EfectivoFCC" class="form-control">
+                                        <input id="EfectivoDolaresC" asp-for="Cierres.EfectivoFCC" class="form-control">
 
 
                                     </div>
@@ -279,7 +333,7 @@
                                 <div class="col-3">
                                     <div class="form-group">
                                         <label>Tarjetas Dólares</label>
-                                        <input asp-for="Cierres.TarjetasFCC" class="form-control">
+                                        <input id="TarjetaDolaresC" asp-for="Cierres.TarjetasFCC" class="form-control">
 
 
                                     </div>
@@ -289,29 +343,31 @@
 
 
                             <!-- title row -->
-                            <div class="row" hidden>
+                            <div class="row">
                                 <div class="col-3">
 
                                     <div class="form-group">
                                         <label>Cheques Colones</label>
-                                        <input asp-for="Cierres.ChequesColonesC" class="form-control">
+                                        <input id="ChequesColonesC" asp-for="Cierres.ChequesColonesC" class="form-control">
 
 
                                     </div>
                                 </div>
-                                <div class="col-3">
-                                    <div class="form-group">
-                                        <label>Cheques Dólares</label>
-                                        <input asp-for="Cierres.ChequesFCC" class="form-control">
 
-
-                                    </div>
-                                </div>
                                 <div class="col-3">
 
                                     <div class="form-group">
                                         <label>Otros Colones</label>
-                                        <input asp-for="Cierres.OtrosMediosColonesC" class="form-control">
+                                        <input id="OtrosMediosColonesC" asp-for="Cierres.OtrosMediosColonesC" class="form-control">
+
+
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label>Cheques Dólares</label>
+                                        <input id="ChequesDolaresC" asp-for="Cierres.ChequesFCC" class="form-control">
 
 
                                     </div>
@@ -319,7 +375,7 @@
                                 <div class="col-3">
                                     <div class="form-group">
                                         <label>Otros Dólares</label>
-                                        <input asp-for="Cierres.OtrosMediosFCC" class="form-control">
+                                        <input id="OtrosMediosFCC" asp-for="Cierres.OtrosMediosFCC" class="form-control">
 
 
                                     </div>
@@ -331,7 +387,7 @@
 
                                     <div class="form-group">
                                         <label>Transferencias Colones</label>
-                                        <input asp-for="Cierres.TransferenciasColonesC" class="form-control">
+                                        <input id="TransferenciasColonesC" asp-for="Cierres.TransferenciasColonesC" class="form-control">
 
 
                                     </div>
@@ -339,7 +395,7 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label>Transferencias Dólares</label>
-                                        <input asp-for="Cierres.TransferenciasDolaresC" class="form-control">
+                                        <input id="TransferenciasDolaresC" asp-for="Cierres.TransferenciasDolaresC" class="form-control">
 
 
                                     </div>
@@ -659,7 +715,7 @@
 
                         <div class="form-group">
                             <label>Efectivo Colones Cajero</label>
-                            <h6> ₡@Math.Round(Model.Cierres.EfectivoColonesC, 2).ToString("C",formato) </h6>
+                            <h6 id="EfecColC"> </h6>
 
 
                         </div>
@@ -667,7 +723,7 @@
                     <div class="col-3">
                         <div class="form-group">
                             <label>Tarjetas Colones Cajero</label>
-                            <h6> ₡@Math.Round(Model.Cierres.TarjetasColonesC, 2).ToString("C",formato) </h6>
+                            <h6 id="TarjColC">  </h6>
 
 
                         </div>
@@ -676,7 +732,7 @@
 
                         <div class="form-group">
                             <label>Efectivo Dólares Cajero</label>
-                            <h6> $@Math.Round(Model.Cierres.EfectivoFCC, 2).ToString("C",formato) </h6>
+                            <h6 id="EfecDoC"> </h6>
 
 
                         </div>
@@ -685,7 +741,7 @@
 
                         <div class="form-group">
                             <label>Tarjetas Dólares Cajero</label>
-                            <h6> $@Math.Round(Model.Cierres.TarjetasFCC, 2).ToString("C",formato) </h6>
+                            <h6 id="TarjDolC">  </h6>
 
 
                         </div>
@@ -698,7 +754,7 @@
 
                         <div class="form-group">
                             <label>Cheques Colones Cajero</label>
-                            <h6> ₡@Math.Round(Model.Cierres.ChequesColonesC, 2).ToString("C",formato)  </h6>
+                            <h6 id="CheColC">  </h6>
 
 
                         </div>
@@ -707,7 +763,7 @@
 
                         <div class="form-group">
                             <label>Otros Colones Cajero</label>
-                            <h6> ₡@Math.Round(Model.Cierres.OtrosMediosColonesC, 2).ToString("C",formato)  </h6>
+                            <h6 id="OtroColC">   </h6>
 
 
                         </div>
@@ -715,7 +771,7 @@
                     <div class="col-3">
                         <div class="form-group">
                             <label>Cheques Dólares Cajero</label>
-                            <h6> $@Math.Round(Model.Cierres.ChequesFCC, 2).ToString("C",formato)  </h6>
+                            <h6 id="CheqDolC">   </h6>
 
 
                         </div>
@@ -724,7 +780,7 @@
                     <div class="col-3">
                         <div class="form-group">
                             <label>Otros Dólares Cajero</label>
-                            <h6> $@Math.Round(Model.Cierres.OtrosMediosFCC, 2).ToString("C",formato)  </h6>
+                            <h6 id="OtroDolC">  </h6>
 
 
                         </div>
@@ -737,7 +793,7 @@
 
                         <div class="form-group">
                             <label>Transferencias Colones Cajero</label>
-                            <h6> ₡@Math.Round(Model.Cierres.TransferenciasColonesC, 2).ToString("C",formato)  </h6>
+                            <h6 id="TranColC">  </h6>
 
 
                         </div>
@@ -745,7 +801,7 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label>Transferencias Dólares Cajero</label>
-                            <h6> $@Math.Round(Model.Cierres.TransferenciasDolaresC, 2).ToString("C",formato)  </h6>
+                            <h6 id="TranDolC">   </h6>
 
 
                         </div>
@@ -778,7 +834,7 @@
 
                         <div class="form-group">
                             <label>Total Registrado Colones</label>
-                            <h6> ₡@Math.Round(Model.Cierres.TotalRegistradoColones, 2).ToString("C",formato)  </h6>
+                            <h6 id="TotalRegisCol">  </h6>
 
 
                         </div>
@@ -786,7 +842,7 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label>Total Registrado Dólares</label>
-                            <h6> $@Math.Round(Model.Cierres.TotalRegistradoFC, 2).ToString("C",formato)  </h6>
+                            <h6 id="TotalRegisDol">   </h6>
 
 
                         </div>
@@ -794,7 +850,7 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label>Totalizado</label>
-                            <h6> ₡@Math.Round(Model.Cierres.TotalizadoMonedas, 2).ToString("C",formato)  </h6>
+                            <h6 id="Total">  </h6>
 
 
                         </div>
@@ -810,7 +866,7 @@
 
                         <div class="form-group">
                             <label>Faltantes Colones</label>
-                            <h6> ₡@Math.Round(Model.Cierres.TotalVendidoColones - Model.Cierres.TotalRegistradoColones).ToString("C",formato) </h6>
+                            <h6 id="FColonesC">  </h6>
 
 
                         </div>
@@ -818,7 +874,7 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label>Faltantes Dólares</label>
-                            <h6> $@Math.Round(Model.Cierres.TotalVendidoFC - Model.Cierres.TotalRegistradoFC, 2).ToString("C",formato) </h6>
+                            <h6 id="FDolaresC">  </h6>
 
 
                         </div>
@@ -962,13 +1018,13 @@
 
 
                                 <div>
-                                    <p>Total Colones  : <span> @Math.Round(Model.Cierres.TotalRegistradoColones, 2).ToString("C",formato)</span> </p>
-                                    <p>Total Dólares  : <span> @Math.Round(Model.Cierres.TotalRegistradoFC, 2).ToString("C",formato)</span></p>
+                                    <p>Total Colones  : <span id="TotalCP"> </span> </p>
+                                    <p>Total Dólares  : <span id="TotalDP"> </span></p>
 
 
                                 </div>
                                 <div class="total-payment">
-                                    <h3><b>Totalizado :</b>  <span>  @Math.Round(Model.Cierres.TotalizadoMonedas, 2).ToString("C",formato)</span></h3>
+                                    <h3><b>Totalizado :</b>  <span id="TotalP">  </span></h3>
                                 </div>
 
                             </div>

@@ -848,7 +848,10 @@ function AgregarProductoTabla() {
         var totalG = parseFloat(ReplaceLetra($("#totG").text()));
 
         var id = $("#ProductoSeleccionado").val();
+        var id = $("#ProductoSeleccionado").val();
         var PE = ProdClientes.find(a => a.id == id);
+
+
 
         var Producto =
         {
@@ -867,8 +870,32 @@ function AgregarProductoTabla() {
             idExoneracion: $("#exoneracion").val(),
             PorExoneracion: 0
         };
-        var Descuento = $("#DES").val();
-         if (Producto.PorDescto > Descuento) {
+
+        var Descuento = parseFloat($("#DES").val());
+
+
+
+
+        if (Producto.Cantidad <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Cantidad Invalida'
+
+            })
+
+        }
+        if (Producto.PorDescto < 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Descuento Invalido'
+
+            })
+
+        }
+
+        if (Producto.PorDescto > Descuento) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -876,54 +903,55 @@ function AgregarProductoTabla() {
 
             })
 
-        }
-        else if (Producto.Cabys.length >= 13) {
+        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento) {
+
+            if (Producto.Cabys.length >= 13) {
 
 
-            var ImpuestoTarifa = $("#impuesto").val();
-            var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
+                var ImpuestoTarifa = $("#impuesto").val();
+                var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
 
-            var calculoIMP = IMP.Tarifa;
+                var calculoIMP = IMP.Tarifa;
 
-            Producto.Descuento = (Producto.Cantidad * Producto.PrecioUnitario) * (Producto.PorDescto / 100);
-            Producto.TotalImpuesto = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * (calculoIMP / 100);
-            //EX => Exoneracion
-            var EX = Exoneraciones.find(a => a.id == Producto.idExoneracion);
-            if (EX != undefined) {
-                var ValorExonerado = (EX.PorExon / 100);
-                var TarifaExonerado = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * ValorExonerado;
-                Producto.TotalImpuesto -= TarifaExonerado;
-                Producto.PorExoneracion = EX.PorExon;
+                Producto.Descuento = (Producto.Cantidad * Producto.PrecioUnitario) * (Producto.PorDescto / 100);
+                Producto.TotalImpuesto = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * (calculoIMP / 100);
+                //EX => Exoneracion
+                var EX = Exoneraciones.find(a => a.id == Producto.idExoneracion);
+                if (EX != undefined) {
+                    var ValorExonerado = (EX.PorExon / 100);
+                    var TarifaExonerado = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * ValorExonerado;
+                    Producto.TotalImpuesto -= TarifaExonerado;
+                    Producto.PorExoneracion = EX.PorExon;
+                }
+                //Termina Exoneracion
+
+
+                Producto.TotalLinea = (Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento + Producto.TotalImpuesto;
+
+                subtotalG += (Producto.Cantidad * Producto.PrecioUnitario);
+                impuestoG += Producto.TotalImpuesto;
+                descuentoG += Producto.Descuento;
+                totalG += Producto.TotalLinea;
+
+                $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
+                $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
+                $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+                $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+
+                ProdCadena.push(Producto);
+
+                RellenaTabla();
+                onChangeMoneda();
+
+                $("#ProductoSeleccionado").val("0").trigger('change.select2');
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Producto sin Cabys valido'
+
+                })
             }
-            //Termina Exoneracion
-
-
-            Producto.TotalLinea = (Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento + Producto.TotalImpuesto;
-
-            subtotalG += (Producto.Cantidad * Producto.PrecioUnitario);
-            impuestoG += Producto.TotalImpuesto;
-            descuentoG += Producto.Descuento;
-            totalG += Producto.TotalLinea;
-
-            $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
-            $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
-            $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
-            $("#totG").text(formatoDecimal(totalG.toFixed(2)));
-
-            ProdCadena.push(Producto);
-
-            RellenaTabla();
-            onChangeMoneda();
-
-
-            $("#ProductoSeleccionado").val("0").trigger('change.select2');
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Producto sin Cabys valido'
-
-            })
         }
     } catch (e) {
         Swal.fire({
@@ -1136,13 +1164,13 @@ function validarOferta(e) {
 function onChangeDescuentoProducto(i) {
     try {
         ProdCadena[i].PorDescto = parseFloat($("#" + i + "_Prod2").val()).toFixed(2);
-        var Descuento = $("#DES").val();
+        var Descuento = parseFloat($("#DES").val());
 
         if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento) {
             ValidarTotales();
         }
 
-        else if (ProdCadena[i].PorDescto < 0) {
+        if (ProdCadena[i].PorDescto < 0) {
             ProdCadena[i].PorDescto = 0;
             Swal.fire({
                 icon: 'error',
@@ -1150,10 +1178,10 @@ function onChangeDescuentoProducto(i) {
                 text: 'Descuento Invalido'
 
             })
-            ProdCadena[i].PorDescto = 0;
+
             ValidarTotales();
         }
-        else if (ProdCadena[i].PorDescto > Descuento) {
+        if (ProdCadena[i].PorDescto > Descuento) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

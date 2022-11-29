@@ -116,8 +116,8 @@ function RecuperarInformacion() {
 
 function ValidarStocks() {
     try {
-        for (var i = 0; i < Documento.Detalle.length; i++) {
-            var PE = Productos.find(a => a.id == Documento.Detalle[i].idProducto);
+        for (var i = 0; i < Oferta.Detalle.length; i++) {
+            var PE = Productos.find(a => a.id == Oferta.Detalle[i].idProducto);
             if ((PE.Stock - ProdCadena[i].Cantidad) < 0) {
                 Swal.fire({
                     icon: 'warning',
@@ -903,7 +903,7 @@ function AgregarProductoTabla() {
                 text: 'Producto sin stock valido'
 
             })
-        }  else if (Producto.PorDescto > Descuento) {
+        }   if (Producto.PorDescto > Descuento) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -911,7 +911,42 @@ function AgregarProductoTabla() {
 
         })
 
-    } else {
+        }  if (Producto.Cantidad <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Cantidad Invalida'
+
+            })
+          
+        }
+         if (Producto.PorDescto < 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Descuento Invalido'
+
+            })
+
+        }
+
+         if (Producto.PorDescto < 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Descuento Invalido'
+
+            })
+
+        }  if (Producto.PorDescto > Descuento) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Usted no puede aplicar este descuento, el descuento máximo asignado a su usuario es de' + ' ' + parseFloat(Descuento).toFixed(2) + '%'
+
+            })
+
+        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) > 0)) {
             if (Producto.Cabys.length >= 13) {
 
 
@@ -1170,13 +1205,13 @@ function validarOferta(e) {
 function onChangeDescuentoProducto(i) {
     try {
         ProdCadena[i].PorDescto = parseFloat($("#" + i + "_Prod2").val()).toFixed(2);
-        var Descuento = $("#DES").val();
+        var Descuento = parseFloat($("#DES").val());
 
         if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento) {
             ValidarTotales();
         }
 
-        else if (ProdCadena[i].PorDescto < 0) {
+        if (ProdCadena[i].PorDescto < 0) {
             ProdCadena[i].PorDescto = 0;
             Swal.fire({
                 icon: 'error',
@@ -1184,10 +1219,10 @@ function onChangeDescuentoProducto(i) {
                 text: 'Descuento Invalido'
 
             })
-            ProdCadena[i].PorDescto = 0;
+
             ValidarTotales();
         }
-        else if (ProdCadena[i].PorDescto > Descuento) {
+        if (ProdCadena[i].PorDescto > Descuento) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1207,6 +1242,7 @@ function onChangeDescuentoProducto(i) {
         })
     }
 }
+ 
 
 function onChangeCantidadProducto(i) {
     try {

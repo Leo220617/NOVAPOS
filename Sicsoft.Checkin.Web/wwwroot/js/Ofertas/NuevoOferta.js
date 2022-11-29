@@ -147,7 +147,7 @@ function ValidarStocks() {
 
         })
     }
-    
+
 }
 function onChangeMoneda() {
     try {
@@ -912,7 +912,10 @@ function AgregarProductoTabla() {
             idExoneracion: $("#exoneracion").val(),
             PorExoneracion: 0
         };
-        var Descuento = $("#DES").val();
+
+        var Descuento = parseFloat($("#DES").val());
+
+
         if ((PE.Stock - Producto.Cantidad) < 0) {
             Swal.fire({
                 icon: 'error',
@@ -925,16 +928,16 @@ function AgregarProductoTabla() {
 
         }
 
-        else if (Producto.Cantidad <= 0) {
+        if (Producto.Cantidad <= 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Cantidad Invalida'
 
             })
-            Producto.Cantidad = 1;
+          
         }
-        else if (Producto.PorDescto < 0) {
+        if (Producto.PorDescto < 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -944,15 +947,7 @@ function AgregarProductoTabla() {
 
         }
 
-        else if (Producto.PorDescto < 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Descuento Invalido'
-
-            })
-
-        } else if (Producto.PorDescto > Descuento) {
+        if (Producto.PorDescto > Descuento) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -960,7 +955,7 @@ function AgregarProductoTabla() {
 
             })
 
-        }      else {
+        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) > 0)) {
 
             if (Producto.Cabys.length >= 13) {
 
@@ -1233,13 +1228,13 @@ function validarOferta(e) {
 function onChangeDescuentoProducto(i) {
     try {
         ProdCadena[i].PorDescto = parseFloat($("#" + i + "_Prod2").val()).toFixed(2);
-        var Descuento = $("#DES").val();
+        var Descuento = parseFloat($("#DES").val());
 
         if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento) {
             ValidarTotales();
         }
 
-        else if (ProdCadena[i].PorDescto < 0) {
+        if (ProdCadena[i].PorDescto < 0) {
             ProdCadena[i].PorDescto = 0;
             Swal.fire({
                 icon: 'error',
@@ -1247,10 +1242,10 @@ function onChangeDescuentoProducto(i) {
                 text: 'Descuento Invalido'
 
             })
-            ProdCadena[i].PorDescto = 0;
+
             ValidarTotales();
         }
-        else if (ProdCadena[i].PorDescto > Descuento) {
+        if (ProdCadena[i].PorDescto > Descuento) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1260,7 +1255,7 @@ function onChangeDescuentoProducto(i) {
             ProdCadena[i].PorDescto = 0;
             ValidarTotales();
         }
-      
+
     } catch (e) {
         Swal.fire({
             icon: 'error',

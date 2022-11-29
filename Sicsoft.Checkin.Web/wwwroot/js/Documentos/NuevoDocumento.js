@@ -982,7 +982,7 @@ function AgregarProductoTabla() {
                 text: 'Producto sin stock valido'
 
             })
-        } else if (Producto.Cantidad <= 0) {
+        }  if (Producto.Cantidad <= 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -991,7 +991,7 @@ function AgregarProductoTabla() {
             })
             Producto.Cantidad = 1;
         }
-        else if (Producto.PorDescto < 0) {
+         if (Producto.PorDescto < 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

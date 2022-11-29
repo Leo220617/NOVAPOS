@@ -11,5 +11,7 @@
         public string CuentaSAP { get; set; }
 
         public bool Estado { get; set; }
+
+        public string Banco { get; set; }
     }
 }

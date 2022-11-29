@@ -20,7 +20,10 @@ namespace NOVAAPP.Pages.CierreCajas
 
         private readonly ICrudApi<UsuariosViewModel, int> users;
         private readonly ICrudApi<TipoCambiosViewModel, int> tipoCambio;
-
+        private readonly ICrudApi<CajasViewModel, int> cajo;
+        private readonly ICrudApi<DocumentosViewModel, int> documento;
+        private readonly ICrudApi<MetodosPagosViewModel, int> pagos;
+        private readonly ICrudApi<CuentasBancariasViewModel, int> cuenta;
 
 
         [BindProperty]
@@ -32,15 +35,34 @@ namespace NOVAAPP.Pages.CierreCajas
         public UsuariosViewModel Users { get; set; }
 
         [BindProperty]
+        public CajasViewModel[] Cajos { get; set; }
+
+        [BindProperty]
         public string Caja { get; set; }
         [BindProperty]
-        public TipoCambiosViewModel[] TC { get; set; } 
+        public TipoCambiosViewModel[] TC { get; set; }
 
-        public EditarModel(ICrudApi<CierreCajasViewModel, int> service, ICrudApi<UsuariosViewModel, int> users, ICrudApi<TipoCambiosViewModel, int> tipoCambio)
+
+        [BindProperty]
+        public DocumentosViewModel[] Documento { get; set; }
+
+        [BindProperty]
+        public MetodosPagosViewModel[] Pagos { get; set; }
+
+        [BindProperty]
+        public CuentasBancariasViewModel[] CuentasBancarias { get; set; }
+
+        public EditarModel(ICrudApi<CierreCajasViewModel, int> service, ICrudApi<UsuariosViewModel, int> users, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CajasViewModel, int> cajo, ICrudApi<DocumentosViewModel, int> documento, ICrudApi<MetodosPagosViewModel, int> pagos, ICrudApi<CuentasBancariasViewModel, int> cuenta)
         {
             this.service = service;
             this.users = users;
             this.tipoCambio = tipoCambio;
+
+            this.cajo = cajo;
+            this.documento = documento;
+
+            this.pagos = pagos;
+            this.cuenta = cuenta;
         }
         public async Task<IActionResult> OnGetAsync()
         {
@@ -51,6 +73,7 @@ namespace NOVAAPP.Pages.CierreCajas
                 {
                     return RedirectToPage("/NoPermiso");
                 }
+                Cajos = await cajo.ObtenerLista("");
                 var idcaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault());
                 var Fecha = DateTime.Now.Date;
                 var idCajero = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
@@ -60,7 +83,18 @@ namespace NOVAAPP.Pages.CierreCajas
 
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.FechaInicial = DateTime.Now.Date;
+                filtro.FechaInicial = Cierres.FechaCaja;
+                filtro.FechaFinal = Cierres.FechaCaja;
                 TC = await tipoCambio.ObtenerLista(filtro);
+                filtro.Codigo3 = Cierres.idCaja;
+
+                Documento = await documento.ObtenerLista(filtro);
+
+
+                filtro.Codigo1 = Cierres.idCaja;
+                Pagos = await pagos.ObtenerLista(filtro);
+                TC = await tipoCambio.ObtenerLista(filtro);
+                CuentasBancarias = await cuenta.ObtenerLista("");
 
                 return Page();
             }

@@ -1023,7 +1023,7 @@ function AgregarProductoTabla() {
 
         }
 
-        else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) > 0)) {
+        else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0)) {
             if (Producto.Cabys.length >= 13) {
 
 

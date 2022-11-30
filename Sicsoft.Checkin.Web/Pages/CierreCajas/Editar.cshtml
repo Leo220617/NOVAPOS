@@ -1014,16 +1014,18 @@
                             </div>
                             <!-- /.col -->
                             <div class="col-12  text-right">
-
+                                 @{
+                                    var cond = Model.Condicion;
+                                }
 
                                 <div>
-                                    <p>Total Colones  : <span id="TotalCP"> ₡ @Model.Documento.Where(a => a.Moneda == "CRC").Sum(a => a.TotalCompra).ToString("C",formato) </span> </p>
-                                    <p>Total Dólares  : <span id="TotalDP"> $ @Model.Documento.Where(a => a.Moneda == "USD").Sum(a => a.TotalCompra).ToString("C",formato)</span></p>
+                                    <p>Total Colones  : <span id="TotalCP"> ₡ @Model.Documento.Where(a => a.Moneda == "CRC" && a.idCondPago == cond.id).Sum(a => a.TotalCompra).ToString("C",formato) </span> </p>
+                                    <p>Total Dólares  : <span id="TotalDP"> $ @Model.Documento.Where(a => a.Moneda == "USD" && a.idCondPago == cond.id).Sum(a => a.TotalCompra).ToString("C",formato)</span></p>
 
 
                                 </div>
                                 <div class="total-payment">
-                                    <h3><b>Totalizado :</b>  <span id="TotalP"> ₡ @((Model.Documento.Where(a => a.Moneda == "CRC").Sum(a => a.TotalCompra) + (Model.Documento.Where(a => a.Moneda == "USD").Sum(a => a.TotalCompra) * Model.TC.Where(a => a.Moneda == "USD").FirstOrDefault().TipoCambio)).ToString("C",formato))  </span></h3>
+                                    <h3><b>Totalizado :</b>  <span id="TotalP"> ₡ @((Model.Documento.Where(a => a.Moneda == "CRC" && a.idCondPago == cond.id).Sum(a => a.TotalCompra) + (Model.Documento.Where(a => a.Moneda == "USD").Sum(a => a.TotalCompra) * Model.TC.Where(a => a.Moneda == "USD").FirstOrDefault().TipoCambio)).ToString("C",formato))  </span></h3>
                                 </div>
 
                             </div>

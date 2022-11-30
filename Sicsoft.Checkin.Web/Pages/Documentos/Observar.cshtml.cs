@@ -24,6 +24,8 @@ namespace NOVAAPP.Pages.Documentos
         private readonly ICrudApi<ExoneracionesViewModel, int> exoneracion;
         private readonly ICrudApi<CondicionesPagosViewModel, int> condiconesPago;
         private readonly ICrudApi<VendedoresViewModel, int> vendedor;
+        private readonly ICrudApi<TipoCambiosViewModel, int> tipoCambio;
+
 
 
         [BindProperty]
@@ -42,9 +44,14 @@ namespace NOVAAPP.Pages.Documentos
         public CondicionesPagosViewModel CondicionesPago { get; set; }
 
         [BindProperty]
+        public CondicionesPagosViewModel[] CondicionesPagos { get; set; }
+        [BindProperty]
+        public TipoCambiosViewModel[] TP { get; set; }
+
+        [BindProperty]
         public VendedoresViewModel Vendedor { get; set; }
 
-        public ObservarModel(ICrudApi<DocumentosViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor)
+        public ObservarModel(ICrudApi<DocumentosViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor,ICrudApi<TipoCambiosViewModel, int> tipoCambio)
         {
             this.service = service;
             this.serviceE = serviceE;
@@ -52,6 +59,7 @@ namespace NOVAAPP.Pages.Documentos
             this.exoneracion = exoneracion;
             this.condiconesPago = condiconesPago;
             this.vendedor = vendedor;
+            this.tipoCambio = tipoCambio;
         }
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -74,10 +82,15 @@ namespace NOVAAPP.Pages.Documentos
                 Vendedor = Vendedores.Where(a => a.id == Documento.idVendedor).FirstOrDefault();
 
                 Clientes = await serviceE.ObtenerLista(filtro);
+                CondicionesPagos = CondPago;
 
+                filtro.FechaInicial = DateTime.Now.Date;
+                TP = await tipoCambio.ObtenerLista(filtro);
 
-                
-                Productos = await serviceP.ObtenerLista("");
+                ParametrosFiltros filtro2 = new ParametrosFiltros();
+                filtro2.CardCode = Documento.CodSuc;
+                filtro2.Codigo2 = Clientes.Where(a => a.id == Documento.idCliente).FirstOrDefault().idListaPrecios;
+                Productos = await serviceP.ObtenerLista(filtro2);
                 Exoneraciones = await exoneracion.ObtenerLista("");
 
                 return Page();

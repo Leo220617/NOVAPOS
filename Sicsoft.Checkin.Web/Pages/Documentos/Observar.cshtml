@@ -28,55 +28,7 @@
 
 }
     @section scripts{
-    <script>
-        $(document).ready(function() {
-            jQuery(document).ready(function($) {
-
-            });
-
-
-
-            $(document).ready(function() {
-
-            });
-
-
-        });
-
-        function ImprimirPantalla() {
-            try {
-                // window.print();
-                var margins = {
-                    top: 10,
-                    bottom: 10,
-                    left: 10,
-                    width: 595
-                };
-
-
-                html = $(".html").html();
-                html2pdf(html, {
-                    margin: 1,
-                    padding: 0,
-                    filename: 'Documento.pdf',
-                    image: { type: 'jpeg', quality: 1 },
-                    html2canvas: { scale: 2, logging: true },
-                    jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
-                    class: ImprimirPantalla
-                });
-
-            } catch (e) {
-                console.log(e);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Ha ocurrido un error al intentar imprimir ' + e
-
-                })
-            }
-        }
-
-    </script>
+    <script src="/js/Documentos/ObservarDocumento.js"></script>
 }
 
 
@@ -102,6 +54,16 @@
                         <div class="row">
                             <div class="col-8">
                                 <h6 class="box-subtitle">Observar Documento</h6>
+                                <input hidden id="Documento" value="@JsonConvert.SerializeObject(Model.Documento)" />
+                                <input hidden id="CP" value="@JsonConvert.SerializeObject(Model.CondicionesPagos)" />
+                                <input hidden id="Clientes" value="@JsonConvert.SerializeObject(Model.Clientes)" />
+                                <input hidden id="Vendedor" value="@JsonConvert.SerializeObject(Model.Vendedor)" />
+                                <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
+                                <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
+
+
+
+
 
 
                             </div>
@@ -161,7 +123,7 @@
 
 
                                         <br />
-                                     
+
                                         <div class="col-3">
                                         </div>
                                         <div class="col-3">
@@ -176,7 +138,7 @@
                                         </div>
 
                                         <br />
-                                     
+
                                         <div class="col-6">
                                             <h5> <b>Clave Hacienda: </b> @(Model.Documento.ClaveHacienda)</h5>
 
@@ -329,20 +291,20 @@
                 <div class="box-body">
                     <!-- title row -->
                     <div class="row">
-                         <div class="col-12">
-                                <div class="page-header mt-0">
-                                    <h2 class="d-inline"><span class="font-size-24">Documento No: @Model.Documento.id</span></h2>
-                                    <br />
-                                    <div class="text-left">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <h5> <b>Fecha: </b> @Model.Documento.Fecha.ToString("dd/MM/yyyy")</h5>
+                        <div class="col-12">
+                            <div class="page-header mt-0">
+                                <h2 class="d-inline"><span class="font-size-24">Documento No: @Model.Documento.id</span></h2>
+                                <br />
+                                <div class="text-left">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <h5> <b>Fecha: </b> @Model.Documento.Fecha.ToString("dd/MM/yyyy")</h5>
 
-                                            </div>
+                                        </div>
 
-                                            <div class="col-4">
-                                                <h5>
-                                                    <b>Tipo de Documento:</b>  @switch (Model.Documento.TipoDocumento)
+                                        <div class="col-4">
+                                            <h5>
+                                                <b>Tipo de Documento:</b>  @switch (Model.Documento.TipoDocumento)
                                                 {
                                                     case "01":
                                                         {
@@ -372,7 +334,7 @@
 
 
                                         <br />
-                                     
+
                                         <div class="col-3">
                                         </div>
                                         <div class="col-3">
@@ -387,7 +349,7 @@
                                         </div>
 
                                         <br />
-                                     
+
                                         <div class="col-6">
                                             <h5> <b>Clave Hacienda: </b> @(Model.Documento.ClaveHacienda)</h5>
 

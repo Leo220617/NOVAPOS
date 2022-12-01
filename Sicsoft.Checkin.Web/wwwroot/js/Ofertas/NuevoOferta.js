@@ -68,6 +68,7 @@ function RecuperarInformacion() {
     try {
         $("#ClienteSeleccionado").val(Documento.idCliente);
         $("#Fecha").val(Documento.Fecha);
+        $("#selectTD").val(Documento.TipoDocumento);
 
         $("#selectMoneda").val(Documento.Moneda);
         $("#selectVendedor").val(Documento.idVendedor);

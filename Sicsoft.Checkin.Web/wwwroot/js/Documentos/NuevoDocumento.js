@@ -110,9 +110,9 @@ function RecuperarInformacion() {
         $("#ClienteSeleccionado").val(Documento.idCliente);
         $("#selectVendedor").val(Documento.idVendedor);
         $("#Fecha").val(Documento.Fecha);
-
+        $("#selectTD").val(Documento.TipoDocumento);
         $("#selectMoneda").val(Documento.Moneda);
-        $("#selectTD").val("01");
+      
         $("#selectCondPago").val(Documento.idCondPago);
         $("#inputComentarios").val(Documento.Comentarios);
         $("#subG").text(formatoDecimal(Documento.Subtotal.toFixed(2)));

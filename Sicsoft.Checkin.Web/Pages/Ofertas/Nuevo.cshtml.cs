@@ -119,6 +119,7 @@ namespace NOVAAPP.Pages.Ofertas
                     Oferta.CodSuc = Ofertas.CodSuc;
                     Oferta.idUsuarioCreador = Ofertas.idUsuarioCreador;
                     Oferta.idVendedor = Ofertas.idVendedor;
+                    Oferta.TipoDocumento = Ofertas.TipoDocumento;
                     Oferta.Fecha = DateTime.Now;
                     Oferta.FechaVencimiento = Ofertas.FechaVencimiento;
                     Oferta.Moneda = Ofertas.Moneda;

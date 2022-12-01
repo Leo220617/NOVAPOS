@@ -67,7 +67,7 @@ function RecuperarInformacion() {
         $("#selectVendedor").val(Oferta.idVendedor);
         $("#Fecha").val(Oferta.Fecha);
         $("#selectMoneda").val(Oferta.Moneda);
-
+        $("#selectTD").val(Oferta.TipoDocumento);
         $("#inputComentarios").val(Oferta.Comentarios);
         $("#subG").text(formatoDecimal(Oferta.Subtotal.toFixed(2)));
         $("#impG").text(formatoDecimal(Oferta.TotalImpuestos.toFixed(2)));

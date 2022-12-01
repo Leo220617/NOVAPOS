@@ -64,9 +64,11 @@ function RecuperarInformacion() {
     try {
 
         $("#ClienteSeleccionado").val(Oferta.idCliente);
+        $("#selectTD").val(Oferta.TipoDocumento);
         $("#selectVendedor").val(Oferta.idVendedor);
         $("#Fecha").val(Oferta.Fecha);
         $("#selectMoneda").val(Oferta.Moneda);
+        $("#selectTD").val(Oferta.TipoDocumento);
         $("#selectVendedor").val(Oferta.idVendedor);
         $("#inputComentarios").val(Oferta.Comentarios);
         $("#subG").text(formatoDecimal(Oferta.Subtotal.toFixed(2)));

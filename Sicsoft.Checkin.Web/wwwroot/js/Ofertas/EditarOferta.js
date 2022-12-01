@@ -26,6 +26,7 @@ var TipoCambio = [];
 var DES = [];
 var CP = [];
 var Vendedores = [];
+var Bodega = [];
 
 function Recuperar() {
     try {
@@ -41,6 +42,7 @@ function Recuperar() {
         TipoCambio = JSON.parse($("#TipoCambio").val());
         CP = JSON.parse($("#CP").val());
         DES = JSON.parse($("#DES").val());
+        Bodega = JSON.parse($("#Bodega").val());
 
         ExoneracionesCliente = [];
 
@@ -57,12 +59,12 @@ function Recuperar() {
 
         })
     }
-    
+
 }
 
 function RecuperarInformacion() {
     try {
-       
+
         $("#ClienteSeleccionado").val(Oferta.idCliente);
         $("#selectVendedor").val(Oferta.idVendedor);
         $("#Fecha").val(Oferta.Fecha);
@@ -77,7 +79,7 @@ function RecuperarInformacion() {
 
         for (var i = 0; i < Oferta.Detalle.length; i++) {
             var PE = Productos.find(a => a.id == Oferta.Detalle[i].idProducto);
-            
+
             var Producto =
             {
                 idEncabezado: 0,
@@ -94,7 +96,8 @@ function RecuperarInformacion() {
                 TotalLinea: parseFloat(Oferta.Detalle[i].TotalLinea.toFixed(2)),
                 Cabys: Oferta.Detalle[i].Cabys,
                 idExoneracion: Oferta.Detalle[i].Cabys,
-                PorExoneracion: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).PorExon
+                PorExoneracion: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).PorExon,
+               
             };
             ProdCadena.push(Producto);
         }
@@ -102,7 +105,7 @@ function RecuperarInformacion() {
         onChangeCliente();
         ValidarStocks();
         $("#selectCondPago").val(Oferta.idCondPago);
-        
+
 
     } catch (e) {
         Swal.fire({
@@ -248,7 +251,7 @@ function RellenaClientes() {
 
         })
     }
-   
+
 }
 function RellenaProductos() {
     try {
@@ -258,7 +261,8 @@ function RellenaProductos() {
         html += "<option value='0' > Seleccione Producto </option>";
 
         for (var i = 0; i < ProdClientes.length; i++) {
-            html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " </option>";
+            var Bodegas = Bodega.find(a => a.id == ProdClientes[i].idBodega) == undefined ? undefined : Bodega.find(a => a.id == ProdClientes[i].idBodega);
+            html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP +  " </option>";
         }
 
 
@@ -272,7 +276,7 @@ function RellenaProductos() {
 
         })
     }
-    
+
 }
 
 function RellenaExoneraciones() {
@@ -342,9 +346,9 @@ function onChangeCliente() {
             var Cond30 = [];
             RellenaCondiciones(Cond30);
         }
-      
 
-       
+
+
 
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
@@ -369,7 +373,7 @@ function onChangeCliente() {
 
         })
     }
-    
+
 
 }
 function RellenaCondiciones(CPS) {
@@ -417,7 +421,7 @@ function ExoneracionxCliente() {
 
         })
     }
-    
+
 }
 function onChangeProducto() {
     try {
@@ -450,7 +454,7 @@ function onChangeProducto() {
 
         })
     }
-   
+
 
 
 
@@ -493,7 +497,7 @@ function ModificaSelects(i) {
 
         })
     }
-   
+
 
 }
 
@@ -517,7 +521,7 @@ function RellenaCantones(ListCantones) {
 
         })
     }
-   
+
 }
 
 function RellenaDistritos(ListDistritos) {
@@ -540,7 +544,7 @@ function RellenaDistritos(ListDistritos) {
 
         })
     }
-   
+
 }
 
 function RellenaBarrios(ListBarrios) {
@@ -563,7 +567,7 @@ function RellenaBarrios(ListBarrios) {
 
         })
     }
-   
+
 }
 
 function AbrirModalAgregarCliente() {
@@ -577,7 +581,7 @@ function AbrirModalAgregarCliente() {
 
         })
     }
-   
+
 }
 
 function validar(cliente) {
@@ -618,7 +622,7 @@ function validar(cliente) {
 
         })
     }
-    
+
 }
 
 function LimpiarDatosCliente() {
@@ -641,7 +645,7 @@ function LimpiarDatosCliente() {
 
         })
     }
-   
+
 }
 
 //Agregar Cliente
@@ -835,7 +839,7 @@ function RellenaTabla() {
 
         })
     }
-    
+
 }
 function cantidadRepetidos(palabra, separador) {
 
@@ -849,7 +853,7 @@ function cantidadRepetidos(palabra, separador) {
 
         })
     }
-   
+
 }
 function ReplaceLetra(palabra) {
     try {
@@ -871,7 +875,7 @@ function ReplaceLetra(palabra) {
 
         })
     }
-    
+
 }
 
 
@@ -910,24 +914,24 @@ function AgregarProductoTabla() {
                 text: 'Producto sin stock valido'
 
             })
-        }   if (Producto.PorDescto > Descuento) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Usted no puede aplicar este descuento, el descuento máximo asignado a su usuario es de' + ' ' + parseFloat(Descuento).toFixed(2) + '%'
+        } if (Producto.PorDescto > Descuento) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Usted no puede aplicar este descuento, el descuento máximo asignado a su usuario es de' + ' ' + parseFloat(Descuento).toFixed(2) + '%'
 
-        })
+            })
 
-        }  if (Producto.Cantidad <= 0) {
+        } if (Producto.Cantidad <= 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Cantidad Invalida'
 
             })
-          
+
         }
-         if (Producto.PorDescto < 0) {
+        if (Producto.PorDescto < 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -937,7 +941,7 @@ function AgregarProductoTabla() {
 
         }
 
-         if (Producto.PorDescto < 0) {
+        if (Producto.PorDescto < 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -945,7 +949,7 @@ function AgregarProductoTabla() {
 
             })
 
-        }  if (Producto.PorDescto > Descuento) {
+        } if (Producto.PorDescto > Descuento) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1011,7 +1015,7 @@ function AgregarProductoTabla() {
 
         })
     }
-   
+
 
 
 
@@ -1198,7 +1202,7 @@ function validarOferta(e) {
         } else {
             return true;
         }
-        
+
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -1207,7 +1211,7 @@ function validarOferta(e) {
 
         })
     }
-   
+
 }
 function onChangeDescuentoProducto(i) {
     try {
@@ -1249,7 +1253,7 @@ function onChangeDescuentoProducto(i) {
         })
     }
 }
- 
+
 
 function onChangeCantidadProducto(i) {
     try {

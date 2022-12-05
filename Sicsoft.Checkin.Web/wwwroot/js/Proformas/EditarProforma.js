@@ -98,7 +98,7 @@ function RecuperarInformacion() {
                 TotalLinea: parseFloat(Oferta.Detalle[i].TotalLinea.toFixed(2)),
                 Cabys: Oferta.Detalle[i].Cabys,
                 idExoneracion: Oferta.Detalle[i].Cabys,
-                PorExoneracion: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).PorExon, 
+                PorExoneracion: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).PorExon 
                
             };
             ProdCadena.push(Producto);

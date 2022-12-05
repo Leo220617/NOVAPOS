@@ -140,8 +140,8 @@ function RecuperarInformacion() {
                 TotalLinea: parseFloat(Documento.Detalle[i].TotalLinea.toFixed(2)),
                 Cabys: Documento.Detalle[i].Cabys,
                 idExoneracion: Documento.Detalle[i].Cabys,
-                PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon,
-                idBodega: Bodega.find(a => a.id == idProducto) == undefined ? 0 : Bodega.find(a => a.id == idProducto).id
+                PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon
+               
                
             };
             ProdCadena.push(Producto);

@@ -323,7 +323,7 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label>Apertura Dólares</label>
-                                        <input type="number" asp-for="Cierres.TotalAperturaFC" class="form-control">
+                                        <input type="number" asp-for="Cierres.TotalAperturaFC" readonly class="form-control">
 
 
                                     </div>
@@ -338,7 +338,7 @@
 
                                     <div class="form-group">
                                         <label>Efectivo Colones</label>
-                                        <input id="EfectivoColonesC" asp-for="Cierres.EfectivoColonesC" onchange="javascript: onChangeTotales();" class="form-control">
+                                        <input id="EfectivoColonesC" number asp-for="Cierres.EfectivoColonesC" onchange="javascript: onChangeTotales();" class="form-control">
 
 
                                     </div>
@@ -348,7 +348,7 @@
 
                                     <div class="form-group">
                                         <label>Tarjetas Colones</label>
-                                        <input id="TarjetaColonesC" asp-for="Cierres.TarjetasColonesC" onchange="javascript: onChangeTotales();" class="form-control">
+                                        <input id="TarjetaColonesC" asp-for="Cierres.TarjetasColonesC" number onchange="javascript: onChangeTotales();" class="form-control">
 
 
                                     </div>
@@ -356,7 +356,7 @@
                                 <div class="col-3">
                                     <div class="form-group">
                                         <label>Efectivo Dólares</label>
-                                        <input id="EfectivoDolaresC" asp-for="Cierres.EfectivoFCC" onchange="javascript: onChangeTotales();" class="form-control">
+                                        <input id="EfectivoDolaresC" asp-for="Cierres.EfectivoFCC" number onchange="javascript: onChangeTotales();" class="form-control">
 
 
                                     </div>
@@ -365,7 +365,7 @@
                                 <div class="col-3">
                                     <div class="form-group">
                                         <label>Tarjetas Dólares</label>
-                                        <input id="TarjetaDolaresC" asp-for="Cierres.TarjetasFCC" onchange="javascript: onChangeTotales();" class="form-control">
+                                        <input id="TarjetaDolaresC" asp-for="Cierres.TarjetasFCC" number onchange="javascript: onChangeTotales();" class="form-control">
 
 
                                     </div>
@@ -380,7 +380,7 @@
 
                                     <div class="form-group">
                                         <label>Cheques Colones</label>
-                                        <input id="ChequesColonesC" asp-for="Cierres.ChequesColonesC" onchange="javascript: onChangeTotales();" class="form-control">
+                                        <input id="ChequesColonesC" asp-for="Cierres.ChequesColonesC" number onchange="javascript: onChangeTotales();" class="form-control">
 
 
                                     </div>
@@ -390,7 +390,7 @@
 
                                     <div class="form-group">
                                         <label>Otros Colones</label>
-                                        <input id="OtrosMediosColonesC" asp-for="Cierres.OtrosMediosColonesC" onchange="javascript: onChangeTotales();" class="form-control">
+                                        <input id="OtrosMediosColonesC" asp-for="Cierres.OtrosMediosColonesC" number onchange="javascript: onChangeTotales();" class="form-control">
 
 
                                     </div>
@@ -399,7 +399,7 @@
                                 <div class="col-3">
                                     <div class="form-group">
                                         <label>Cheques Dólares</label>
-                                        <input id="ChequesDolaresC" asp-for="Cierres.ChequesFCC" onchange="javascript: onChangeTotales();" class="form-control">
+                                        <input id="ChequesDolaresC" asp-for="Cierres.ChequesFCC" number onchange="javascript: onChangeTotales();" class="form-control">
 
 
                                     </div>
@@ -407,7 +407,7 @@
                                 <div class="col-3">
                                     <div class="form-group">
                                         <label>Otros Dólares</label>
-                                        <input id="OtrosMediosFCC" asp-for="Cierres.OtrosMediosFCC" onchange="javascript: onChangeTotales();" class="form-control">
+                                        <input id="OtrosMediosFCC" asp-for="Cierres.OtrosMediosFCC" number onchange="javascript: onChangeTotales();" class="form-control">
 
 
                                     </div>
@@ -419,7 +419,7 @@
 
                                     <div class="form-group">
                                         <label>Transferencias Colones</label>
-                                        <input id="TransferenciasColonesC" asp-for="Cierres.TransferenciasColonesC" onchange="javascript: onChangeTotales();" class="form-control">
+                                        <input id="TransferenciasColonesC" asp-for="Cierres.TransferenciasColonesC" number onchange="javascript: onChangeTotales();" class="form-control">
 
 
                                     </div>
@@ -427,7 +427,7 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label>Transferencias Dólares</label>
-                                        <input id="TransferenciasDolaresC" asp-for="Cierres.TransferenciasDolaresC" onchange="javascript: onChangeTotales();" class="form-control">
+                                        <input id="TransferenciasDolaresC" asp-for="Cierres.TransferenciasDolaresC" number onchange="javascript: onChangeTotales();" class="form-control">
 
 
                                     </div>
@@ -700,6 +700,30 @@
                     </div>
                     <!-- /.col -->
                 </div>
+                  <div class="row">
+                                <div class="col-6">
+
+                                    <div class="form-group">
+                                        <label>Transferencias Colones</label>
+                                        <h6> ₡@Math.Round(Model.Cierres.TransferenciasColones, 2).ToString("C",formato)  </h6>
+
+
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Transferencias Dólares</label>
+                                        <h6> $@Math.Round(Model.Cierres.TransferenciasDolares, 2).ToString("C",formato)  </h6>
+
+
+                                    </div>
+                                </div>
+
+                                <!-- /.col -->
+                                <!-- title row -->
+
+                            </div>
+
                 <div class="row">
                     <div class="col-6">
 

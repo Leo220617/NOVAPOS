@@ -1274,7 +1274,7 @@ function validarDocumento(e) {
             }
             else if (e.MetodosPagos.length == 0 || e.MetodosPagos == null) {
                 return false;
-            } else if (sumArray(e.MetodosPagos) < e.TotalCompra) {
+            } else if (parseFloat(sumArray(e.MetodosPagos).toFixed(2)) < e.TotalCompra) {
                 return false;
             }
             else {

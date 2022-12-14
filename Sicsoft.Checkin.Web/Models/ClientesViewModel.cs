@@ -56,5 +56,7 @@ namespace NOVAAPP.Models
         public string CorreoPublicitario { get; set; }
 
         public int idGrupo { get; set; }
+        public bool MAG { get; set; }
+
     }
 }

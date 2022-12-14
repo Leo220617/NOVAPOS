@@ -243,8 +243,11 @@ function ValidarTotales() {
         var totalG = 0;
 
         for (var i = 0; i < ProdCadena.length; i++) {
+            var idCliente = $("#ClienteSeleccionado").val();
+            var Cliente = Clientes.find(a => a.id == idCliente);
+            var IMP2 = Impuestos.find(a => a.Tarifa == 1);
             var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
-            var ImpuestoTarifa = PE.idImpuesto;
+            var ImpuestoTarifa = (Cliente.MAG == true && PE.MAG == true ? IMP2.id : PE.idImpuesto); 
             var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
 
             var calculoIMP = IMP.Tarifa;
@@ -556,11 +559,29 @@ function onChangeProducto() {
         var idProducto = $("#ProductoSeleccionado").val();
 
         var Producto = ProdClientes.find(a => a.id == idProducto);
+        var idCliente = $("#ClienteSeleccionado").val();
+        var Cliente = Clientes.find(a => a.id == idCliente);
 
         if (Producto != undefined) {
             $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
             $("#inputCabys").val(Producto.Cabys);
-            $("#impuesto").val(Producto.idImpuesto);
+            if (Cliente != undefined) {
+                if (Cliente.MAG == true && Producto.MAG == true) {
+
+                    var IMP = Impuestos.find(a => a.Tarifa == 1);
+
+                    if (IMP != undefined) {
+                        $("#impuesto").val(IMP.id);
+                    } else {
+                        $("#impuesto").val(Producto.idImpuesto);
+                    }
+
+                } else {
+                    $("#impuesto").val(Producto.idImpuesto);
+                }
+            } else {
+                $("#impuesto").val(Producto.idImpuesto);
+            }
             $("#MonedaProducto").val(Producto.Moneda);
 
             ExoneracionxCliente();

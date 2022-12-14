@@ -401,10 +401,30 @@ function onChangeProducto() {
 
         var Producto = ProdClientes.find(a => a.id == idProducto);
 
+        var idCliente = $("#ClienteSeleccionado").val();
+        var Cliente = Clientes.find(a => a.id == idCliente);
+
+
         if (Producto != undefined) {
             $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
             $("#inputCabys").val(Producto.Cabys);
-            $("#impuesto").val(Producto.idImpuesto);
+            if (Cliente != undefined) {
+                if (Cliente.MAG == true && Producto.MAG == true) {
+
+                    var IMP = Impuestos.find(a => a.Tarifa == 1);
+
+                    if (IMP != undefined) {
+                        $("#impuesto").val(IMP.id);
+                    } else {
+                        $("#impuesto").val(Producto.idImpuesto);
+                    }
+
+                } else {
+                    $("#impuesto").val(Producto.idImpuesto);
+                }
+            } else {
+                $("#impuesto").val(Producto.idImpuesto);
+            }
             $("#MonedaProducto").val(Producto.Moneda);
 
             ExoneracionxCliente();

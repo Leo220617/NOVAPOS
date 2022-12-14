@@ -254,8 +254,11 @@ function ValidarTotales() {
         var totalG = 0;
 
         for (var i = 0; i < ProdCadena.length; i++) {
+            var idCliente = $("#ClienteSeleccionado").val();
+            var Cliente = Clientes.find(a => a.id == idCliente);
+            var IMP2 = Impuestos.find(a => a.Tarifa == 1);
             var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
-            var ImpuestoTarifa = PE.idImpuesto;
+            var ImpuestoTarifa = (Cliente.MAG == true && PE.MAG == true ? IMP2.id : PE.idImpuesto); 
             var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
 
             var calculoIMP = IMP.Tarifa;

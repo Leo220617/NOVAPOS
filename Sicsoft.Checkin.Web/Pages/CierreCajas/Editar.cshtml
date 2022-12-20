@@ -261,7 +261,7 @@
                     <div class="box-body">
                         <!-- title row -->
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-md-6">
                                 <div class="page-header mt-0">
                                     <h2 class="d-inline"><span class="font-size-24">Cierre Caja</span></h2>
                                     <div class="text-left">
@@ -273,7 +273,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-3">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Usuario</label>
                                     <input asp-for="Users.Nombre" class="form-control" readonly>
@@ -281,7 +281,7 @@
 
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Caja</label>
                                     <input asp-for="Caja" class="form-control" readonly>
@@ -311,7 +311,7 @@
                             <input hidden asp-for="Cierres.idUsuario" />
                             <!-- title row -->
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-md-6">
 
                                     <div class="form-group">
                                         <label>Apertura Colones</label>
@@ -320,7 +320,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Apertura Dólares</label>
                                         <input type="number" asp-for="Cierres.TotalAperturaFC" readonly class="form-control">
@@ -334,7 +334,7 @@
 
                             <!-- title row -->
                             <div class="row">
-                                <div class="col-3">
+                                <div class="col-md-3">
 
                                     <div class="form-group">
                                         <label>Efectivo Colones</label>
@@ -344,7 +344,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-3">
+                                <div class="col-md-3">
 
                                     <div class="form-group">
                                         <label>Tarjetas Colones</label>
@@ -353,7 +353,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label>Efectivo Dólares</label>
                                         <input id="EfectivoDolaresC" asp-for="Cierres.EfectivoFCC" number onchange="javascript: onChangeTotales();" class="form-control">
@@ -362,7 +362,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-3">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label>Tarjetas Dólares</label>
                                         <input id="TarjetaDolaresC" asp-for="Cierres.TarjetasFCC" number onchange="javascript: onChangeTotales();" class="form-control">
@@ -376,7 +376,7 @@
 
                             <!-- title row -->
                             <div class="row">
-                                <div class="col-3">
+                                <div class="col-md-3">
 
                                     <div class="form-group">
                                         <label>Cheques Colones</label>
@@ -386,7 +386,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-3">
+                                <div class="col-md-3">
 
                                     <div class="form-group">
                                         <label>Otros Colones</label>
@@ -396,7 +396,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-3">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label>Cheques Dólares</label>
                                         <input id="ChequesDolaresC" asp-for="Cierres.ChequesFCC" number onchange="javascript: onChangeTotales();" class="form-control">
@@ -404,7 +404,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label>Otros Dólares</label>
                                         <input id="OtrosMediosFCC" asp-for="Cierres.OtrosMediosFCC" number onchange="javascript: onChangeTotales();" class="form-control">
@@ -415,7 +415,7 @@
                                 <!-- /.col -->
                             </div>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-md-6">
 
                                     <div class="form-group">
                                         <label>Transferencias Colones</label>
@@ -424,7 +424,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Transferencias Dólares</label>
                                         <input id="TransferenciasDolaresC" asp-for="Cierres.TransferenciasDolaresC" number onchange="javascript: onChangeTotales();" class="form-control">
@@ -462,7 +462,7 @@
 
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-md-4">
 
                                     <div class="form-group">
                                         <label>Total Registrado Colones</label>
@@ -471,7 +471,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Totalizado</label>
                                         <input asp-for="Cierres.TotalizadoMonedas" readonly id="TotalizadoMonedas" class="form-control">
@@ -479,7 +479,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Total Registrado Dólares</label>
                                         <input type="number" asp-for="Cierres.TotalRegistradoFC" readonly id="Dolares" class="form-control" onchange="javascript: Totalizado()">

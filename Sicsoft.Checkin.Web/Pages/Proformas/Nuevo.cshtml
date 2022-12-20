@@ -84,7 +84,7 @@
                     <div class="box-body">
                         <!-- title row -->
                         <div class="row">
-                            <div class="col-3">
+                            <div class="col-md-3">
                                 <div class="page-header mt-0">
                                     <h2 class="d-inline"><span class="font-size-24">Proforma</span></h2>
                                     <div class="text-left">
@@ -96,7 +96,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-3">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Fecha Vencimiento</label>
                                     <input type="date" class="form-control" id="fechaVencimiento" value="@DateTime.Now.Date.AddDays(3).ToString("yyyy-MM-dd")">
@@ -105,7 +105,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-3">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Tipo de Documento</label>
                                     <select class="form-control" id="selectTD">
@@ -120,7 +120,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-3">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Moneda</label>
                                     <select class="form-control" id="selectMoneda" onchange="javascript: onChangeMoneda()">
@@ -187,14 +187,14 @@
                         <div class="row">
 
 
-                            <div class="col-12  ">
+                            <div class="col-md-12  ">
                                 <div class="x_panel">
                                     <div class="x_content">
 
 
 
                                         <div class="row">
-                                            <div class="col-6">
+                                            <div class="col-md-6">
                                                 <h3>Productos</h3>
                                             </div>
                                         </div>
@@ -206,7 +206,7 @@
 
 
                                         <div class="row">
-                                            <div class="col-12">
+                                            <div class="col-md-12">
                                                 <select id="ProductoSeleccionado" class="form-control select2" onchange="javascript: onChangeProducto()">
                                                     <option value="0"> Seleccione Productos</option>
 
@@ -219,7 +219,7 @@
                                         <br />
                                         <div class="row">
 
-                                            <div class="col-3">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label>Cantidad</label>
                                                     <input type="number" class="form-control" id="cantidad" placeholder="Cantidad" value="1">
@@ -230,7 +230,7 @@
 
                                             </div>
 
-                                            <div class="col-3">
+                                            <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label>Impuesto</label>
                                                     <br />
@@ -247,7 +247,7 @@
 
 
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>% Descuento</label>
                                                 <input type="number" class="form-control" id="descuento" placeholder="Descuento" value="0">
@@ -257,7 +257,7 @@
 
 
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Moneda</label>
                                                 <input type="text" class="form-control" id="MonedaProducto" readonly placeholder="Moneda">
@@ -436,7 +436,7 @@
             <div class="modal-body">
 
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="cyber">Tipo de Cédula:</label>
                             <select id="selectTP" class="form-control" onchange="javascript: maskCedula();" required>
@@ -449,7 +449,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <h5>Cédula<span class="text-danger">*</span></h5>
                             <div class="controls">
@@ -458,7 +458,7 @@
 
                         </div>
                     </div>
-                    <div class="col-xl-4">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <h5>Nombre<span class="text-danger">*</span></h5>
                             <div class="controls">
@@ -476,7 +476,7 @@
 
 
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <h5>Correo Factura<span class="text-danger">*</span></h5>
                             <div class="controls">
@@ -487,7 +487,7 @@
 
 
                     </div>
-                    <div class="col-4">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <h5>Correo Publicitario<span class="text-danger">*</span></h5>
                             <div class="controls">
@@ -499,7 +499,7 @@
 
                     </div>
 
-                    <div class="col-4">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <h5>Teléfono<span class="text-danger">*</span></h5>
                             <div class="controls">
@@ -513,7 +513,7 @@
 
                 </div>
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="nom">Provincia:</label>
                             <select id="selectP" class="form-control" onchange="javascript: ModificaSelects(1)" required>
@@ -535,7 +535,7 @@
 
 
                     </div>
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="nom">Cantón:</label>
                             <select id="selectC" class="form-control" onchange="javascript: ModificaSelects(2)" required>
@@ -552,7 +552,7 @@
 
 
                     </div>
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="nom">Distrito:</label>
                             <select id="selectD" class="form-control" onchange="javascript: ModificaSelects(3)" required>
@@ -568,7 +568,7 @@
                         </div>
 
                     </div>
-                    <div class="col-3">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="nom">Barrio:</label>
                             <select id="selectB" class="form-control" required>
@@ -585,7 +585,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <h5>Dirección<span class="text-danger">*</span></h5>
                             <div class="controls">
@@ -596,7 +596,7 @@
 
 
                     </div>
-                    <div class="col-4">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <h5>Lista de Precio<span class="text-danger">*</span></h5>
 
@@ -626,7 +626,7 @@
 
 
                     </div>
-                    <div class="col-4">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <h5>Grupo<span class="text-danger">*</span></h5>
 

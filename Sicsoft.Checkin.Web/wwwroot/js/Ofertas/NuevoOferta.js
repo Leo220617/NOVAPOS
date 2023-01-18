@@ -856,8 +856,7 @@ function RellenaTabla() {
 
             html += "<td > " + ProdCadena[i].Descripcion + " </td>";
             html += "<td class='text-center'> <input onchange='javascript: onChangeCantidadProducto(" + i + ")' type='number' id='" + i + "_Prod' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + "' min='1'/>  </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
-
+            html += "<td class='text-center'> <input onchange='javascript: onChangePrecioProducto(" + i + ")' type='number' id='" + i + "_Prod3' class='form-control'   value= '" + parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2) + "' min='1'/> </td>";
             html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
@@ -957,6 +956,18 @@ function AgregarProductoTabla() {
 
         }
 
+        if (PE.PrecioUnitario > Producto.PrecioUnitario) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Precio invalido, el precio tiene que ser mayor o igual a ' + ' ' + PE.PrecioUnitario
+
+            })
+
+
+
+        }
+
         if (Producto.Cantidad <= 0) {
             Swal.fire({
                 icon: 'error',
@@ -984,7 +995,7 @@ function AgregarProductoTabla() {
 
             })
 
-        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0)) {
+        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) && PE.PrecioUnitario <= Producto.PrecioUnitario ) {
 
             if (Producto.Cabys.length >= 13) {
 
@@ -1284,6 +1295,43 @@ function onChangeDescuentoProducto(i) {
             ProdCadena[i].PorDescto = 0;
             ValidarTotales();
         }
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
+
+        })
+    }
+}
+
+function onChangePrecioProducto(i) {
+    try {
+
+        var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+        ;
+        ProdCadena[i].PrecioUnitario = parseFloat($("#" + i + "_Prod3").val()).toFixed(2);
+
+        if (ProdCadena[i].PrecioUnitario >= PE.PrecioUnitario) {
+            ValidarTotales();
+        }
+        else if (PE.PrecioUnitario > ProdCadena[i].PrecioUnitario ) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Precio invalido, el precio tiene que ser mayor o igual a ' + ' ' + PE.PrecioUnitario
+
+            })
+            ProdCadena[i].PrecioUnitario = PE.PrecioUnitario;
+            ValidarTotales();
+
+        }
+    
+
+
+
+
 
     } catch (e) {
         Swal.fire({

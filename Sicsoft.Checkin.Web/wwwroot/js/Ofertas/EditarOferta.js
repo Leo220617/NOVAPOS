@@ -833,7 +833,7 @@ function RellenaTabla() {
 
             html += "<td > " + ProdCadena[i].Descripcion + " </td>";
             html += "<td class='text-center'> <input onchange='javascript: onChangeCantidadProducto(" + i + ")' type='number' id='" + i + "_Prod' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + "' min='1'/>  </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
+            html += "<td class='text-center'> <input onchange='javascript: onChangePrecioProducto(" + i + ")' type='number' id='" + i + "_Prod3' class='form-control'   value= '" + parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2) + "' min='1'/> </td>";
             html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
@@ -905,7 +905,10 @@ function AgregarProductoTabla() {
         var totalG = parseFloat(ReplaceLetra($("#totG").text()));
 
         var id = $("#ProductoSeleccionado").val();
+        var id = $("#ProductoSeleccionado").val();
         var PE = ProdClientes.find(a => a.id == id);
+
+
 
         var Producto =
         {
@@ -924,7 +927,10 @@ function AgregarProductoTabla() {
             idExoneracion: $("#exoneracion").val(),
             PorExoneracion: 0
         };
-        var Descuento = $("#DES").val();
+
+        var Descuento = parseFloat($("#DES").val());
+
+
         if ((PE.Stock - Producto.Cantidad) < 0) {
             Swal.fire({
                 icon: 'error',
@@ -932,15 +938,24 @@ function AgregarProductoTabla() {
                 text: 'Producto sin stock valido'
 
             })
-        } if (Producto.PorDescto > Descuento) {
+
+
+
+        }
+
+        if (PE.PrecioUnitario > Producto.PrecioUnitario) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Usted no puede aplicar este descuento, el descuento máximo asignado a su usuario es de' + ' ' + parseFloat(Descuento).toFixed(2) + '%'
+                text: 'Precio invalido, el precio tiene que ser mayor o igual a ' + ' ' + PE.PrecioUnitario
 
             })
 
-        } if (Producto.Cantidad <= 0) {
+
+
+        }
+
+        if (Producto.Cantidad <= 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -959,15 +974,7 @@ function AgregarProductoTabla() {
 
         }
 
-        if (Producto.PorDescto < 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Descuento Invalido'
-
-            })
-
-        } if (Producto.PorDescto > Descuento) {
+        if (Producto.PorDescto > Descuento) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -975,7 +982,8 @@ function AgregarProductoTabla() {
 
             })
 
-        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) > 0)) {
+        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) && PE.PrecioUnitario <= Producto.PrecioUnitario) {
+
             if (Producto.Cabys.length >= 13) {
 
 
@@ -1013,7 +1021,6 @@ function AgregarProductoTabla() {
 
                 RellenaTabla();
                 onChangeMoneda();
-
 
                 $("#ProductoSeleccionado").val("0").trigger('change.select2');
             } else {
@@ -1272,6 +1279,42 @@ function onChangeDescuentoProducto(i) {
     }
 }
 
+function onChangePrecioProducto(i) {
+    try {
+
+        var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+        ;
+        ProdCadena[i].PrecioUnitario = parseFloat($("#" + i + "_Prod3").val()).toFixed(2);
+
+        if (ProdCadena[i].PrecioUnitario >= PE.PrecioUnitario) {
+            ValidarTotales();
+        }
+        else if (PE.PrecioUnitario > ProdCadena[i].PrecioUnitario) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Precio invalido, el precio tiene que ser mayor o igual a ' + ' ' + PE.PrecioUnitario
+
+            })
+            ProdCadena[i].PrecioUnitario = PE.PrecioUnitario;
+            ValidarTotales();
+
+        }
+
+
+
+
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
+
+        })
+    }
+}
 
 function onChangeCantidadProducto(i) {
     try {

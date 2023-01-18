@@ -76,7 +76,7 @@
             }
         }
 
-         function ImprimirDescuento() {
+        function ImprimirDescuento() {
             try {
                 // window.print();
                 var margins = {
@@ -108,7 +108,39 @@
                 })
             }
         }
-     
+
+        function ImprimirTotales() {
+            try {
+                // window.print();
+                var margins = {
+                    top: 10,
+                    bottom: 10,
+                    left: 10,
+                    width: 595
+                };
+
+
+                html2 = $(".html3").html();
+                html2pdf(html2, {
+                    margin: 1,
+                    padding: 0,
+                    filename: 'Proforma.pdf',
+                    image: { type: 'jpeg', quality: 1 },
+                    html2canvas: { scale: 2, logging: true },
+                    jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
+                    class: ImprimirDescuento
+                });
+
+            } catch (e) {
+                console.log(e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+                })
+            }
+        }
 
 
     </script>
@@ -120,7 +152,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-           Proformas
+            Proformas
         </h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
@@ -169,13 +201,13 @@
 
                                             </div>
 
-                                              <div class="col-md-4">
-                                            <h5> <b>Vendedor: </b> @(Model.Vendedor.Nombre)</h5>
+                                            <div class="col-md-4">
+                                                <h5> <b>Vendedor: </b> @(Model.Vendedor.Nombre)</h5>
 
-                                        </div>
-                                        <br />
-                                        <br />
-                                        <br />
+                                            </div>
+                                            <br />
+                                            <br />
+                                            <br />
                                             <div class="col-md-3">
                                                 <h5>
                                                     <b>Estado:</b>@if (Model.Oferta.Status == "0")
@@ -190,9 +222,9 @@
                                             </h5>
 
                                         </div>
-                                       
 
-                                         <div class="col-md-3">
+
+                                        <div class="col-md-3">
                                             <h5>
                                                 <b>Tipo de Documento:</b>  @switch (Model.Oferta.TipoDocumento)
                                                 {
@@ -226,7 +258,7 @@
 
                                         </div>
 
-                                       
+
 
 
 
@@ -242,7 +274,7 @@
                         <!-- /.col -->
                     </div>
 
-                    
+
                     <!-- info row -->
                     <div class="row invoice-info">
                         <div class="col-md-8 invoice-col">
@@ -349,7 +381,13 @@
     &nbsp
     &nbsp
 
-     <button id="print2" class="btn btn-info" type="button" onclick="javascript: ImprimirDescuento()"> <span><i class="fa fa-print"></i> Imprimir  <del>Descuento</del></span> </button>
+    <button id="print2" class="btn btn-info" type="button" onclick="javascript: ImprimirDescuento()"> <span><i class="fa fa-print"></i> Imprimir  <del>Descuento</del></span> </button>
+
+    &nbsp
+    &nbsp
+
+
+    <button id="print3" class="btn btn-info" type="button" onclick="javascript: ImprimirTotales()"> <span><i class="fa fa-print"></i> Imprimir  <del>Precios</del></span> </button>
 </section>
 
 
@@ -377,29 +415,29 @@
                             <div class="page-header mt-0">
                                 <h2 class="d-inline"><span class="font-size-24">Proforma No: @Model.Oferta.id</span></h2>
                                 <br />
-                               <div class="text-left">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
+                                <div class="text-left">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
 
-                                            </div>
+                                        </div>
 
-                                            <div class="col-4">
-                                                <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
+                                        <div class="col-4">
+                                            <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
 
-                                            </div>
+                                        </div>
 
-                                              <div class="col-4">
+                                        <div class="col-4">
                                             <h5> <b>Vendedor: </b> @(Model.Vendedor.Nombre)</h5>
 
                                         </div>
                                         <br />
                                         <br />
                                         <br />
-                                        
-                                       
 
-                                         <div class="col-3">
+
+
+                                        <div class="col-3">
                                             <h5>
                                                 <b>Tipo de Documento:</b>  @switch (Model.Oferta.TipoDocumento)
                                                 {
@@ -433,7 +471,7 @@
 
                                         </div>
 
-                                       
+
 
 
 
@@ -513,7 +551,7 @@
 
 
                             <div>
-                                
+
                                 <p>Sub Total  :  <span id="Subtotal"> @Math.Round(Model.Oferta.Subtotal, 2).ToString("C",formato)</span> </p>
                                 <p>Descuento  :  <span id="Descuento"> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>
                                 <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C",formato)</span></p>
@@ -575,29 +613,29 @@
                             <div class="page-header mt-0">
                                 <h2 class="d-inline"><span class="font-size-24">Proforma No: @Model.Oferta.id</span></h2>
                                 <br />
-                               <div class="text-left">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
+                                <div class="text-left">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
 
-                                            </div>
+                                        </div>
 
-                                            <div class="col-4">
-                                                <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
+                                        <div class="col-4">
+                                            <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
 
-                                            </div>
+                                        </div>
 
-                                              <div class="col-4">
+                                        <div class="col-4">
                                             <h5> <b>Vendedor: </b> @(Model.Vendedor.Nombre)</h5>
 
                                         </div>
                                         <br />
                                         <br />
                                         <br />
-                                        
-                                       
 
-                                         <div class="col-3">
+
+
+                                        <div class="col-3">
                                             <h5>
                                                 <b>Tipo de Documento:</b>  @switch (Model.Oferta.TipoDocumento)
                                                 {
@@ -631,7 +669,7 @@
 
                                         </div>
 
-                                       
+
 
 
 
@@ -669,7 +707,7 @@
                                         <th class="text-center">Producto</th>
                                         <th class="text-center">Cantidad</th>
                                         <th class="text-center">Precio Unitario</th>
-                                     
+
                                         <th class="text-center">Impuesto</th>
                                         <th class="text-center">% Exoneración</th>
 
@@ -691,7 +729,7 @@
 
 
                                             <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
-                                          
+
                                             <td class="text-center">@Math.Round(@item.TotalImpuesto, 2).ToString("C", formato)</td>
                                             <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
 
@@ -710,8 +748,197 @@
 
                             <div>
                                 <p>Sub Total  :  <span> @Math.Round((Model.Oferta.Subtotal - Model.Oferta.TotalDescuento) , 2).ToString("C",formato)</span> </p>
-                             
-                             
+
+
+                                <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C",formato)</span></p>
+
+                            </div>
+                            <div class="total-payment">
+                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra, 2).ToString("C",formato)</span></h3>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- /.row -->
+                    <!-- /.row -->
+
+                </div>
+            </div>
+
+
+            <!-- Default box -->
+            <div class="col-6 box">
+                <div class="col-6 box-header with-border">
+                    <h4 class="box-title">Comentarios</h4>
+                </div>
+                <div class="box-body">
+                    <span>@Model.Oferta.Comentarios</span>
+
+                    <!-- /.box-body -->
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="html3" hidden>
+    <div class="row">
+        <div class="col-12">
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-8">
+                            <h6 class="box-subtitle">Proforma</h6>
+
+
+                        </div>
+                        <div class="col-4">
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <!-- title row -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-header mt-0">
+                                <h2 class="d-inline"><span class="font-size-24">Proforma No: @Model.Oferta.id</span></h2>
+                                <br />
+                                <div class="text-left">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
+
+                                        </div>
+
+                                        <div class="col-4">
+                                            <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
+
+                                        </div>
+
+                                        <div class="col-4">
+                                            <h5> <b>Vendedor: </b> @(Model.Vendedor.Nombre)</h5>
+
+                                        </div>
+                                        <br />
+                                        <br />
+                                        <br />
+
+
+
+                                        <div class="col-3">
+                                            <h5>
+                                                <b>Tipo de Documento:</b>  @switch (Model.Oferta.TipoDocumento)
+                                                {
+                                                    case "01":
+                                                        {
+                                                            <p>Factura Electrónica</p>
+                                                            break;
+                                                        }
+                                                    case "03":
+                                                        {
+                                                            <p>Nota de Crédito</p>
+                                                            break;
+                                                        }
+                                                    case "04":
+                                                        {
+                                                            <p>Tiquete Electrónico</p>
+                                                            break;
+                                                        }
+                                                }
+                                            </h5>
+
+                                        </div>
+
+                                        <div class="col-3">
+                                            <h5> <b>Moneda</b> @Model.Oferta.Moneda</h5>
+
+                                        </div>
+
+                                        <div class="col-3">
+                                            <h5> <b>Cond.Pago: </b> @(Model.CondicionesPago.Nombre)</h5>
+
+                                        </div>
+
+
+
+
+
+                                    </div>
+
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- info row -->
+                    <div class="row invoice-info">
+                        <div class="col-md-8 invoice-col">
+                            <strong>Cliente</strong>
+                            <address>
+                                <strong class="text-blue font-size-24">   @( Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" : Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault().Codigo + " - " + Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault().Nombre)</strong>
+
+
+                            </address>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <!-- Table row -->
+                    <div class="row">
+                        <div class="col-12 table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="bg-pale-info">
+                                        <th class="text-center">#</th>
+                                        <th class="text-center">Producto</th>
+                                        <th class="text-center">Cantidad</th>
+                                   
+                                
+
+                                      
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model.Oferta.Detalle)
+                                    {
+                                        <tr>
+                                            <td>@item.NumLinea</td>
+
+
+                                            <td>  @( Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - "+ Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Nombre)   </td>
+
+                                            <td class="text-right">@(Math.Round(item.Cantidad))</td>
+
+
+                                      
+
+                                        </tr>
+                                    }
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-12  text-right">
+
+
+                            <div>
+                                <p>Sub Total  :  <span> @Math.Round((Model.Oferta.Subtotal - Model.Oferta.TotalDescuento) , 2).ToString("C",formato)</span> </p>
+
+
                                 <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C",formato)</span></p>
 
                             </div>

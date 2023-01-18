@@ -200,7 +200,7 @@ function RellenaVendedores() {
 
             } else {
                 html += "<option value='" + Vendedores[i].id + "' > " + Vendedores[i].CodSAP + " - " + Vendedores[i].Nombre + " </option>";
-
+              
             }
 
         }
@@ -250,7 +250,7 @@ function RellenaProductos() {
         html += "<option value='0' > Seleccione Producto </option>";
 
         for (var i = 0; i < ProdClientes.length; i++) {
-            var Bodegas = Bodega.find(a => a.id == ProdClientes[i].idBodega) == undefined ? undefined : Bodega.find(a => a.id == ProdClientes[i].idBodega);
+            var Bodegas = Bodega.find(a => a.CodSAP == ProdClientes[i].idBodega) == undefined ? undefined : Bodega.find(a => a.CodSAP == ProdClientes[i].idBodega);
             html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " </option>";
         }
 
@@ -829,7 +829,7 @@ function RellenaTabla() {
 
             html += "<td > " + ProdCadena[i].Descripcion + " </td>";
             html += "<td class='text-center'> <input onchange='javascript: onChangeCantidadProducto(" + i + ")' type='number' id='" + i + "_Prod' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + "' min='1'/>  </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
+            html += "<td class='text-center'> <input onchange='javascript: onChangePrecioProducto(" + i + ")' type='number' id='" + i + "_Prod3' class='form-control'   value= '" + parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2) + "' min='1'/> </td>";
 
             html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
@@ -919,7 +919,17 @@ function AgregarProductoTabla() {
 
 
     
+        if (PE.PrecioUnitario > Producto.PrecioUnitario) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Precio invalido, el precio tiene que ser mayor o igual a ' + ' ' + PE.PrecioUnitario
 
+            })
+
+
+
+        }
         if (Producto.Cantidad <= 0) {
             Swal.fire({
                 icon: 'error',
@@ -947,7 +957,7 @@ function AgregarProductoTabla() {
 
             })
 
-        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento ) {
+        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && PE.PrecioUnitario <= Producto.PrecioUnitario) {
 
             if (Producto.Cabys.length >= 13) {
 
@@ -1258,6 +1268,42 @@ function onChangeDescuentoProducto(i) {
     }
 }
 
+function onChangePrecioProducto(i) {
+    try {
+
+        var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+        ;
+        ProdCadena[i].PrecioUnitario = parseFloat($("#" + i + "_Prod3").val()).toFixed(2);
+
+        if (ProdCadena[i].PrecioUnitario >= PE.PrecioUnitario) {
+            ValidarTotales();
+        }
+        else if (PE.PrecioUnitario > ProdCadena[i].PrecioUnitario) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Precio invalido, el precio tiene que ser mayor o igual a ' + ' ' + PE.PrecioUnitario
+
+            })
+            ProdCadena[i].PrecioUnitario = PE.PrecioUnitario;
+            ValidarTotales();
+
+        }
+
+
+
+
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
+
+        })
+    }
+}
 function onChangeCantidadProducto(i) {
     try {
 

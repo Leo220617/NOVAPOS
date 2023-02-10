@@ -122,12 +122,15 @@ function ValidarStocks() {
         for (var i = 0; i < Oferta.Detalle.length; i++) {
             var PE = Productos.find(a => a.id == Oferta.Detalle[i].idProducto);
             if ((PE.Stock - ProdCadena[i].Cantidad) < 0) {
-                Swal.fire({
+                $.toast({
+                    heading: 'Precaución',
+                    text: 'El producto' + ' ' + ProdCadena[i].Descripcion + ' ' + 'NO tiene' + ' ' + ProdCadena[i].Cantidad + '' + ' unidades en stock, el stock real es de' + ' ' + PE.Stock,
+                    position: 'top-right',
+                    loaderBg: '#ff6849',
                     icon: 'warning',
-                    title: 'Oops...',
-                    text: 'El producto' + ' ' + ProdCadena[i].Descripcion + ' ' + 'NO tiene' + ' ' + ProdCadena[i].Cantidad + '' + ' unidades en stock, el stock real es de' + ' ' + PE.Stock
-
-                })
+                    hideAfter: 10000,
+                    stack: 6
+                });
                 ProdCadena[i].Cantidad = PE.Stock;
 
             }
@@ -827,6 +830,8 @@ function RellenaTabla() {
 
 
         for (var i = 0; i < ProdCadena.length; i++) {
+            var PE = Productos.find(a => a.id == ProdCadena[i].idProducto);
+            if (PE.Stock - ProdCadena[i].Cantidad > 0 || PE.Stock > 0) {
             html += "<tr>";
 
             html += "<td> " + (i + 1) + " </td>";
@@ -842,7 +847,12 @@ function RellenaTabla() {
             html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
             html += "</tr>";
+            } else {
 
+                EliminarProducto(i);
+
+
+            }
 
         }
 

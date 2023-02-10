@@ -102,14 +102,17 @@ function RecuperarInformacion() {
                 Cabys: Documento.Detalle[i].Cabys,
                 idExoneracion: Documento.Detalle[i].Cabys,
                 PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon
-               
+
             };
 
             ProdCadena.push(Producto);
 
+
         }
 
-        RellenaTabla();
+        if (PE.Stock - ProdCadena.Cantidad > 0) {
+            RellenaTabla();
+        }
         onChangeCliente();
         ValidarStocks();
 
@@ -130,12 +133,15 @@ function ValidarStocks() {
         for (var i = 0; i < Documento.Detalle.length; i++) {
             var PE = Productos.find(a => a.id == Documento.Detalle[i].idProducto);
             if ((PE.Stock - ProdCadena[i].Cantidad) < 0) {
-                Swal.fire({
+                $.toast({
+                    heading: 'Precaución',
+                    text: 'El producto' + ' ' + ProdCadena[i].Descripcion + ' ' + 'NO tiene' + ' ' + ProdCadena[i].Cantidad + '' + ' unidades en stock, el stock real es de' + ' ' + PE.Stock,
+                    position: 'top-right',
+                    loaderBg: '#ff6849',
                     icon: 'warning',
-                    title: 'Oops...',
-                    text: 'El producto' + ' ' + ProdCadena[i].Descripcion + ' ' + 'NO tiene' + ' ' + ProdCadena[i].Cantidad + '' + ' unidades en stock, el stock real es de' + ' ' + PE.Stock
-
-                })
+                    hideAfter: 10000,
+                    stack: 6
+                });
                 ProdCadena[i].Cantidad = PE.Stock;
 
             }
@@ -281,7 +287,7 @@ function RellenaProductos() {
         for (var i = 0; i < ProdClientes.length; i++) {
             var Bodegas = Bodega.find(a => a.id == ProdClientes[i].idBodega) == undefined ? undefined : Bodega.find(a => a.id == ProdClientes[i].idBodega);
 
-            html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " +   Bodegas.CodSAP + " </option>";
+            html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " </option>";
         }
 
 
@@ -365,7 +371,7 @@ function onChangeCliente() {
             var Cond30 = [];
             RellenaCondiciones(Cond30);
         }
-       
+
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
 
@@ -749,6 +755,7 @@ function AgregarCliente() {
                                 Swal.fire({
                                     title: "Ha sido generado con éxito",
 
+
                                     icon: 'success',
                                     showCancelButton: false,
 
@@ -850,24 +857,36 @@ function RellenaTabla() {
 
 
         for (var i = 0; i < ProdCadena.length; i++) {
-            html += "<tr>";
+            var PE = Productos.find(a => a.id == ProdCadena[i].idProducto);
+            if (PE.Stock - ProdCadena[i].Cantidad > 0 || PE.Stock > 0) {
 
-            html += "<td> " + (i + 1) + " </td>";
 
-            html += "<td > " + ProdCadena[i].Descripcion + " </td>";
-            html += "<td class='text-center'> <input onchange='javascript: onChangeCantidadProducto(" + i + ")' type='number' id='" + i + "_Prod' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + "' min='1'/>  </td>";
-            html += "<td class='text-center'> <input onchange='javascript: onChangePrecioProducto(" + i + ")' type='number' id='" + i + "_Prod3' class='form-control'   value= '" + parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2) + "' min='1'/> </td>";
-            html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
-            html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
-            html += "</tr>";
+                html += "<tr>";
 
+                html += "<td> " + (i + 1) + " </td>";
+
+                html += "<td > " + ProdCadena[i].Descripcion + " </td>";
+                html += "<td class='text-center'> <input onchange='javascript: onChangeCantidadProducto(" + i + ")' type='number' id='" + i + "_Prod' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + "' min='1'/>  </td>";
+                html += "<td class='text-center'> <input onchange='javascript: onChangePrecioProducto(" + i + ")' type='number' id='" + i + "_Prod3' class='form-control'   value= '" + parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2) + "' min='1'/> </td>";
+                html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
+                html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
+
+                html += "</tr>";
+
+            } else {
+            
+                EliminarProducto(i);
+
+
+            }
 
         }
+
 
 
 
@@ -975,7 +994,7 @@ function AgregarProductoTabla() {
                 text: 'Cantidad Invalida'
 
             })
-          
+
         }
         if (Producto.PorDescto < 0) {
             Swal.fire({
@@ -995,7 +1014,7 @@ function AgregarProductoTabla() {
 
             })
 
-        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) && PE.PrecioUnitario <= Producto.PrecioUnitario ) {
+        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) && PE.PrecioUnitario <= Producto.PrecioUnitario) {
 
             if (Producto.Cabys.length >= 13) {
 
@@ -1316,7 +1335,7 @@ function onChangePrecioProducto(i) {
         if (ProdCadena[i].PrecioUnitario >= PE.PrecioUnitario) {
             ValidarTotales();
         }
-        else if (PE.PrecioUnitario > ProdCadena[i].PrecioUnitario ) {
+        else if (PE.PrecioUnitario > ProdCadena[i].PrecioUnitario) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1327,7 +1346,7 @@ function onChangePrecioProducto(i) {
             ValidarTotales();
 
         }
-    
+
 
 
 
@@ -1404,7 +1423,7 @@ function ValidarTotales() {
             var IMP2 = Impuestos.find(a => a.Tarifa == 1);
 
             var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
-            var ImpuestoTarifa = (Cliente.MAG == true && PE.MAG == true ? IMP2.id : PE.idImpuesto); 
+            var ImpuestoTarifa = (Cliente.MAG == true && PE.MAG == true ? IMP2.id : PE.idImpuesto);
             var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
 
             var calculoIMP = IMP.Tarifa;

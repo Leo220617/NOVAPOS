@@ -166,12 +166,15 @@ function ValidarStocks() {
         for (var i = 0; i < Documento.Detalle.length; i++) {
             var PE = Productos.find(a => a.id == Documento.Detalle[i].idProducto);
             if ((PE.Stock - ProdCadena[i].Cantidad) < 0) {
-                Swal.fire({
+                $.toast({
+                    heading: 'Precaución',
+                    text: 'El producto' + ' ' + ProdCadena[i].Descripcion + ' ' + 'NO tiene' + ' ' + ProdCadena[i].Cantidad + '' + ' unidades en stock, el stock real es de' + ' ' + PE.Stock,
+                    position: 'top-right',
+                    loaderBg: '#ff6849',
                     icon: 'warning',
-                    title: 'Oops...',
-                    text: 'El producto' + ' ' + ProdCadena[i].Descripcion + ' ' + 'NO tiene' + ' ' + ProdCadena[i].Cantidad + '' + ' unidades en stock, el stock real es de' + ' ' + PE.Stock
-
-                })
+                    hideAfter: 10000,
+                    stack: 6
+                });
                 ProdCadena[i].Cantidad = PE.Stock;
 
             }
@@ -936,6 +939,8 @@ function RellenaTabla() {
 
 
         for (var i = 0; i < ProdCadena.length; i++) {
+            var PE = Productos.find(a => a.id == ProdCadena[i].idProducto);
+            if (PE.Stock - ProdCadena[i].Cantidad > 0 || PE.Stock > 0) {
             html += "<tr>";
 
             html += "<td> " + (i + 1) + " </td>";
@@ -950,7 +955,12 @@ function RellenaTabla() {
             html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
             html += "</tr>";
+        } else {
 
+            EliminarProducto(i);
+
+
+        }
 
         }
 
@@ -1010,7 +1020,9 @@ function AgregarProductoTabla() {
             TotalLinea: 0,
             Cabys: $("#inputCabys").val(),
             idExoneracion: $("#exoneracion").val(),
-            PorExoneracion: 0
+            PorExoneracion: 0,
+            Codigo: PE.Codigo
+
         };
         var Descuento = parseFloat($("#DES").val());
 
@@ -1913,7 +1925,7 @@ function ImprimirTiquete(Documento) {
         texto = texto.replace("CO-Pital", "");
         texto = texto.replace("@NumComprobante", Documento.consecutivoHacienda);
         texto = texto.replace("@NumFactura", Documento.id);
-
+        texto = texto.replace("@Comentario", Documento.comentarios);
         
 
         if (Documento.tipoDocumento == "04") {
@@ -1933,12 +1945,16 @@ function ImprimirTiquete(Documento) {
 
             var Prod = Productos.find(a => a.id == Documento.detalle[i].idProducto)
 
-            tabla += "<tr>";
-            tabla += "<td>" + Documento.detalle[i].cantidad + " </td>";
-            tabla += "<td style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;'>" + Prod.Nombre + " </td>";
-            tabla += "<td>" + formatoDecimal(Documento.detalle[i].precioUnitario) + " </td>";
-            tabla += "<td>" + formatoDecimal(Documento.detalle[i].totalLinea) + " </td>";
+            tabla += "<tr>" + "<td colspan='3'>  " + Prod.Codigo + "-" + Prod.Nombre + "  </td></tr>";
 
+
+            tabla += "<tr>";
+
+            tabla += "<td style='text-align left;'>" + Documento.detalle[i].cantidad + " </td>";
+
+            tabla += "<td style='text-align left;'>" + formatoDecimal(Documento.detalle[i].precioUnitario) + " </td>";
+            tabla += "<td style='text-align left;'>" + formatoDecimal(Documento.detalle[i].totalLinea) + " </td>";
+            
 
 
 

@@ -108,6 +108,7 @@ function ImprimirTiquete() {
         var Cli = Clientes.find(a => a.id == Documento.idCliente);
         texto = texto.replace("@NombreCliente", Cli.Nombre);
         texto = texto.replace("@Vendedor", Vendedor.Nombre);
+        texto = texto.replace("@Comentario", Documento.Comentarios);
 
 
         var tabla = "";
@@ -116,12 +117,16 @@ function ImprimirTiquete() {
 
             var Prod = Productos.find(a => a.id == Documento.Detalle[i].idProducto)
 
-            tabla += "<tr>";
-            tabla += "<td>" + Documento.Detalle[i].Cantidad + " </td>";
-            tabla += "<td style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;'>" + Prod.Nombre + " </td>";
-            tabla += "<td>" + formatoDecimal(Documento.Detalle[i].PrecioUnitario) + " </td>";
-            tabla += "<td>" + formatoDecimal(Documento.Detalle[i].TotalLinea) + " </td>";
+            tabla += "<tr>" + "<td colspan='3'>  " + Prod.Codigo + "-" + Prod.Nombre + "  </td></tr>";
 
+
+            tabla += "<tr>";
+           
+            tabla += "<td style='text-align left;'>" + Documento.Detalle[i].Cantidad + " </td>";
+            
+            tabla += "<td style='text-align left;'>" + formatoDecimal(Documento.Detalle[i].PrecioUnitario) + " </td>";
+            tabla += "<td style='text-align left;'>" + formatoDecimal(Documento.Detalle[i].TotalLinea) + " </td>";
+            //tabla += "<p style=' text-align left; color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;'>" + Prod.Codigo + "-" + Prod.Nombre + " </p>";
 
 
 

@@ -250,7 +250,8 @@ function RellenaProductos() {
         html += "<option value='0' > Seleccione Producto </option>";
 
         for (var i = 0; i < ProdClientes.length; i++) {
-            var Bodegas = Bodega.find(a => a.CodSAP == ProdClientes[i].idBodega) == undefined ? undefined : Bodega.find(a => a.CodSAP == ProdClientes[i].idBodega);
+            var Bodegas = Bodega.find(a => a.id == ProdClientes[i].idBodega) == undefined ? undefined : Bodega.find(a => a.id == ProdClientes[i].idBodega);
+
             html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " </option>";
         }
 
@@ -267,6 +268,7 @@ function RellenaProductos() {
     }
 
 }
+
 
 function RellenaExoneraciones() {
 

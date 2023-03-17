@@ -97,9 +97,11 @@ function RecuperarInformacion() {
                 Descuento: parseFloat(Oferta.Detalle[i].Descuento.toFixed(2)),
                 TotalLinea: parseFloat(Oferta.Detalle[i].TotalLinea.toFixed(2)),
                 Cabys: Oferta.Detalle[i].Cabys,
-                idExoneracion: Oferta.Detalle[i].Cabys,
-                PorExoneracion: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).PorExon 
-               
+                /*  idExoneracion: Oferta.Detalle[i].Cabys,*/
+                PorExoneracion: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).PorExon,
+                /*    idExo: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).id*/
+                idExoneracion: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).id
+
             };
             ProdCadena.push(Producto);
         }
@@ -319,7 +321,7 @@ function onChangeCliente() {
             var Cond30 = [];
             RellenaCondiciones(Cond30);
         }
- 
+
 
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
@@ -408,26 +410,36 @@ function onChangeProducto() {
         if (Producto != undefined) {
             $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
             $("#inputCabys").val(Producto.Cabys);
-            if (Cliente != undefined) {
-                if (Cliente.MAG == true && Producto.MAG == true) {
+            ExoneracionxCliente();
+            //EX => Exoneracion
+            var Exonera = parseInt($("#exoneracion").val());
+            var EX = Exoneraciones.find(a => a.id == Exonera);
+            if (EX == undefined || EX.PorExon < 13) {
+                if (Cliente != undefined) {
+                    if (Cliente.MAG == true && Producto.MAG == true) {
 
-                    var IMP = Impuestos.find(a => a.Tarifa == 1);
+                        var IMP = Impuestos.find(a => a.Tarifa == 1);
 
-                    if (IMP != undefined) {
-                        $("#impuesto").val(IMP.id);
+                        if (IMP != undefined) {
+                            $("#impuesto").val(IMP.id);
+                        } else {
+                            $("#impuesto").val(Producto.idImpuesto);
+                        }
+
                     } else {
                         $("#impuesto").val(Producto.idImpuesto);
                     }
-
                 } else {
                     $("#impuesto").val(Producto.idImpuesto);
                 }
             } else {
                 $("#impuesto").val(Producto.idImpuesto);
             }
-            $("#MonedaProducto").val(Producto.Moneda);
+            //Termina Exoneracion
 
-            ExoneracionxCliente();
+
+
+            $("#MonedaProducto").val(Producto.Moneda);
         } else {
             $("#cantidad").val(1);
 
@@ -436,7 +448,6 @@ function onChangeProducto() {
             $("#impuesto").val(0);
             $("#MonedaProducto").val("");
             $("#descuento").val(0);
-
         }
     } catch (e) {
         Swal.fire({
@@ -1180,7 +1191,7 @@ function validarOferta(e) {
 
                 })
                 return false;
-               
+
 
             }
 
@@ -1191,7 +1202,7 @@ function validarOferta(e) {
         } else {
             return true;
         }
-        
+
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -1318,8 +1329,13 @@ function ValidarTotales() {
         var totalG = 0;
 
         for (var i = 0; i < ProdCadena.length; i++) {
+            var idCliente = $("#ClienteSeleccionado").val();
+            var Cliente = Clientes.find(a => a.id == idCliente);
+            var IMP2 = Impuestos.find(a => a.Tarifa == 1);
+            var EX = Exoneraciones.find(a => a.id == ProdCadena[i].idExoneracion);
+
             var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
-            var ImpuestoTarifa = PE.idImpuesto;
+            var ImpuestoTarifa = (Cliente.MAG == true && PE.MAG == true && (EX == undefined || EX.PorExon < 13) ? IMP2.id : PE.idImpuesto);
             var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
 
             var calculoIMP = IMP.Tarifa;
@@ -1327,7 +1343,6 @@ function ValidarTotales() {
             ProdCadena[i].Descuento = (ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) * (ProdCadena[i].PorDescto / 100);
             ProdCadena[i].TotalImpuesto = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * (calculoIMP / 100);
             //EX => Exoneracion
-            var EX = Exoneraciones.find(a => a.id == ProdCadena[i].idExoneracion);
             if (EX != undefined) {
                 var ValorExonerado = (EX.PorExon / 100);
                 var TarifaExonerado = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * ValorExonerado;

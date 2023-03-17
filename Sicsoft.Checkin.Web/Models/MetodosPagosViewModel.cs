@@ -10,5 +10,6 @@
         public string NumReferencia { get; set; }
         public string NumCheque { get; set; }
         public string Metodo { get; set; }
+        public string Moneda { get; set; }
     }
 }

@@ -44,9 +44,9 @@ function HideP() {
 
         })
     }
-   
+
 }
-function ReadOnlyC(){
+function ReadOnlyC() {
     try {
         $("#boxC").attr("readonly", "readonly");
         $("#selectCondPago").attr("disabled", "disabled");
@@ -86,12 +86,12 @@ function Recuperar() {
 
         RellenaExoneraciones();
         maskCedula();
-       
+
         if (Documento != null || Documento != undefined) {
             RecuperarInformacion();
             HideP();
             ReadOnlyC();
-            
+
             // HIDDEN por medio de jquery lo de agregar productos y poner readonly el resto de cosas
             // Puede ser un metodo nuevo o hacerlo todo chorreado aqui 
 
@@ -113,7 +113,7 @@ function RecuperarInformacion() {
         $("#Fecha").val(Documento.Fecha);
         $("#selectTD").val(Documento.TipoDocumento);
         $("#selectMoneda").val(Documento.Moneda);
-      
+
         $("#selectCondPago").val(Documento.idCondPago);
         $("#inputComentarios").val(Documento.Comentarios);
         $("#subG").text(formatoDecimal(Documento.Subtotal.toFixed(2)));
@@ -139,10 +139,11 @@ function RecuperarInformacion() {
                 Descuento: parseFloat(Documento.Detalle[i].Descuento.toFixed(2)),
                 TotalLinea: parseFloat(Documento.Detalle[i].TotalLinea.toFixed(2)),
                 Cabys: Documento.Detalle[i].Cabys,
-                idExoneracion: Documento.Detalle[i].Cabys,
-                PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon
-               
-               
+
+                PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon,
+                idExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).id
+
+
             };
             ProdCadena.push(Producto);
         }
@@ -203,9 +204,10 @@ function ValidarTotales() {
             var idCliente = $("#ClienteSeleccionado").val();
             var Cliente = Clientes.find(a => a.id == idCliente);
             var IMP2 = Impuestos.find(a => a.Tarifa == 1);
+            var EX = Exoneraciones.find(a => a.id == ProdCadena[i].idExoneracion);
 
             var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
-            var ImpuestoTarifa = (Cliente.MAG == true && PE.MAG == true ? IMP2.id : PE.idImpuesto); 
+            var ImpuestoTarifa = (Cliente.MAG == true && PE.MAG == true && (EX == undefined || EX.PorExon < 13) ? IMP2.id : PE.idImpuesto);
             var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
 
             var calculoIMP = IMP.Tarifa;
@@ -213,7 +215,6 @@ function ValidarTotales() {
             ProdCadena[i].Descuento = (ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) * (ProdCadena[i].PorDescto / 100);
             ProdCadena[i].TotalImpuesto = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * (calculoIMP / 100);
             //EX => Exoneracion
-            var EX = Exoneraciones.find(a => a.id == ProdCadena[i].idExoneracion);
             if (EX != undefined) {
                 var ValorExonerado = (EX.PorExon / 100);
                 var TarifaExonerado = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * ValorExonerado;
@@ -448,7 +449,7 @@ function onChangeCliente() {
             var Cond30 = [];
             RellenaCondiciones(Cond30);
         }
-       
+
 
 
 
@@ -540,6 +541,7 @@ function onChangeProducto() {
         var idProducto = $("#ProductoSeleccionado").val();
 
         var Producto = ProdClientes.find(a => a.id == idProducto);
+
         var idCliente = $("#ClienteSeleccionado").val();
         var Cliente = Clientes.find(a => a.id == idCliente);
 
@@ -547,26 +549,36 @@ function onChangeProducto() {
         if (Producto != undefined) {
             $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
             $("#inputCabys").val(Producto.Cabys);
-            if (Cliente != undefined) {
-                if (Cliente.MAG == true && Producto.MAG == true) {
+            ExoneracionxCliente();
+            //EX => Exoneracion
+            var Exonera = parseInt($("#exoneracion").val());
+            var EX = Exoneraciones.find(a => a.id == Exonera);
+            if (EX == undefined || EX.PorExon < 13) {
+                if (Cliente != undefined) {
+                    if (Cliente.MAG == true && Producto.MAG == true) {
 
-                    var IMP = Impuestos.find(a => a.Tarifa == 1);
+                        var IMP = Impuestos.find(a => a.Tarifa == 1);
 
-                    if (IMP != undefined) {
-                        $("#impuesto").val(IMP.id);
+                        if (IMP != undefined) {
+                            $("#impuesto").val(IMP.id);
+                        } else {
+                            $("#impuesto").val(Producto.idImpuesto);
+                        }
+
                     } else {
                         $("#impuesto").val(Producto.idImpuesto);
                     }
-
                 } else {
                     $("#impuesto").val(Producto.idImpuesto);
                 }
             } else {
                 $("#impuesto").val(Producto.idImpuesto);
             }
-            $("#MonedaProducto").val(Producto.Moneda);
+            //Termina Exoneracion
 
-            ExoneracionxCliente();
+
+
+            $("#MonedaProducto").val(Producto.Moneda);
         } else {
             $("#cantidad").val(1);
 
@@ -575,17 +587,17 @@ function onChangeProducto() {
             $("#impuesto").val(0);
             $("#MonedaProducto").val("");
             $("#descuento").val(0);
-
         }
-
     } catch (e) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
+            text: 'Error ' + e
 
         })
     }
+
+
 
 
 }
@@ -941,26 +953,26 @@ function RellenaTabla() {
         for (var i = 0; i < ProdCadena.length; i++) {
             var PE = Productos.find(a => a.id == ProdCadena[i].idProducto);
             if (PE.Stock - ProdCadena[i].Cantidad > 0 || PE.Stock > 0) {
-            html += "<tr>";
+                html += "<tr>";
 
-            html += "<td> " + (i + 1) + " </td>";
+                html += "<td> " + (i + 1) + " </td>";
 
-            html += "<td > " + ProdCadena[i].Descripcion + " </td>";
-            html += "<td class='text-center'> " + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
-            html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
+                html += "<td > " + ProdCadena[i].Descripcion + " </td>";
+                html += "<td class='text-center'> " + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
+                html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
-            html += "</tr>";
-        } else {
+                html += "</tr>";
+            } else {
 
-            EliminarProducto(i);
+                EliminarProducto(i);
 
 
-        }
+            }
 
         }
 
@@ -1033,7 +1045,7 @@ function AgregarProductoTabla() {
                 text: 'Producto sin stock valido'
 
             })
-        }  if (Producto.Cantidad <= 0) {
+        } if (Producto.Cantidad <= 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1042,7 +1054,7 @@ function AgregarProductoTabla() {
             })
             Producto.Cantidad = 1;
         }
-         if (Producto.PorDescto < 0) {
+        if (Producto.PorDescto < 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1050,7 +1062,7 @@ function AgregarProductoTabla() {
 
             })
 
-         } 
+        }
 
         if (Producto.PorDescto > Descuento) {
             Swal.fire({
@@ -1298,6 +1310,23 @@ function validarDocumento(e) {
     try {
         var Contado = CP.find(a => a.Nombre == "Contado");
 
+        var sumatoriaPagos = 0;
+        var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+
+        for (var i = 0; i < e.MetodosPagos.length; i++) {
+            if ($("#selectMoneda").val() != e.MetodosPagos[i].Moneda) {
+                if (e.MetodosPagos[i].Moneda != "CRC") {
+                    sumatoriaPagos += e.MetodosPagos[i].Monto * TipoCambio.TipoCambio;
+                } else {
+                    sumatoriaPagos += e.MetodosPagos[i].Monto / TipoCambio.TipoCambio;
+
+                }
+            } else {
+                sumatoriaPagos += e.MetodosPagos[i].Monto;
+            }
+        }
+
+
         if ($("#selectCondPago").val() == Contado.id) {
             if (e.idCliente == "0" || e.idCliente == null) {
                 return false;
@@ -1309,7 +1338,7 @@ function validarDocumento(e) {
             }
             else if (e.MetodosPagos.length == 0 || e.MetodosPagos == null) {
                 return false;
-            } else if (parseFloat(sumArray(e.MetodosPagos).toFixed(2)) < e.TotalCompra) {
+            } else if (parseFloat(sumatoriaPagos.toFixed(2)) < e.TotalCompra) {
                 return false;
             }
             else {
@@ -1422,10 +1451,11 @@ function AbrirPago() {
             var Total = parseFloat(ReplaceLetra($("#totG").text()));
             $("#totPago").text(formatoDecimal(Total));
             $("#fatPago").text(formatoDecimal(Total));
-
+            $("#selectMonedaP").val($("#selectMoneda").val());
 
             onChangeMetodo();
             RellenaCB();
+
 
             $("#modalPagos").modal("show");
         } else {
@@ -1445,10 +1475,13 @@ function RellenaCB() {
     try {
         var text = '';
         $("#CuentaB").html(text);
+        var Moneda2 = $("#selectMonedaP").val();
+        var Metodo = $("#MetodoSeleccionado").val();
+        var Cuenta = CB.filter(a => a.Moneda == Moneda2 && a.Tipo == Metodo && a.Estado == true);
 
-        for (var i = 0; i < CB.length; i++) {
+        for (var i = 0; i < Cuenta.length; i++) {
 
-            text += "<option value= '" + CB[i].id + "' > " + CB[i].Nombre + " </option>";
+            text += "<option value= '" + Cuenta[i].id + "' > " + Cuenta[i].Nombre + " </option>";
         }
 
         $("#CuentaB").html(text);
@@ -1476,8 +1509,8 @@ function onChangeMetodo() {
                     $(".CHEQUEDIV").hide();
                     $(".EFECTIVODIV").show();
                     $(".TRANSFERENCIADIV").hide();
-                    $(".CUENTADIV").hide();
-
+                    $(".CUENTADIV").show();
+                    RellenaCB();
                     break;
                 }
             case "Tarjeta":
@@ -1489,7 +1522,7 @@ function onChangeMetodo() {
                     $(".TRANSFERENCIADIV").show();
                     $(".CHEQUEDIV").hide();
                     $(".CUENTADIV").show();
-
+                    RellenaCB();
                     break;
                 }
             case "Transferencia":
@@ -1501,7 +1534,7 @@ function onChangeMetodo() {
                     $(".CHEQUEDIV").hide();
                     $(".TRANSFERENCIADIV").show();
                     $(".CUENTADIV").show();
-
+                    RellenaCB();
                     break;
                 }
             case "Cheque":
@@ -1513,7 +1546,7 @@ function onChangeMetodo() {
                     $(".CHEQUEDIV").show();
                     $(".TRANSFERENCIADIV").hide();
                     $(".CUENTADIV").hide();
-
+                    RellenaCB();
                     break;
                 }
             case "Otros":
@@ -1525,7 +1558,20 @@ function onChangeMetodo() {
                     $(".OTRODIV").show();
                     $(".TRANSFERENCIADIV").hide();
                     $(".CUENTADIV").show();
+                    RellenaCB();
+                    break;
+                }
 
+            case "Pago a Cuenta":
+                {
+                    $(".OTRODIV").hide();
+                    $(".EFECTIVODIV").hide();
+
+                    $(".TARJETADIV").hide();
+                    $(".CHEQUEDIV").hide();
+                    $(".TRANSFERENCIADIV").hide();
+                    $(".CUENTADIV").show();
+                    RellenaCB();
                     break;
                 }
             default:
@@ -1535,9 +1581,12 @@ function onChangeMetodo() {
                     $(".TARJETADIV").hide();
                     $(".OTRODIV").hide();
                     $(".CHEQUEDIV").hide();
+                    RellenaCB();
                     break;
                 }
+
         }
+        onChangeMonedaP();
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -1551,6 +1600,7 @@ function insertarPago() {
     try {
 
         var Metodo = $("#MetodoSeleccionado").val();
+
         if (validarMetodo()) {
             switch (Metodo) {
                 case "Efectivo":
@@ -1566,6 +1616,7 @@ function insertarPago() {
                             NumReferencia: "",
                             NumCheque: "",
                             Metodo: "Efectivo",
+                            Moneda: $("#selectMonedaP").val(),
                             PagadoCon: parseFloat(ReplaceLetra($("#PagadoCon").val()))
                         };
                         MetodosPagos.push(Detalle);
@@ -1583,6 +1634,7 @@ function insertarPago() {
                             NumReferencia: $("#ReferenciaPago").val(),
                             NumCheque: "",
                             Metodo: "Tarjeta",
+                            Moneda: $("#selectMonedaP").val(),
                             PagadoCon: 0
                         };
                         MetodosPagos.push(Detalle);
@@ -1600,6 +1652,7 @@ function insertarPago() {
                             NumReferencia: $("#ReferenciaPago").val(),
                             NumCheque: "",
                             Metodo: "Transferencia",
+                            Moneda: $("#selectMonedaP").val(),
                             PagadoCon: 0
                         };
                         MetodosPagos.push(Detalle);
@@ -1617,6 +1670,7 @@ function insertarPago() {
                             NumReferencia: "",
                             NumCheque: $("#ChequePago").val(),
                             Metodo: "Cheque",
+                            Moneda: $("#selectMonedaP").val(),
                             PagadoCon: 0
                         };
                         MetodosPagos.push(Detalle);
@@ -1633,6 +1687,25 @@ function insertarPago() {
                             NumReferencia: "",
                             NumCheque: "",
                             Metodo: "Otros | " + $("#otroPago").val(),
+                            Moneda: $("#selectMonedaP").val(),
+                            PagadoCon: 0
+                        };
+                        MetodosPagos.push(Detalle);
+
+                        break;
+                    }
+                case "Pago a Cuenta":
+                    {
+                        var Detalle = {
+                            id: 0,
+                            idEncabezado: 0,
+                            idCuentaBancaria: $("#CuentaB").val(),
+                            Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
+                            BIN: "",
+                            NumReferencia: "",
+                            NumCheque: "",
+                            Metodo: "Pago a Cuenta",
+                            Moneda: $("#selectMonedaP").val(),
                             PagadoCon: 0
                         };
                         MetodosPagos.push(Detalle);
@@ -1653,6 +1726,7 @@ function insertarPago() {
             RellenaTablaPagos();
             LimpiarDatosPago();
             RellenaCB();
+            $("#selectMonedaP").val($("#selectMoneda").val());
         } else {
 
         }
@@ -1687,6 +1761,12 @@ function LimpiarDatosPago() {
 function validarMetodo() {
     try {
         var Metodo = $("#MetodoSeleccionado").val();
+
+        var Moneda = $("#selectMonedaP").val();
+        var Monto = parseFloat($("#MontoPago").val());
+        var MonedaDoc = $("#selectMoneda").val();
+        var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+
         var Total = parseFloat(ReplaceLetra($("#totG").text())) - parseFloat(ReplaceLetra($("#pagPago").text()));
 
         if (Total <= 0) {
@@ -1699,7 +1779,7 @@ function validarMetodo() {
             return false;
         }
 
-        if (parseFloat($("#MontoPago").val()) > parseFloat(ReplaceLetra($("#fatPago").text()))) {
+        if (parseFloat($("#MontoPago").val()) > parseFloat(ReplaceLetra($("#fatPago").text())) && MonedaDoc == Moneda) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1708,6 +1788,26 @@ function validarMetodo() {
             })
             return false;
         }
+        if ((parseFloat($("#MontoPago").val()) / TipodeCambio.TipoCambio) > parseFloat(ReplaceLetra($("#fatPago").text())) && Moneda == "USD" && MonedaDoc == "CRC") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No se puede ingresar montos mayores a lo faltante'
+
+            })
+            return false;
+        }
+
+        if ((parseFloat($("#MontoPago").val()) * TipodeCambio.TipoCambio) > parseFloat(ReplaceLetra($("#fatPago").text())) && Moneda == "CRC" && MonedaDoc == "USD") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No se puede ingresar montos mayores a lo faltante'
+
+            })
+            return false;
+        }
+
         if ($("#CuentaB").val() == "") {
             Swal.fire({
                 icon: 'error',
@@ -1762,7 +1862,7 @@ function validarMetodo() {
                 }
             case "Transferencia":
                 {
-                      if (parseFloat(ReplaceLetra($("#ReferenciaPago").val())) <= 0 || $("#ReferenciaPago").val() == undefined || $("#ReferenciaPago").val() == "") {
+                    if (parseFloat(ReplaceLetra($("#ReferenciaPago").val())) <= 0 || $("#ReferenciaPago").val() == undefined || $("#ReferenciaPago").val() == "") {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
@@ -1837,7 +1937,8 @@ function RellenaTablaPagos() {
             text += "<td class='text-center'> " + MetodosPagos[i].Metodo + " </td>";
             text += "<td class='text-center'> " + MetodosPagos[i].BIN + " </td>";
             text += "<td class='text-center'> " + MetodosPagos[i].NumReferencia + " </td>";
-            text += "<td class='text-center'> " + MetodosPagos[i].NumCheque + " </td>";
+            /*  text += "<td class='text-center'> " + MetodosPagos[i].NumCheque + " </td>";*/
+            text += "<td class='text-center'> " + MetodosPagos[i].Moneda + " </td>";
             text += "<td class='text-rigth'> " + formatoDecimal(MetodosPagos[i].Monto) + " </td>";
             text += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarPago(" + i + ") '> </a> </td>";
             text += "</tr>";
@@ -1863,19 +1964,61 @@ function calcularPago() {
         var Total = parseFloat(ReplaceLetra($("#totG").text()));
         var Faltante = 0;
         var Pagado = 0;
-
+        var MonedaDoc = $("#selectMoneda").val();
+        var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
         var vuelto = 0;
         $("#vueltoPago").text(formatoDecimal(vuelto.toFixed(2)));
 
         for (var i = 0; i < MetodosPagos.length; i++) {
-            Pagado += MetodosPagos[i].Monto;
-            if (MetodosPagos[i].Metodo == "Efectivo") {
 
-                if (MetodosPagos[i].PagadoCon > 0) {
-                    vuelto += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
+            if (MetodosPagos[i].Moneda == MonedaDoc) {
+                Pagado += MetodosPagos[i].Monto;
 
+                if (MetodosPagos[i].Metodo == "Efectivo") {
+
+                    if (MetodosPagos[i].PagadoCon > 0) {
+
+
+
+                        vuelto += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
+
+                    }
                 }
+            } else {
+
+                if (MetodosPagos[i].Moneda != "CRC") {
+                    Pagado += MetodosPagos[i].Monto * TipodeCambio.TipoCambio;
+
+                    if (MetodosPagos[i].Metodo == "Efectivo") {
+
+                        if (MetodosPagos[i].PagadoCon > 0) {
+
+
+
+                            vuelto += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) * TipodeCambio.TipoCambio ;
+
+                        }
+                    }
+
+                } else {
+                    Pagado += MetodosPagos[i].Monto / TipodeCambio.TipoCambio;
+                    if (MetodosPagos[i].Metodo == "Efectivo") {
+
+                        if (MetodosPagos[i].PagadoCon > 0) {
+
+
+
+                            vuelto += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) / TipodeCambio.TipoCambio;
+
+                        }
+                    }
+                }
+
+
+
             }
+
+
         }
 
 
@@ -1926,7 +2069,7 @@ function ImprimirTiquete(Documento) {
         texto = texto.replace("@NumComprobante", Documento.consecutivoHacienda);
         texto = texto.replace("@NumFactura", Documento.id);
         texto = texto.replace("@Comentario", Documento.comentarios);
-        
+
 
         if (Documento.tipoDocumento == "04") {
             texto = texto.replace("FACTURA", "TIQUETE");
@@ -1954,7 +2097,7 @@ function ImprimirTiquete(Documento) {
 
             tabla += "<td style='text-align left;'>" + formatoDecimal(Documento.detalle[i].precioUnitario) + " </td>";
             tabla += "<td style='text-align left;'>" + formatoDecimal(Documento.detalle[i].totalLinea) + " </td>";
-            
+
 
 
 
@@ -2021,7 +2164,7 @@ function ImprimirFactura(Documento) {
 
         texto = texto.replace("@Vendedor", Vendedores.find(a => a.id == $("#selectVendedor").val()).Nombre);
 
-       var cond = CP.find(a => a.id == $("#selectCondPago").val());
+        var cond = CP.find(a => a.id == $("#selectCondPago").val());
         texto = texto.replace("@selectCondPago", cond.Nombre);
 
         texto = texto.replace("@FechaVencimiento", "");
@@ -2030,11 +2173,11 @@ function ImprimirFactura(Documento) {
         texto = texto.replace("@TipoCambio", TipoCambio[0].TipoCambio);
 
         texto = texto.replace("@TotalLetras", NumeroALetras(Documento.totalCompra));
-        
-        
-        
 
-        
+
+
+
+
 
         var tabla = "";
 
@@ -2087,3 +2230,45 @@ function ImprimirFactura(Documento) {
         })
     }
 }
+
+function onChangeMonedaP() {
+    try {
+
+        RellenaCB();
+        var Moneda = $("#selectMonedaP").val();
+        var Monto = parseFloat($("#MontoPago").val());
+        var MonedaDoc = $("#selectMoneda").val();
+        var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+        var Total = parseFloat(ReplaceLetra($("#totG").text()));
+
+
+
+        if (Moneda != "CRC") {
+
+            var TotalC = Monto * TipodeCambio.TipoCambio; // lo calcula a colones
+            $("#TotalC").val(TotalC); // lo pongo en colones
+            // Monto = Monto / TipodeCambio.TipoCambio; //lo tengo en $
+            $("#TotalD").val(Monto); // lo pongo en dolares
+            //$("#MontoPago").val(formatoDecimal(Monto.toFixed(2))); // le pongo el monto digitado en $
+        } else {
+
+            var TotalD = Monto / TipodeCambio.TipoCambio;
+            $("#TotalD").val(TotalD);
+            $("#TotalC").val(Monto);
+            // Monto = Monto * TipodeCambio.TipoCambio;
+            // $("#MontoPago").val(formatoDecimal(Monto.toFixed(2)));
+        }
+
+
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+        })
+    }
+}
+

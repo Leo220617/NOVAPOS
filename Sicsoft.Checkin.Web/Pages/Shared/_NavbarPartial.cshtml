@@ -87,6 +87,22 @@
 
             }
 
+              @{
+                if (!string.IsNullOrEmpty(Roles.Where(a => a == "51").FirstOrDefault()))
+                {
+                    <li class="">
+
+                        <a asp-page="/Productos/Index">
+                            <i class="mdi mdi-cube"></i> <span>Productos</span>
+
+                        </a>
+
+                    </li>
+
+                }
+
+            }
+
 
 
 

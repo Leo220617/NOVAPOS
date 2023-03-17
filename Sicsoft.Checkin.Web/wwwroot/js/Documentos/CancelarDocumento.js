@@ -257,8 +257,10 @@ function ValidarTotales() {
             var idCliente = $("#ClienteSeleccionado").val();
             var Cliente = Clientes.find(a => a.id == idCliente);
             var IMP2 = Impuestos.find(a => a.Tarifa == 1);
+            var EX = Exoneraciones.find(a => a.id == ProdCadena[i].idExoneracion);
+
             var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
-            var ImpuestoTarifa = (Cliente.MAG == true && PE.MAG == true ? IMP2.id : PE.idImpuesto); 
+            var ImpuestoTarifa = (Cliente.MAG == true && PE.MAG == true && (EX == undefined || EX.PorExon < 13) ? IMP2.id : PE.idImpuesto);
             var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
 
             var calculoIMP = IMP.Tarifa;
@@ -266,14 +268,13 @@ function ValidarTotales() {
             ProdCadena[i].Descuento = (ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) * (ProdCadena[i].PorDescto / 100);
             ProdCadena[i].TotalImpuesto = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * (calculoIMP / 100);
             //EX => Exoneracion
-            var EX = Exoneraciones.find(a => a.id == ProdCadena[i].idExoneracion);
             if (EX != undefined) {
                 var ValorExonerado = (EX.PorExon / 100);
                 var TarifaExonerado = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * ValorExonerado;
                 ProdCadena[i].TotalImpuesto -= TarifaExonerado;
                 ProdCadena[i].PorExoneracion = EX.PorExon;
             }
-                //Termina Exoneracion
+            //Termina Exoneracion
             ProdCadena[i].TotalLinea = (ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento + ProdCadena[i].TotalImpuesto;
 
 

@@ -51,7 +51,7 @@
                 <input hidden id="Distritos" value="@JsonConvert.SerializeObject(Model.Distritos)" />
                 <input hidden id="Barrios" value="@JsonConvert.SerializeObject(Model.Barrios)" />
                 <input hidden id="Clientes" value="@JsonConvert.SerializeObject(Model.Clientes)" />
-                  <input hidden id="Vendedores" value="@JsonConvert.SerializeObject(Model.Vendedores)" />
+                <input hidden id="Vendedores" value="@JsonConvert.SerializeObject(Model.Vendedores)" />
                 <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
                 <input hidden id="Impuestos" value="@JsonConvert.SerializeObject(Model.Impuestos)" />
                 <input hidden id="Exoneraciones" value="@JsonConvert.SerializeObject(Model.Exoneraciones)" />
@@ -127,7 +127,7 @@
                             <!-- /.col -->
                         </div>
                         <!-- info row -->
-                         <div class="col-sm-3" style="text-align: right"> <a onclick="javascript: AbrirModalAgregarCliente()" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Cliente</a></div>
+                        <div class="col-sm-3" style="text-align: right"> <a onclick="javascript: AbrirModalAgregarCliente()" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Cliente</a></div>
                         <div class="row invoice-info">
                             <div class="col-md-6 invoice-col">
                                 <strong>Para</strong>
@@ -145,21 +145,17 @@
                                     <strong id="strongInfo">Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
                                 </address>
                             </div>
-                             <div class="col-sm-3">
+                            <div class="col-sm-3">
                                 <label>Cond. Pago</label>
-                                    <select class="form-control" id="selectCondPago"  >
-                                        
-
-                                    </select>
+                                <select class="form-control" id="selectCondPago">
+                                </select>
                             </div>
-                              <div class="col-sm-3">
+                            <div class="col-sm-3">
                                 <label>Vendedor</label>
-                                    <select class="form-control select2" id="selectVendedor" asp-for="Documento.idVendedor" >
-                                        
-
-                                    </select>
+                                <select class="form-control select2" id="selectVendedor" asp-for="Documento.idVendedor">
+                                </select>
                             </div>
-                           
+
                         </div>
                         <!-- /.col -->
                         <!-- /.row -->
@@ -648,31 +644,63 @@
 <!-- /.modal -->
 <!-- Modal -->
 <div class="modal modal-fill fade" data-backdrop="false" id="modalPagos" tabindex="-1">
+
     <div class="modal-dialog">
         <div class="modal-content" style="width: 80%; max-width: 200%; padding-top: 5%;">
+
+          
+          
             <div class="modal-header">
-                <h5 class="modal-title">Métodos de Pago</h5>
+                  <h1 class="modal-title"> Gestión de Pagos </h1>
+               
+            
+                
+                
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
+                  <div class="row">
+                      <div class="col-md-10"><h5 class="modal-title">Métodos de Pago</h5> </div>
+                      <div class="col-md-2"> <h5 class="modal-title" style="text-align: left;">Moneda Pago</h5></div>
+                  </div>
+
+
+
+
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-12">
+
+                    <div class="col-md-9">
+
                         <select id="MetodoSeleccionado" class="form-control" onchange="javascript: onChangeMetodo()">
                             <option value="0">Seleccione</option>
 
                             <option value="Efectivo">Efectivo</option>
                             <option value="Tarjeta">Tarjeta</option>
                             <option value="Transferencia">Transferencia</option>
-                            <option value="Cheque">Cheque</option>
-                           @* <option value="Otros">Otros</option>*@
+                            @*<option value="Cheque">Cheque</option>*@
+                            <option value="Pago a Cuenta">Pago a Cuenta</option>
+                            @* <option value="Otros">Otros</option>*@
 
 
 
                         </select>
                     </div>
 
+                    <div class="col-md-3">
+                        <div class="form-group">
+
+                            <select class="form-control" id="selectMonedaP" onchange="javascript: onChangeMonedaP()">
+                                <option value="CRC" selected>CRC</option>
+                                <option value="USD">USD</option>
+
+                            </select>
+
+
+                        </div>
+                    </div>
                 </div>
 
                 <br />
@@ -681,7 +709,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Monto</label>
-                            <input type="number" class="form-control" id="MontoPago" placeholder="Monto Pagado" value="1">
+                            <input type="number" class="form-control" id="MontoPago" placeholder="Monto Pagado" onchange="javascript: onChangeMonedaP();" value="1">
 
 
                         </div>
@@ -693,7 +721,7 @@
                     <div class="col-md-4 TARJETADIV">
                         <div class="form-group">
                             <label>BIN (últimos 4 números de la tarjeta)</label>
-                            <input type="number" class="form-control" id="BINPago" placeholder="BIN" >
+                            <input type="number" class="form-control" id="BINPago" placeholder="BIN">
 
 
                         </div>
@@ -744,9 +772,9 @@
                     </div>
                     <div class="col-md-4 CUENTADIV">
                         <div class="form-group">
-                           
+
                             <label>Cuenta:  </label> <br />
-                            <select class="form-control select2" id="CuentaB" >
+                            <select class="form-control" id="CuentaB">
                             </select>
 
 
@@ -754,6 +782,30 @@
 
 
                     </div>
+
+                       <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Total Colones:  </label>
+                            <input type="number" class="form-control" disabled id="TotalC" placeholder="Total Colones">
+
+
+                        </div>
+
+
+                    </div>
+
+                     <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Total Dólares:  </label>
+                            <input type="number" class="form-control" disabled id="TotalD" placeholder="Total Dólares">
+
+
+                        </div>
+
+
+                    </div>
+
+
                     <div class="col-sm-12 pl-1" style="text-align: right;">
 
                         <a id="agregarPago" onclick="javascript: insertarPago() " class="btn btn-primary" style="color: white !important;">+</a>
@@ -773,7 +825,7 @@
                                     <th>Método</th>
                                     <th class="text-right">BIN</th>
                                     <th class="text-right">Referencia</th>
-                                    <th class="text-right">Cheque</th>
+                                    <th class="text-right">Moneda</th>
                                     <th class="text-right">Total</th>
                                     <th class="text-right">Eliminar</th>
 
@@ -829,6 +881,16 @@
             case "02":
                 {
                     $("#Cedula").mask("9999999999");
+                    break;
+                }
+                 case "03":
+                {
+                    $("#Cedula").mask("9999999999999");
+                    break;
+                }
+                 case "04":
+                {
+                    $("#Cedula").mask("9999999999999");
                     break;
                 }
         }

@@ -1447,7 +1447,7 @@ function AbrirPago() {
     try {
         var Contado = CP.find(a => a.Nombre == "Contado");
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
-
+        $("#TipCam").val(TipodeCambio.TipoCambio);
         if ($("#selectCondPago").val() == Contado.id) {
 
             if ($("#selectMoneda").val() == "CRC") {
@@ -1524,8 +1524,8 @@ function onChangeMetodo() {
         var Metodo = $("#MetodoSeleccionado").val();
         var Moneda = $("#selectMonedaP").val();
         var MonedaDoc = $("#selectMoneda").val();
-       // var Total = parseFloat(ReplaceLetra($("#totG").text())) - parseFloat(ReplaceLetra($("#pagPago").text()));
-        var Total = MonedaDoc == "CRC" ? parseFloat(ReplaceLetra($("#fatPago").text())) : parseFloat(ReplaceLetra($("#fatPagoD").text())) ;
+        // var Total = parseFloat(ReplaceLetra($("#totG").text())) - parseFloat(ReplaceLetra($("#pagPago").text()));
+        var Total = MonedaDoc == "CRC" ? parseFloat(ReplaceLetra($("#fatPago").text())) : parseFloat(ReplaceLetra($("#fatPagoD").text()));
         $("#MontoPago").val(Total);
 
         switch (Metodo) {
@@ -1537,6 +1537,12 @@ function onChangeMetodo() {
                     $(".EFECTIVODIV").show();
                     $(".TRANSFERENCIADIV").hide();
                     $(".CUENTADIV").show();
+
+                    if (Moneda != MonedaDoc) {
+
+                        $("#PagadoCon").val(Total);
+                    }
+
                     RellenaCB();
                     break;
                 }
@@ -1625,7 +1631,7 @@ function onChangeMetodo() {
 }
 function insertarPago() {
     try {
-        var Moneda = $("#selectMonedaP").val(); 
+        var Moneda = $("#selectMonedaP").val();
         var MonedaDoc = $("#selectMoneda").val();
         var Metodo = $("#MetodoSeleccionado").val();
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
@@ -1639,7 +1645,7 @@ function insertarPago() {
                             id: 0,
                             idEncabezado: 0,
                             idCuentaBancaria: $("#CuentaB").val(),
-                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio,
+                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : Moneda != "CRC" ? parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio ,
                             BIN: "",
                             NumReferencia: "",
                             NumCheque: "",
@@ -1657,7 +1663,7 @@ function insertarPago() {
                             id: 0,
                             idEncabezado: 0,
                             idCuentaBancaria: $("#CuentaB").val(),
-                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio,
+                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : Moneda != "CRC" ? parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio,
                             BIN: $("#BINPago").val(),
                             NumReferencia: $("#ReferenciaPago").val(),
                             NumCheque: "",
@@ -1675,7 +1681,7 @@ function insertarPago() {
                             id: 0,
                             idEncabezado: 0,
                             idCuentaBancaria: $("#CuentaB").val(),
-                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio,
+                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : Moneda != "CRC" ? parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio,
                             BIN: "",
                             NumReferencia: $("#ReferenciaPago").val(),
                             NumCheque: "",
@@ -1693,7 +1699,7 @@ function insertarPago() {
                             id: 0,
                             idEncabezado: 0,
                             idCuentaBancaria: $("#CuentaB").val(),
-                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio,
+                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : Moneda != "CRC" ? parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio,
                             BIN: "",
                             NumReferencia: "",
                             NumCheque: $("#ChequePago").val(),
@@ -1710,7 +1716,7 @@ function insertarPago() {
                             id: 0,
                             idEncabezado: 0,
                             idCuentaBancaria: $("#CuentaB").val(),
-                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio,
+                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : Moneda != "CRC" ? parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio,
                             BIN: "",
                             NumReferencia: "",
                             NumCheque: "",
@@ -1728,7 +1734,7 @@ function insertarPago() {
                             id: 0,
                             idEncabezado: 0,
                             idCuentaBancaria: $("#CuentaB").val(),
-                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio,
+                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : Moneda != "CRC" ? parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio,
                             BIN: "",
                             NumReferencia: "",
                             NumCheque: "",
@@ -1795,7 +1801,7 @@ function validarMetodo() {
         var MonedaDoc = $("#selectMoneda").val();
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
 
-        var Total =  MonedaDoc == "CRC" ? parseFloat(ReplaceLetra($("#totG").text())) - parseFloat(ReplaceLetra($("#pagPago").text())) : 0; //Total En Colones
+        var Total = MonedaDoc == "CRC" ? parseFloat(ReplaceLetra($("#totG").text())) - parseFloat(ReplaceLetra($("#pagPago").text())) : 0; //Total En Colones
         var TotalD = MonedaDoc != "CRC" ? parseFloat(ReplaceLetra($("#totG").text())) - parseFloat(ReplaceLetra($("#pagPagoD").text())) : 0;
 
         if (Total <= 0 && TotalD <= 0) {
@@ -2022,7 +2028,7 @@ function calcularPago() {
 
         if (MonedaDoc != "CRC") {
             TotalD = parseFloat(ReplaceLetra($("#totG").text()));
-            Total = Total * TipodeCambio.TipoCambio;
+            Total = TotalD * TipodeCambio.TipoCambio;
         } else {
             Total = parseFloat(ReplaceLetra($("#totG").text()));
             TotalD = Total / TipodeCambio.TipoCambio;
@@ -2041,10 +2047,19 @@ function calcularPago() {
                 if (MetodosPagos[i].Metodo == "Efectivo") {
 
                     if (MetodosPagos[i].PagadoCon > 0) {
-                        vueltoTD += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
-                        vueltoT += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) * TipodeCambio.TipoCambio;
 
-                        vueltoD += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
+                        if (MetodosPagos[i].Moneda != MonedaDoc) {
+                            vueltoTD += (MetodosPagos[i].PagadoCon / TipodeCambio.TipoCambio) - MetodosPagos[i].Monto;
+                            vueltoT += ((MetodosPagos[i].PagadoCon / TipodeCambio.TipoCambio) - MetodosPagos[i].Monto) * TipodeCambio.TipoCambio;
+
+                            vueltoD += (MetodosPagos[i].PagadoCon / TipodeCambio.TipoCambio) - MetodosPagos[i].Monto;
+                        } else {
+                            vueltoTD += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
+                            vueltoT += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) * TipodeCambio.TipoCambio;
+
+                            vueltoD += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
+                        }
+
                         // vuelto += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) * TipodeCambio.TipoCambio;
                     }
                 }
@@ -2059,11 +2074,19 @@ function calcularPago() {
                 if (MetodosPagos[i].Metodo == "Efectivo") {
 
                     if (MetodosPagos[i].PagadoCon > 0) {
+                        if (MetodosPagos[i].Moneda != MonedaDoc) {
+                            vueltoT += (MetodosPagos[i].PagadoCon * TipodeCambio.TipoCambio) - MetodosPagos[i].Monto;
+                            vueltoTD += ((MetodosPagos[i].PagadoCon * TipodeCambio.TipoCambio) - MetodosPagos[i].Monto) / TipodeCambio.TipoCambio;
 
-                        vueltoT += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
-                        vueltoTD += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) / TipodeCambio.TipoCambio;
+                            vuelto += (MetodosPagos[i].PagadoCon * TipodeCambio.TipoCambio) - MetodosPagos[i].Monto;
 
-                        vuelto += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
+                        } else {
+                            vueltoT += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
+                            vueltoTD += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) / TipodeCambio.TipoCambio;
+
+                            vuelto += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
+                        }
+
                         // vueltoD += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) / TipodeCambio.TipoCambio;
                     }
                 }
@@ -2329,7 +2352,14 @@ function onChangeMonedaP() {
         var MonedaDoc = $("#selectMoneda").val();
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
         var Total = parseFloat(ReplaceLetra($("#totG").text()));
+        var Metodo = $("#MetodoSeleccionado").val();
 
+        if (Metodo == "Efectivo") {
+            if (Moneda != MonedaDoc) {
+
+                $("#PagadoCon").val(Monto);
+            }
+        }
 
 
         if (Moneda != "CRC") {
@@ -2342,31 +2372,21 @@ function onChangeMonedaP() {
                 var TotalC = Monto * TipodeCambio.TipoCambio; // Tptal en dolares
                 $("#TotalC").val(TotalC);
             }
-            
 
-            //var TotalC = Monto * TipodeCambio.TipoCambio; // lo calcula a colones
-            //$("#TotalC").val(TotalC); // lo pongo en colones
-            //// Monto = Monto / TipodeCambio.TipoCambio; //lo tengo en $
-            //$("#TotalD").val(Monto); // lo pongo en dolares
-            ////$("#MontoPago").val(formatoDecimal(Monto.toFixed(2))); // le pongo el monto digitado en $
+             
         } else { //La moneda que se escogio es colones
 
             if (Moneda != MonedaDoc) {
                 $("#TotalD").val(Monto); // lo pongo en colones
                 var TotalC = Monto * TipodeCambio.TipoCambio; // Tptal en dolares
                 $("#TotalC").val(TotalC);
-                
+
             } else {
                 $("#TotalC").val(Monto); // lo pongo en colones
                 var TotalD = Monto / TipodeCambio.TipoCambio; // Tptal en dolares
                 $("#TotalD").val(TotalD);
             }
-
-            //var TotalD = Monto / TipodeCambio.TipoCambio;
-            //$("#TotalD").val(TotalD);
-            //$("#TotalC").val(Monto);
-            //// Monto = Monto * TipodeCambio.TipoCambio;
-            //// $("#MontoPago").val(formatoDecimal(Monto.toFixed(2)));
+             
         }
 
 

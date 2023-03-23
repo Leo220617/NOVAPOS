@@ -648,23 +648,23 @@
     <div class="modal-dialog">
         <div class="modal-content" style="width: 80%; max-width: 200%; padding-top: 5%;">
 
-          
-          
+
+
             <div class="modal-header">
-                  <h1 class="modal-title"> Gestión de Pagos </h1>
-               
-            
-                
-                
+                <h1 class="modal-title"> Gestión de Pagos </h1>
+
+
+
+
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
-                  <div class="row">
-                      <div class="col-md-10"><h5 class="modal-title">Métodos de Pago</h5> </div>
-                      <div class="col-md-2"> <h5 class="modal-title" style="text-align: left;">Moneda Pago</h5></div>
-                  </div>
+            <div class="row">
+                <div class="col-md-10"><h5 class="modal-title">Métodos de Pago</h5> </div>
+                <div class="col-md-2"> <h5 class="modal-title" style="text-align: left;">Moneda Pago</h5></div>
+            </div>
 
 
 
@@ -708,7 +708,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>Monto</label>
+                            <label>Monto <span style="color: red;"> (Debe ser en la moneda del documento)</span> </label>
                             <input type="number" class="form-control" id="MontoPago" placeholder="Monto Pagado" onchange="javascript: onChangeMonedaP();" value="1">
 
 
@@ -783,7 +783,7 @@
 
                     </div>
 
-                       <div class="col-md-4">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label>Total Colones:  </label>
                             <input type="number" class="form-control" disabled id="TotalC" placeholder="Total Colones">
@@ -794,7 +794,7 @@
 
                     </div>
 
-                     <div class="col-md-4">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label>Total Dólares:  </label>
                             <input type="number" class="form-control" disabled id="TotalD" placeholder="Total Dólares">
@@ -804,7 +804,16 @@
 
 
                     </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Tipo de Cambio:  </label>
+                            <input type="number" readonly class="form-control" disabled id="TipCam" placeholder="Tipo Cambio">
 
+
+                        </div>
+
+
+                    </div>
 
                     <div class="col-sm-12 pl-1" style="text-align: right;">
 
@@ -838,10 +847,10 @@
                     <!-- /.col -->
                 </div>
                 <!-- /.row -->
-                 <div class="row">
-                      <div class="col-md-10"><h5 class="modal-title" style="text-align: right;"><b>Colones</b></h5> </div>
-                      <div class="col-md-2"> <h5 class="modal-title" style="text-align: right;"><b>Dolares</b></h5></div>
-                  </div>
+                <div class="row">
+                    <div class="col-md-10"><h5 class="modal-title" style="text-align: right;"><b>Colones</b></h5> </div>
+                    <div class="col-md-2"> <h5 class="modal-title" style="text-align: right;"><b>Dolares</b></h5></div>
+                </div>
                 <div class="row">
                     <!-- /.col -->
                     <div class="col-10 text-right">
@@ -858,13 +867,13 @@
                             <h3><b>Vuelto :</b>  <span id="vueltoPago">0 </span></h3>
                         </div>
 
-                         <div class="total-payment">
+                        <div class="total-payment">
                             <h4><b>Vuelto General:</b>  <span id="vueltoPagoG">0 </span></h4>
                         </div>
 
                     </div>
 
-                       <div class="col-2 text-right">
+                    <div class="col-2 text-right">
 
 
                         <div>
@@ -878,13 +887,13 @@
                             <h3><b>Vuelto :</b>  <span id="vueltoPagoD">0 </span></h3>
                         </div>
 
-                         <div class="total-payment">
+                        <div class="total-payment">
                             <h4><b>Vuelto General:</b>  <span id="vueltoPagoGD">0 </span></h4>
                         </div>
 
                     </div>
 
-                   
+
                     <!-- /.col -->
                 </div>
             </div>
@@ -913,12 +922,12 @@
                     $("#Cedula").mask("9999999999");
                     break;
                 }
-                 case "03":
+            case "03":
                 {
                     $("#Cedula").mask("9999999999999");
                     break;
                 }
-                 case "04":
+            case "04":
                 {
                     $("#Cedula").mask("9999999999999");
                     break;

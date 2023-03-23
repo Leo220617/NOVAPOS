@@ -497,9 +497,12 @@
 
 
                                     <th>Método</th>
+                                    <th class="text-right">Moneda</th>
+
                                     <th class="text-right">BIN</th>
                                     <th class="text-right">Referencia</th>
                                     <th class="text-right">Cheque</th>
+
                                     <th class="text-right">Total</th>
 
                                 </tr>
@@ -508,11 +511,13 @@
                                 @foreach (var item in Model.Documento.MetodosPagos)
                                 {
                                     <tr>
-                                        <td>@item.Metodo</td>
-                                        <td>@item.BIN</td>
-                                        <td>@item.NumReferencia</td>
-                                        <td>@item.NumCheque</td>
-                                        <td>@item.Monto.ToString("N",formato)</td>
+                                        <td align="left">@item.Metodo</td>
+                                        <td align="center">@item.Moneda</td>
+
+                                        <td align="center">@item.BIN</td>
+                                        <td align="center">@item.NumReferencia</td>
+                                        <td align="center">@item.NumCheque</td>
+                                        <td align="right">@item.Monto.ToString("N",formato)</td>
 
                                     </tr>
                                 }

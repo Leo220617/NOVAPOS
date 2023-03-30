@@ -166,7 +166,8 @@ function ValidarStocks() {
     try {
         for (var i = 0; i < Documento.Detalle.length; i++) {
             var PE = Productos.find(a => a.id == Documento.Detalle[i].idProducto);
-            if ((PE.Stock - ProdCadena[i].Cantidad) < 0) {
+            var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
+            if ((PE.Stock - ProdCadena[i].Cantidad) < 0 && PE.Codigo != PS.Codigo){
                 $.toast({
                     heading: 'Precaución',
                     text: 'El producto' + ' ' + ProdCadena[i].Descripcion + ' ' + 'NO tiene' + ' ' + ProdCadena[i].Cantidad + '' + ' unidades en stock, el stock real es de' + ' ' + PE.Stock,
@@ -948,11 +949,11 @@ function RellenaTabla() {
     try {
         var html = "";
         $("#tbody").html(html);
-
+        var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
 
         for (var i = 0; i < ProdCadena.length; i++) {
             var PE = Productos.find(a => a.id == ProdCadena[i].idProducto);
-            if (PE.Stock - ProdCadena[i].Cantidad > 0 || PE.Stock > 0) {
+            if (PE.Stock - ProdCadena[i].Cantidad > 0 || PE.Stock > 0 || PE.Codigo == PS.Codigo) {
                 html += "<tr>";
 
                 html += "<td> " + (i + 1) + " </td>";
@@ -1037,8 +1038,8 @@ function AgregarProductoTabla() {
 
         };
         var Descuento = parseFloat($("#DES").val());
-
-        if ((PE.Stock - Producto.Cantidad) < 0) {
+        var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
+        if ((PE.Stock - Producto.Cantidad) < 0  && PE.Codigo != PS.Codigo) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1074,7 +1075,7 @@ function AgregarProductoTabla() {
 
         }
 
-        else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0)) {
+        else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) || Producto.Codigo == PS.Codigo) {
             if (Producto.Cabys.length >= 13) {
 
 
@@ -1602,7 +1603,7 @@ function onChangeMetodo() {
 
                     $(".TARJETADIV").hide();
                     $(".CHEQUEDIV").hide();
-                    $(".TRANSFERENCIADIV").hide();
+                    $(".TRANSFERENCIADIV").show();
                     $(".CUENTADIV").show();
                     RellenaCB();
                     break;
@@ -1737,7 +1738,7 @@ function insertarPago() {
                             Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : Moneda != "CRC" ? parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio,
                             BIN: "",
                             NumReferencia: "",
-                            NumCheque: "",
+                            NumCheque: $("#ReferenciaPago").val(),
                             Metodo: "Pago a Cuenta",
                             Moneda: $("#selectMonedaP").val(),
                             PagadoCon: 0

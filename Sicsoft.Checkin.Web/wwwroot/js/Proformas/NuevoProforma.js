@@ -1323,7 +1323,7 @@ function onChangeCantidadProducto(i) {
         ;
         ProdCadena[i].Cantidad = parseFloat($("#" + i + "_Prod").val()).toFixed(2);
 
-        if (ProdCadena[i].Cantidad > 0 && (PE.Stock - ProdCadena[i].Cantidad) >= 0) {
+        if (ProdCadena[i].Cantidad > 0 ) {
             ValidarTotales();
         }
      

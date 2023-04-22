@@ -1,0 +1,295 @@
+﻿@page
+@model NOVAAPP.Pages.Pagos.NuevoModel
+@{
+    ViewData["Title"] = "Abonos";
+}
+@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@using Sicsoft.Checkin.Web.Models;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
+@section styles{
+
+
+}
+    @section scripts{
+
+
+    <script src="/js/Pagos/NuevoPago.js"></script>
+
+
+}
+
+
+    @using Newtonsoft.Json;
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Abonos
+        </h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+            <li class="breadcrumb-item active">Generar Pago</li>
+        </ol>
+    </section>
+
+    <section class="content ">
+        <div class="row">
+            <div class="col-12">
+
+                <input hidden id="Clientes" value="@JsonConvert.SerializeObject(Model.Clientes)" />
+                <input hidden id="Vendedores" value="@JsonConvert.SerializeObject(Model.Vendedores)" />
+                <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
+
+                <input hidden id="Sucursales" value="@JsonConvert.SerializeObject(Model.Sucursales)" />
+                <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
+                <input hidden id="Documento" value="@JsonConvert.SerializeObject(Model.Pago)" />
+                <input hidden id="CP" value="@JsonConvert.SerializeObject(Model.CP)" />
+
+
+
+
+
+
+                <input hidden id="urlGenerar" value="@Url.Page("Nuevo", "AgregarPago")" />
+                <input hidden id="urlFacturas" value="@Url.Page("Nuevo", "Facturas")" />
+
+
+
+                <!-- Content Header (Page header) -->
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-8">
+                                <h6 class="box-subtitle">Generar Pago</h6>
+
+
+                            </div>
+                            <div class="col-4">
+                                <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <!-- title row -->
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="page-header mt-0">
+                                    <h2 class="d-inline"><span class="font-size-24">Abonos</span></h2>
+                                    <div class="text-left">
+                                        <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
+                                        <input hidden id="Fecha" type="datetime" value="@DateTime.Now" />
+
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Fecha Vencimiento</label>
+                                    <input type="date" class="form-control" id="fechaVencimiento" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Fecha Contabilización</label>
+                                    <input type="date" class="form-control" id="fechaContabilzacion" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Moneda</label>
+                                    <select class="form-control" id="selectMoneda" onchange="javascript: onChangeMoneda()">
+                                        <option value="CRC" selected>CRC</option>
+                                        <option value="USD">USD</option>
+
+                                    </select>
+
+
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <!-- info row -->
+
+                        <div class="row invoice-info">
+                            <div class="col-md-6 invoice-col">
+                                <strong>Para</strong>
+                                <address>
+
+                                    <select id="ClienteSeleccionado" asp-for="Pago.idCliente" class="form-control select2" onchange="javascript: onChangeCliente()">
+                                        <option value="0"> Seleccione Cliente</option>
+
+
+
+                                    </select>
+
+                                    <br><br>
+                                    <span id="spanDireccion"> </span> <br>
+                                    <strong id="strongInfo">Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
+
+                                    <br><br>
+
+
+
+
+                                </address>
+                            </div>
+                            <div class="col-md-6">
+                                <br><br>
+                                <br><br>
+                           
+                              
+                                <strong id="strongInfo2">Saldo:   &nbsp;&nbsp;&nbsp;&nbsp; Limite Crédito:  </strong>
+                            </div>
+
+
+
+
+
+                        </div>
+                        <!-- /.col -->
+                        <!-- /.row -->
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="box">
+                <div class="box-body">
+                    <!-- Table row -->
+                    <div class="row">
+                        <div class="col-md-12  ">
+                            <div class="x_panel">
+                                <div class="x_content">
+
+
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h3>Facturas A Crédito</h3>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                      
+
+                                        <th>Nº Documento</th>
+                                        <th class="text-right">Cond Pago</th>
+
+                                        <th class="text-right">Fecha</th>
+                                        <th class="text-right">Fecha Vencimiento</th>
+                                        <th class="text-right">Días de atraso</th>
+                                          <th>Moneda</th>
+                                        <th class="text-right">Total</th>
+                                        <th class="text-right">Saldo Vencido</th>
+
+                                        <th class="text-right">Pago total</th>
+                                        <th class="text-right">Acción</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    @*  <div class="row">
+                <!-- accepted payments column -->
+                <div class="col-12 col-sm-6">
+                </div>
+                <!-- /.col -->
+                <div class="col-12 col-sm-6 text-right">
+
+
+                <div>
+                <p>Sub Total  : <span id="subG">0</span> </p>
+                <p>Descuento  : <span id="descG">0</span></p>
+                <p>Impuesto :  <span id="impG"> 0</span></p>
+
+                </div>
+                <div class="total-payment">
+                <h3><b>Total :</b>  <span id="totG">0 </span></h3>
+                </div>
+
+                </div>
+                <!-- /.col -->
+                </div>*@
+                    <!-- /.row -->
+
+                </div>
+            </div>
+
+
+            <div class="box">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+
+                            <div class="form-group">
+                                <label>Comentarios</label>
+                                <textarea id="inputComentarios" class="form-control"></textarea>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- this row will not appear when printing -->
+                    <div class="row no-print">
+                        <div class="col-12">
+                            @*<button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>*@
+                            <button type="button" class="btn btn-success pull-right" onclick="    javascript: Generar()">
+                                <i class="fa fa-credit-card"></i> Generar
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+       
+    </section>
+
+  
+
+
+<!--Modal-->
+<!--Programacion del modal edicion-->
+
+   

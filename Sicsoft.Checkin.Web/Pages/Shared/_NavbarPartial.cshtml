@@ -103,6 +103,22 @@
 
             }
 
+             @{
+                if (!string.IsNullOrEmpty(Roles.Where(a => a == "52").FirstOrDefault()))
+                {
+                    <li class="">
+
+                        <a asp-page="/Pagos/Index">
+                            <i class="mdi mdi-currency-usd"></i> <span>Abonos</span>
+
+                        </a>
+
+                    </li>
+
+                }
+
+            }
+
 
 
 

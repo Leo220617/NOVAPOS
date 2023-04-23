@@ -16,13 +16,12 @@ var Clientes = []; // variables globales
 var DocumentoC = [];
 var ProdClientes = [];
 var Impuestos = [];
-var ProdCadena = [];
-
+var ProdCadena = []; 
 var TipoCambio = [];
-var Documento = [];
-
+var Documento = []; 
 var CP = [];
 var Vendedores = [];
+var DetallePago = [];
 
 function Recuperar() {
     try {
@@ -121,7 +120,7 @@ function RecolectarFacturas() {
 
                 } else {
                     console.log(result);
-                    result = result.filter(a => a.moneda == $("#selectMoneda").val());
+                    result = result.filter(a => a.moneda == $("#selectMoneda").val() && a.status != "C");
                     ProdCadena = result;
                     RellenaTabla();
                 }
@@ -181,8 +180,7 @@ function RellenaTabla() {
             html += "<td > " + ProdCadena[i].moneda + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].totalCompra).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].saldo).toFixed(2)) + " </td>";
-            html += "<td class='text-center'> <input onchange='javascript: onChangeCantidadProducto(" + i + ")' type='number' id='" + i + "_Prod' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].totalDescuento).toFixed(2)) + "' min='1'/>  </td>";
-
+            html += "<td class='text-center'> <input onchange='javascript: onChangeMonto(" + i + ")' type='number' id='" + i + "_Fac' class='form-control'   value= '0' min='1'/>  </td>"; 
             html += "<td class='text-center'> <a class='fa fa-info-circle icono' onclick='javascript:AbrirModal(" + ProdCadena[i].id + ") '> </a> </td>";
 
             html += "</tr>";
@@ -208,10 +206,218 @@ function AbrirModal() {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Ha ocurrido un error al intentar recuperar ' + e
+            text: 'Ha ocurrido un error al intentar abrir modal ' + e
 
         })
     }
 
 }
- 
+function onChangeMonto(i) {
+    try {
+
+        var Fac = DetallePago.find(a => a.idEncDocumentoCredito == ProdCadena[i].id);
+
+        if ($("#" + i + "_Fac").val() > ProdCadena[i].saldo) {
+            $("#" + i + "_Fac").val(ProdCadena[i].saldo);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'El valor digitado es mayor al saldo faltante '
+
+            });
+        }
+        if (Fac == undefined && parseFloat($("#" + i + "_Fac").val()) > 0) {
+            var detalle = {
+                id: 0,
+                idEncabezado: 0,
+                idEncDocumentoCredito: ProdCadena[i].id,
+                NumLinea: 0,
+                Total: parseFloat($("#" + i + "_Fac").val())
+            };
+
+            DetallePago.push(detalle);
+        } else  {
+            if (parseFloat($("#" + i + "_Fac").val()) == 0) {
+
+                var posicion = DetallePago.indexOf(Fac);
+                DetallePago.splice(posicion, 1);
+            } else if (parseFloat($("#" + i + "_Fac").val()) > 0) {
+                var posicion = DetallePago.indexOf(Fac);
+                DetallePago[posicion].Total = parseFloat($("#" + i + "_Fac").val());
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Valor no puede ser menor a 0'  
+
+                })
+                $("#" + i + "_Fac").val(0);
+            }
+        }
+
+        if (DetallePago.length > 0) {
+            $('#selectMoneda').prop('disabled', true);
+            $('#ClienteSeleccionado').prop('disabled', true);
+
+        } else {
+            $('#selectMoneda').prop('disabled', false);
+            $('#ClienteSeleccionado').prop('disabled', false);
+
+        }
+        calculaTotalPago();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar insertar pago ' + e
+
+        })
+    }
+}
+
+
+function calculaTotalPago() {
+    try {
+        var total = 0;
+        for (var i = 0; i < DetallePago.length; i++) {
+            total += DetallePago[i].Total;
+        }
+
+        $("#totP").text(formatoDecimal(total.toFixed(2)));
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error: ' + e
+
+        })
+    }
+}
+
+function Generar() {
+    try {
+        $("#divProcesando").modal("show");
+        var Recibido = {
+            id: 0,
+            idCliente: $("#ClienteSeleccionado").val(),
+            CodSuc: "",
+            Fecha: $("#Fecha").val(),
+            FechaVencimiento: $("#fechaVencimiento").val(),
+            FechaContabilizacion: $("#fechaContabilzacion").val(),
+            Comentarios: $("#inputComentarios").val(),
+            Referencia: "",
+            Moneda: $("#selectMoneda").val(),
+            TotalPagado: 0,
+            Detalle: DetallePago
+        }
+        if (ValidarPago(Recibido)) {
+            Swal.fire({
+                title: '¿Desea guardar el pago?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: `Aceptar`,
+                denyButtonText: `Cancelar`,
+                customClass: {
+                    confirmButton: 'swalBtnColor',
+                    denyButton: 'swalDeny'
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $("#divProcesando").modal("show");
+
+
+                    $.ajax({
+                        type: 'POST',
+
+                        url: $("#urlGenerar").val(),
+                        dataType: 'json',
+                        data: { recibidos: Recibido },
+                        headers: {
+                            RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (json) {
+
+
+                            console.log("resultado " + json.Pago);
+                            if (json.success == true) {
+                                $("#divProcesando").modal("hide");
+                                Swal.fire({
+                                    title: "Ha sido generado con éxito",
+
+                                    icon: 'success',
+                                    showCancelButton: false,
+
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'swalBtnColor',
+
+                                    },
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        //Despues de insertar, ocupariamos el id del cliente en la bd 
+                                        //para entonces setearlo en el array de clientes
+
+                                        window.location.href = window.location.href.split("/Nuevo")[0];
+
+
+                                    }
+                                })
+
+                            } else {
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Ha ocurrido un error al intentar guardar'
+
+                                })
+                            }
+                        },
+
+                        beforeSend: function () {
+
+                        },
+                        complete: function () {
+                            $("#divProcesando").modal("hide");
+
+                        },
+                        error: function (error) {
+                            $("#divProcesando").modal("hide");
+
+
+                        }
+                    });
+                }
+            })
+        }
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar generar ' + e
+
+        })
+    }
+}
+
+function ValidarPago(Pago) {
+    try {
+        if (Pago.idCliente == "0" || Pago.idCliente == null) {
+            return false;
+        } else if (Pago.Fecha == "" || Pago.Fecha == null) {
+            return false;
+        }
+        else if (Pago.FechaVencimiento == "" || Pago.FechaVencimiento == null) {
+            return false;
+        } else if (Pago.FechaContabilizacion == "" || Pago.FechaContabilizacion == null) {
+            return false;
+        } else if (Pago.Detalle.length == 0 || Pago.Detalle == null) {
+            return false;
+        } else {
+            return true;
+        }
+    } catch (e) {
+        return false;
+    }
+}

@@ -130,17 +130,28 @@ namespace NOVAAPP.Pages.Pagos
             {
 
 
+                if(idCliente > 0)
+                {
+                    ParametrosFiltros filtros = new ParametrosFiltros();
+                    filtros.Codigo1 = idCliente;
 
-                ParametrosFiltros filtros = new ParametrosFiltros();
-                filtros.Codigo1 = idCliente;
+                    var objetos = await documentos.ObtenerLista(filtros);
+
+                    var objeto = objetos.ToList();
+
+
+
+                    return new JsonResult(objeto);
+                }
+                else
+                {
+                    var objeto = new DocumentosCreditoViewModel[0];
+
+
+
+                    return new JsonResult(objeto);
+                }
                 
-                var objetos = await documentos.ObtenerLista(filtros);
-
-                var objeto = objetos.ToList();
-
-
-
-                return new JsonResult(objeto);
             }
             catch (ApiException ex)
             {
@@ -167,7 +178,7 @@ namespace NOVAAPP.Pages.Pagos
             try
             {
                 recibidos.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
-             
+                recibidos.TotalPagado = recibidos.Detalle.Sum(a => a.Total);
                 var resp = await service.Agregar(recibidos);
                 //if (recibidos.TotalPagado > 0)
                 //{
@@ -183,19 +194,21 @@ namespace NOVAAPP.Pages.Pagos
             }
             catch (ApiException ex)
             {
-                Errores errores = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
-                ModelState.AddModelError(string.Empty, errores.Message);
-                return new JsonResult(error);
-                //return new JsonResult(false);
+                var resp2 = new
+                {
+                    success = false,
+                    Pago = ex.Content.ToString()
+                };
+                return new JsonResult(resp2);
             }
             catch (Exception ex)
             {
 
-                ModelState.AddModelError(string.Empty, ex.Message);
+                
                 var resp2 = new
                 {
                     success = false,
-                    Pago = ""
+                    Pago = ex.Message
                 };
                 return new JsonResult(resp2);
             }

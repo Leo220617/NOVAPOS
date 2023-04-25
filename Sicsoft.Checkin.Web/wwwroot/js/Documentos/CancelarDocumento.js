@@ -78,7 +78,7 @@ function RecuperarInformacion() {
                 idEncabezado: 0,
                 Descripcion: PE.Codigo + " - " + PE.Nombre,
                 Moneda: $("#selectMoneda").val(),
-                idProducto: PE.id,
+                idProducto: Documento.Detalle[i].idProducto,
                 NumLinea: 0,
                 Cantidad: parseFloat(Documento.Detalle[i].Cantidad.toFixed(2)),
                 TotalImpuesto: parseFloat(Documento.Detalle[i].TotalImpuesto.toFixed(2)),
@@ -233,8 +233,23 @@ function RellenaTabla() {
 
 function onChangeCantidadProducto(i) {
     try {
-        ProdCadena[i].Cantidad = parseFloat($("#" + i + "_Prod").val()).toFixed(2);
-        ValidarTotales();
+        var Detalle = Documento.Detalle.find(a => a.idProducto == ProdCadena[i].idProducto);
+        if (Detalle.Cantidad < parseFloat($("#" + i + "_Prod").val())) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Error, no puede seleccionar una cantidad mayor a lo facturado'
+
+            })
+
+            $("#" + i + "_Prod").val(Detalle.Cantidad);
+            ValidarTotales();
+
+        } else {
+            ProdCadena[i].Cantidad = parseFloat($("#" + i + "_Prod").val()).toFixed(2);
+            ValidarTotales();
+
+        }
     } catch (e) {
         Swal.fire({
             icon: 'error',

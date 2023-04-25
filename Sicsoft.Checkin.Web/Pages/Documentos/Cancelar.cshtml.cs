@@ -82,6 +82,12 @@ namespace NOVAAPP.Pages.Documentos
                     return RedirectToPage("/NoPermiso");
                 }
 
+                ParametrosFiltros filtroNC = new ParametrosFiltros();
+                filtroNC.BaseEntry = id;
+                filtroNC.CardCode = "03";
+
+                var NCAnteriores = await service.ObtenerLista(filtroNC);
+
                 Documento = await service.ObtenerPorId(id);
                 Documento.BaseEntry = id;
                 Documento.Comentarios = "Cancelacion de la factura # " + id;
@@ -100,6 +106,16 @@ namespace NOVAAPP.Pages.Documentos
                 Grupos = await grupo.ObtenerLista("");
                 filtro.FechaInicial = DateTime.Now.Date;
                 TP = await tipoCambio.ObtenerLista(filtro);
+
+                foreach(var item in NCAnteriores)
+                {
+                    foreach(var item2 in item.Detalle)
+                    {
+                        Documento.Detalle.Where(a => a.idProducto == item2.idProducto).FirstOrDefault().Cantidad -= item2.Cantidad;
+
+                    }
+                }
+
                 return Page();
             }
             catch (Exception ex)

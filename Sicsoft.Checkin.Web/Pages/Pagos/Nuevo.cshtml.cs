@@ -18,20 +18,20 @@ namespace NOVAAPP.Pages.Pagos
     public class NuevoModel : PageModel
     {
         private readonly ICrudApi<PagosViewModel, int> service; //API
-       
+
         private readonly ICrudApi<ClientesViewModel, string> clientes;
         private readonly ICrudApi<ProductosViewModel, string> productos;
         private readonly ICrudApi<SucursalesViewModel, string> sucursales;
         private readonly ICrudApi<DocumentosCreditoViewModel, int> documentos;
-     
-    
+
+
         private readonly ICrudApi<TipoCambiosViewModel, int> tipoCambio;
         private readonly ICrudApi<CondicionesPagosViewModel, int> serviceCP; //API
 
         private readonly ICrudApi<VendedoresViewModel, int> vendedor;
-  
 
-   
+
+
 
 
         [BindProperty]
@@ -59,12 +59,12 @@ namespace NOVAAPP.Pages.Pagos
         [BindProperty]
         public CondicionesPagosViewModel[] CP { get; set; }
 
-     
+
 
         [BindProperty]
         public int idVendedor { get; set; }
 
-        
+
 
         [BindProperty]
         public VendedoresViewModel[] Vendedores { get; set; }
@@ -72,7 +72,7 @@ namespace NOVAAPP.Pages.Pagos
 
 
 
-        public NuevoModel(ICrudApi<PagosViewModel, int> service,  ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<SucursalesViewModel, string> sucursales,  ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<DocumentosCreditoViewModel, int> documentos) //CTOR 
+        public NuevoModel(ICrudApi<PagosViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<DocumentosCreditoViewModel, int> documentos) //CTOR 
         {
             this.service = service;
             this.clientes = clientes;
@@ -82,7 +82,7 @@ namespace NOVAAPP.Pages.Pagos
             this.tipoCambio = tipoCambio;
             this.serviceCP = serviceCP;
             this.vendedor = vendedor;
-        
+
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -95,11 +95,11 @@ namespace NOVAAPP.Pages.Pagos
                     return RedirectToPage("/NoPermiso");
                 }
 
-              
+
 
                 CP = await serviceCP.ObtenerLista("");
                 var idUsuario = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
-              
+
 
 
                 ParametrosFiltros filtro = new ParametrosFiltros();
@@ -111,8 +111,8 @@ namespace NOVAAPP.Pages.Pagos
                 Productos = await productos.ObtenerLista("");
                 filtro.FechaInicial = DateTime.Now.Date;
                 TP = await tipoCambio.ObtenerLista(filtro);
-                Vendedores = await vendedor.ObtenerLista(filtro);
-                Vendedores = Vendedores.Where(a => a.Activo == true).ToArray();
+                Vendedores = await vendedor.ObtenerLista("");
+            
 
                 return Page();
             }
@@ -130,7 +130,7 @@ namespace NOVAAPP.Pages.Pagos
             {
 
 
-                if(idCliente > 0)
+                if (idCliente > 0)
                 {
                     ParametrosFiltros filtros = new ParametrosFiltros();
                     filtros.Codigo1 = idCliente;
@@ -151,7 +151,7 @@ namespace NOVAAPP.Pages.Pagos
 
                     return new JsonResult(objeto);
                 }
-                
+
             }
             catch (ApiException ex)
             {
@@ -204,7 +204,7 @@ namespace NOVAAPP.Pages.Pagos
             catch (Exception ex)
             {
 
-                
+
                 var resp2 = new
                 {
                     success = false,
@@ -213,7 +213,25 @@ namespace NOVAAPP.Pages.Pagos
                 return new JsonResult(resp2);
             }
         }
+        public async Task<IActionResult> OnGetBuscarFM(int idB)
+        {
+            try
+            {
+                var FM = await documentos.ObtenerPorId(idB);
+
+                return new JsonResult(FM);
+            }
+            catch (ApiException ex)
+            {
+                Errores error = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
+
+
+                return new JsonResult(error);
+            }
+        }
+
 
 
     }
 }
+

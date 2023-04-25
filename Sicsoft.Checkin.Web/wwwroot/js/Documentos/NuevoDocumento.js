@@ -769,7 +769,7 @@ function validar(cliente) {
 }
 
 function LimpiarDatosCliente() {
-    try {ci
+    try {
         $("#idListaP").val("1").trigger('change.select2');
         $("#idGrupo").val("1").trigger('change.select2');
         $("#Nombre").val("");

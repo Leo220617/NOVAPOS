@@ -38,5 +38,6 @@
         public int SerieFECO { get; set; }
 
         public int SerieFECR { get; set; }
+        public int SeriePago { get; set; }
     }
 }

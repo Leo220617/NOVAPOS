@@ -1,0 +1,620 @@
+﻿@page "{id}"
+@model NOVAAPP.Pages.Pagos.ObservarModel
+@{
+    ViewData["Title"] = "Abonos";
+    NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
+    formato.CurrencySymbol = "";
+    formato.CurrencyGroupSeparator = ",";
+    formato.NumberDecimalSeparator = ".";
+}
+@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@using Sicsoft.Checkin.Web.Models;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
+@section styles{
+
+
+}
+    @section scripts{
+
+
+    <script src="/js/Pagos/ObservarPago.js"></script>
+
+
+}
+
+
+    @using Newtonsoft.Json;
+    @using System.Globalization
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Abonos
+        </h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+            <li class="breadcrumb-item active">Observar Pago</li>
+        </ol>
+    </section>
+
+    <section class="content ">
+        <div class="row">
+            <div class="col-12">
+                <input hidden id="Pago" value="@JsonConvert.SerializeObject(Model.Pago)" />
+                <input hidden id="Clientes" value="@JsonConvert.SerializeObject(Model.Clientes)" />
+                <input hidden id="Vendedores" value="@JsonConvert.SerializeObject(Model.Vendedores)" />
+                <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
+
+                <input hidden id="Sucursales" value="@JsonConvert.SerializeObject(Model.Sucursales)" />
+                <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
+                <input hidden id="Documento" value="@JsonConvert.SerializeObject(Model.Pago)" />
+                <input hidden id="CP" value="@JsonConvert.SerializeObject(Model.CP)" />
+                <input hidden id="Facturas" value="@JsonConvert.SerializeObject(Model.DocumentosC)" />
+
+                <input hidden id="urlModalEdicion" value="@Url.Page("Observar", "BuscarFM")" />
+
+
+
+
+
+                <input hidden id="urlGenerar" value="@Url.Page("Observar", "AgregarPago")" />
+                <input hidden id="urlFacturas" value="@Url.Page("Observar", "Facturas")" />
+
+
+
+                <!-- Content Header (Page header) -->
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-8">
+                                <h6 class="box-subtitle">Observar Pago</h6>
+
+
+                            </div>
+                            <div class="col-4">
+                                <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <!-- title row -->
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="page-header mt-0">
+                                    <h2 class="d-inline"><span class="font-size-24">Abonos</span></h2>
+                                    <div class="text-left">
+                                        <h5>Fecha <span class="font-size-18">@Model.Pago.Fecha.ToString("dd MMM yyy")</span></h5>
+                                        <input hidden id="Fecha" type="datetime"  />
+
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <h5> <b>Fecha Vencimiento: </b> @Model.Pago.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                      <h5> <b>Fecha Contabilización: </b> @Model.Pago.FechaContabilizacion.ToString("dd/MM/yyyy")</h5>
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                     <h5> <b>Moneda: </b> @Model.Pago.Moneda</h5>
+                                       
+
+                                 
+
+
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <!-- info row -->
+
+                        <div class="row invoice-info">
+                            <div class="col-md-6 invoice-col">
+                                <strong>Para</strong>
+                                <address>
+
+                                   <strong class="text-blue font-size-24"> @( Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" : Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault().Codigo + " - "+ Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault().Nombre)   </strong>
+
+                                    <br><br>
+                                    <span id="spanDireccion"> </span> <br>
+                                    <strong id="strongInfo">Phone: @( Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" :  Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault().Telefono) 
+                                        &nbsp;&nbsp;&nbsp;&nbsp; Email:   @( Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" :  Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault().Email) </strong>
+
+                                    <br><br>
+
+
+
+
+                                </address>
+                            </div>
+                            <div class="col-md-6">
+                                <br><br>
+                                <br><br>
+
+
+                                <strong id="strongInfo2">Saldo:  @Math.Round(( Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault() == null ? 0 :  Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault().Saldo),2).ToString("C",formato) 
+                                    &nbsp;&nbsp;&nbsp;&nbsp; Limite Crédito: @Math.Round(( Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault() == null ? 0 :  Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault().LimiteCredito),2).ToString("C",formato)   </strong>
+                            </div>
+
+
+
+
+
+                        </div>
+                        <!-- /.col -->
+                        <!-- /.row -->
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="box">
+                <div class="box-body">
+                    <!-- Table row -->
+                    <div class="row">
+                        <div class="col-md-12  ">
+                            <div class="x_panel">
+                                <div class="x_content">
+
+
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h3>Facturas A Crédito</h3>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+
+
+                                        <th class='text-center'>Nº Documento</th>
+                                        <th class="text-center">Cond Pago</th>
+
+                                        <th class="text-center">Fecha</th>
+                                        <th class="text-center">Fecha Vencimiento</th>
+                                      
+                                        <th class="text-center">Moneda</th>
+                                        <th class="text-center">Total</th>
+                                        <th class="text-center">Saldo Vencido</th>
+
+                                        <th class="text-center">Pago total</th>
+                                        <th class="text-center">Acción</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody">
+                                    @foreach(var item in Model.DocumentosC)
+                                {
+                                    <tr>
+                                      <td class='text-center'>@item.DocNum</td>
+                                      <td class='text-right'> @(Model.CP.Where(a => a.id == item.idCondPago).FirstOrDefault() == null ? "0" : Model.CP.Where(a => a.id == item.idCondPago).FirstOrDefault().Nombre)</td>
+                                          <td class='text-center'>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                                          <td class='text-center'>@item.FechaVencimiento.ToString("dd/MM/yyyy")</td>
+                                          <td class='text-center'>@item.Moneda</td>
+                                          <td class='text-right'>@Math.Round(item.TotalCompra, 2).ToString("C",formato)</td>
+                                          <td class='text-right'>@Math.Round(item.Saldo, 2).ToString("C",formato)</td>
+                                          <td class='text-right'>@Math.Round(Model.Pago.Detalle.Where( a => a.idEncDocumentoCredito == item.id).FirstOrDefault() == null ? 0 : Model.Pago.Detalle.Where( a => a.idEncDocumentoCredito == item.id).FirstOrDefault().Total, 2).ToString("C",formato) </td>
+                                          <td class='text-center'>   <a class="fa fa-info-circle icono" onclick="javascript: AbrirModalEdicion ('@item.id')"> </a>  </td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                            </table>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <div class="row">
+                        <!-- accepted payments column -->
+                        <div class="col-12 col-sm-6">
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-12 col-sm-6 text-right">
+
+
+
+                            <div class="total-payment">
+                                <h3><b>Total Pagado :</b>  <span >@Math.Round(Model.Pago.TotalPagado,2).ToString("C",formato) </span></h3>
+                            </div>
+
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+
+                </div>
+            </div>
+
+
+          <div class="col-6 box">
+                <div class="col-6 box-header with-border">
+                    <h4 class="box-title">Comentarios</h4>
+                </div>
+                <div class="box-body">
+                    <p>@Model.Pago.Comentarios</p>
+
+                    <!-- /.box-body -->
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+        <button id="print" class="btn btn-warning" type="button" onclick="javascript: ImprimirPantalla()"> <span><i class="fa fa-print"></i> Imprimir</span> </button>
+
+    </section>
+
+
+
+
+    <!-- Modal -->
+    <div class="modal fade bs-example-modal-lg" id="ModalInclusion" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Observar Factura</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="text-left">
+                        <div class="row">
+                            <div class="col-4">
+                                <h5> <b>Fecha: </b> <a id="FechaM"> </a></h5>
+
+
+                            </div>
+
+
+
+
+
+
+                            <br />
+
+
+                            <div class="col-4">
+                                <h5> <b>Moneda: </b> <a id="MonedaM"> </a></h5>
+
+
+                            </div>
+
+                            <div class="col-4">
+                                <h5> <b>Cond.Pago: </b> <a id="CondPagoM"> </a></h5>
+
+
+                            </div>
+
+                            <div class="col-4">
+                                <h5> <b>Vendedor: </b>  <a id="VendedorM"> </a></h5>
+
+                            </div>
+
+                            <br />
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+                            <div class="col-12">
+                                <h5> <b>Clave Hacienda: </b><a id="ClaveHacienda"> </a></h5>
+
+
+                            </div>
+                            &nbsp;
+                            &nbsp;
+                            abr
+                            <div class="col-12">
+                                <h5> <b>Consecutivo Hacienda: </b> <a id="ConsecutivoHaciendaM"> </a> </h5>
+
+
+
+                            </div>
+
+
+
+                        </div>
+                        <div class="row invoice-info">
+                            <div class="col-md-8 invoice-col">
+                                <strong>Cliente</strong>
+                                <address>
+                                    <strong id="ClienteM" class="text-blue font-size-24">   </strong>
+
+
+                                </address>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <!-- /.row -->
+                        <!-- Table row -->
+                        <div class="row">
+                            <div class="col-12 table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr class="bg-pale-info">
+                                            <th class="text-center">#</th>
+                                            <th class="text-center">Producto</th>
+                                            <th class="text-center">Cantidad</th>
+                                            <th class="text-center">Precio Unitario</th>
+                                            <th class="text-center">% Descuento</th>
+                                            <th class="text-center">Descuento</th>
+                                            <th class="text-center">Impuesto</th>
+
+
+
+                                            <th class="text-center">Total</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyM">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-12  text-right">
+
+
+                                <div>
+                                    <p>Sub Total  : <span id="SubtotalM"> </span></p>
+                                    <p>Descuento  : <span id="DescuentoM"> </span></p>
+                                    <p>Impuesto :  <span id="ImpuestoM"> </span></p>
+
+                                </div>
+                                <div class="total-payment">
+                                    <h3><b>Total :</b>  <span id="TotalM">  </span></h3>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Cerrar</button> &nbsp;
+
+
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+<div class="html" hidden>
+      <div class="box">
+                 
+                    <div class="box-body">
+                        <!-- title row -->
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="page-header mt-0">
+                                    <h2 class="d-inline"><span class="font-size-24">Abonos</span></h2>
+                                    <div class="text-left">
+                                        <h5>Fecha <span class="font-size-18">@Model.Pago.Fecha.ToString("dd MMM yyy")</span></h5>
+                                        <input hidden id="Fecha" type="datetime"  />
+
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <h5> <b>Fecha Vencimiento: </b> @Model.Pago.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                      <h5> <b>Fecha Contabilización: </b> @Model.Pago.FechaContabilizacion.ToString("dd/MM/yyyy")</h5>
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                     <h5> <b>Moneda: </b> @Model.Pago.Moneda</h5>
+                                       
+
+                                 
+
+
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <!-- info row -->
+
+                        <div class="row invoice-info">
+                            <div class="col-md-6 invoice-col">
+                                <strong>Para</strong>
+                                <address>
+
+                                   <strong class="text-blue font-size-24"> @( Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" : Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault().Codigo + " - "+ Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault().Nombre)   </strong>
+
+                                    <br><br>
+                                    <span id="spanDireccion"> </span> <br>
+                                    <strong id="strongInfo">Phone: @( Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" :  Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault().Telefono) 
+                                        &nbsp;&nbsp;&nbsp;&nbsp; Email:   @( Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" :  Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault().Email) </strong>
+
+                                    <br><br>
+
+
+
+
+                                </address>
+                            </div>
+                            <div class="col-md-6">
+                                <br><br>
+                                <br><br>
+
+
+                                <strong id="strongInfo2">Saldo:  @Math.Round(( Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault() == null ? 0 :  Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault().Saldo),2).ToString("C",formato) 
+                                    &nbsp;&nbsp;&nbsp;&nbsp; Limite Crédito: @Math.Round(( Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault() == null ? 0 :  Model.Clientes.Where(a => a.id == Model.Pago.idCliente).FirstOrDefault().LimiteCredito),2).ToString("C",formato)   </strong>
+                            </div>
+
+
+
+
+
+                        </div>
+                        <!-- /.col -->
+                        <!-- /.row -->
+
+                    </div>
+
+                </div>
+
+
+          
+
+
+            <div class="box">
+                <div class="box-body">
+                    <!-- Table row -->
+                    <div class="row">
+                        <div class="col-md-12  ">
+                            <div class="x_panel">
+                                <div class="x_content">
+
+
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h3>Facturas A Crédito</h3>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+
+
+                                        <th class='text-center'>Nº Documento</th>
+                                        <th class="text-center">Cond Pago</th>
+
+                                        <th class="text-center">Fecha</th>
+                                        <th class="text-center">Fecha Vencimiento</th>
+                                      
+                                        <th class="text-center">Moneda</th>
+                                        <th class="text-center">Total</th>
+                                        <th class="text-center">Saldo Vencido</th>
+
+                                        <th class="text-center">Pago total</th>
+                                     
+
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody">
+                                    @foreach(var item in Model.DocumentosC)
+                                {
+                                    <tr>
+                                      <td class='text-center'>@item.DocNum</td>
+                                      <td class='text-right'> @(Model.CP.Where(a => a.id == item.idCondPago).FirstOrDefault() == null ? "0" : Model.CP.Where(a => a.id == item.idCondPago).FirstOrDefault().Nombre)</td>
+                                          <td class='text-center'>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                                          <td class='text-center'>@item.FechaVencimiento.ToString("dd/MM/yyyy")</td>
+                                          <td class='text-center'>@item.Moneda</td>
+                                          <td class='text-right'>@Math.Round(item.TotalCompra, 2).ToString("C",formato)</td>
+                                          <td class='text-right'>@Math.Round(item.Saldo, 2).ToString("C",formato)</td>
+                                          <td class='text-right'>@Math.Round(Model.Pago.Detalle.Where( a => a.idEncDocumentoCredito == item.id).FirstOrDefault() == null ? 0 : Model.Pago.Detalle.Where( a => a.idEncDocumentoCredito == item.id).FirstOrDefault().Total, 2).ToString("C",formato) </td>
+                                        
+                                    </tr>
+
+                                }
+                            </tbody>
+                            </table>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <div class="row">
+                        <!-- accepted payments column -->
+                        <div class="col-12 col-sm-6">
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-12 col-sm-6 text-right">
+
+
+
+                            <div class="total-payment">
+                                <h3><b>Total Pagado :</b>  <span >@Math.Round(Model.Pago.TotalPagado,2).ToString("C",formato) </span></h3>
+                            </div>
+
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+
+                </div>
+            </div>
+
+
+          <div class="col-6 box">
+                <div class="col-6 box-header with-border">
+                    <h4 class="box-title">Comentarios</h4>
+                </div>
+                <div class="box-body">
+                    <p>@Model.Pago.Comentarios</p>
+
+                    <!-- /.box-body -->
+                </div>
+
+
+
+
+            </div>
+
+         </div>

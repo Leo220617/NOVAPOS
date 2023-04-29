@@ -85,13 +85,13 @@ namespace NOVAAPP.Pages.Pagos
 
 
                 }
-             
 
+                filtro.Activo = true;
                 Listas = await service.ObtenerLista(filtro);
                 Sucursales = await sucursales.ObtenerLista(filtro);
 
 
-
+               
                 var Roles = await roles.ObtenerLista("");
                 var RolCajero = Roles.Where(a => a.NombreRol.ToLower().Contains("cajero".ToLower())).FirstOrDefault();
                 var UsuariosSucursales = await usuc.ObtenerLista(filtro);
@@ -134,6 +134,25 @@ namespace NOVAAPP.Pages.Pagos
                 return Page();
             }
         }
-     
+
+        public async Task<IActionResult> OnGetSincronizarSAP(int id)
+        {
+            try
+            {
+
+                await service.SincronizarSAP(id);
+                return new JsonResult(true);
+            }
+            catch (ApiException ex)
+            {
+                return new JsonResult(false);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(false);
+
+            }
+        }
+
     }
 }

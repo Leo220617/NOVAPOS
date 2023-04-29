@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\Pagos\Nuevo.cshtml" />
     <Content Remove="wwwroot\js\Documentos\EditarDocumento.js~RF33b1f000.TMP" />
     <Content Remove="wwwroot\js\Documentos\NuevoDocumento.js~RF33a8b758.TMP" />
   </ItemGroup>
@@ -37,20 +36,11 @@
 
   <ItemGroup>
     <None Include="Pages\Documentos\Cancelar.cshtml" />
-    <None Include="Pages\Pagos\Nuevo.cshtml" />
     <None Include="wwwroot\assets\vendor_components\popper\.github\ISSUE_TEMPLATE.md" />
     <None Include="wwwroot\assets\vendor_components\popper\.github\PULL_REQUEST_TEMPLATE.md" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\Pagos\Nuevo.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\Pagos\Nuevo.cshtml" />
-  </ItemGroup>
 
 
 

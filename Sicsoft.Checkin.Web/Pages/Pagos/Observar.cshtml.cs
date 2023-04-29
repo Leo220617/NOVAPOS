@@ -15,7 +15,7 @@ using Sicsoft.Checkin.Web.Servicios;
 
 namespace NOVAAPP.Pages.Pagos
 {
-    public class NuevoModel : PageModel
+    public class ObservarModel : PageModel
     {
         private readonly ICrudApi<PagosViewModel, int> service; //API
 
@@ -46,7 +46,7 @@ namespace NOVAAPP.Pages.Pagos
         public ProductosViewModel[] Productos { get; set; }
 
         [BindProperty]
-        public DocumentosCreditoViewModel[] DocumentosC { get; set; }
+        public List<DocumentosCreditoViewModel> DocumentosC { get; set; } = new List<DocumentosCreditoViewModel>();
 
 
         [BindProperty]
@@ -72,7 +72,7 @@ namespace NOVAAPP.Pages.Pagos
 
 
 
-        public NuevoModel(ICrudApi<PagosViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<DocumentosCreditoViewModel, int> documentos) //CTOR 
+        public ObservarModel(ICrudApi<PagosViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<DocumentosCreditoViewModel, int> documentos) //CTOR 
         {
             this.service = service;
             this.clientes = clientes;
@@ -100,6 +100,7 @@ namespace NOVAAPP.Pages.Pagos
                 CP = await serviceCP.ObtenerLista("");
                 var idUsuario = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
 
+                Pago = await service.ObtenerPorId(id);
 
 
                 ParametrosFiltros filtro = new ParametrosFiltros();
@@ -113,6 +114,16 @@ namespace NOVAAPP.Pages.Pagos
                 TP = await tipoCambio.ObtenerLista(filtro);
                 Vendedores = await vendedor.ObtenerLista("");
 
+                foreach(var item in Pago.Detalle)
+                {
+                    var Factura = await documentos.ObtenerPorId(item.idEncDocumentoCredito);
+                    if(Factura != null)
+                    {
+                        DocumentosC.Add(Factura);
+
+                    }
+                }
+               
 
                 return Page();
             }
@@ -170,49 +181,7 @@ namespace NOVAAPP.Pages.Pagos
         }
 
 
-        public async Task<IActionResult> OnPostAgregarPago(PagosViewModel recibidos)
-        {
-            string error = "";
-
-
-            try
-            {
-                recibidos.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
-                recibidos.TotalPagado = recibidos.Detalle.Sum(a => a.Total);
-                var resp = await service.Agregar(recibidos);
-                //if (recibidos.TotalPagado > 0)
-                //{
-                //    await service.Eliminar(recibidos.TotalPagado);
-
-                //}
-                var resp2 = new
-                {
-                    success = true,
-                    Pago = resp
-                };
-                return new JsonResult(resp2);
-            }
-            catch (ApiException ex)
-            {
-                var resp2 = new
-                {
-                    success = false,
-                    Pago = ex.Content.ToString()
-                };
-                return new JsonResult(resp2);
-            }
-            catch (Exception ex)
-            {
-
-
-                var resp2 = new
-                {
-                    success = false,
-                    Pago = ex.Message
-                };
-                return new JsonResult(resp2);
-            }
-        }
+      
         public async Task<IActionResult> OnGetBuscarFM(int idB)
         {
             try

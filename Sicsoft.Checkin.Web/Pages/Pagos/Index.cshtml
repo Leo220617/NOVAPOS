@@ -212,9 +212,28 @@
                                 </div>
                             </div>
 
+                              <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="cyber">Moneda:</label>
+                                        <select class="form-control" id="money" asp-for="filtro.CardCode" required>
+                                       
+                                            <option value="CRC">CRC</option>
+                                            <option value="USD">USD</option>
+                                    
+
+
+
+
+
+                                        </select>
+                                    </div>
+                                </div>
                           
                            
-
+                             <div class="col-md-2 " style="text-align: center; padding-top: 2%;">
+                                <input type="checkbox" id="md_checkbox_1" class="chk-col-red" asp-for="filtro.Procesado" onclick="this.form.submit()" />
+                                <label for="md_checkbox_1"> Procesado SAP</label>
+                            </div>
 
 
 
@@ -259,8 +278,9 @@
 
                                     <th>Fecha Vencimiento</th>
                                     <th>Fecha Contabilización</th>
-                                    <th>Referencia</th>
+                                    <th>Moneda</th>
                                     <th>Total Pagado</th>
+                                    <th>Procesado SAP</th>
 
                                    
 
@@ -281,13 +301,13 @@
                                         </td>
                                           <td align="center" style="padding-top:15px;">
                                            
-                                                <a asp-page="./Editar" asp-route-id="@item.id" class="fa fa-edit icono"> </a>
-
-
-                                            &nbsp;
                                             <a asp-page="./Observar" asp-route-id="@item.id" class="fa fa-info-circle icono"> </a> &nbsp;
                                             &nbsp;
                                             
+                                             @if (item.ProcesadaSAP == false)
+                                            {
+                                                <a onclick="javascript: onClickModal('@item.id')" title="Insertar a SAP"><img src="/sapX.png" /></a>
+                                            }
                                           
                                         </td>
                                         <td>
@@ -309,10 +329,22 @@
                                         </td>
                                        
                                         <td>
-                                            @item.Referencia
+                                            @item.Moneda
                                         </td>
                                         <td>
                                             @Math.Round(@item.TotalPagado, 2).ToString("C",formato)
+                                        </td>
+
+                                           <td>
+                                            @if (item.ProcesadaSAP)
+                                            {
+                                                <span class="badge badge-pill badge-success">Procesado</span>
+
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-pill badge-danger">Sin Procesar</span>
+                                            }
                                         </td>
                                        
 
@@ -343,8 +375,9 @@
 
                                     <th>Fecha Vencimiento</th>
                                     <th>Fecha Contabilización</th>
-                                    <th>Referencia</th>
+                                    <th>Moneda</th>
                                     <th>Total Pagado</th>
+                                     <th>Procesado SAP</th>
                                    
 
                                 </tr>

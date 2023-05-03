@@ -297,6 +297,7 @@ function calculaTotalPago() {
 function Generar() {
     try {
         $("#divProcesando").modal("show");
+        var button = document.getElementById("botonG");
         var Recibido = {
             id: 0,
             idCliente: $("#ClienteSeleccionado").val(),
@@ -323,6 +324,7 @@ function Generar() {
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
+                    button.disabled = true;
                     $("#divProcesando").modal("show");
 
 
@@ -364,7 +366,7 @@ function Generar() {
                                 })
 
                             } else {
-
+                                button.disabled = false;
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
@@ -392,6 +394,7 @@ function Generar() {
         }
 
     } catch (e) {
+        button.disabled = false;
         Swal.fire({
             icon: 'error',
             title: 'Oops...',

@@ -61,9 +61,10 @@
                 <input hidden id="Documento" value="@JsonConvert.SerializeObject(Model.Oferta)" />
                 <input hidden id="urlGenerar" value="@Url.Page("Nuevo", "AgregarOferta")" />
                 <input hidden id="urlCliente" value="@Url.Page("Nuevo", "AgregarCliente")" />
-                 <input hidden id="USU" value="@JsonConvert.SerializeObject(Model.idVendedor)" />
-                  <input hidden id="DES" value="@JsonConvert.SerializeObject(Model.Descuento)" />
-                  <input hidden id="Bodega" value="@JsonConvert.SerializeObject(Model.Bodega)" />
+                <input hidden id="urlFacturas" value="@Url.Page("Nuevo", "Facturas")" />
+                <input hidden id="USU" value="@JsonConvert.SerializeObject(Model.idVendedor)" />
+                <input hidden id="DES" value="@JsonConvert.SerializeObject(Model.Descuento)" />
+                <input hidden id="Bodega" value="@JsonConvert.SerializeObject(Model.Bodega)" />
 
                 <!-- Content Header (Page header) -->
                 <div class="box">
@@ -153,9 +154,11 @@
                                     <span id="spanDireccion"> </span> <br>
                                     <strong id="strongInfo">Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
 
-
+                                    <br><br>
+                                    <strong id="strongInfo2">Saldo:   &nbsp;&nbsp;&nbsp;&nbsp; Limite Crédito:  </strong>
                                 </address>
                             </div>
+
 
                             <div class="col-sm-3">
                                 <label>Cond. Pago</label>
@@ -169,7 +172,7 @@
                                 </select>
                             </div>
 
-                            
+
                         </div>
 
 
@@ -218,6 +221,17 @@
                                         </div>
                                         <br />
                                         <div class="row">
+
+                                                <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Nombre Producto</label>
+                                                <input id="inputNomPro" disabled type="text"  class="form-control" placeholder="Nombre Producto">
+
+
+                                            </div>
+
+
+                                        </div>
 
                                             <div class="col-md-3">
                                                 <div class="form-group">
@@ -275,7 +289,7 @@
                                         <div class="col-md-3 pr-1">
                                             <div class="form-group">
                                                 <label>Precio de Venta</label>
-                                                <input id="inputPrecio"  type="number" class="form-control" placeholder="Precio Unitario" value="0">
+                                                <input id="inputPrecio" type="number" class="form-control" placeholder="Precio Unitario" value="0">
 
 
                                             </div>

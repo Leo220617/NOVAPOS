@@ -34,6 +34,7 @@ function Recuperar() {
         TipoCambio = JSON.parse($("#TipoCambio").val());
         Documento = JSON.parse($("#Documento").val());
         CP = JSON.parse($("#CP").val());
+      
 
         RellenaClientes();
 
@@ -161,26 +162,34 @@ function RellenaTabla() {
         for (var i = 0; i < ProdCadena.length; i++) {
             html += "<tr>";
 
-
+            html += "<td> <input type='checkbox' id='" + i + "_mdcheckbox' class='chk-col-green' onchange='javascript: onChangeRevisado("+i+")'>  <label for='" + i + "_mdcheckbox'></label> </td> ";
 
             html += "<td > " + ProdCadena[i].docNum + " </td>";
-            var CondP = CP.find(a => a.id == ProdCadena[i].idCondPago);
-            html += "<td > " + CondP.Nombre + " </td>";
+            html += "<td > " + ProdCadena[i].consecutivoHacienda + " </td>";
+            //var CondP = CP.find(a => a.id == ProdCadena[i].idCondPago);
+            //html += "<td > " + CondP.Nombre + " </td>";
 
-            html += "<td > " + ProdCadena[i].fecha.toString().split("T")[0] + " </td>";
-            html += "<td > " + ProdCadena[i].fechaVencimiento.toString().split("T")[0] + " </td>";
+            //html += "<td > " + ProdCadena[i].fecha.toString().split("T")[0] + " </td>";
+            //html += "<td > " + ProdCadena[i].fechaVencimiento.toString().split("T")[0] + " </td>";
 
 
             var fechaInicio = new Date(ProdCadena[i].fechaVencimiento).getTime();
             var fechaFin = new Date(Date.now()).getTime();
             var diff = fechaFin - fechaInicio;
             var diferencia = diff / (1000 * 60 * 60 * 24);
+            var interes = 0;
+            if (diferencia > 10) {
+                interes = (ProdCadena[i].saldo * 0.015) * (diferencia-10)
+            }
 
             html += "<td > " + formatoDecimal(parseFloat(diferencia).toFixed(0)) + " </td>";
             html += "<td > " + ProdCadena[i].moneda + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].totalCompra).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].saldo).toFixed(2)) + " </td>";
+            html += "<td class='text-right'  > " + formatoDecimal(parseFloat(ProdCadena[i].saldo).toFixed(2)) + " </td>";
             html += "<td class='text-center'> <input onchange='javascript: onChangeMonto(" + i + ")' type='number' id='" + i + "_Fac' class='form-control'   value= '0' min='1'/>  </td>";
+            html += "<td hidden id='" + i + "_Int'> " + interes.toFixed(2) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(interes).toFixed(2)) + " </td>";
+
             html += "<td class='text-center'> <a class='fa fa-info-circle icono' onclick='javascript:AbrirModalEdicion(" + ProdCadena[i].id + ") '> </a> </td>";
 
             html += "</tr>";
@@ -232,7 +241,8 @@ function onChangeMonto(i) {
                 idEncabezado: 0,
                 idEncDocumentoCredito: ProdCadena[i].id,
                 NumLinea: 0,
-                Total: parseFloat($("#" + i + "_Fac").val())
+                Total: parseFloat($("#" + i + "_Fac").val()),
+                Interes: parseFloat($("#" + i + "_Int").text()),
             };
 
             DetallePago.push(detalle);
@@ -244,6 +254,7 @@ function onChangeMonto(i) {
             } else if (parseFloat($("#" + i + "_Fac").val()) > 0) {
                 var posicion = DetallePago.indexOf(Fac);
                 DetallePago[posicion].Total = parseFloat($("#" + i + "_Fac").val());
+             
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -284,6 +295,13 @@ function calculaTotalPago() {
         }
 
         $("#totP").text(formatoDecimal(total.toFixed(2)));
+
+        var totalI = 0;
+        for (var i = 0; i < DetallePago.length; i++) {
+            totalI += DetallePago[i].Interes;
+        }
+
+        $("#totI").text(formatoDecimal(totalI.toFixed(2)));
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -309,6 +327,7 @@ function Generar() {
             Referencia: "",
             Moneda: $("#selectMoneda").val(),
             TotalPagado: 0,
+            TotalInteres: 0,
             Detalle: DetallePago
         }
         if (ValidarPago(Recibido)) {
@@ -521,6 +540,35 @@ function AbrirModalEdicion(id) {
             text: 'Ha ocurrido un error al intentar recuperar ' + e
 
         })
+    }
+
+}
+
+function onChangeRevisado(i) {
+    try {
+
+       
+        var valorCheck = $("#" + i + "_mdcheckbox").prop('checked');
+        var Saldo = ProdCadena[i].saldo;
+       
+
+        if (valorCheck == true) {
+            $("#" + i + "_Fac").val(Saldo);
+        } else {
+            $("#" + i + "_Fac").val(0);
+
+        }
+
+        onChangeMonto(i);
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: e
+
+        });
     }
 
 }

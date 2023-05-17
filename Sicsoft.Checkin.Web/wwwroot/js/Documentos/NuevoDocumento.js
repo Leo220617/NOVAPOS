@@ -50,7 +50,7 @@ function ReadOnlyC() {
     try {
         $("#boxC").attr("readonly", "readonly");
         $("#selectCondPago").attr("disabled", "disabled");
-        $("#selectMoneda").attr("disabled", "disabled");
+    /*    $("#selectMoneda").attr("disabled", "disabled");*/
         $("#ClienteSeleccionado").attr("disabled", "disabled");
         $("#selectCondPago").attr("disabled", "disabled");
         $("#selectVendedor").attr("disabled", "disabled");
@@ -174,7 +174,7 @@ function ValidarStocks() {
                     position: 'top-right',
                     loaderBg: '#ff6849',
                     icon: 'warning',
-                    hideAfter: 10000,
+                    hideAfter: 100000000000,
                     stack: 6
                 });
                 ProdCadena[i].Cantidad = PE.Stock;
@@ -428,9 +428,12 @@ function onChangeCliente() {
     try {
         var idCliente = $("#ClienteSeleccionado").val();
 
+        $("#selectCondPago").attr("disabled", "disabled");
+
         var Cliente = Clientes.find(a => a.id == idCliente);
 
         var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
+        var Contado = CP.find(a => a.Nombre == "Contado");
 
         //Preguntarle a CP cual es la de 30 dias
         if (CondP.length > 0) {
@@ -453,9 +456,20 @@ function onChangeCliente() {
 
 
 
+        RecolectarFacturas();
 
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
+        $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)));
+
+        if (Cliente.LimiteCredito <= 0 && Cliente.idCondicionPago != Contado.id) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Advertencia',
+                text: 'Limite de crédito excedido'
+
+            })
+        }
 
         ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
         ProdClientes = ProdClientes.sort(function (a, b) {
@@ -479,6 +493,58 @@ function onChangeCliente() {
     }
 
 
+}
+function RecolectarFacturas() {
+    try {
+        var idClientes = $("#ClienteSeleccionado").val();
+
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: $("#urlFacturas").val(),
+            data: { idCliente: idClientes },
+            success: function (result) {
+
+                if (result == null) {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Ha ocurrido un error al intentar recuperar facturas'
+
+                    })
+
+                } else if (result.length > 0) {
+                    console.log(result);
+                    $("#selectCondPago").attr("disabled", "disabled");
+                    var textoF = "";
+                    for (var i = 0; i < result.length; i++) {
+                        textoF += " " + result[i].docNum + ", ";
+                    }
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Advertencia...',
+                        text: 'El Cliente tiene las siguientes facturas pendientes: ' + textoF + " por lo tanto se bloquea el crédito"
+
+                    })
+                } else {
+                    $("#selectCondPago").attr("disabled", false);
+                }
+            },
+            beforeSend: function () {
+
+            }
+        })
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar facturas:  ' + e
+
+        })
+    }
 }
 function RellenaCondiciones(CPS) {
     try {

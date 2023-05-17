@@ -83,7 +83,7 @@ function RecuperarInformacion() {
             var Producto =
             {
                 idEncabezado: 0,
-                Descripcion: PE.Codigo + " - " + PE.Nombre,
+                Descripcion: PE.Codigo + " - " + Oferta.Detalle[i].NomPro,
                 idProducto: PE.id,
                 Moneda: $("#selectMoneda").val(),
 
@@ -95,7 +95,7 @@ function RecuperarInformacion() {
                 Descuento: parseFloat(Oferta.Detalle[i].Descuento.toFixed(2)),
                 TotalLinea: parseFloat(Oferta.Detalle[i].TotalLinea.toFixed(2)),
                 Cabys: Oferta.Detalle[i].Cabys,
-    
+                NomPro: Oferta.Detalle[i].NomPro,
                 PorExoneracion: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).PorExon,
                 idExoneracion: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).id
                
@@ -123,14 +123,14 @@ function ValidarStocks() {
         for (var i = 0; i < Oferta.Detalle.length; i++) {
             var PE = Productos.find(a => a.id == Oferta.Detalle[i].idProducto);
             var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
-            if ((PE.Stock - ProdCadena[i].Cantidad) < 0 && PE.Codigo != PS.Codigo) {
+            if ((PE.Stock - ProdCadena[i].Cantidad) < 0 && PE.Codigo != PS.Codigo && PE.Editable == false) {
                 $.toast({
                     heading: 'Precaución',
                     text: 'El producto' + ' ' + ProdCadena[i].Descripcion + ' ' + 'NO tiene' + ' ' + ProdCadena[i].Cantidad + '' + ' unidades en stock, el stock real es de' + ' ' + PE.Stock,
                     position: 'top-right',
                     loaderBg: '#ff6849',
                     icon: 'warning',
-                    hideAfter: 10000,
+                    hideAfter: 100000000000,
                     stack: 6
                 });
                 ProdCadena[i].Cantidad = PE.Stock;
@@ -329,9 +329,11 @@ function onChangeCliente() {
 
     try {
         var idCliente = $("#ClienteSeleccionado").val();
+        $("#selectCondPago").attr("disabled", "disabled");
 
         var Cliente = Clientes.find(a => a.id == idCliente);
         var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
+        var Contado = CP.find(a => a.Nombre == "Contado");
 
         //Preguntarle a CP cual es la de 30 dias
         if (CondP.length > 0) {
@@ -353,10 +355,20 @@ function onChangeCliente() {
         }
 
 
-
+        RecolectarFacturas();
 
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
+        $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)));
+
+        if (Cliente.LimiteCredito <= 0 && Cliente.idCondicionPago != Contado.id) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Advertencia',
+                text: 'Limite de crédito excedido'
+
+            })
+        }
 
         ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
         ProdClientes = ProdClientes.sort(function (a, b) {
@@ -380,6 +392,59 @@ function onChangeCliente() {
     }
 
 
+}
+
+function RecolectarFacturas() {
+    try {
+        var idClientes = $("#ClienteSeleccionado").val();
+
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: $("#urlFacturas").val(),
+            data: { idCliente: idClientes },
+            success: function (result) {
+
+                if (result == null) {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Ha ocurrido un error al intentar recuperar facturas'
+
+                    })
+
+                } else if (result.length > 0) {
+                    console.log(result);
+                    $("#selectCondPago").attr("disabled", "disabled");
+                    var textoF = "";
+                    for (var i = 0; i < result.length; i++) {
+                        textoF += " " + result[i].docNum + ", ";
+                    }
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Advertencia...',
+                        text: 'El Cliente tiene las siguientes facturas pendientes: ' + textoF + " por lo tanto se bloquea el crédito"
+
+                    })
+                } else {
+                    $("#selectCondPago").attr("disabled", false);
+                }
+            },
+            beforeSend: function () {
+
+            }
+        })
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar facturas:  ' + e
+
+        })
+    }
 }
 function RellenaCondiciones(CPS) {
     try {
@@ -441,6 +506,12 @@ function onChangeProducto() {
         if (Producto != undefined) {
             $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
             $("#inputCabys").val(Producto.Cabys);
+            $("#inputNomPro").val(Producto.Nombre);
+            if (Producto.Editable == true) {
+                $("#inputNomPro").attr("disabled", false);
+            } else {
+                $("#inputNomPro").attr("disabled", true);
+            }
             ExoneracionxCliente();
             //EX => Exoneracion
             var Exonera = parseInt($("#exoneracion").val());
@@ -476,6 +547,7 @@ function onChangeProducto() {
 
             $("#inputPrecio").val(0);
             $("#inputCabys").val("");
+            $("#inputNomPro").val("");
             $("#impuesto").val(0);
             $("#MonedaProducto").val("");
             $("#descuento").val(0);
@@ -844,7 +916,7 @@ function RellenaTabla() {
 
         for (var i = 0; i < ProdCadena.length; i++) {
             var PE = Productos.find(a => a.id == ProdCadena[i].idProducto);
-            if (PE.Stock - ProdCadena[i].Cantidad > 0 || PE.Stock > 0 || PE.Codigo == PS.Codigo) {
+            if (PE.Stock - ProdCadena[i].Cantidad > 0 || PE.Stock > 0 || PE.Codigo == PS.Codigo || PE.Editable == true) {
             html += "<tr>";
 
             html += "<td> " + (i + 1) + " </td>";
@@ -936,7 +1008,7 @@ function AgregarProductoTabla() {
         var Producto =
         {
             idEncabezado: 0,
-            Descripcion: PE.Codigo + " - " + PE.Nombre,
+            Descripcion: PE.Codigo + " - " + $("#inputNomPro").val(),
             idProducto: PE.id,
             Moneda: PE.Moneda,
             NumLinea: 0,
@@ -947,6 +1019,7 @@ function AgregarProductoTabla() {
             Descuento: 0,
             TotalLinea: 0,
             Cabys: $("#inputCabys").val(),
+            NomPro: $("#inputNomPro").val(),
             idExoneracion: $("#exoneracion").val(),
             PorExoneracion: 0
         };
@@ -954,7 +1027,7 @@ function AgregarProductoTabla() {
         var Descuento = parseFloat($("#DES").val());
         var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
 
-        if ((PE.Stock - Producto.Cantidad) < 0 && PE.Codigo != PS.Codigo) {
+        if ((PE.Stock - Producto.Cantidad) < 0 && PE.Codigo != PS.Codigo && PE.Editable == false) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -966,7 +1039,7 @@ function AgregarProductoTabla() {
 
         }
 
-        if (PE.PrecioUnitario > Producto.PrecioUnitario) {
+        if (PE.PrecioUnitario > Producto.PrecioUnitario && PE.Editable == false) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -974,6 +1047,16 @@ function AgregarProductoTabla() {
 
             })
 
+
+
+        }
+        if (Producto.PrecioUnitario <= 0 && PE.Editable == true) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Precio invalido, el precio tiene que ser mayor  a 0'
+
+            })
 
 
         }
@@ -1005,7 +1088,7 @@ function AgregarProductoTabla() {
 
             })
 
-        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) && PE.PrecioUnitario <= Producto.PrecioUnitario || PE.Codigo == PS.Codigo) {
+        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0 || PE.Editable == true && Producto.Cantidad > 0) && PE.PrecioUnitario <= Producto.PrecioUnitario || (PE.Editable == true && Producto.Cantidad > 0) || PE.Codigo == PS.Codigo) {
 
             if (Producto.Cabys.length >= 13) {
 
@@ -1309,10 +1392,10 @@ function onChangePrecioProducto(i) {
         ;
         ProdCadena[i].PrecioUnitario = parseFloat($("#" + i + "_Prod3").val()).toFixed(2);
 
-        if (ProdCadena[i].PrecioUnitario >= PE.PrecioUnitario) {
+        if (ProdCadena[i].PrecioUnitario >= PE.PrecioUnitario || (PE.Editable == true && ProdCadena[i].PrecioUnitario > 0)) {
             ValidarTotales();
         }
-        else if (PE.PrecioUnitario > ProdCadena[i].PrecioUnitario) {
+        else if (PE.PrecioUnitario > ProdCadena[i].PrecioUnitario && PE.Editable == false) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1320,6 +1403,16 @@ function onChangePrecioProducto(i) {
 
             })
             ProdCadena[i].PrecioUnitario = PE.PrecioUnitario;
+            ValidarTotales();
+
+        } else if (PE.Editable == true && ProdCadena[i].PrecioUnitario <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Precio invalido, el precio tiene que ser mayor a 0'
+
+            })
+            ProdCadena[i].PrecioUnitario = 1;
             ValidarTotales();
 
         }
@@ -1346,10 +1439,10 @@ function onChangeCantidadProducto(i) {
         var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
         ProdCadena[i].Cantidad = parseFloat($("#" + i + "_Prod").val()).toFixed(2);
 
-        if (ProdCadena[i].Cantidad > 0 && (PE.Stock - ProdCadena[i].Cantidad) >= 0 || PE.Codigo == PS.Codigo) {
+        if (ProdCadena[i].Cantidad > 0 && (PE.Stock - ProdCadena[i].Cantidad) >= 0 || PE.Codigo == PS.Codigo || (PE.Editable == true && ProdCadena[i].Cantidad > 0)) {
             ValidarTotales();
         }
-        else if ((PE.Stock - ProdCadena[i].Cantidad) < 0) {
+        else if ((PE.Stock - ProdCadena[i].Cantidad) < 0 && PE.Codigo != PS.Codigo && PE.Editable == false) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

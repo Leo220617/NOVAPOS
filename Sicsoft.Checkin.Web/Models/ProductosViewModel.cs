@@ -45,6 +45,7 @@ namespace NOVAAPP.Models
         public bool ProcesadoSAP { get; set; }
 
         public bool MAG { get; set; }
+        public bool Editable { get; set; }
 
     }
 }

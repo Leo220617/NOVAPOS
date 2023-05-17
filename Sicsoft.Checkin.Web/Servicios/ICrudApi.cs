@@ -58,8 +58,13 @@ namespace Sicsoft.Checkin.Web.Servicios
         [Post("/Eliminar")]
         Task EliminarUsuario(int id, string CedulaJuridica);
 
-      
+        [Get("/ConsultarByClient")]
+        Task<TEntity[]> ObtenerFacturaC(int idCliente);
 
- 
+
+
+
+
+
     }
 }

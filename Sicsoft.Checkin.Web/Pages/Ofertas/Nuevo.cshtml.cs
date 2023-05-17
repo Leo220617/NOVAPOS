@@ -32,6 +32,7 @@ namespace NOVAAPP.Pages.Ofertas
         private readonly ICrudApi<VendedoresViewModel, int> vendedor;
         private readonly ICrudApi<UsuariosViewModel, int> usuario;
         private readonly ICrudApi<BodegasViewModel, int> bodegas;
+        private readonly ICrudApi<DocumentosCreditoViewModel, int> documentos;
 
 
 
@@ -87,8 +88,11 @@ namespace NOVAAPP.Pages.Ofertas
         [BindProperty]
         public BodegasViewModel[] Bodega { get; set; }
 
+        [BindProperty]
+        public DocumentosCreditoViewModel[] DocumentosC { get; set; }
 
-        public NuevoModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos,ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<UsuariosViewModel, int> usuario, ICrudApi<BodegasViewModel, int> bodegas) //CTOR 
+
+        public NuevoModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos,ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<UsuariosViewModel, int> usuario, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<DocumentosCreditoViewModel, int> documentos) //CTOR 
         {
             this.service = service;
             this.serviceU = serviceU;
@@ -105,6 +109,7 @@ namespace NOVAAPP.Pages.Ofertas
             this.vendedor = vendedor;
             this.usuario = usuario;
             this.bodegas = bodegas;
+            this.documentos = documentos;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -155,6 +160,7 @@ namespace NOVAAPP.Pages.Ofertas
                         det.TotalLinea = item.TotalLinea;
                         det.Cabys = item.Cabys;
                         det.idExoneracion = item.idExoneracion;
+                        det.NomPro = item.NomPro;
                         Oferta.Detalle[i] = det;
                         i++;
                     }
@@ -280,6 +286,49 @@ namespace NOVAAPP.Pages.Ofertas
             }
         }
 
+        public async Task<IActionResult> OnGetFacturas(int idCliente)
+        {
+            try
+            {
 
+
+                if (idCliente > 0)
+                {
+
+
+
+                    var objetos = await documentos.ObtenerFacturaC(idCliente);
+
+                    var objeto = objetos.ToList();
+
+
+
+                    return new JsonResult(objeto);
+                }
+                else
+                {
+                    var objeto = new DocumentosCreditoViewModel[0];
+
+
+
+                    return new JsonResult(objeto);
+                }
+
+            }
+            catch (ApiException ex)
+            {
+
+
+
+                return new JsonResult(ex.Content.ToString());
+            }
+            catch (Exception ex)
+            {
+
+
+
+                return new JsonResult(ex.Message.ToString());
+            }
+        }
     }
 }

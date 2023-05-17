@@ -65,6 +65,7 @@
 
                 <input hidden id="urlGenerar" value="@Url.Page("Editar", "AgregarOferta")" />
                 <input hidden id="urlCliente" value="@Url.Page("Editar", "AgregarCliente")" />
+                <input hidden id="urlFacturas" value="@Url.Page("Editar", "Facturas")" />
 
 
                 <!-- Content Header (Page header) -->
@@ -152,6 +153,9 @@
                                     <br><br>
                                     <span id="spanDireccion"> </span> <br>
                                     <strong id="strongInfo">Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
+
+                                    <br><br>
+                                    <strong id="strongInfo2">Saldo:   &nbsp;&nbsp;&nbsp;&nbsp; Limite Crédito:  </strong>
                                 </address>
                             </div>
 
@@ -210,7 +214,16 @@
                                         </div>
                                         <br />
                                         <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Nombre Producto</label>
+                                                    <input id="inputNomPro" disabled type="text" class="form-control" placeholder="Nombre Producto">
 
+
+                                                </div>
+
+
+                                            </div>
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label>Cantidad</label>
@@ -267,7 +280,7 @@
                                         <div class="col-md-3 pr-1">
                                             <div class="form-group">
                                                 <label>Precio de Venta</label>
-                                                <input id="inputPrecio"  type="number" class="form-control" placeholder="Precio Unitario" value="0">
+                                                <input id="inputPrecio" type="number" class="form-control" placeholder="Precio Unitario" value="0">
 
 
                                             </div>

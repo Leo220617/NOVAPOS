@@ -99,6 +99,7 @@ function RecuperarInformacion() {
                 Cabys: Oferta.Detalle[i].Cabys,
                 NomPro: Oferta.Detalle[i].NomPro,
                 /*  idExoneracion: Oferta.Detalle[i].Cabys,*/
+                Costo: PE.Costo,
                 PorExoneracion: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).PorExon,
                 /*    idExo: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).id*/
                 idExoneracion: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).id
@@ -888,6 +889,7 @@ function RellenaTabla() {
 
 
         for (var i = 0; i < ProdCadena.length; i++) {
+            var TotalGanancia = (ProdCadena[i].TotalLinea - ProdCadena[i].TotalImpuesto);
             html += "<tr>";
 
             html += "<td> " + (i + 1) + " </td>";
@@ -900,6 +902,13 @@ function RellenaTabla() {
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
+            if ($("#RolGanancia").val() == "value") {
+                if (retornaMargenGanancia(TotalGanancia, ProdCadena[i].Costo) > 0) {
+                    html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, ProdCadena[i].Costo).toFixed(2)) + "%" + " </td>";
+                } else {
+                    html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, ProdCadena[i].Costo).toFixed(2)) + "%" + " </td>";
+                }
+            }
             html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
             html += "</tr>";
@@ -987,7 +996,8 @@ function AgregarProductoTabla() {
             Cabys: $("#inputCabys").val(),
             NomPro: $("#inputNomPro").val(),
             idExoneracion: $("#exoneracion").val(),
-            PorExoneracion: 0
+            PorExoneracion: 0,
+            Costo: PE.Costo
         };
 
         var Descuento = parseFloat($("#DES").val());
@@ -1170,7 +1180,7 @@ function Generar() {
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $("#divProcesando").modal("show");
+                 
 
 
                     $.ajax({
@@ -1222,21 +1232,21 @@ function Generar() {
                         },
 
                         beforeSend: function (xhr) {
-
+                            $("#divProcesando").modal("show");
 
                         },
                         complete: function () {
-
+                            $("#divProcesando").modal("hide");
                         },
                         error: function (error) {
-
+                            $("#divProcesando").modal("hide");
 
                         }
                     });
                 }
             })
         } else {
-
+            $("#divProcesando").modal("hide");
         }
 
     } catch (e) {

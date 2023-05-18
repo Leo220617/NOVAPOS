@@ -388,7 +388,7 @@ function Generar() {
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $("#divProcesando").modal("show");
+                   
 
 
                     $.ajax({
@@ -429,7 +429,7 @@ function Generar() {
                                 })
 
                             } else {
-
+                                $("#divProcesando").modal("hide");
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
@@ -440,20 +440,21 @@ function Generar() {
                         },
 
                         beforeSend: function (xhr) {
-
+                            $("#divProcesando").modal("show");
 
                         },
                         complete: function () {
-
+                            $("#divProcesando").modal("hide");
                         },
                         error: function (error) {
-
+                            $("#divProcesando").modal("hide");
 
                         }
                     });
                 }
             })
         } else {
+            $("#divProcesando").modal("hide");
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -463,6 +464,7 @@ function Generar() {
         }
 
     } catch (e) {
+        $("#divProcesando").modal("hide");
         Swal.fire({
             icon: 'error',
             title: 'Oops...',

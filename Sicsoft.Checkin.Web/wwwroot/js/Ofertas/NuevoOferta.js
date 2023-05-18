@@ -89,7 +89,7 @@ function RecuperarInformacion() {
             var Producto =
             {
                 idEncabezado: 0,
-                Descripcion: PE.Codigo + " - " + Documento.Detalle[i].NomPro,
+                Descripcion: PE.Codigo + " - " + PE.Nombre,
                 Moneda: $("#selectMoneda").val(),
                 idProducto: PE.id,
                 NumLinea: 0,
@@ -101,6 +101,7 @@ function RecuperarInformacion() {
                 TotalLinea: parseFloat(Documento.Detalle[i].TotalLinea.toFixed(2)),
                 Cabys: Documento.Detalle[i].Cabys,
                 NomPro: Documento.Detalle[i].NomPro,
+                Costo: PE.Costo,
                 PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon,
                 idExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).id
 
@@ -146,6 +147,17 @@ function ValidarStocks() {
                 });
                 ProdCadena[i].Cantidad = PE.Stock;
 
+            }
+            if (PE.Editable == true) {
+                $.toast({
+                    heading: 'Precaución',
+                    text: 'Favor sustituir el producto' + ' ' + ProdCadena[i].Descripcion + ' ' + 'ubicado en la linea' + ' ' + i,
+                    position: 'top-right',
+                    loaderBg: '#ff6849',
+                    icon: 'warning',
+                    hideAfter: 100000000000,
+                    stack: 6
+                });
             }
 
 
@@ -536,11 +548,7 @@ function onChangeProducto() {
             $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
             $("#inputCabys").val(Producto.Cabys);
             $("#inputNomPro").val(Producto.Nombre);
-            if (Producto.Editable == true) {
-                $("#inputNomPro").attr("disabled", false);
-            } else {
-                $("#inputNomPro").attr("disabled", true);
-            }
+         
             ExoneracionxCliente();
             //EX => Exoneracion
             var Exonera = parseInt($("#exoneracion").val());
@@ -949,7 +957,7 @@ function RellenaTabla() {
             if (PE.Stock - ProdCadena[i].Cantidad > 0 || PE.Stock > 0 || PE.Codigo == PS.Codigo || PE.Editable == true) {
 
 
-
+                var TotalGanancia = (ProdCadena[i].TotalLinea - ProdCadena[i].TotalImpuesto);
                 html += "<tr>";
 
                 html += "<td> " + (i + 1) + " </td>";
@@ -962,6 +970,13 @@ function RellenaTabla() {
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
+                if ($("#RolGanancia").val() == "value") {
+                    if (retornaMargenGanancia(TotalGanancia, ProdCadena[i].Costo) > 0) {
+                        html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, ProdCadena[i].Costo).toFixed(2)) + "%" + " </td>";
+                    } else {
+                        html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, ProdCadena[i].Costo).toFixed(2)) + "%" + " </td>";
+                    }
+                }
                 html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
                 html += "</tr>";
@@ -1033,7 +1048,7 @@ function AgregarProductoTabla() {
         var Producto =
         {
             idEncabezado: 0,
-            Descripcion: PE.Codigo + " - " + $("#inputNomPro").val(),
+            Descripcion: PE.Codigo + " - " + PE.Nombre,
             idProducto: PE.id,
             Moneda: PE.Moneda,
             NumLinea: 0,
@@ -1046,13 +1061,14 @@ function AgregarProductoTabla() {
             Cabys: $("#inputCabys").val(),
             NomPro: $("#inputNomPro").val(),
             idExoneracion: $("#exoneracion").val(),
-            PorExoneracion: 0
+            PorExoneracion: 0,
+            Costo: PE.Costo
         };
 
         var Descuento = parseFloat($("#DES").val());
         var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
 
-        if ((PE.Stock - Producto.Cantidad) < 0 && PE.Codigo != PS.Codigo && PE.Editable == false) {
+        if ((PE.Stock - Producto.Cantidad) < 0 && PE.Codigo != PS.Codigo ) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1064,7 +1080,7 @@ function AgregarProductoTabla() {
 
         }
 
-        if (PE.PrecioUnitario > Producto.PrecioUnitario && PE.Editable == false) {
+        if (PE.PrecioUnitario > Producto.PrecioUnitario) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1075,16 +1091,7 @@ function AgregarProductoTabla() {
 
 
         }
-        if (Producto.PrecioUnitario <= 0 && PE.Editable == true) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Precio invalido, el precio tiene que ser mayor  a 0' 
-
-            })
-     
-
-        }
+   
 
         if (Producto.Cantidad <= 0) {
             Swal.fire({
@@ -1113,7 +1120,7 @@ function AgregarProductoTabla() {
 
             })
 
-        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0 || PE.Editable == true && Producto.Cantidad > 0) && PE.PrecioUnitario <= Producto.PrecioUnitario || (PE.Editable == true && Producto.Cantidad > 0)|| PE.Codigo == PS.Codigo) {
+        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) && PE.PrecioUnitario <= Producto.PrecioUnitario || PE.Codigo == PS.Codigo) {
 
             if (Producto.Cabys.length >= 13) {
 
@@ -1215,7 +1222,7 @@ function EliminarProducto(i) {
 
 //Generar
 function Generar() {
-    $("#divProcesando").modal("show");
+
     try {
 
 
@@ -1253,7 +1260,7 @@ function Generar() {
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $("#divProcesando").modal("show");
+                  
 
 
                     $.ajax({
@@ -1305,20 +1312,20 @@ function Generar() {
                         },
 
                         beforeSend: function () {
-
+                            $("#divProcesando").modal("show");
                         },
                         complete: function () {
-
+                            $("#divProcesando").modal("hide");
                         },
                         error: function (error) {
 
-
+                            $("#divProcesando").modal("hide");
                         }
                     });
                 }
             })
         } else {
-
+            $("#divProcesando").modal("hide");
         }
 
     } catch (e) {
@@ -1338,6 +1345,21 @@ function Generar() {
 function validarOferta(e) {
     try {
         var Contado = CP.find(a => a.Nombre == "Contado");
+
+
+        for (var i = 0; i < e.Detalle.length; i++) {
+            var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+            if (PE.Editable == true) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar agregar, no se puede guardar la Orden de Venta con productos editables '
+
+                })
+                return false;
+
+            }
+        }
 
         if ($("#selectCondPago").val() == Contado.id) {
             if (e.idCliente == "0" || e.idCliente == null) {
@@ -1362,6 +1384,7 @@ function validarOferta(e) {
 
 
             }
+          
 
             else {
                 return true;

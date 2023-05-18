@@ -187,6 +187,10 @@
 
 
                                         <th class="text-center">Total</th>
+                                            @if (!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))
+                                        {
+                                            <th class="text-center">% Ganancia</th>
+                                        }
 
                                     </tr>
                                 </thead>
@@ -209,7 +213,10 @@
                                             <td class="text-center">@Math.Round(@item.TotalImpuesto,2).ToString("C",formato)</td>
                                             <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
                                             <td class="text-center">@Math.Round(@item.TotalLinea,2).ToString("C",formato)</td>
-
+                                                     @if (!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))
+                                        {
+                                            <td class="text-center">@Math.Round(((((@item.TotalLinea - @item.TotalImpuesto) - ( Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0: Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Costo)) / (@item.TotalLinea - @item.TotalImpuesto)) * 100) ,2).ToString("C",formato)%</td>
+                                        }
                                         </tr>
                                     }
 
@@ -298,7 +305,7 @@
                                 <div class="text-left">
                                     <div class="row">
                                         <div class="col-4">
-                                            <h5> <b>Fecha: </b> @Model.Documento.Fecha.ToString("dd/MM/yyyy")</h5>
+                                            <h5> <b>Fecha: </b> @DateTime.Now.ToString("dd/MM")</h5>
 
                                         </div>
 

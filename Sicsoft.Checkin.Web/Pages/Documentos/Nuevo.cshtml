@@ -65,7 +65,8 @@
 
                 <input hidden id="urlGenerar" value="@Url.Page("Nuevo", "AgregarDocumento")" />
                 <input hidden id="urlCliente" value="@Url.Page("Nuevo", "AgregarCliente")" />
-                    <input hidden id="urlFacturas" value="@Url.Page("Nuevo", "Facturas")" />
+                <input hidden id="urlFacturas" value="@Url.Page("Nuevo", "Facturas")" />
+                  <input hidden id="RolGanancia" value="@(!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))" />
 
 
                 <!-- Content Header (Page header) -->
@@ -145,7 +146,7 @@
                                     <span id="spanDireccion"> </span> <br>
                                     <strong id="strongInfo">Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
 
-                                      <br><br>
+                                    <br><br>
                                     <strong id="strongInfo2">Saldo:   &nbsp;&nbsp;&nbsp;&nbsp; Limite Crédito:  </strong>
                                 </address>
                             </div>
@@ -337,6 +338,10 @@
                                         <th class="text-right">% Exoneración</th>
 
                                         <th class="text-right">Total</th>
+                                                   @if (!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))
+                                        {
+                                        <th class="text-right">% Ganancia</th>
+                                          }
                                         <th class="text-right">Eliminar</th>
 
                                     </tr>

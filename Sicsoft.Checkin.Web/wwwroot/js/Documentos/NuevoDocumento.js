@@ -31,6 +31,7 @@ var CP = [];
 var Vendedores = [];
 var DES = [];
 var Bodega = [];
+var Sucursal = [];
 
 function HideP() {
     try {
@@ -79,6 +80,7 @@ function Recuperar() {
         CP = JSON.parse($("#CP").val());
         DES = JSON.parse($("#DES").val());
         Bodega = JSON.parse($("#Bodega").val());
+        Sucursal = JSON.parse($("#Sucursal").val());
         ExoneracionesCliente = [];
 
         RellenaClientes();

@@ -28,6 +28,7 @@ var DES = [];
 var CP = [];
 var Vendedores = [];
 var Bodega = [];
+var Sucursal = [];
 
 function Recuperar() {
     try {
@@ -45,6 +46,7 @@ function Recuperar() {
         USU = JSON.parse($("#USU").val());
         DES = JSON.parse($("#DES").val());
         Bodega = JSON.parse($("#Bodega").val());
+        Sucursal = JSON.parse($("#Sucursal").val());
         ExoneracionesCliente = [];
 
         RellenaClientes();

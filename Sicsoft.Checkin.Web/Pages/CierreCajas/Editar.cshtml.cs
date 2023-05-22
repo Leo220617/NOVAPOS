@@ -55,6 +55,9 @@ namespace NOVAAPP.Pages.CierreCajas
 
         [BindProperty]
         public CondicionesPagosViewModel Condicion { get; set; }
+        [BindProperty]
+
+        public string Anterior { get; set; }
 
         public EditarModel(ICrudApi<CierreCajasViewModel, int> service, ICrudApi<UsuariosViewModel, int> users, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CajasViewModel, int> cajo, ICrudApi<DocumentosViewModel, int> documento, ICrudApi<MetodosPagosViewModel, int> pagos, ICrudApi<CuentasBancariasViewModel, int> cuenta, ICrudApi<CondicionesPagosViewModel, int> cond)
         {
@@ -68,7 +71,7 @@ namespace NOVAAPP.Pages.CierreCajas
             this.pagos = pagos;
             this.cuenta = cuenta;
         }
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(DateTime DiaAnterior)
         {
             try
             {
@@ -78,32 +81,80 @@ namespace NOVAAPP.Pages.CierreCajas
                     return RedirectToPage("/NoPermiso");
                 }
                 Cajos = await cajo.ObtenerLista("");
-                var idcaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault());
-                var Fecha = DateTime.Now.Date;
-                var idCajero = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
-                Cierres = await service.ObtenerCierre(idcaja, Fecha, idCajero);
-                Users = await users.ObtenerPorId(idCajero);
-                Caja =  ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Caja").Select(s1 => s1.Value).FirstOrDefault();
+                var time = new DateTime();
+                if (DiaAnterior != time)
+                {
+                    Anterior = "SI";
+                    ParametrosFiltros filtro2 = new ParametrosFiltros();
+                    filtro2.Externo = true; // para traer los activos
+                    filtro2.Codigo2 = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault().ToString());
+                    filtro2.FechaInicial = DiaAnterior;
+                    filtro2.FechaFinal = DiaAnterior;
+                    filtro2.Activo = true;
 
-                ParametrosFiltros filtro = new ParametrosFiltros();
-                filtro.FechaInicial = DateTime.Now.Date;
-                filtro.FechaInicial = Cierres.FechaCaja;
-                filtro.FechaFinal = Cierres.FechaCaja;
-                TC = await tipoCambio.ObtenerLista(filtro);
-                filtro.Codigo3 = Cierres.idCaja;
-
-                Documento = await documento.ObtenerLista(filtro);
+                    var Cierre = await service.ObtenerLista(filtro2);
+                    Cierre = Cierre.Where(a => a.FechaCaja == DiaAnterior).ToArray();
 
 
-                filtro.Codigo1 = Cierres.idCaja;
-                Pagos = await pagos.ObtenerLista(filtro);
-                TC = await tipoCambio.ObtenerLista(filtro);
-                CuentasBancarias = await cuenta.ObtenerLista("");
+                    var idcaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault());
+                    var Fecha = DiaAnterior.Date;
+                    var idCajero = Cierre.FirstOrDefault().idUsuario;
+                    Cierres = await service.ObtenerCierre(idcaja, Fecha, idCajero);
+                    Users = await users.ObtenerPorId(idCajero);
+                    Caja = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Caja").Select(s1 => s1.Value).FirstOrDefault();
 
-                var Condiciones = await cond.ObtenerLista("");
-                Condicion = Condiciones.Where(a => a.Dias == 0).FirstOrDefault();
+                    ParametrosFiltros filtro = new ParametrosFiltros();
+                    filtro.FechaInicial = DateTime.Now.Date;
+                    filtro.FechaInicial = Cierres.FechaCaja;
+                    filtro.FechaFinal = Cierres.FechaCaja;
+                    TC = await tipoCambio.ObtenerLista(filtro);
+                    filtro.Codigo3 = Cierres.idCaja;
 
-                return Page();
+                    Documento = await documento.ObtenerLista(filtro);
+
+
+                    filtro.Codigo1 = Cierres.idCaja;
+                    Pagos = await pagos.ObtenerLista(filtro);
+                    TC = await tipoCambio.ObtenerLista(filtro);
+                    CuentasBancarias = await cuenta.ObtenerLista("");
+
+                    var Condiciones = await cond.ObtenerLista("");
+                    Condicion = Condiciones.Where(a => a.Dias == 0).FirstOrDefault();
+
+                    return Page();
+                }
+                else
+                {
+                    Anterior = "NO";
+
+                    var idcaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault());
+                    var Fecha = DateTime.Now.Date;
+                    var idCajero = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
+                    Cierres = await service.ObtenerCierre(idcaja, Fecha, idCajero);
+                    Users = await users.ObtenerPorId(idCajero);
+                    Caja = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Caja").Select(s1 => s1.Value).FirstOrDefault();
+
+                    ParametrosFiltros filtro = new ParametrosFiltros();
+                    filtro.FechaInicial = DateTime.Now.Date;
+                    filtro.FechaInicial = Cierres.FechaCaja;
+                    filtro.FechaFinal = Cierres.FechaCaja;
+                    TC = await tipoCambio.ObtenerLista(filtro);
+                    filtro.Codigo3 = Cierres.idCaja;
+
+                    Documento = await documento.ObtenerLista(filtro);
+
+
+                    filtro.Codigo1 = Cierres.idCaja;
+                    Pagos = await pagos.ObtenerLista(filtro);
+                    TC = await tipoCambio.ObtenerLista(filtro);
+                    CuentasBancarias = await cuenta.ObtenerLista("");
+
+                    var Condiciones = await cond.ObtenerLista("");
+                    Condicion = Condiciones.Where(a => a.Dias == 0).FirstOrDefault();
+
+                    return Page();
+                }
+               
             }
             catch (Exception ex)
             {

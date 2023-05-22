@@ -65,7 +65,7 @@
                 <input hidden id="USU" value="@JsonConvert.SerializeObject(Model.idVendedor)" />
                 <input hidden id="DES" value="@JsonConvert.SerializeObject(Model.Descuento)" />
                 <input hidden id="Bodega" value="@JsonConvert.SerializeObject(Model.Bodega)" />
-                <input hidden id="Sucursal" value="@JsonConvert.SerializeObject(Model.Sucursal)" />
+                <input hidden id="Sucursal" value="@JsonConvert.SerializeObject(Model.MiSucursal)" />
                 <input hidden id="RolGanancia" value="@(!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))" />
 
 
@@ -75,7 +75,7 @@
                         <div class="row">
                             <div class="col-8">
                                 <h6 class="box-subtitle">Generar Proforma</h6>
-
+                                
 
                             </div>
                             <div class="col-4">

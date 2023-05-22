@@ -410,7 +410,7 @@ function onChangeCliente() {
             })
         }
         RecolectarFacturas();
-        ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
+        ProdClientes = Productos.filter(a => a.idListaPrecios == Sucursal.idListaPrecios);
         ProdClientes = ProdClientes.sort(function (a, b) {
             if (a.Stock < b.Stock) {
                 return 1;

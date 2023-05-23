@@ -51,7 +51,7 @@ function ReadOnlyC() {
     try {
         $("#boxC").attr("readonly", "readonly");
         $("#selectCondPago").attr("disabled", "disabled");
-    /*    $("#selectMoneda").attr("disabled", "disabled");*/
+        /*    $("#selectMoneda").attr("disabled", "disabled");*/
         $("#ClienteSeleccionado").attr("disabled", "disabled");
         $("#selectCondPago").attr("disabled", "disabled");
         $("#selectVendedor").attr("disabled", "disabled");
@@ -142,6 +142,7 @@ function RecuperarInformacion() {
                 TotalLinea: parseFloat(Documento.Detalle[i].TotalLinea.toFixed(2)),
                 Cabys: Documento.Detalle[i].Cabys,
                 Costo: PE.Costo,
+                
 
                 PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon,
                 idExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).id
@@ -170,7 +171,7 @@ function ValidarStocks() {
         for (var i = 0; i < Documento.Detalle.length; i++) {
             var PE = Productos.find(a => a.id == Documento.Detalle[i].idProducto);
             var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
-            if ((PE.Stock - ProdCadena[i].Cantidad) < 0 && PE.Codigo != PS.Codigo){
+            if ((PE.Stock - ProdCadena[i].Cantidad) < 0 && PE.Codigo != PS.Codigo) {
                 $.toast({
                     heading: 'Precaución',
                     text: 'El producto' + ' ' + ProdCadena[i].Descripcion + ' ' + 'NO tiene' + ' ' + ProdCadena[i].Cantidad + '' + ' unidades en stock, el stock real es de' + ' ' + PE.Stock,
@@ -1019,7 +1020,8 @@ function RellenaTabla() {
         var html = "";
         $("#tbody").html(html);
         var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
-
+        var MonedaDoc = $("#selectMoneda").val();
+        var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
         for (var i = 0; i < ProdCadena.length; i++) {
             var PE = Productos.find(a => a.id == ProdCadena[i].idProducto);
             if (PE.Stock - ProdCadena[i].Cantidad > 0 || PE.Stock > 0 || PE.Codigo == PS.Codigo) {
@@ -1035,14 +1037,55 @@ function RellenaTabla() {
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
-             
+
                 if ($("#RolGanancia").val() == "value") {
-                    if (retornaMargenGanancia(TotalGanancia, ProdCadena[i].Costo) > 0) {
-                        html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, ProdCadena[i].Costo).toFixed(2)) + "%" + " </td>";
-                    } else {
-                        html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, ProdCadena[i].Costo).toFixed(2)) + "%" + " </td>";
+                    if (ProdCadena[i].Moneda != MonedaDoc) {
+                        if (ProdCadena[i].Moneda != "CRC") {
+                            var Costo = ProdCadena[i].Costo;
+                            if (retornaMargenGanancia(TotalGanancia, Costo) > 0) {
+                                html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            }
+                            else {
+                                html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            }
+
+                        } else {
+                            var Costo = ProdCadena[i].Costo / TipodeCambio.TipoCambio;
+                            if (retornaMargenGanancia(TotalGanancia, Costo) > 0) {
+                                html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            } else {
+                                html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            }
+                        }
+
                     }
+                    else {
+                        if (ProdCadena[i].Moneda != "CRC") {
+                            var Costo = ProdCadena[i].Costo / TipodeCambio.TipoCambio;
+                            if (retornaMargenGanancia(TotalGanancia, Costo) > 0) {
+                                html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            }
+                            else {
+                                html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            }
+                        } else {
+                            var Costo = ProdCadena[i].Costo;
+                            if (retornaMargenGanancia(TotalGanancia, Costo) > 0) {
+                                html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            }
+                            else {
+                                html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            }
+                        }
+                    }
+
                 }
+
+
+
+
+
+              
                 html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
                 html += "</tr>";
@@ -1112,13 +1155,13 @@ function AgregarProductoTabla() {
             Cabys: $("#inputCabys").val(),
             idExoneracion: $("#exoneracion").val(),
             PorExoneracion: 0,
-            Codigo: PE.Codigo,
+            Codigo: PE.Codigo,        
             Costo: PE.Costo
 
         };
         var Descuento = parseFloat($("#DES").val());
         var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
-        if ((PE.Stock - Producto.Cantidad) < 0  && PE.Codigo != PS.Codigo) {
+        if ((PE.Stock - Producto.Cantidad) < 0 && PE.Codigo != PS.Codigo) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1288,7 +1331,7 @@ function Generar() {
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
-                   
+
 
 
                     $.ajax({
@@ -1527,6 +1570,7 @@ function ImprimirPantalla() {
 //////Metodos pago
 function AbrirPago() {
     try {
+        $(".MetodosPagoRellenar").hide();
         var Contado = CP.find(a => a.Nombre == "Contado");
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
         $("#TipCam").val(TipodeCambio.TipoCambio);
@@ -1607,7 +1651,27 @@ function onChangeMetodo() {
         var Moneda = $("#selectMonedaP").val();
         var MonedaDoc = $("#selectMoneda").val();
         // var Total = parseFloat(ReplaceLetra($("#totG").text())) - parseFloat(ReplaceLetra($("#pagPago").text()));
-        var Total = MonedaDoc == "CRC" ? parseFloat(ReplaceLetra($("#fatPago").text())) : parseFloat(ReplaceLetra($("#fatPagoD").text()));
+        var Total = 0;
+        if ($("#MetodoSeleccionado").val() != '0') {
+            $(".MetodosPagoRellenar").show();
+
+        } else {
+            $(".MetodosPagoRellenar").hide();
+
+        }
+        if (MonedaDoc == "CRC") {
+            if (Moneda != MonedaDoc) {
+                Total = parseFloat(ReplaceLetra($("#fatPagoD").text()));
+            } else {
+                Total = parseFloat(ReplaceLetra($("#fatPago").text()));
+            }
+        } else {
+            if (Moneda != MonedaDoc) {
+                Total = parseFloat(ReplaceLetra($("#fatPago").text()));
+            } else {
+                Total = parseFloat(ReplaceLetra($("#fatPagoD").text()));
+            }
+        }    
         $("#MontoPago").val(Total);
 
         switch (Metodo) {
@@ -1701,6 +1765,8 @@ function onChangeMetodo() {
                 }
 
         }
+         
+
         onChangeMonedaP();
     } catch (e) {
         Swal.fire({
@@ -1711,7 +1777,7 @@ function onChangeMetodo() {
         })
     }
 }
-function insertarPago() {
+function insertarPago() { 
     try {
         var Moneda = $("#selectMonedaP").val();
         var MonedaDoc = $("#selectMoneda").val();
@@ -1727,7 +1793,8 @@ function insertarPago() {
                             id: 0,
                             idEncabezado: 0,
                             idCuentaBancaria: $("#CuentaB").val(),
-                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : Moneda != "CRC" ? parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio ,
+                            Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
+                            // Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : Moneda != "CRC" ? parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio,
                             BIN: "",
                             NumReferencia: "",
                             NumCheque: "",
@@ -1745,7 +1812,10 @@ function insertarPago() {
                             id: 0,
                             idEncabezado: 0,
                             idCuentaBancaria: $("#CuentaB").val(),
-                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : Moneda != "CRC" ? parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio,
+                            Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
+
+                            //Monto: MonedaDoc != "CRC" ? (Moneda != MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio) : (Moneda != MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio),
+
                             BIN: $("#BINPago").val(),
                             NumReferencia: $("#ReferenciaPago").val(),
                             NumCheque: "",
@@ -1763,7 +1833,7 @@ function insertarPago() {
                             id: 0,
                             idEncabezado: 0,
                             idCuentaBancaria: $("#CuentaB").val(),
-                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : Moneda != "CRC" ? parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio,
+                            Monto: parseFloat(ReplaceLetra($("#MontoPago").val())), 
                             BIN: "",
                             NumReferencia: $("#ReferenciaPago").val(),
                             NumCheque: "",
@@ -1781,7 +1851,8 @@ function insertarPago() {
                             id: 0,
                             idEncabezado: 0,
                             idCuentaBancaria: $("#CuentaB").val(),
-                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : Moneda != "CRC" ? parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio,
+                            Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
+
                             BIN: "",
                             NumReferencia: "",
                             NumCheque: $("#ChequePago").val(),
@@ -1798,7 +1869,8 @@ function insertarPago() {
                             id: 0,
                             idEncabezado: 0,
                             idCuentaBancaria: $("#CuentaB").val(),
-                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : Moneda != "CRC" ? parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio,
+                            Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
+
                             BIN: "",
                             NumReferencia: "",
                             NumCheque: "",
@@ -1816,7 +1888,8 @@ function insertarPago() {
                             id: 0,
                             idEncabezado: 0,
                             idCuentaBancaria: $("#CuentaB").val(),
-                            Monto: Moneda == MonedaDoc ? parseFloat(ReplaceLetra($("#MontoPago").val())) : Moneda != "CRC" ? parseFloat(ReplaceLetra($("#MontoPago").val())) / TipodeCambio.TipoCambio : parseFloat(ReplaceLetra($("#MontoPago").val())) * TipodeCambio.TipoCambio,
+                            Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
+
                             BIN: "",
                             NumReferencia: "",
                             NumCheque: $("#ReferenciaPago").val(),
@@ -1874,7 +1947,7 @@ function LimpiarDatosPago() {
         })
     }
 }
-function validarMetodo() {
+function validarMetodo() { // CAMBIAR
     try {
         var Metodo = $("#MetodoSeleccionado").val();
 
@@ -2086,7 +2159,7 @@ function RellenaTablaPagos() {
 }
 
 
-function calcularPago() {
+function calcularPago() { //REVISAR
     try {
 
         var Faltante = 0;
@@ -2119,7 +2192,7 @@ function calcularPago() {
         for (var i = 0; i < MetodosPagos.length; i++) {
 
             // if (MetodosPagos[i].Moneda == MonedaDoc) {
-            if (MetodosPagos[i].Moneda != "CRC") {
+            if (MetodosPagos[i].Moneda != "CRC") { // Moneda del Pago viene en USD
 
                 PagadoTD += MetodosPagos[i].Monto;
                 PagadoT += MetodosPagos[i].Monto * TipodeCambio.TipoCambio;
@@ -2130,11 +2203,11 @@ function calcularPago() {
 
                     if (MetodosPagos[i].PagadoCon > 0) {
 
-                        if (MetodosPagos[i].Moneda != MonedaDoc) {
-                            vueltoTD += (MetodosPagos[i].PagadoCon / TipodeCambio.TipoCambio) - MetodosPagos[i].Monto;
-                            vueltoT += ((MetodosPagos[i].PagadoCon / TipodeCambio.TipoCambio) - MetodosPagos[i].Monto) * TipodeCambio.TipoCambio;
+                        if (MetodosPagos[i].Moneda != MonedaDoc) { // SI USD = Moneda DOC
+                            vueltoTD += (MetodosPagos[i].PagadoCon) - MetodosPagos[i].Monto;
+                            vueltoT += ((MetodosPagos[i].PagadoCon) - MetodosPagos[i].Monto) * TipodeCambio.TipoCambio;
 
-                            vueltoD += (MetodosPagos[i].PagadoCon / TipodeCambio.TipoCambio) - MetodosPagos[i].Monto;
+                            vueltoD += (MetodosPagos[i].PagadoCon) - MetodosPagos[i].Monto;
                         } else {
                             vueltoTD += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
                             vueltoT += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) * TipodeCambio.TipoCambio;
@@ -2157,10 +2230,10 @@ function calcularPago() {
 
                     if (MetodosPagos[i].PagadoCon > 0) {
                         if (MetodosPagos[i].Moneda != MonedaDoc) {
-                            vueltoT += (MetodosPagos[i].PagadoCon * TipodeCambio.TipoCambio) - MetodosPagos[i].Monto;
-                            vueltoTD += ((MetodosPagos[i].PagadoCon * TipodeCambio.TipoCambio) - MetodosPagos[i].Monto) / TipodeCambio.TipoCambio;
+                            vueltoT += (MetodosPagos[i].PagadoCon) - MetodosPagos[i].Monto;
+                            vueltoTD += ((MetodosPagos[i].PagadoCon) - MetodosPagos[i].Monto) / TipodeCambio.TipoCambio;
 
-                            vuelto += (MetodosPagos[i].PagadoCon * TipodeCambio.TipoCambio) - MetodosPagos[i].Monto;
+                            vuelto += (MetodosPagos[i].PagadoCon) - MetodosPagos[i].Monto;
 
                         } else {
                             vueltoT += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
@@ -2174,36 +2247,7 @@ function calcularPago() {
                 }
             }
 
-
-            //} else {
-
-            //    if (MetodosPagos[i].Moneda != "CRC") {
-            //        Pagado += MetodosPagos[i].Monto * TipodeCambio.TipoCambio;
-
-            //        if (MetodosPagos[i].Metodo == "Efectivo") {
-
-            //            if (MetodosPagos[i].PagadoCon > 0) {
-
-
-
-            //                vueltoD += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto);
-            //                vuelto += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) * TipodeCambio.TipoCambio;
-
-            //            }
-            //        }
-
-            //    } else {
-            //        Pagado += MetodosPagos[i].Monto / TipodeCambio.TipoCambio;
-            //        if (MetodosPagos[i].Metodo == "Efectivo") {
-
-            //            if (MetodosPagos[i].PagadoCon > 0) {
-
-
-
-            //                vuelto += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) / TipodeCambio.TipoCambio;
-            //                vueltoD += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) ;
-
-            //            }
+             
         }
 
 
@@ -2429,33 +2473,36 @@ function onChangeMonedaP() {
     try {
 
         RellenaCB();
-        var Moneda = $("#selectMonedaP").val();
-        var Monto = parseFloat($("#MontoPago").val()); //siempre viene con el total de la moneda del documento
-        var MonedaDoc = $("#selectMoneda").val();
+        var Moneda = $("#selectMonedaP").val(); //Moneda del pago
+        var Monto = parseFloat($("#MontoPago").val()); //Monto que se pone el input
+        var MonedaDoc = $("#selectMoneda").val(); //Moneda del documento
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
         var Total = parseFloat(ReplaceLetra($("#totG").text()));
         var Metodo = $("#MetodoSeleccionado").val();
 
-        if (Metodo == "Efectivo") {
-            if (Moneda != MonedaDoc) {
+        
+        
 
-                $("#PagadoCon").val(Monto);
-            }
+        if (Metodo == "Efectivo") { 
+
+            $("#PagadoCon").val(Monto); 
         }
 
 
-        if (Moneda != "CRC") {
+        if (Moneda != "CRC") { //Si es USD
             if (Moneda != MonedaDoc) {
-                $("#TotalC").val(Monto); // lo pongo en colones
-                var TotalD = Monto / TipodeCambio.TipoCambio; // Tptal en dolares
-                $("#TotalD").val(TotalD);
+                var TotalC = Monto * TipodeCambio.TipoCambio;
+                $("#TotalC").val(TotalC); // lo pongo en colones
+                //var TotalD = Monto / TipodeCambio.TipoCambio; // Tptal en dolares
+                $("#TotalD").val(Monto);
             } else {
-                $("#TotalD").val(Monto); // lo pongo en colones
-                var TotalC = Monto * TipodeCambio.TipoCambio; // Tptal en dolares
-                $("#TotalC").val(TotalC);
+                var TotalD = Monto / TipodeCambio.TipoCambio; // Tptal en dolares
+                $("#TotalD").val(TotalD); // lo pongo en colones
+               
+                $("#TotalC").val(Monto);
             }
 
-             
+
         } else { //La moneda que se escogio es colones
 
             if (Moneda != MonedaDoc) {
@@ -2468,7 +2515,7 @@ function onChangeMonedaP() {
                 var TotalD = Monto / TipodeCambio.TipoCambio; // Tptal en dolares
                 $("#TotalD").val(TotalD);
             }
-             
+
         }
 
 

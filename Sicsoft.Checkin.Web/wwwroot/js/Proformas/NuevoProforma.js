@@ -914,6 +914,8 @@ function RellenaTabla() {
 
         for (var i = 0; i < ProdCadena.length; i++) {
             var TotalGanancia = (ProdCadena[i].TotalLinea - ProdCadena[i].TotalImpuesto) ;
+            var MonedaDoc = $("#selectMoneda").val();
+            var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
             html += "<tr>";
 
             html += "<td> " + (i + 1) + " </td>";
@@ -928,11 +930,46 @@ function RellenaTabla() {
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
             if ($("#RolGanancia").val() == "value") {
-                if (retornaMargenGanancia(TotalGanancia, ProdCadena[i].Costo) > 0) {
-                    html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, ProdCadena[i].Costo).toFixed(2)) + "%" + " </td>";
-                } else {
-                    html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, ProdCadena[i].Costo).toFixed(2)) + "%" + " </td>";
+                if (ProdCadena[i].Moneda != MonedaDoc) {
+                    if (ProdCadena[i].Moneda != "CRC") {
+                        var Costo = ProdCadena[i].Costo;
+                        if (retornaMargenGanancia(TotalGanancia, Costo) > 0) {
+                            html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                        }
+                        else {
+                            html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                        }
+
+                    } else {
+                        var Costo = ProdCadena[i].Costo / TipodeCambio.TipoCambio;
+                        if (retornaMargenGanancia(TotalGanancia, Costo) > 0) {
+                            html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                        } else {
+                            html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                        }
+                    }
+
                 }
+                else {
+                    if (ProdCadena[i].Moneda != "CRC") {
+                        var Costo = ProdCadena[i].Costo / TipodeCambio.TipoCambio;
+                        if (retornaMargenGanancia(TotalGanancia, Costo) > 0) {
+                            html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                        }
+                        else {
+                            html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                        }
+                    } else {
+                        var Costo = ProdCadena[i].Costo;
+                        if (retornaMargenGanancia(TotalGanancia, Costo) > 0) {
+                            html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                        }
+                        else {
+                            html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                        }
+                    }
+                }
+
             }
             
   

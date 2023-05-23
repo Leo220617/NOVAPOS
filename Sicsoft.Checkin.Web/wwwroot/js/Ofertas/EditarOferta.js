@@ -912,6 +912,8 @@ function RellenaTabla() {
         var html = "";
         $("#tbody").html(html);
         var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
+        var MonedaDoc = $("#selectMoneda").val();
+        var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
 
         for (var i = 0; i < ProdCadena.length; i++) {
             var PE = Productos.find(a => a.id == ProdCadena[i].idProducto);
@@ -930,11 +932,46 @@ function RellenaTabla() {
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
                 if ($("#RolGanancia").val() == "value") {
-                    if (retornaMargenGanancia(TotalGanancia, ProdCadena[i].Costo) > 0) {
-                        html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, ProdCadena[i].Costo).toFixed(2)) + "%" + " </td>";
-                    } else {
-                        html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, ProdCadena[i].Costo).toFixed(2)) + "%" + " </td>";
+                    if (ProdCadena[i].Moneda != MonedaDoc) {
+                        if (ProdCadena[i].Moneda != "CRC") {
+                            var Costo = ProdCadena[i].Costo;
+                            if (retornaMargenGanancia(TotalGanancia, Costo) > 0) {
+                                html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            }
+                            else {
+                                html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            }
+
+                        } else {
+                            var Costo = ProdCadena[i].Costo / TipodeCambio.TipoCambio;
+                            if (retornaMargenGanancia(TotalGanancia, Costo) > 0) {
+                                html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            } else {
+                                html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            }
+                        }
+
                     }
+                    else {
+                        if (ProdCadena[i].Moneda != "CRC") {
+                            var Costo = ProdCadena[i].Costo / TipodeCambio.TipoCambio;
+                            if (retornaMargenGanancia(TotalGanancia, Costo) > 0) {
+                                html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            }
+                            else {
+                                html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            }
+                        } else {
+                            var Costo = ProdCadena[i].Costo;
+                            if (retornaMargenGanancia(TotalGanancia, Costo) > 0) {
+                                html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            }
+                            else {
+                                html += "<td class='text-right' style='background-color:#FFE9E9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
+                            }
+                        }
+                    }
+
                 }
             html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 

@@ -550,7 +550,7 @@ function onChangeProducto() {
             $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
             $("#inputCabys").val(Producto.Cabys);
             $("#inputNomPro").val(Producto.Nombre);
-         
+
             ExoneracionxCliente();
             //EX => Exoneracion
             var Exonera = parseInt($("#exoneracion").val());
@@ -1021,7 +1021,7 @@ function RellenaTabla() {
                 html += "</tr>";
 
             } else {
-            
+
                 EliminarProducto(i);
 
 
@@ -1107,7 +1107,7 @@ function AgregarProductoTabla() {
         var Descuento = parseFloat($("#DES").val());
         var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
 
-        if ((PE.Stock - Producto.Cantidad) < 0 && PE.Codigo != PS.Codigo ) {
+        if ((PE.Stock - Producto.Cantidad) < 0 && PE.Codigo != PS.Codigo) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1130,7 +1130,7 @@ function AgregarProductoTabla() {
 
 
         }
-   
+
 
         if (Producto.Cantidad <= 0) {
             Swal.fire({
@@ -1299,7 +1299,7 @@ function Generar() {
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
-                  
+
 
 
                     $.ajax({
@@ -1384,8 +1384,16 @@ function Generar() {
 function validarOferta(e) {
     try {
         var Contado = CP.find(a => a.Nombre == "Contado");
+        var idCliente = $("#ClienteSeleccionado").val();
+        var totalG = parseFloat(ReplaceLetra($("#totG").text()));
 
+        var Cliente = Clientes.find(a => a.id == idCliente);
+        var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+        var CondPago = $("#selectCondPago").val();
 
+        if ($("#selectMoneda").val() != "CRC") {
+            totalG = totalG * TipodeCambio.TipoCambio;
+        }
         for (var i = 0; i < e.Detalle.length; i++) {
             var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
             if (PE.Editable == true) {
@@ -1423,11 +1431,19 @@ function validarOferta(e) {
 
 
             }
-          
+
 
             else {
                 return true;
             }
+        } if (Cliente.LimiteCredito < totalG && CondPago != Contado.id) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'El total de la factura es mayor al Limite de crédito'
+
+            })
+            return false;
         } else {
             return true;
         }
@@ -1540,7 +1556,7 @@ function onChangeCantidadProducto(i) {
         var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
         ProdCadena[i].Cantidad = parseFloat($("#" + i + "_Prod").val()).toFixed(2);
 
-        if (ProdCadena[i].Cantidad > 0 && (PE.Stock - ProdCadena[i].Cantidad) >= 0 || PE.Codigo == PS.Codigo || (PE.Editable == true && ProdCadena[i].Cantidad > 0 )) {
+        if (ProdCadena[i].Cantidad > 0 && (PE.Stock - ProdCadena[i].Cantidad) >= 0 || PE.Codigo == PS.Codigo || (PE.Editable == true && ProdCadena[i].Cantidad > 0)) {
             ValidarTotales();
         }
         else if ((PE.Stock - ProdCadena[i].Cantidad) < 0 && PE.Codigo != PS.Codigo && PE.Editable == false) {

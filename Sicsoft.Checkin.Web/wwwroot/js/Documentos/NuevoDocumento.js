@@ -1434,10 +1434,11 @@ function validarDocumento(e) {
 
     try {
         var Contado = CP.find(a => a.Nombre == "Contado");
+ 
 
         var sumatoriaPagos = 0;
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
-
+       
         for (var i = 0; i < e.MetodosPagos.length; i++) {
             if ($("#selectMoneda").val() != e.MetodosPagos[i].Moneda) {
                 if (e.MetodosPagos[i].Moneda != "CRC") {
@@ -1474,7 +1475,7 @@ function validarDocumento(e) {
                 return false;
             } else if (e.idCliente == "0" || e.idCliente == null) {
                 return false;
-            } else {
+            }  else {
                 return true;
             }
         }
@@ -1572,7 +1573,28 @@ function AbrirPago() {
     try {
         $(".MetodosPagoRellenar").hide();
         var Contado = CP.find(a => a.Nombre == "Contado");
+        var idCliente = $("#ClienteSeleccionado").val();
+        var totalG = parseFloat(ReplaceLetra($("#totG").text()));
+
+        var Cliente = Clientes.find(a => a.id == idCliente);
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+        var  CondPago = $("#selectCondPago").val();
+        if ($("#selectMoneda").val() != "CRC") {
+            totalG = totalG * TipodeCambio.TipoCambio;
+        }
+
+        if (Cliente.LimiteCredito < totalG && CondPago != Contado.id) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'El total de la factura es mayor al Limite de crédito'
+
+            })
+            return false;
+        } else {
+          
+       
+     
         $("#TipCam").val(TipodeCambio.TipoCambio);
         if ($("#selectCondPago").val() == Contado.id) {
 
@@ -1610,7 +1632,7 @@ function AbrirPago() {
         } else {
             Generar();
         }
-
+        }
     } catch (e) {
         Swal.fire({
             icon: 'error',

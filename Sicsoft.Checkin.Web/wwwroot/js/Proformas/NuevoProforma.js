@@ -1336,6 +1336,16 @@ function Generar() {
 function validarOferta(e) {
     try {
         var Contado = CP.find(a => a.Nombre == "Contado");
+        var idCliente = $("#ClienteSeleccionado").val();
+        var totalG = parseFloat(ReplaceLetra($("#totG").text()));
+
+        var Cliente = Clientes.find(a => a.id == idCliente);
+        var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+        var CondPago = $("#selectCondPago").val();
+
+        if ($("#selectMoneda").val() != "CRC") {
+            totalG = totalG * TipodeCambio.TipoCambio;
+        }
 
         if ($("#selectCondPago").val() == Contado.id) {
             if (e.idCliente == "0" || e.idCliente == null) {
@@ -1360,10 +1370,19 @@ function validarOferta(e) {
 
 
             }
+        
 
             else {
                 return true;
             }
+        } if (Cliente.LimiteCredito < totalG && CondPago != Contado.id) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'El total de la factura es mayor al Limite de crédito'
+
+            })
+            return false;
         } else {
             return true;
         }

@@ -1,0 +1,245 @@
+﻿@page
+@model NOVAAPP.Pages.Depositos.NuevoModel
+@{
+    ViewData["Title"] = "Depósitos";
+}
+@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@using Sicsoft.Checkin.Web.Models;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
+@section styles{
+
+
+}
+    @section scripts{
+
+
+    <script src="/js/Depositos/NuevoDeposito.js"></script>
+
+
+}
+
+
+    @using Newtonsoft.Json;
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Depósito
+        </h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+            <li class="breadcrumb-item active">Generar Depósito</li>
+        </ol>
+    </section>
+
+    <section class="content ">
+        <div class="row">
+            <div class="col-12">
+
+
+
+                <input hidden id="Deposito" value="@JsonConvert.SerializeObject(Model.Deposito)" />
+                <input hidden id="CB" value="@JsonConvert.SerializeObject(Model.CB)" />
+                <input hidden id="USU" value="@JsonConvert.SerializeObject(Model.USU)" />
+                <input hidden id="Cuentas" value="@JsonConvert.SerializeObject(Model.Cuentas.Cuentas)" />
+                <input hidden id="Cierres" value="@JsonConvert.SerializeObject(Model.Cierres)" />
+
+
+
+
+                <input hidden id="urlGenerar" value="@Url.Page("Nuevo", "AgregarDeposito")" />
+
+                <input hidden id="RolGanancia" value="@(!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))" />
+
+
+                <!-- Content Header (Page header) -->
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-8">
+                                <h6 class="box-subtitle">Generar Depósito</h6>
+
+
+                            </div>
+                            <div class="col-4">
+                                <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <!-- title row -->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="page-header mt-0">
+                                    <h2 class="d-inline"><span class="font-size-24"> Depósito</span></h2>
+                                    <div class="text-left">
+                                        <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
+                                        <input hidden id="Fecha" type="datetime" value="@DateTime.Now" />
+
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Fecha de Depósito</label>
+                                    <input type="date" class="form-control" id="fechaVencimiento" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")">
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Moneda</label>
+                                    <select class="form-control" id="selectMoneda" onchange="javascript: onChangeMoneda()">
+                                        <option value="CRC" selected>CRC</option>
+                                        <option value="USD">USD</option>
+
+                                    </select>
+
+
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Banco</label>
+                                    <input type="text" class="form-control" id="fechaVencimiento">
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Referencia bancaria</label>
+                                    <input type="text" class="form-control" id="fechaVencimiento">
+
+
+                                </div>
+                            </div>
+
+
+
+                            <!-- /.col -->
+                        </div>
+                        <br />
+                        <br />
+
+
+                        <!-- info row -->
+
+                        <div class="row invoice-info">
+                            <div class="col-md-4">
+                                <strong>Cuenta Destino</strong>
+                             
+                                    <select id="CuentaSeleccionada" class="form-control select2">
+                                        <option value="0"> Seleccione Cuenta Bancaria</option>
+
+
+
+                                    </select>
+
+
+
+                             
+                            </div>
+
+                            <div class="col-md-4">
+                                <strong>Cuenta Inicial</strong>
+                               
+
+                                    <select id="MisCuentas" class="form-control select2">
+                                        <option value="0"> Seleccione Cuenta Bancaria</option>
+
+
+
+                                    </select>
+
+
+
+                                
+                            </div>
+
+                            <div class="col-md-4 ">
+                                <div class="form-group">
+                                    <strong>Monto</strong>
+                                    <input id="Monto" type="number" class="form-control" value=0>
+
+
+                                </div>
+
+
+                            </div>
+
+
+
+
+                        </div>
+
+                        <!-- /.col -->
+                        <!-- /.row -->
+
+                    </div>
+
+                </div>
+
+
+
+
+
+
+                <div class="box">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+
+                                <div class="form-group">
+                                    <label>Comentarios</label>
+                                    <textarea id="inputComentarios" class="form-control"></textarea>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <!-- this row will not appear when printing -->
+                        <div class="row no-print">
+                            <div class="col-12">
+                                @*<button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>*@
+                                <button type="button" class="btn btn-success pull-right" onclick="    javascript: Generar()">
+                                    <i class="fa fa-credit-card"></i> Generar
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+
+

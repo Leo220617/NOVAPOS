@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Models\CuentasSAPViewModel.cs~RF913ca42.TMP" />
     <None Remove="Pages\Documentos\Nuevo.cshtml~RF33a5c5be.TMP" />
     <None Remove="Pages\Documentos\Observar.cshtml~RF339ce72c.TMP" />
     <None Remove="Pages\Ofertas\Nuevo.cshtml.cs~RF59effe9.TMP" />

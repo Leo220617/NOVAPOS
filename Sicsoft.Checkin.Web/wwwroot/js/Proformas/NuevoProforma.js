@@ -179,7 +179,7 @@ function RecolectarFacturas() {
         })
     }
 }
-
+rel
 function onChangeMoneda() {
     try {
 
@@ -1342,6 +1342,7 @@ function validarOferta(e) {
         var Cliente = Clientes.find(a => a.id == idCliente);
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
         var CondPago = $("#selectCondPago").val();
+     
 
         if ($("#selectMoneda").val() != "CRC") {
             totalG = totalG * TipodeCambio.TipoCambio;
@@ -1583,7 +1584,7 @@ function BuscarCliente() {
     $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: 'https://apis.gometa.org/cedulas/' + $("#Cedula").val() + '&key=gkUkysPxCKUYWZS', //Nombre del metodo
+        url: 'https://api.hacienda.go.cr/fe/ae?identificacion=' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8', //Nombre del metodo
         data: {},
         success: function (result) {
 

@@ -119,6 +119,22 @@
 
             }
 
+             @{
+                if (!string.IsNullOrEmpty(Roles.Where(a => a == "54").FirstOrDefault()))
+                {
+                    <li class="">
+
+                        <a asp-page="/Depositos/Index">
+                            <i class="mdi mdi-currency-usd"></i> <span>Depósitos</span>
+
+                        </a>
+
+                    </li>
+
+                }
+
+            }
+
 
 
 

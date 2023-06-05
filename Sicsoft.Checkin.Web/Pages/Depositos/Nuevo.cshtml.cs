@@ -24,6 +24,11 @@ namespace NOVAAPP.Pages.Depositos
         [BindProperty]
         public DepositosViewModel Deposito { get; set; }
 
+
+        [BindProperty]
+        public DepositosViewModel[] Lista { get; set; }
+
+
         [BindProperty]
         public UsuariosViewModel USU { get; set; }
 
@@ -73,7 +78,11 @@ namespace NOVAAPP.Pages.Depositos
                 CB = await serviceCB.ObtenerLista(FiltroCB);
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.FechaInicial = DateTime.Now.Date;
-         
+
+                filtro.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                filtro.Codigo3 = idcaja;
+
+                Lista = await service.ObtenerLista(filtro);
                 Cuentas = await cuentas.ObtenerListaEspecial("");
 
 
@@ -96,7 +105,8 @@ namespace NOVAAPP.Pages.Depositos
             {
                 recibidos.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
                 recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
-             
+                recibidos.idCaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault());
+
                 var resp = await service.Agregar(recibidos);
 
                 var resp2 = new

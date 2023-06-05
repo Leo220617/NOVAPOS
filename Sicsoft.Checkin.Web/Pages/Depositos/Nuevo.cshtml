@@ -55,6 +55,7 @@
                 <input hidden id="USU" value="@JsonConvert.SerializeObject(Model.USU)" />
                 <input hidden id="Cuentas" value="@JsonConvert.SerializeObject(Model.Cuentas.Cuentas)" />
                 <input hidden id="Cierres" value="@JsonConvert.SerializeObject(Model.Cierres)" />
+                <input hidden id="Lista" value="@JsonConvert.SerializeObject(Model.Lista)" />
 
 
 
@@ -86,13 +87,6 @@
                             <div class="col-md-4">
                                 <div class="page-header mt-0">
                                     <h2 class="d-inline"><span class="font-size-24"> Depósito</span></h2>
-                                    <div class="text-left">
-                                        <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
-                                        <input hidden id="Fecha" type="datetime" value="@DateTime.Now" />
-
-
-
-                                    </div>
 
                                 </div>
 
@@ -103,7 +97,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Fecha de Depósito</label>
-                                    <input type="date" class="form-control" id="fechaVencimiento" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")">
+                                    <input type="date" class="form-control" id="Fecha" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")">
 
 
                                 </div>
@@ -125,7 +119,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Banco</label>
-                                    <input type="text" class="form-control" id="fechaVencimiento">
+                                    <input type="text" class="form-control" id="Banco">
 
 
                                 </div>
@@ -133,12 +127,20 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Referencia bancaria</label>
-                                    <input type="text" class="form-control" id="fechaVencimiento">
+                                    <input type="text" class="form-control" id="Referencia">
 
 
                                 </div>
                             </div>
 
+                                <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Disponible para Depósito</label>
+                                    <input type="number" disabled class="form-control" id="SaldoDisponible">
+
+
+                                </div>
+                            </div>
 
 
                             <!-- /.col -->
@@ -151,40 +153,41 @@
 
                         <div class="row invoice-info">
                             <div class="col-md-4">
-                                <strong>Cuenta Destino</strong>
-                             
-                                    <select id="CuentaSeleccionada" class="form-control select2">
-                                        <option value="0"> Seleccione Cuenta Bancaria</option>
-
-
-
-                                    </select>
-
-
-
-                             
-                            </div>
-
-                            <div class="col-md-4">
                                 <strong>Cuenta Inicial</strong>
-                               
-
-                                    <select id="MisCuentas" class="form-control select2">
-                                        <option value="0"> Seleccione Cuenta Bancaria</option>
 
 
-
-                                    </select>
+                                <select id="MisCuentas" class="form-control select2">
+                                    <option value="0"> Seleccione Cuenta Bancaria</option>
 
 
 
-                                
+                                </select>
+
+
+
+
                             </div>
+                            <div class="col-md-4">
+                                <strong>Cuenta Destino</strong>
+
+                                <select id="CuentaSeleccionada" class="form-control select2">
+                                    <option value="0"> Seleccione Cuenta Bancaria</option>
+
+
+
+                                </select>
+
+
+
+
+                            </div>
+
+
 
                             <div class="col-md-4 ">
                                 <div class="form-group">
                                     <strong>Monto</strong>
-                                    <input id="Monto" type="number" class="form-control" value=0>
+                                    <input id="Monto" type="number" class="form-control" min=0 value=0>
 
 
                                 </div>

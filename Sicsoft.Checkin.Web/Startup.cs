@@ -265,6 +265,8 @@ namespace Sicsoft.Checkin.Web
 .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Depositos"))
 .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
+       
+
             return services;
         }
     }

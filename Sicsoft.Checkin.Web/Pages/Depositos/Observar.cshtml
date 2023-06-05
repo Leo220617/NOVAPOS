@@ -1,0 +1,246 @@
+﻿@page "{id}"
+@model NOVAAPP.Pages.Depositos.ObservarModel
+@{
+    ViewData["Title"] = "Depósitos";
+    NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
+    formato.CurrencySymbol = "";
+    formato.CurrencyGroupSeparator = ",";
+    formato.NumberDecimalSeparator = ".";
+}
+@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@using Sicsoft.Checkin.Web.Models;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
+
+@section scripts{
+
+
+    <script src="/js/Depositos/ObservarDeposito.js"></script>
+
+
+}
+
+    @using Newtonsoft.Json;
+    @using System.Globalization
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Depósito
+        </h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+            <li class="breadcrumb-item active">Observar Depósito</li>
+        </ol>
+    </section>
+
+    <section class="content ">
+        <div class="row">
+            <div class="col-12">
+
+
+                <input hidden id="CB" value="@JsonConvert.SerializeObject(Model.CB)" />
+
+                <input hidden id="Cuentas" value="@JsonConvert.SerializeObject(Model.Cuentas.Cuentas)" />
+
+                <input hidden id="Deposito" value="@JsonConvert.SerializeObject(Model.Listas)" />
+
+
+
+
+
+
+                <!-- Content Header (Page header) -->
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-8">
+                                <h6 class="box-subtitle">Observar Depósito</h6>
+
+
+                            </div>
+                            <div class="col-4">
+                                <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+
+
+                            </div>
+
+                        </div>
+                        <div class="box-body">
+                            <!-- title row -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="page-header mt-0">
+                                        <h2 class="d-inline"><span class="font-size-24">Depósito No: @Model.Listas.id</span></h2>
+                                        <br />
+                                        <div class="text-left">
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <h5> <b>Fecha: </b> @Model.Listas.Fecha.ToString("dd/MM/yyyy")</h5>
+
+                                                </div>
+                                                <div class="col-3">
+                                                    <h5> <b>Moneda: </b> @Model.Listas.Moneda</h5>
+
+                                                </div>
+
+                                                <div class="col-3">
+                                                    <h5> <b>Banco: </b> @(Model.Listas.Banco)</h5>
+
+                                                </div>
+
+                                                <div class="col-3">
+                                                    <h5> <b>Referencia Bancaria: </b> @(Model.Listas.Referencia)</h5>
+
+                                                </div>
+                                                <br />
+                                                <br />
+                                                <div class="col-4">
+                                                    <h5> <b>Cuenta Inicial: </b> @( Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial).FirstOrDefault() == null ? "Cuenta Inexistente" : Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial).FirstOrDefault().CuentaSAP + " - "+ Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial && a.Tipo == "Efectivo").FirstOrDefault().Nombre) </h5>
+
+                                                </div>
+
+                                                <div class="col-4">
+                                                    <h5> <b>Cuenta Destino: </b> @(Model.Listas.CuentaFinal)  - <h5 id="Nombre"></h5></h5>
+
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="total-payment">
+                                                        <h3><b>Monto :</b>  <span>  @Math.Round(Model.Listas.Saldo, 2).ToString("C",formato)</span></h3>
+                                                    </div>
+                                                </div>
+
+
+
+
+
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+                                <!-- info row -->
+                                <!-- /.col -->
+                                <!-- /.row -->
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+                <div class="col-6 box">
+                    <div class="col-6 box-header with-border">
+                        <h4 class="box-title">Comentarios</h4>
+                    </div>
+                    <div class="box-body">
+                        <p>@Model.Listas.Comentarios</p>
+
+                        <!-- /.box-body -->
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+        </div>
+        <button id="print" class="btn btn-warning" type="button" onclick="javascript: ImprimirPantalla()"> <span><i class="fa fa-print"></i> Imprimir</span> </button>
+    </section>
+
+
+    <div class="html" hidden>
+        <div class="row">
+            <div class="col-12">
+                <div class="page-header mt-0">
+                    <h2 class="d-inline"><span class="font-size-24">Depósito No: @Model.Listas.id</span></h2>
+                    <br />
+                    <div class="text-left">
+                        <div class="row">
+                            <div class="col-3">
+                                <h5> <b>Fecha: </b> @Model.Listas.Fecha.ToString("dd/MM/yyyy")</h5>
+
+                            </div>
+                            <div class="col-3">
+                                <h5> <b>Moneda: </b> @Model.Listas.Moneda</h5>
+
+                            </div>
+
+                            <div class="col-3">
+                                <h5> <b>Banco: </b> @(Model.Listas.Banco)</h5>
+
+                            </div>
+
+                            <div class="col-3">
+                                <h5> <b>Referencia Bancaria: </b> @(Model.Listas.Referencia)</h5>
+
+                            </div>
+                            <br />
+                            <br />
+                            <div class="col-4">
+                                <h5> <b>Cuenta Inicial: </b> @( Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial).FirstOrDefault() == null ? "Cuenta Inexistente" : Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial).FirstOrDefault().CuentaSAP + " - "+ Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial && a.Tipo == "Efectivo").FirstOrDefault().Nombre) </h5>
+
+                            </div>
+
+                            <div class="col-4">
+                                <h5> <b>Cuenta Destino: </b> @(Model.Listas.CuentaFinal)  - <h5 id="Nombre"></h5></h5>
+
+                            </div>
+                            <div class="col-4">
+                                <div class="total-payment">
+                                    <h3><b>Monto :</b>  <span>  @Math.Round(Model.Listas.Saldo, 2).ToString("C",formato)</span></h3>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col -->
+            <!-- info row -->
+            <!-- /.col -->
+            <!-- /.row -->
+
+        </div>
+        <div class="col-6 box">
+            <div class="col-6 box-header with-border">
+                <h4 class="box-title">Comentarios</h4>
+            </div>
+            <div class="box-body">
+                <p>@Model.Listas.Comentarios</p>
+
+                <!-- /.box-body -->
+            </div>
+
+
+
+
+        </div>
+    </div>
+

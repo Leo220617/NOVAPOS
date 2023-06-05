@@ -78,16 +78,19 @@
                     success: function(result) {
                         $("#divProcesando").modal("hide");
                         console.log(result);
-                        if (result == false) {
+                        if (result.success == false) {
+                            $("#divProcesando").modal("hide");
 
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
-                                text: 'Ha ocurrido un error al intentar sincronizar a SAP'
+                                text: 'Ha ocurrido un error al intentar sincronizar a SAP ' + result.motivo
 
                             })
 
                         } else {
+                        $("#divProcesando").modal("hide");
+
                             Swal.fire({
                                 title: "Ha sido sincronizado a SAP con éxito",
 
@@ -111,6 +114,8 @@
                 })
             } catch (e) {
                 console.log(e);
+                $("#divProcesando").modal("hide");
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -237,12 +242,13 @@
 
                                     <th>ID</th>
                                     <th>Acción</th>
-                                    <th>Banco</th>
+                                    <th>Consecutivo SAP</th>
                                     <th>Cuenta Inicial</th>
                                     <th>Cuenta Final</th>
                                     <th>Moneda</th>
                                     <th>Saldo</th>
-
+                                    <th>Sucursal</th>
+                                    <th>Fecha</th>
                                     <th>Generado Por</th>
                                     <th>Procesado SAP</th>
 
@@ -268,7 +274,7 @@
                                                 <a onclick="javascript: onClickModal('@item.id')" title="Insertar a SAP"><img src="/sapX.png" /></a>
                                             }
                                         </td>
-                                        <td> @item.Banco</td>
+                                        <td> @item.DocEntry</td>
                                         <td> @item.CuentaInicial</td>
                                         <td> @item.CuentaFinal</td>
                                         <td> @item.Moneda</td>
@@ -326,12 +332,13 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Acción</th>
-                                    <th>Banco</th>
+                                    <th>Consecutivo SAP</th>
                                     <th>Cuenta Inicial</th>
                                     <th>Cuenta Final</th>
                                     <th>Moneda</th>
                                     <th>Saldo</th>
-
+                                    <th>Sucursal</th>
+                                    <th>Fecha</th>
                                     <th>Generado Por</th>
                                     <th>Procesado SAP</th>
 

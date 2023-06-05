@@ -33,6 +33,7 @@ namespace NOVAAPP.Pages.Depositos
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
 
+    
 
         public IndexModel(ICrudApi<DepositosViewModel, int> service, ICrudApi<UsuariosViewModel, int> serviceU, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<RolesViewModel, int> roles, ICrudApi<UsuariosSucursalesViewModel, int> usuc)
         {
@@ -73,14 +74,16 @@ namespace NOVAAPP.Pages.Depositos
 
 
                     filtro.Codigo2 = 0;
-                    filtro.Codigo3 = 0;
-            
-                 
-                    filtro.CardName = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
+                    filtro.Codigo3 = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault());
+
+
+                    filtro.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
 
 
                 }
-            
+              
+
+             
                 Listas = await service.ObtenerLista(filtro);
               
 
@@ -92,8 +95,8 @@ namespace NOVAAPP.Pages.Depositos
 
 
                 Users = await serviceU.ObtenerLista("");
-             
-              
+
+                Sucursales = await sucursales.ObtenerLista(filtro);
                 Users = Users.Where(a => a.novapos == true).ToArray();
 
 
@@ -127,5 +130,39 @@ namespace NOVAAPP.Pages.Depositos
                 return Page();
             }
         }
+        public async Task<IActionResult> OnGetSincronizarSAP(int id)
+        {
+            try
+            {
+
+                await service.SincronizarSAP(id);
+                var respuesta = new
+                {
+                    success = true,
+                    motivo = ""
+                };
+                return new JsonResult(respuesta);
+            }
+            catch (ApiException ex)
+            {
+                var respuesta = new
+                {
+                    success = false,
+                    motivo = ex.Content.ToString()
+                };
+                return new JsonResult(respuesta);
+            }
+            catch (Exception ex)
+            {
+                var respuesta = new
+                {
+                    success = false,
+                    motivo = ex.Message
+                };
+                return new JsonResult(respuesta);
+
+            }
+        }
+
     }
 }

@@ -107,18 +107,18 @@
                                                 <br />
                                                 <br />
                                                 <div class="col-4">
-                                                    <h5> <b>Cuenta Inicial: </b> @( Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial).FirstOrDefault() == null ? "Cuenta Inexistente" : Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial).FirstOrDefault().CuentaSAP + " - "+ Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial && a.Tipo == "Efectivo").FirstOrDefault().Nombre) </h5>
+                                                    <h5> <b>Cuenta Inicial: @( Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial).FirstOrDefault() == null ? "Cuenta Inexistente" : Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial).FirstOrDefault().CuentaSAP + " - "+ Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial && a.Tipo == "Efectivo").FirstOrDefault().Nombre) </b> </h5>
 
                                                 </div>
 
                                                 <div class="col-4">
-                                                    <h5> <b>Cuenta Destino: </b> @(Model.Listas.CuentaFinal)  - <h5 id="Nombre"></h5></h5>
+                                                    <h5> <b>Cuenta Destino: </b> @(Model.Listas.CuentaFinal)  - <b id="Nombre"></b></h5>
 
                                                 </div>
                                                 <div class="col-4">
-                                                    <div class="total-payment">
+                                                 
                                                         <h3><b>Monto :</b>  <span>  @Math.Round(Model.Listas.Saldo, 2).ToString("C",formato)</span></h3>
-                                                    </div>
+                                                  
                                                 </div>
 
 
@@ -197,18 +197,18 @@
                             <br />
                             <br />
                             <div class="col-4">
-                                <h5> <b>Cuenta Inicial: </b> @( Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial).FirstOrDefault() == null ? "Cuenta Inexistente" : Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial).FirstOrDefault().CuentaSAP + " - "+ Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial && a.Tipo == "Efectivo").FirstOrDefault().Nombre) </h5>
+                                <h5> <b>Cuenta Inicial:  @( Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial).FirstOrDefault() == null ? "Cuenta Inexistente" : Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial).FirstOrDefault().CuentaSAP + " - "+ Model.CB.Where(a => a.CuentaSAP == Model.Listas.CuentaInicial && a.Tipo == "Efectivo").FirstOrDefault().Nombre)</b> </h5>
 
                             </div>
 
                             <div class="col-4">
-                                <h5> <b>Cuenta Destino: </b> @(Model.Listas.CuentaFinal)  - <h5 id="Nombre"></h5></h5>
+                                <h5> <b>Cuenta Destino: </b> @(Model.Listas.CuentaFinal)  - <b id="Nombre"></b></h5>
 
                             </div>
                             <div class="col-4">
-                                <div class="total-payment">
+                              
                                     <h3><b>Monto :</b>  <span>  @Math.Round(Model.Listas.Saldo, 2).ToString("C",formato)</span></h3>
-                                </div>
+                              
                             </div>
 
 

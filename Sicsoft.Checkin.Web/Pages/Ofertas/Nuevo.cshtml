@@ -396,6 +396,12 @@
                             <div class="total-payment">
                                 <h3><b>Total :</b>  <span id="totG">0 </span></h3>
                             </div>
+                                 @if (!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))
+                            {
+                                <div class="total-payment">
+                                    <h3><b>Total Ganancia :</b>  <span id="totGana">0</span>%</h3>
+                                </div>
+                            }
 
                         </div>
                         <!-- /.col -->
@@ -457,8 +463,11 @@
                             <select id="selectTP" class="form-control" onchange="javascript: maskCedula();" required>
                                 <option value="01">Nacional</option>
                                 <option value="02">Jurídica</option>
+                                   @if (!string.IsNullOrEmpty(Roles.Where(a => a == "55").FirstOrDefault()))
+                                        {
                                 <option value="03">DIMEX</option>
                                 <option value="04">NITE</option>
+                                        }
 
 
                             </select>
@@ -477,7 +486,7 @@
                         <div class="form-group">
                             <h5>Nombre<span class="text-danger">*</span></h5>
                             <div class="controls">
-                                <input type="text" id="Nombre" class="form-control" required data-validation-required-message="Este campo es requerido">
+                                <input type="text" id="Nombre" readonly class="form-control" required data-validation-required-message="Este campo es requerido">
                             </div>
 
                         </div>

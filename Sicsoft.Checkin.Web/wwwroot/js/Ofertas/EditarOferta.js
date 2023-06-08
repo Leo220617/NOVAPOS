@@ -28,6 +28,8 @@ var CP = [];
 var Vendedores = [];
 var Bodega = [];
 var Sucursal = [];
+var FP = false;
+var Inicio = false;
 
 function Recuperar() {
     try {
@@ -78,6 +80,8 @@ function RecuperarInformacion() {
         $("#descG").text(formatoDecimal(Oferta.TotalDescuento.toFixed(2)));
         $("#totG").text(formatoDecimal(Oferta.TotalCompra.toFixed(2)));
         $("#descuento").text(formatoDecimal(Oferta.PorDescto.toFixed(2)));
+
+        Inicio = true;
 
         for (var i = 0; i < Oferta.Detalle.length; i++) {
             var PE = Productos.find(a => a.id == Oferta.Detalle[i].idProducto);
@@ -332,37 +336,10 @@ function onChangeCliente() {
 
     try {
         var idCliente = $("#ClienteSeleccionado").val();
-        $("#selectCondPago").attr("disabled", "disabled");
-
+    
         var Cliente = Clientes.find(a => a.id == idCliente);
-        var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
+
         var Contado = CP.find(a => a.Nombre == "Contado");
-
-        //Preguntarle a CP cual es la de 30 dias
-        if (CondP.length > 0) {
-            var Cond30 = CP.filter(a => a.Dias <= CondP[0].Dias).sort(function (a, b) {
-                if (a.Dias > b.Dias) {
-                    return 1;
-                }
-                if (a.Dias < b.Dias) {
-                    return -1;
-                }
-                // a must be equal to b
-                return 0;
-            });
-            RellenaCondiciones(Cond30);
-
-        } else {
-            var Cond30 = [];
-            RellenaCondiciones(Cond30);
-        }
-
-
-        RecolectarFacturas();
-
-        $("#spanDireccion").text(Cliente.Sennas);
-        $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
-        $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)));
 
         if (Cliente.LimiteCredito <= 0 && Cliente.idCondicionPago != Contado.id) {
             Swal.fire({
@@ -373,6 +350,12 @@ function onChangeCliente() {
             })
         }
 
+        $("#spanDireccion").text(Cliente.Sennas);
+        $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
+        $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)));
+
+      
+        RecolectarFacturas();
         ProdClientes = Productos.filter(a => a.idListaPrecios == Sucursal.idListaPrecios);
         ProdClientes = ProdClientes.sort(function (a, b) {
             if (a.Stock < b.Stock) {
@@ -400,6 +383,11 @@ function onChangeCliente() {
 function RecolectarFacturas() {
     try {
         var idClientes = $("#ClienteSeleccionado").val();
+        var Cliente = Clientes.find(a => a.id == idClientes);
+
+        var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
+
+        var Contado = CP.find(a => a.Nombre == "Contado");
 
         $.ajax({
             type: 'GET',
@@ -419,7 +407,9 @@ function RecolectarFacturas() {
 
                 } else if (result.length > 0) {
                     console.log(result);
-                    $("#selectCondPago").attr("disabled", "disabled");
+                    // $("#selectCondPago").attr("disabled", "disabled");
+                    FP = false;
+
                     var textoF = "";
                     for (var i = 0; i < result.length; i++) {
                         textoF += " " + result[i].docNum + ", ";
@@ -432,8 +422,38 @@ function RecolectarFacturas() {
 
                     })
                 } else {
-                    $("#selectCondPago").attr("disabled", false);
+                    if (Cliente.LimiteCredito <= 0 && Cliente.idCondicionPago != Contado.id) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Advertencia',
+                            text: 'Limite de crédito excedido'
+
+                        })
+                    } else {
+                        FP = true;
+                        //$("#selectCondPago").attr("disabled", false);
+                    }
+
                 }
+                if (CondP.length > 0 && FP == true) {
+                    var Cond30 = CP.filter(a => a.Dias <= CondP[0].Dias).sort(function (a, b) {
+                        if (a.Dias > b.Dias) {
+                            return 1;
+                        }
+                        if (a.Dias < b.Dias) {
+                            return -1;
+                        }
+                        // a must be equal to b
+                        return 0;
+                    });
+                    RellenaCondiciones(Cond30);
+
+                } else {
+                    var Cond30 = [];
+                    RellenaCondiciones(Cond30);
+                }
+
+
             },
             beforeSend: function () {
 
@@ -451,17 +471,29 @@ function RecolectarFacturas() {
 }
 function RellenaCondiciones(CPS) {
     try {
+        var valorCondicion = Oferta != null || Oferta != undefined ? Oferta.idCondPago : 0;
         var text = "";
         $("#selectCondPago").html(text);
 
         var Contado = CP.find(a => a.Nombre == "Contado");
+        var Transito = CP.find(a => a.Nombre == "Transito");
 
-        text += "<option value='" + Contado.id + "' selected> " + Contado.Nombre + " </option>";
 
+
+        text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
+        if (FP == false) {
+            text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
+        }
 
         for (var i = 0; i < CPS.length; i++) {
-            if (CPS[i].id != Contado.id) {
-                text += "<option value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+            if (CPS[i].id != Contado.id && FP == true) {
+                if (valorCondicion == CPS[i].id && FP == true) {
+                    text += "<option selected value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+
+                } else {
+                    text += "<option value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+
+                }
 
             }
         }
@@ -469,6 +501,10 @@ function RellenaCondiciones(CPS) {
 
         $("#selectCondPago").html(text);
 
+        if (Inicio == true) {
+            $("#selectCondPago").val(Oferta.idCondPago);
+            Inicio = false;
+        }
 
     } catch (e) {
         Swal.fire({
@@ -971,7 +1007,7 @@ function RellenaTabla() {
                             }
                         }
                     }
-
+                    ValidarCosto();
                 }
             html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
@@ -1035,7 +1071,35 @@ function ReplaceLetra(palabra) {
 
 }
 
+function ValidarCosto() {
+    try {
+        var totalC = 0;
+        for (var i = 0; i < ProdCadena.length; i++) {
+            var Produc = Productos.find(a => a.id == ProdCadena[i].idProducto);
 
+            totalC += ProdCadena[i].Costo;
+
+
+
+
+        }
+        var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
+        var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
+        var subtotalD = subtotalG - descuentoG;
+        var diferencia = subtotalD - totalC;
+        var TotalGanancia = (diferencia / subtotalD) * 100;
+
+        $("#totGana").text(TotalGanancia.toFixed(2));
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
+
+        })
+    }
+}
 function AgregarProductoTabla() {
     try {
         var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
@@ -1338,6 +1402,7 @@ function Generar() {
 function validarOferta(e) {
     try {
         var Contado = CP.find(a => a.Nombre == "Contado");
+        var Transito = CP.find(a => a.Nombre == "Transito");
         var idCliente = $("#ClienteSeleccionado").val();
         var totalG = parseFloat(ReplaceLetra($("#totG").text()));
 
@@ -1387,7 +1452,7 @@ function validarOferta(e) {
             else {
                 return true;
             }
-        } if (Cliente.LimiteCredito < totalG && CondPago != Contado.id) {
+        } if (Cliente.LimiteCredito < totalG && CondPago != Contado.id && CondPago != Transito.id ) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -1417,6 +1482,7 @@ function onChangeDescuentoProducto(i) {
 
         if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento) {
             ValidarTotales();
+            ValidarCosto();
         }
 
         if (ProdCadena[i].PorDescto < 0) {
@@ -1429,6 +1495,7 @@ function onChangeDescuentoProducto(i) {
             })
 
             ValidarTotales();
+            ValidarCosto();
         }
         if (ProdCadena[i].PorDescto > Descuento) {
             Swal.fire({
@@ -1439,6 +1506,7 @@ function onChangeDescuentoProducto(i) {
             })
             ProdCadena[i].PorDescto = 0;
             ValidarTotales();
+            ValidarCosto();
         }
 
     } catch (e) {
@@ -1460,6 +1528,7 @@ function onChangePrecioProducto(i) {
 
         if (ProdCadena[i].PrecioUnitario >= PE.PrecioUnitario || (PE.Editable == true && ProdCadena[i].PrecioUnitario > 0)) {
             ValidarTotales();
+            ValidarCosto();
         }
         else if (PE.PrecioUnitario > ProdCadena[i].PrecioUnitario && PE.Editable == false) {
             Swal.fire({
@@ -1470,6 +1539,7 @@ function onChangePrecioProducto(i) {
             })
             ProdCadena[i].PrecioUnitario = PE.PrecioUnitario;
             ValidarTotales();
+            ValidarCosto();
 
         } else if (PE.Editable == true && ProdCadena[i].PrecioUnitario <= 0) {
             Swal.fire({
@@ -1480,6 +1550,7 @@ function onChangePrecioProducto(i) {
             })
             ProdCadena[i].PrecioUnitario = 1;
             ValidarTotales();
+            ValidarCosto();
 
         }
 
@@ -1507,6 +1578,7 @@ function onChangeCantidadProducto(i) {
 
         if (ProdCadena[i].Cantidad > 0 && (PE.Stock - ProdCadena[i].Cantidad) >= 0 || PE.Codigo == PS.Codigo || (PE.Editable == true && ProdCadena[i].Cantidad > 0)) {
             ValidarTotales();
+            ValidarCosto();
         }
         else if ((PE.Stock - ProdCadena[i].Cantidad) < 0 && PE.Codigo != PS.Codigo && PE.Editable == false) {
             Swal.fire({
@@ -1517,6 +1589,7 @@ function onChangeCantidadProducto(i) {
             })
             ProdCadena[i].Cantidad = PE.Stock;
             ValidarTotales();
+            ValidarCosto();
 
         }
         else if (ProdCadena[i].Cantidad <= 0) {
@@ -1529,6 +1602,7 @@ function onChangeCantidadProducto(i) {
             })
             ProdCadena[i].Cantidad = 1;
             ValidarTotales();
+            ValidarCosto();
 
         }
 

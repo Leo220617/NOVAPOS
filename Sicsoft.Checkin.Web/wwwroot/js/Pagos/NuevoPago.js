@@ -179,7 +179,7 @@ function RellenaTabla() {
             var diferencia = diff / (1000 * 60 * 60 * 24);
             var interes = 0;
             if (diferencia > 10) {
-                interes = (ProdCadena[i].saldo * 0.015) * (diferencia-10)
+                interes = (ProdCadena[i].saldo * 0.0005) * (diferencia-10)
             }
 
             html += "<td > " + formatoDecimal(parseFloat(diferencia).toFixed(0)) + " </td>";

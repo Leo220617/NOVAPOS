@@ -32,6 +32,8 @@ var Vendedores = [];
 var DES = [];
 var Bodega = [];
 var Sucursal = [];
+var FP = false;
+var Inicio = false;
 
 function HideP() {
     try {
@@ -124,6 +126,8 @@ function RecuperarInformacion() {
         $("#totG").text(formatoDecimal(Documento.TotalCompra.toFixed(2)));
         $("#descuento").text(formatoDecimal(Documento.PorDescto.toFixed(2)));
 
+        Inicio = true;
+
         for (var i = 0; i < Documento.Detalle.length; i++) {
             var PE = Productos.find(a => a.id == Documento.Detalle[i].idProducto);
 
@@ -142,7 +146,7 @@ function RecuperarInformacion() {
                 TotalLinea: parseFloat(Documento.Detalle[i].TotalLinea.toFixed(2)),
                 Cabys: Documento.Detalle[i].Cabys,
                 Costo: PE.Costo,
-                
+
 
                 PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon,
                 idExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).id
@@ -432,39 +436,9 @@ function onChangeCliente() {
     try {
         var idCliente = $("#ClienteSeleccionado").val();
 
-        $("#selectCondPago").attr("disabled", "disabled");
-
         var Cliente = Clientes.find(a => a.id == idCliente);
 
-        var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
         var Contado = CP.find(a => a.Nombre == "Contado");
-
-        //Preguntarle a CP cual es la de 30 dias
-        if (CondP.length > 0) {
-            var Cond30 = CP.filter(a => a.Dias <= CondP[0].Dias).sort(function (a, b) {
-                if (a.Dias > b.Dias) {
-                    return 1;
-                }
-                if (a.Dias < b.Dias) {
-                    return -1;
-                }
-                // a must be equal to b
-                return 0;
-            });
-            RellenaCondiciones(Cond30);
-
-        } else {
-            var Cond30 = [];
-            RellenaCondiciones(Cond30);
-        }
-
-
-
-        RecolectarFacturas();
-
-        $("#spanDireccion").text(Cliente.Sennas);
-        $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
-        $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)));
 
         if (Cliente.LimiteCredito <= 0 && Cliente.idCondicionPago != Contado.id) {
             Swal.fire({
@@ -475,6 +449,15 @@ function onChangeCliente() {
             })
         }
 
+
+
+        $("#spanDireccion").text(Cliente.Sennas);
+        $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
+        $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)));
+
+      
+
+        RecolectarFacturas();
         ProdClientes = Productos.filter(a => a.idListaPrecios == Sucursal.idListaPrecios);
         ProdClientes = ProdClientes.sort(function (a, b) {
             if (a.Stock < b.Stock) {
@@ -501,6 +484,11 @@ function onChangeCliente() {
 function RecolectarFacturas() {
     try {
         var idClientes = $("#ClienteSeleccionado").val();
+        var Cliente = Clientes.find(a => a.id == idClientes);
+
+        var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
+
+        var Contado = CP.find(a => a.Nombre == "Contado");
 
         $.ajax({
             type: 'GET',
@@ -520,7 +508,9 @@ function RecolectarFacturas() {
 
                 } else if (result.length > 0) {
                     console.log(result);
-                    $("#selectCondPago").attr("disabled", "disabled");
+                    // $("#selectCondPago").attr("disabled", "disabled");
+                    FP = false;
+
                     var textoF = "";
                     for (var i = 0; i < result.length; i++) {
                         textoF += " " + result[i].docNum + ", ";
@@ -533,8 +523,38 @@ function RecolectarFacturas() {
 
                     })
                 } else {
-                    $("#selectCondPago").attr("disabled", false);
+                    if (Cliente.LimiteCredito <= 0 && Cliente.idCondicionPago != Contado.id) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Advertencia',
+                            text: 'Limite de crédito excedido'
+
+                        })
+                    } else {
+                        FP = true;
+                        //$("#selectCondPago").attr("disabled", false);
+                    }
+
                 }
+                if (CondP.length > 0 && FP == true) {
+                    var Cond30 = CP.filter(a => a.Dias <= CondP[0].Dias).sort(function (a, b) {
+                        if (a.Dias > b.Dias) {
+                            return 1;
+                        }
+                        if (a.Dias < b.Dias) {
+                            return -1;
+                        }
+                        // a must be equal to b
+                        return 0;
+                    });
+                    RellenaCondiciones(Cond30);
+
+                } else {
+                    var Cond30 = [];
+                    RellenaCondiciones(Cond30);
+                }
+
+
             },
             beforeSend: function () {
 
@@ -557,15 +577,18 @@ function RellenaCondiciones(CPS) {
         $("#selectCondPago").html(text);
 
         var Contado = CP.find(a => a.Nombre == "Contado");
+        var Transito = CP.find(a => a.Nombre == "Transito");
 
 
 
         text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
-
+        if (FP == false) {
+            text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
+        }
 
         for (var i = 0; i < CPS.length; i++) {
-            if (CPS[i].id != Contado.id) {
-                if (valorCondicion == CPS[i].id) {
+            if (CPS[i].id != Contado.id && FP == true) {
+                if (valorCondicion == CPS[i].id && FP == true) {
                     text += "<option selected value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
 
                 } else {
@@ -579,6 +602,10 @@ function RellenaCondiciones(CPS) {
 
         $("#selectCondPago").html(text);
 
+        if (Inicio == true) {
+            $("#selectCondPago").val(Documento.idCondPago);
+            Inicio = false;
+        }
 
     } catch (e) {
         Swal.fire({
@@ -589,7 +616,6 @@ function RellenaCondiciones(CPS) {
         })
     }
 }
-
 function ExoneracionxCliente() {
 
     try {
@@ -1078,14 +1104,14 @@ function RellenaTabla() {
                             }
                         }
                     }
-
+                    ValidarCosto();
                 }
 
+             
 
 
 
 
-              
                 html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
                 html += "</tr>";
@@ -1128,6 +1154,35 @@ function ReplaceLetra(palabra) {
     return palabra;
 }
 
+function ValidarCosto() {
+    try {
+        var totalC = 0;
+        for (var i = 0; i < ProdCadena.length; i++) {
+            var Produc = Productos.find(a => a.id == ProdCadena[i].idProducto);
+
+            totalC += ProdCadena[i].Costo;
+          
+
+
+
+        }
+        var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
+        var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
+        var subtotalD = subtotalG - descuentoG;
+        var diferencia = subtotalD - totalC;
+        var TotalGanancia = (diferencia/subtotalD) * 100;
+      
+        $("#totGana").text(TotalGanancia.toFixed(2));
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
+
+        })
+    }
+}
 
 function AgregarProductoTabla() {
     try {
@@ -1155,7 +1210,7 @@ function AgregarProductoTabla() {
             Cabys: $("#inputCabys").val(),
             idExoneracion: $("#exoneracion").val(),
             PorExoneracion: 0,
-            Codigo: PE.Codigo,        
+            Codigo: PE.Codigo,
             Costo: PE.Costo
 
         };
@@ -1434,11 +1489,11 @@ function validarDocumento(e) {
 
     try {
         var Contado = CP.find(a => a.Nombre == "Contado");
- 
+
 
         var sumatoriaPagos = 0;
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
-       
+
         for (var i = 0; i < e.MetodosPagos.length; i++) {
             if ($("#selectMoneda").val() != e.MetodosPagos[i].Moneda) {
                 if (e.MetodosPagos[i].Moneda != "CRC") {
@@ -1475,7 +1530,7 @@ function validarDocumento(e) {
                 return false;
             } else if (e.idCliente == "0" || e.idCliente == null) {
                 return false;
-            }  else {
+            } else {
                 return true;
             }
         }
@@ -1573,17 +1628,18 @@ function AbrirPago() {
     try {
         $(".MetodosPagoRellenar").hide();
         var Contado = CP.find(a => a.Nombre == "Contado");
+        var Transito = CP.find(a => a.Nombre == "Transito");
         var idCliente = $("#ClienteSeleccionado").val();
         var totalG = parseFloat(ReplaceLetra($("#totG").text()));
 
         var Cliente = Clientes.find(a => a.id == idCliente);
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
-        var  CondPago = $("#selectCondPago").val();
+        var CondPago = $("#selectCondPago").val();
         if ($("#selectMoneda").val() != "CRC") {
             totalG = totalG * TipodeCambio.TipoCambio;
         }
 
-        if (Cliente.LimiteCredito < totalG && CondPago != Contado.id) {
+        if (Cliente.LimiteCredito < totalG && CondPago != Contado.id && CondPago != Transito.id) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1592,46 +1648,46 @@ function AbrirPago() {
             })
             return false;
         } else {
-          
-       
-     
-        $("#TipCam").val(TipodeCambio.TipoCambio);
-        if ($("#selectCondPago").val() == Contado.id) {
-
-            if ($("#selectMoneda").val() == "CRC") {
-                var Total = parseFloat(ReplaceLetra($("#totG").text()));
-                $("#totPago").text(formatoDecimal(Total));
-                $("#fatPago").text(formatoDecimal(Total));
-                $("#selectMonedaP").val($("#selectMoneda").val());
 
 
-                $("#totPagoD").text(formatoDecimal(Total / TipodeCambio.TipoCambio));
-                $("#fatPagoD").text(formatoDecimal(Total / TipodeCambio.TipoCambio));
+
+            $("#TipCam").val(TipodeCambio.TipoCambio);
+            if ($("#selectCondPago").val() == Contado.id) {
+
+                if ($("#selectMoneda").val() == "CRC") {
+                    var Total = parseFloat(ReplaceLetra($("#totG").text()));
+                    $("#totPago").text(formatoDecimal(Total));
+                    $("#fatPago").text(formatoDecimal(Total));
+                    $("#selectMonedaP").val($("#selectMoneda").val());
 
 
-                onChangeMetodo();
-                RellenaCB();
+                    $("#totPagoD").text(formatoDecimal(Total / TipodeCambio.TipoCambio));
+                    $("#fatPagoD").text(formatoDecimal(Total / TipodeCambio.TipoCambio));
 
 
-                $("#modalPagos").modal("show");
+                    onChangeMetodo();
+                    RellenaCB();
+
+
+                    $("#modalPagos").modal("show");
+                } else {
+                    var Total = parseFloat(ReplaceLetra($("#totG").text()));
+                    $("#totPagoD").text(formatoDecimal(Total));
+                    $("#fatPagoD").text(formatoDecimal(Total));
+                    $("#selectMonedaP").val($("#selectMoneda").val());
+
+
+                    $("#totPago").text(formatoDecimal(Total * TipodeCambio.TipoCambio));
+                    $("#fatPago").text(formatoDecimal(Total * TipodeCambio.TipoCambio));
+
+
+                    onChangeMetodo();
+                    RellenaCB();
+                    $("#modalPagos").modal("show");
+                }
             } else {
-                var Total = parseFloat(ReplaceLetra($("#totG").text()));
-                $("#totPagoD").text(formatoDecimal(Total));
-                $("#fatPagoD").text(formatoDecimal(Total));
-                $("#selectMonedaP").val($("#selectMoneda").val());
-
-
-                $("#totPago").text(formatoDecimal(Total * TipodeCambio.TipoCambio));
-                $("#fatPago").text(formatoDecimal(Total * TipodeCambio.TipoCambio));
-
-
-                onChangeMetodo();
-                RellenaCB();
-                $("#modalPagos").modal("show");
+                Generar();
             }
-        } else {
-            Generar();
-        }
         }
     } catch (e) {
         Swal.fire({
@@ -1693,7 +1749,7 @@ function onChangeMetodo() {
             } else {
                 Total = parseFloat(ReplaceLetra($("#fatPagoD").text()));
             }
-        }    
+        }
         $("#MontoPago").val(Total);
 
         switch (Metodo) {
@@ -1787,7 +1843,7 @@ function onChangeMetodo() {
                 }
 
         }
-         
+
 
         onChangeMonedaP();
     } catch (e) {
@@ -1799,7 +1855,7 @@ function onChangeMetodo() {
         })
     }
 }
-function insertarPago() { 
+function insertarPago() {
     try {
         var Moneda = $("#selectMonedaP").val();
         var MonedaDoc = $("#selectMoneda").val();
@@ -1855,7 +1911,7 @@ function insertarPago() {
                             id: 0,
                             idEncabezado: 0,
                             idCuentaBancaria: $("#CuentaB").val(),
-                            Monto: parseFloat(ReplaceLetra($("#MontoPago").val())), 
+                            Monto: parseFloat(ReplaceLetra($("#MontoPago").val())),
                             BIN: "",
                             NumReferencia: $("#ReferenciaPago").val(),
                             NumCheque: "",
@@ -2269,7 +2325,7 @@ function calcularPago() { //REVISAR
                 }
             }
 
-             
+
         }
 
 
@@ -2502,12 +2558,12 @@ function onChangeMonedaP() {
         var Total = parseFloat(ReplaceLetra($("#totG").text()));
         var Metodo = $("#MetodoSeleccionado").val();
 
-        
-        
 
-        if (Metodo == "Efectivo") { 
 
-            $("#PagadoCon").val(Monto); 
+
+        if (Metodo == "Efectivo") {
+
+            $("#PagadoCon").val(Monto);
         }
 
 
@@ -2518,19 +2574,19 @@ function onChangeMonedaP() {
                 //var TotalD = Monto / TipodeCambio.TipoCambio; // Tptal en dolares
                 $("#TotalD").val(Monto);
             } else {
-                var TotalD = Monto / TipodeCambio.TipoCambio; // Tptal en dolares
-                $("#TotalD").val(TotalD); // lo pongo en colones
-               
-                $("#TotalC").val(Monto);
+                var TotalC = Monto * TipodeCambio.TipoCambio; // Tptal en dolares
+                $("#TotalC").val(TotalC); // lo pongo en colones
+
+                $("#TotalD").val(Monto);
             }
 
 
         } else { //La moneda que se escogio es colones
 
             if (Moneda != MonedaDoc) {
-                $("#TotalD").val(Monto); // lo pongo en colones
-                var TotalC = Monto * TipodeCambio.TipoCambio; // Tptal en dolares
-                $("#TotalC").val(TotalC);
+                $("#TotalC").val(Monto); // lo pongo en colones
+                var TotalD = Monto / TipodeCambio.TipoCambio; // Tptal en dolares
+                $("#TotalD").val(TotalD);
 
             } else {
                 $("#TotalC").val(Monto); // lo pongo en colones

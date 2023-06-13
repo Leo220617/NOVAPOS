@@ -69,6 +69,7 @@
 
                 <input hidden id="urlGenerar" value="@Url.Page("Nuevo", "AgregarPago")" />
                 <input hidden id="urlFacturas" value="@Url.Page("Nuevo", "Facturas")" />
+                <input hidden id="RolSinInteres" value="@(!string.IsNullOrEmpty(Roles.Where(a => a == "56").FirstOrDefault()))" />
 
 
 
@@ -211,221 +212,230 @@
                                 <thead>
                                     <tr>
 
-                                          <th>Aplicar</th>
-                                        <th>Nº Documento</th>
-                                      
-                                        <th class="text-right">Consecutivo Hacienda</th>
-                                        <th class="text-right">Días de atraso</th>
-                                        <th class="text-right">Moneda</th>
-                                        <th class="text-right">Total</th>
-                                        <th class="text-right">Saldo Vencido</th>
+                                        <th>Aplicar</th>
+                                        @if (!string.IsNullOrEmpty(Roles.Where(a => a == "56").FirstOrDefault()))
+                                    {
+                                        <th>Sin Intéres</th>
+                                    }
+                                    <th>Nº Documento</th>
 
-                                        <th class="text-right">Pago total</th>
-                                        <th class="text-right">Interés</th>
-                                        <th class="text-right">Acción</th>
+                                    <th class="text-right">Consecutivo Hacienda</th>
+                                    <th class="text-right">Días de atraso</th>
+                                    <th hidden class="text-right">Moneda</th>
+                                    <th class="text-right">Total</th>
+                                    <th class="text-right">Saldo Vencido</th>
+
+                                    <th class="text-right">Pago total</th>
+                                    <th class="text-right">Capital</th>
+                                    <th class="text-right">Interés</th>
+                                    <th class="text-right"> Total Interés</th>
+                                    <th class="text-right">Acción</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="tbody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+                <div class="row">
+                    <!-- accepted payments column -->
+                    <div class="col-12 col-sm-6">
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-12 col-sm-6 text-right">
+
+
+
+                        <div class="total-payment">
+                            <h3><b>Total Pagado :</b>  <span id="totP">0 </span></h3>
+                        </div>
+
+                        <div class="total-payment">
+                            <h3><b>Total Capital :</b>  <span id="totC">0 </span></h3>
+                        </div>
+
+                        <div class="total-payment">
+                            <h3><b>Total Intereses :</b>  <span id="totI">0 </span></h3>
+                        </div>
+
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+
+            </div>
+        </div>
+
+
+        <div class="box">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-sm-6">
+
+                        <div class="form-group">
+                            <label>Comentarios</label>
+                            <textarea id="inputComentarios" class="form-control"></textarea>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- this row will not appear when printing -->
+                <div class="row no-print">
+                    <div class="col-12">
+                        @*<button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>*@
+                        <button type="button" id="botonG" class="btn btn-success pull-right" onclick="    javascript: Generar()">
+                            <i class="fa fa-credit-card"></i> Generar
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade bs-example-modal-lg" id="ModalInclusion" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Observar Factura</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+
+                <div class="text-left">
+                    <div class="row">
+                        <div class="col-4">
+                            <h5> <b>Fecha: </b> <a id="FechaM"> </a></h5>
+
+
+                        </div>
+
+
+
+
+
+
+                        <br />
+
+
+                        <div class="col-4">
+                            <h5> <b>Moneda: </b> <a id="MonedaM"> </a></h5>
+
+
+                        </div>
+
+                        <div class="col-4">
+                            <h5> <b>Cond.Pago: </b> <a id="CondPagoM"> </a></h5>
+
+
+                        </div>
+
+                        <div class="col-4">
+                            <h5> <b>Vendedor: </b>  <a id="VendedorM"> </a></h5>
+
+                        </div>
+
+                        <br />
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        <div class="col-12">
+                            <h5> <b>Clave Hacienda: </b><a id="ClaveHacienda"> </a></h5>
+
+
+                        </div>
+                        &nbsp;
+                        &nbsp;
+                        abr
+                        <div class="col-12">
+                            <h5> <b>Consecutivo Hacienda: </b> <a id="ConsecutivoHaciendaM"> </a> </h5>
+
+
+
+                        </div>
+
+
+
+                    </div>
+                    <div class="row invoice-info">
+                        <div class="col-md-8 invoice-col">
+                            <strong>Cliente</strong>
+                            <address>
+                                <strong id="ClienteM" class="text-blue font-size-24">   </strong>
+
+
+                            </address>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <!-- Table row -->
+                    <div class="row">
+                        <div class="col-12 table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="bg-pale-info">
+                                        <th class="text-center">#</th>
+                                        <th class="text-center">Producto</th>
+                                        <th class="text-center">Cantidad</th>
+                                        <th class="text-center">Precio Unitario</th>
+                                        <th class="text-center">% Descuento</th>
+                                        <th class="text-center">Descuento</th>
+                                        <th class="text-center">Impuesto</th>
+
+
+
+                                        <th class="text-center">Total</th>
 
                                     </tr>
                                 </thead>
-                                <tbody id="tbody">
+                                <tbody id="tbodyM">
                                 </tbody>
                             </table>
                         </div>
                         <!-- /.col -->
-                    </div>
-                    <!-- /.row -->
-                    <div class="row">
-                        <!-- accepted payments column -->
-                        <div class="col-12 col-sm-6">
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-12 col-sm-6 text-right">
+                        <div class="col-12  text-right">
 
 
+                            <div>
+                                <p>Sub Total  : <span id="SubtotalM"> </span></p>
+                                <p>Descuento  : <span id="DescuentoM"> </span></p>
+                                <p>Impuesto :  <span id="ImpuestoM"> </span></p>
 
+                            </div>
                             <div class="total-payment">
-                                <h3><b>Total Pagado :</b>  <span id="totP">0 </span></h3>
+                                <h3><b>Total :</b>  <span id="TotalM">  </span></h3>
                             </div>
-
-                            
-                            <div class="total-payment">
-                                <h3><b>Total Intereses :</b>  <span id="totI">0 </span></h3>
-                            </div>
-
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <!-- /.row -->
-
-                </div>
-            </div>
-
-
-            <div class="box">
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-
-                            <div class="form-group">
-                                <label>Comentarios</label>
-                                <textarea id="inputComentarios" class="form-control"></textarea>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                    <!-- this row will not appear when printing -->
-                    <div class="row no-print">
-                        <div class="col-12">
-                            @*<button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>*@
-                            <button type="button"  id="botonG" class="btn btn-success pull-right" onclick="    javascript: Generar()">
-                                <i class="fa fa-credit-card"></i> Generar
-                            </button>
 
                         </div>
                     </div>
                 </div>
-            </div>
 
+
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Cerrar</button> &nbsp;
+
+
+            </div>
         </div>
-
-    </section>
-
-
-
-
-    <!-- Modal -->
-    <div class="modal fade bs-example-modal-lg" id="ModalInclusion" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myLargeModalLabel">Observar Factura</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="text-left">
-                        <div class="row">
-                            <div class="col-4">
-                                <h5> <b>Fecha: </b> <a id="FechaM"> </a></h5>
-
-
-                            </div>
-
-
-
-
-
-
-                            <br />
-
-
-                            <div class="col-4">
-                                <h5> <b>Moneda: </b> <a id="MonedaM"> </a></h5>
-
-
-                            </div>
-
-                            <div class="col-4">
-                                <h5> <b>Cond.Pago: </b> <a id="CondPagoM"> </a></h5>
-
-
-                            </div>
-
-                            <div class="col-4">
-                                <h5> <b>Vendedor: </b>  <a id="VendedorM"> </a></h5>
-
-                            </div>
-
-                            <br />
-                            &nbsp;
-                            &nbsp;
-                            &nbsp;
-                            <div class="col-12">
-                                <h5> <b>Clave Hacienda: </b><a id="ClaveHacienda"> </a></h5>
-
-
-                            </div>
-                            &nbsp;
-                            &nbsp;
-                            abr
-                            <div class="col-12">
-                                <h5> <b>Consecutivo Hacienda: </b> <a id="ConsecutivoHaciendaM"> </a> </h5>
-
-
-
-                            </div>
-
-
-
-                        </div>
-                        <div class="row invoice-info">
-                            <div class="col-md-8 invoice-col">
-                                <strong>Cliente</strong>
-                                <address>
-                                    <strong id="ClienteM" class="text-blue font-size-24">   </strong>
-
-
-                                </address>
-                            </div>
-                            <!-- /.col -->
-                        </div>
-                        <!-- /.row -->
-                        <!-- Table row -->
-                        <div class="row">
-                            <div class="col-12 table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr class="bg-pale-info">
-                                            <th class="text-center">#</th>
-                                            <th class="text-center">Producto</th>
-                                            <th class="text-center">Cantidad</th>
-                                            <th class="text-center">Precio Unitario</th>
-                                            <th class="text-center">% Descuento</th>
-                                            <th class="text-center">Descuento</th>
-                                            <th class="text-center">Impuesto</th>
-
-
-
-                                            <th class="text-center">Total</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbodyM">
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-12  text-right">
-
-
-                                <div>
-                                    <p>Sub Total  : <span id="SubtotalM"> </span></p>
-                                    <p>Descuento  : <span id="DescuentoM"> </span></p>
-                                    <p>Impuesto :  <span id="ImpuestoM"> </span></p>
-
-                                </div>
-                                <div class="total-payment">
-                                    <h3><b>Total :</b>  <span id="TotalM">  </span></h3>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Cerrar</button> &nbsp;
-
-
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
+        <!-- /.modal-content -->
     </div>
-    <!-- /.modal -->
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

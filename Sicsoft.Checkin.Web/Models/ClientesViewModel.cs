@@ -57,6 +57,7 @@ namespace NOVAAPP.Models
 
         public int idGrupo { get; set; }
         public bool MAG { get; set; }
+        public bool INT { get; set; }
         public decimal LimiteCredito { get; set; }
 
     }

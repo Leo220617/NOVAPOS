@@ -1161,7 +1161,7 @@ function ValidarCosto() {
             var Produc = Productos.find(a => a.id == ProdCadena[i].idProducto);
 
             totalC += ProdCadena[i].Costo;
-          
+
 
 
 
@@ -1170,8 +1170,8 @@ function ValidarCosto() {
         var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
         var subtotalD = subtotalG - descuentoG;
         var diferencia = subtotalD - totalC;
-        var TotalGanancia = (diferencia/subtotalD) * 100;
-      
+        var TotalGanancia = (diferencia / subtotalD) * 100;
+
         $("#totGana").text(TotalGanancia.toFixed(2));
 
     } catch (e) {
@@ -1425,7 +1425,7 @@ function Generar() {
                                             ImprimirTiquete(json.documento);
 
                                         } else {
-                                            ImprimirFactura(json.documento);
+                                            ImprimirTiqueteC(json.documento);
 
                                         }
 
@@ -2452,13 +2452,98 @@ function ImprimirTiquete(Documento) {
     }
 }
 
+
+function ImprimirTiqueteC(Documento) {
+    try {
+
+
+
+        var ventana = window.open('', 'PRINT', 'height=400,width=600');
+        var texto = htmlCredito2;
+        texto = texto.replace("@Fecha", Documento.fecha.split("T")[0] + " " + Documento.fecha.split("T")[1].substring(0, 8));
+        texto = texto.replace("@NumInterno", Documento.id);
+        texto = texto.replace("CO-Pital", "");
+        texto = texto.replace("@NumComprobante", Documento.consecutivoHacienda);
+        texto = texto.replace("@NumFactura", Documento.id);
+        texto = texto.replace("@Comentario", Documento.comentarios);
+
+        var cond = CP.find(a => a.id == $("#selectCondPago").val());
+        texto = texto.replace("@selectCondPago", cond.Nombre);
+
+
+        if (Documento.tipoDocumento == "04") {
+            texto = texto.replace("FACTURA", "TIQUETE");
+
+        }
+        texto = texto.replace("@CodCliente", " " + Documento.idCliente);
+
+        var Cli = Clientes.find(a => a.id == Documento.idCliente);
+        texto = texto.replace("@NombreCliente", Cli.Nombre);
+        texto = texto.replace("@Vendedor", Vendedores.find(a => a.id == $("#selectVendedor").val()).Nombre);
+
+
+        var tabla = "";
+
+        for (var i = 0; i < Documento.detalle.length; i++) {
+
+            var Prod = Productos.find(a => a.id == Documento.detalle[i].idProducto)
+
+            tabla += "<tr>" + "<td colspan='3'>  " + Prod.Codigo + "-" + Prod.Nombre + "  </td></tr>";
+
+
+            tabla += "<tr>";
+
+            tabla += "<td style='text-align left;'>" + Documento.detalle[i].cantidad + " </td>";
+
+            tabla += "<td style='text-align left;'>" + formatoDecimal(Documento.detalle[i].precioUnitario) + " </td>";
+            tabla += "<td style='text-align left;'>" + formatoDecimal(Documento.detalle[i].totalLinea) + " </td>";
+
+
+
+
+            tabla += "</tr>";
+
+        }
+        texto = texto.replace("@Tabla", tabla);
+
+        if (Documento.moneda == "CRC") {
+            texto = texto.replace("@SubTotal", "₡" + formatoDecimal(Documento.subtotal));
+            texto = texto.replace("@TotalDescuento", "₡" + formatoDecimal(Documento.totalDescuento));
+            texto = texto.replace("@TotalImpuestos", "₡" + formatoDecimal(Documento.totalImpuestos));
+            texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.totalCompra));
+        } else {
+            texto = texto.replace("@SubTotal", "$" + formatoDecimal(Documento.subtotal));
+            texto = texto.replace("@TotalDescuento", "$" + formatoDecimal(Documento.totalDescuento));
+            texto = texto.replace("@TotalImpuestos", "$" + formatoDecimal(Documento.totalImpuestos));
+            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.totalCompra));
+        }
+
+
+
+
+        ventana.document.write(texto);
+        ventana.document.close();
+        ventana.focus();
+        ventana.print();
+        ventana.close();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+}
+
+
 function ImprimirFactura(Documento) {
     try {
 
 
 
         var ventana = window.open('', 'PRINT', 'height=400,width=600');
-        var texto = htmlCredito;
+        var texto = htmlCredito2;
         texto = texto.replace("@Fecha", Documento.fecha.split("T")[0]);
         texto = texto.replace("@NumInterno", Documento.id);
         texto = texto.replace("CO-Pital", "");

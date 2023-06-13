@@ -179,6 +179,8 @@ namespace NOVAAPP.Pages.Pagos
             {
                 recibidos.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
                 recibidos.TotalPagado = recibidos.Detalle.Sum(a => a.Total);
+                recibidos.TotalCapital = recibidos.Detalle.Sum(a => a.Capital);
+                recibidos.TotalInteres = recibidos.Detalle.Sum(a => a.Interes);
                 var resp = await service.Agregar(recibidos);
                 //if (recibidos.TotalPagado > 0)
                 //{

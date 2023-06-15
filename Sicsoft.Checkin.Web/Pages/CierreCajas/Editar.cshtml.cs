@@ -51,6 +51,16 @@ namespace NOVAAPP.Pages.CierreCajas
         public MetodosPagosViewModel[] Pagos { get; set; }
 
         [BindProperty]
+        public decimal TotalColones { get; set; }
+
+        [BindProperty]
+        public decimal TotalFC { get; set; }
+
+        [BindProperty]
+        public decimal Totalizado { get; set; }
+
+
+        [BindProperty]
         public CuentasBancariasViewModel[] CuentasBancarias { get; set; }
 
         [BindProperty]
@@ -145,6 +155,7 @@ namespace NOVAAPP.Pages.CierreCajas
 
 
                     filtro.Codigo1 = Cierres.idCaja;
+                    filtro.Codigo2 = Cierres.idUsuario;
                     Pagos = await pagos.ObtenerLista(filtro);
                     TC = await tipoCambio.ObtenerLista(filtro);
                     CuentasBancarias = await cuenta.ObtenerLista("");
@@ -152,6 +163,10 @@ namespace NOVAAPP.Pages.CierreCajas
                     var Condiciones = await cond.ObtenerLista("");
                     Condicion = Condiciones.Where(a => a.Dias == 0).FirstOrDefault();
 
+
+                    TotalColones = Documento.Where(a => a.Moneda == "CRC" && a.idCondPago == Condicion.id && a.TipoDocumento != "03").Sum(a => a.TotalCompra) - Documento.Where(a => a.Moneda == "CRC" && a.idCondPago == Condicion.id && a.TipoDocumento == "03").Sum(a => a.TotalCompra) + Pagos.Where(a => a.Metodo.ToLower().Contains("pago a cuenta") && a.Moneda == "CRC").Sum(a => a.Monto);
+                    TotalFC = Documento.Where(a => a.Moneda == "USD" && a.idCondPago == Condicion.id && a.TipoDocumento != "03").Sum(a => a.TotalCompra) - Documento.Where(a => a.Moneda == "USD" && a.idCondPago == Condicion.id && a.TipoDocumento == "03").Sum(a => a.TotalCompra) + Pagos.Where(a => a.Metodo.ToLower().Contains("pago a cuenta") && a.Moneda == "USD").Sum(a => a.Monto);
+                    Totalizado = TotalColones + (TotalFC * TC.Where(a => a.Moneda == "USD").FirstOrDefault().TipoCambio);
                     return Page();
                 }
                

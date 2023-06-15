@@ -152,7 +152,7 @@
                 <div class="box-body">
                     <form method="get">
                         <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Fecha Inicial</label>
                                     <input class="form-control " id="FecInicial" type="date" asp-for="filtro.FechaInicial">
@@ -161,13 +161,29 @@
 
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Fecha Final</label>
                                     <input class="form-control" id="FecFinal" type="date" asp-for="filtro.FechaFinal">
                                 </div>
                             </div>
 
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="cyber">Moneda:</label>
+                                    <select class="form-control" id="money" asp-for="filtro.CardCode" required onchange="this.form.submit()">
+
+                                        <option value="CRC">CRC</option>
+                                        <option value="USD">USD</option>
+
+
+
+
+
+
+                                    </select>
+                                </div>
+                            </div>
 
 
                             <div class="col-md-4">
@@ -212,22 +228,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label for="cyber">Moneda:</label>
-                                    <select class="form-control" id="money" asp-for="filtro.CardCode" required onchange="this.form.submit()">
-
-                                        <option value="CRC">CRC</option>
-                                        <option value="USD">USD</option>
-
-
-
-
-
-
-                                    </select>
-                                </div>
-                            </div>
+                          
 
 
                             <div class="col-md-2 " style="text-align: center; padding-top: 2%;">

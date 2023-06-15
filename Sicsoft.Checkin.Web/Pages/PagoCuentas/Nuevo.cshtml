@@ -45,7 +45,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Pagos a Cuenta
+            Pago a Cuenta
         </h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
@@ -110,7 +110,7 @@
                                             <option value="0"> Seleccione</option>
                                             @foreach (var item in Model.ClientesLista)
                                         {
-                                            <option value="@item.id">@item.Nombre</option>
+                                            <option value="@item.id">@item.Codigo - @item.Nombre</option>
                                         }
 
 

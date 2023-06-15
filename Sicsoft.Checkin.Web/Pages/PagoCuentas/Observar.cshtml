@@ -1,0 +1,352 @@
+﻿@page "{id}"
+@using System.Globalization
+@model NOVAAPP.Pages.PagoCuentas.ObservarModel
+@{
+    ViewData["Title"] = "PagoCuentas";
+    NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
+    formato.CurrencySymbol = "";
+    formato.CurrencyGroupSeparator = ",";
+    formato.NumberDecimalSeparator = ".";
+}
+@section scripts{
+    <script>
+        function ImprimirPantalla() {
+            try {
+                // window.print();
+                var margins = {
+                    top: 10,
+                    bottom: 10,
+                    left: 10,
+                    width: 595
+                };
+
+
+                html = $(".html").html();
+                html2pdf(html, {
+                    margin: 1,
+                    padding: 0,
+                    filename: 'PagoCuenta.pdf',
+                    image: { type: 'jpeg', quality: 1 },
+                    html2canvas: { scale: 2, logging: true },
+                    jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
+                    class: ImprimirPantalla
+                });
+
+            } catch (e) {
+                console.log(e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+                })
+            }
+        }
+    </script>
+}
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Pago a Cuenta
+        </h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+            <li class="breadcrumb-item active">Observar Pago a Cuenta</li>
+        </ol>
+    </section>
+
+    <section class="content ">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-8">
+                                <h6 class="box-subtitle">Observar Pago a Cuenta</h6>
+
+
+                            </div>
+                            <div class="col-4">
+                                <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+
+
+                                &nbsp;
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <!-- title row -->
+
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <div class="page-header mt-0">
+
+                                    <br />
+                                    <div class="text-left">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h5> <b>Fecha</b> @Model.Cuenta.Fecha.ToString("dd/MM/yyyy")</h5>
+
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <h5> <b>Fecha Vencimiento</b> @Model.Cuenta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
+
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <h5> <b>Fecha Contabilización</b> @Model.Cuenta.FechaContabilizacion.ToString("dd/MM/yyyy")</h5>
+
+                                            </div>
+
+
+
+
+                                            <br />
+                                            <br />
+                                       
+
+
+                                            <div class="col-md-6">
+                                                <h5> <b>DocEntry:</b> @Model.Cuenta.DocEntry</h5>
+
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <h5>
+                                                    <b>Procesado SAP:</b>
+                                                    @if (Model.Cuenta.ProcesadaSAP)
+                                                {
+                                                    <span class="badge badge-pill badge-success">Procesado</span>
+
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-pill badge-danger">Sin Procesar</span>
+                                                }
+                                            </h5>
+                                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- /.col -->
+                    </div>
+                    <!-- info row -->
+                    <div class="row invoice-info">
+                        <div class="col-md-4 invoice-col">
+                            <strong>Cliente</strong>
+                            <address>
+                                <strong class="text-blue font-size-24"> @( Model.ClientesLista.Where(a => a.id == Model.Cuenta.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" :  Model.ClientesLista.Where(a => a.id == Model.Cuenta.idCliente).FirstOrDefault().Codigo  ) -  @( Model.ClientesLista.Where(a => a.id == Model.Cuenta.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" :  Model.ClientesLista.Where(a => a.id == Model.Cuenta.idCliente).FirstOrDefault().Nombre  ) </strong>
+
+
+                            </address>
+                        </div>
+
+                        <div class="col-md-4">
+                            <h5> <b>Moneda:</b> @Model.Cuenta.Moneda</h5>
+
+                        </div>
+
+                        <div class="col-md-4">
+                            <h5> <b>Total:</b>   @Math.Round(@Model.Cuenta.Total, 2).ToString("C",formato)</h5>
+                        </div>
+
+
+
+
+
+
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+
+
+                </div>
+            </div>
+
+
+            <!-- Default box -->
+
+        </div>
+        <div class="col-6 box">
+            <div class="col-6 box-header with-border">
+                <h4 class="box-title">Comentarios</h4>
+            </div>
+            <div class="box-body">
+                <p>@Model.Cuenta.Comentarios</p>
+
+                <!-- /.box-body -->
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+
+    <button id="print" class="btn btn-warning" type="button" onclick="javascript: ImprimirPantalla()"> <span><i class="fa fa-print"></i> Imprimir</span> </button>
+
+</section>
+
+
+<!--Imprimir-->
+
+<div class="html" hidden>
+       <div class="row">
+            <div class="col-12">
+
+                <div class="box">
+                  
+                    <div class="box-body">
+                        <!-- title row -->
+
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <div class="page-header mt-0">
+
+                                    <br />
+                                    <div class="text-left">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h5> <b>Fecha</b> @Model.Cuenta.Fecha.ToString("dd/MM/yyyy")</h5>
+
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <h5> <b>Fecha Vencimiento</b> @Model.Cuenta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
+
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <h5> <b>Fecha Contabilización</b> @Model.Cuenta.FechaContabilizacion.ToString("dd/MM/yyyy")</h5>
+
+                                            </div>
+
+
+
+
+                                            <br />
+                                            <br />
+                                       
+
+
+                                            <div class="col-md-6">
+                                                <h5> <b>DocEntry:</b> @Model.Cuenta.DocEntry</h5>
+
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <h5>
+                                                    <b>Procesado SAP:</b>
+                                                    @if (Model.Cuenta.ProcesadaSAP)
+                                                {
+                                                    <span class="badge badge-pill badge-success">Procesado</span>
+
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-pill badge-danger">Sin Procesar</span>
+                                                }
+                                            </h5>
+                                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- /.col -->
+                    </div>
+                    <!-- info row -->
+                    <div class="row invoice-info">
+                        <div class="col-md-4 invoice-col">
+                            <strong>Cliente</strong>
+                            <address>
+                                <strong class="text-blue font-size-24"> @( Model.ClientesLista.Where(a => a.id == Model.Cuenta.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" :  Model.ClientesLista.Where(a => a.id == Model.Cuenta.idCliente).FirstOrDefault().Codigo  ) -  @( Model.ClientesLista.Where(a => a.id == Model.Cuenta.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" :  Model.ClientesLista.Where(a => a.id == Model.Cuenta.idCliente).FirstOrDefault().Nombre  ) </strong>
+
+
+                            </address>
+                        </div>
+
+                        <div class="col-md-4">
+                            <h5> <b>Moneda:</b> @Model.Cuenta.Moneda</h5>
+
+                        </div>
+
+                        <div class="col-md-4">
+                            <h5> <b>Total:</b>   @Math.Round(@Model.Cuenta.Total, 2).ToString("C",formato)</h5>
+                        </div>
+
+
+
+
+
+
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+
+
+                </div>
+            </div>
+
+
+            <!-- Default box -->
+
+        </div>
+        <div class="col-6 box">
+            <div class="col-6 box-header with-border">
+                <h4 class="box-title">Comentarios</h4>
+            </div>
+            <div class="box-body">
+                <p>@Model.Cuenta.Comentarios</p>
+
+                <!-- /.box-body -->
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+

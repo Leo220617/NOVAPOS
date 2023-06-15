@@ -135,6 +135,22 @@
 
             }
 
+                 
+                 @{
+                if (!string.IsNullOrEmpty(Roles.Where(a => a == "57").FirstOrDefault()))
+                {
+                    <li class="">
+
+                        <a asp-page="/PagoCuentas/Index">
+                            <i class="mdi mdi-bank"></i> <span>Pago a Cuentas</span>
+
+                        </a>
+
+                    </li>
+
+                }
+
+            }
 
 
 

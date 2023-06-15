@@ -320,7 +320,7 @@ function onChangeMonto(i) {
 
 
         if (Fac == undefined && parseFloat($("#" + i + "_Fac").val()) > 0) {
-            ;
+             
 
             var detalle = {
                 id: 0,

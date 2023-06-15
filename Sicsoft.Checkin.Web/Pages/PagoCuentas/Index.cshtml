@@ -1,0 +1,376 @@
+﻿@page
+@model NOVAAPP.Pages.PagoCuentas.IndexModel
+@{
+    ViewData["Title"] = "PagoCuentas";
+    NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
+    formato.CurrencySymbol = "";
+    formato.CurrencyGroupSeparator = ",";
+    formato.NumberDecimalSeparator = ".";
+}
+@using System.Globalization;
+@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@inject IHttpContextAccessor httpContextAccessor
+
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
+@section scripts{
+
+
+    <script>
+        $(document).ready(function() {
+
+
+
+
+        });
+        var ids = 0;
+        function onClickModal(id) {
+            try {
+                ids = id;
+                Swal.fire({
+                    title: '¿Desea sincronizar a SAP?',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: `Aceptar`,
+                    denyButtonText: `Cancelar`,
+                    customClass: {
+                        confirmButton: 'swalBtnColor',
+                        denyButton: 'swalDeny'
+                    },
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+
+                        SincronizarSAP();
+
+                    }
+                })
+            } catch (e) {
+                console.log(e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+                })
+            }
+
+        }
+
+        function SincronizarSAP() {
+            try {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: '@Url.Page("Index", "SincronizarSAP")',
+                    data: { id: ids },
+                    success: function(result) {
+                        $("#divProcesando").modal("hide");
+                        console.log(result);
+                        if (result == false) {
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Ha ocurrido un error al intentar sincronizar a SAP'
+
+                            })
+
+                        } else {
+                            Swal.fire({
+                                title: "Ha sido sincronizado a SAP con éxito",
+
+                                icon: 'success',
+                                showCancelButton: false,
+                                customClass: {
+                                    confirmButton: 'swalBtnColor',
+
+                                },
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            })
+                        }
+                    },
+                    beforeSend: function() {
+                        $("#divProcesando").modal("show");
+                    }
+                })
+            } catch (e) {
+                console.log(e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar sincronizar a SAP ' + e
+
+                })
+            }
+        }
+    </script>
+}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Pagos a Cuenta
+        </h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+            <li class="breadcrumb-item active">Listado Pagos a Cuenta</li>
+        </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="box">
+                    <div class="box-header with-border">
+                        <div class="row">
+                            <div class="col-sm-8"> <h4 class="box-title">Pagos a Cuenta</h4></div>
+
+                            @if (!string.IsNullOrEmpty(Roles.Where(a => a == "57").FirstOrDefault()))
+                        {
+                            <div class="col-sm-4"> <a asp-page="Nuevo" asp-route-id="0" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Pago a Cuenta</a></div>
+                        }
+                    </div>
+
+
+                </div>
+                <div class="box-body">
+                    <form method="get">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Fecha Inicial</label>
+                                    <input class="form-control " id="FecInicial" type="date" asp-for="filtro.FechaInicial">
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Fecha Final</label>
+                                    <input class="form-control" id="FecFinal" type="date" asp-for="filtro.FechaFinal">
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="cyber">Cliente:</label>
+                                    <select class="form-control select2" id="ClienteF" asp-for="filtro.Codigo1" required onchange="this.form.submit()">
+                                        <option value="0"> Seleccione</option>
+
+                                        @foreach (var item in Model.Clientes)
+                                        {
+                                            <option value="@item.id"> @item.Codigo - @item.Nombre</option>
+                                        }
+
+
+                                    </select>
+
+
+
+
+
+                                </div>
+                            </div>
+                      
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="cyber">Moneda:</label>
+                                    <select class="form-control" id="money" asp-for="filtro.CardCode" required onchange="this.form.submit()">
+
+                                        <option value="CRC">CRC</option>
+                                        <option value="USD">USD</option>
+
+
+
+
+
+
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-2 " style="text-align: center; padding-top: 2%;">
+                                <input type="checkbox" id="md_checkbox_1" class="chk-col-red" asp-for="filtro.Procesado" onclick="this.form.submit()" />
+                                <label for="md_checkbox_1"> Procesado SAP</label>
+                            </div>
+
+
+
+
+
+                            <div class="col-sm-10 pl-1" style="text-align: right; padding-top: 2%;">
+                                <button title="Buscar" type="submit" class="btn btn-rounded btn-outline-primary"> <i class="fa fa-search"></i></button>
+                            </div>
+
+
+
+
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-sm-8"> <h4 class="box-title">Abonos</h4></div>
+                        <div class="col-sm-4">  </div>
+
+                    </div>
+
+
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+
+                                    <th>ID</th>
+                                    <th>Acción</th>
+                                    <th>Cliente</th>
+                                    <th>Sucursal</th>
+                                    <th>Fecha</th>
+
+                                    <th>Fecha Vencimiento</th>
+                                    <th>Fecha Contabilización</th>
+                                    <th>Moneda</th>
+                                    <th>Total</th>
+                                    <th>Procesado SAP</th>
+
+
+
+
+
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Listas)
+                                {
+                                    <tr>
+
+
+                                        <td>
+                                            @item.id
+                                        </td>
+                                        <td align="center" style="padding-top:15px;">
+
+                                            <a asp-page="./Observar" asp-route-id="@item.id" class="fa fa-info-circle icono"> </a> &nbsp;
+                                            &nbsp;
+
+                                            @if (item.ProcesadaSAP == false)
+                                            {
+                                                <a onclick="javascript: onClickModal('@item.id')" title="Insertar a SAP"><img src="/sapX.png" /></a>
+                                            }
+
+                                        </td>
+                                        <td>
+                                            @( Model.Clientes.Where(a => a.id == item.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" :  Model.Clientes.Where(a => a.id == item.idCliente).FirstOrDefault().Codigo + " - " +  Model.Clientes.Where(a => a.id == item.idCliente).FirstOrDefault().Nombre)
+                                        </td>
+
+                                        <td>
+                                            @(Model.Sucursales.Where(a => a.CodSuc == item.CodSuc).FirstOrDefault() == null ? "Sucursal Inexistente": Model.Sucursales.Where(a => a.CodSuc == item.CodSuc).FirstOrDefault().Nombre )
+
+                                        </td>
+                                        <td>
+                                            @item.Fecha.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td>
+                                            @item.FechaVencimiento.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td>
+                                            @item.FechaContabilizacion.ToString("dd/MM/yyyy")
+                                        </td>
+
+                                        <td>
+                                            @item.Moneda
+                                        </td>
+                                        <td>
+                                            @Math.Round(@item.Total, 2).ToString("C",formato)
+                                        </td>
+
+                                        <td>
+                                            @if (item.ProcesadaSAP)
+                                            {
+                                                <span class="badge badge-pill badge-success">Procesado</span>
+
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-pill badge-danger">Sin Procesar</span>
+                                            }
+                                        </td>
+
+
+
+
+
+
+
+
+
+
+
+
+                                    </tr>
+
+                                }
+
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+
+                                    <th>ID</th>
+                                    <th>Acción</th>
+                                    <th>Cliente</th>
+                                    <th>Sucursal</th>
+                                    <th>Fecha</th>
+
+                                    <th>Fecha Vencimiento</th>
+                                    <th>Fecha Contabilización</th>
+                                    <th>Moneda</th>
+                                    <th>Total</th>
+                                    <th>Procesado SAP</th>
+
+
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->

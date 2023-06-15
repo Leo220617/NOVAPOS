@@ -181,6 +181,8 @@ namespace NOVAAPP.Pages.Pagos
                 recibidos.TotalPagado = recibidos.Detalle.Sum(a => a.Total);
                 recibidos.TotalCapital = recibidos.Detalle.Sum(a => a.Capital);
                 recibidos.TotalInteres = recibidos.Detalle.Sum(a => a.Interes);
+                recibidos.idCaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault().ToString());
+                recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
                 var resp = await service.Agregar(recibidos);
                 //if (recibidos.TotalPagado > 0)
                 //{

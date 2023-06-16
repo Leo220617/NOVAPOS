@@ -89,7 +89,7 @@ namespace NOVAAPP.Pages.Documentos
 
                 ParametrosFiltros filtro2 = new ParametrosFiltros();
                 filtro2.CardCode = Documento.CodSuc;
-                filtro2.Codigo2 = Clientes.Where(a => a.id == Documento.idCliente).FirstOrDefault().idListaPrecios;
+         
                 Productos = await serviceP.ObtenerLista(filtro2);
                 Exoneraciones = await exoneracion.ObtenerLista("");
 

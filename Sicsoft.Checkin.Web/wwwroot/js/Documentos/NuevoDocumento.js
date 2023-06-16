@@ -1374,6 +1374,7 @@ function Generar() {
         }
 
         if (validarDocumento(EncDocumento)) {
+          
             Swal.fire({
                 title: '¿Desea guardar el Documento?',
                 showDenyButton: true,
@@ -1506,7 +1507,17 @@ function validarDocumento(e) {
                 sumatoriaPagos += e.MetodosPagos[i].Monto;
             }
         }
+        if (e.idVendedor == "0" || e.idVendedor == null) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Ha ocurrido un error al intentar agregar, falta el vendedor '
 
+            })
+            return false;
+
+
+        }
 
         if ($("#selectCondPago").val() == Contado.id) {
             if (e.idCliente == "0" || e.idCliente == null) {
@@ -1530,6 +1541,16 @@ function validarDocumento(e) {
                 return false;
             } else if (e.idCliente == "0" || e.idCliente == null) {
                 return false;
+            } else if (e.idVendedor == "0" || e.idVendedor == null) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar agregar, falta el vendedor '
+
+                })
+                return false;
+
+
             } else {
                 return true;
             }
@@ -1626,6 +1647,15 @@ function ImprimirPantalla() {
 //////Metodos pago
 function AbrirPago() {
     try {
+        if ($("#selectVendedor").val() == 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Ha ocurrido un error al intentar agregar, falta el vendedor '
+
+            })
+            return false;
+        }
         $(".MetodosPagoRellenar").hide();
         var Contado = CP.find(a => a.Nombre == "Contado");
         var Transito = CP.find(a => a.Nombre == "Transito");

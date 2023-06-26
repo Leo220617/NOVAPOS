@@ -404,7 +404,7 @@ function RecolectarFacturas() {
                             text: 'Limite de crédito excedido'
 
                         })
-                    } else {
+                    } else if (Cliente.LimiteCredito > 0 && Cliente.idCondicionPago != Contado.id) {
                         FP = true;
                         //$("#selectCondPago").attr("disabled", false);
                     }

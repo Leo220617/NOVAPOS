@@ -270,7 +270,7 @@
                                             <td class="text-center">@Math.Round(@item.TotalLinea,2).ToString("C",formato)</td>
                                               @if (!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))
                                         {
-                                            <td class="text-center">@Math.Round(((((@item.TotalLinea - @item.TotalImpuesto) - ( Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0: Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Costo)) / (@item.TotalLinea - @item.TotalImpuesto)) * 100) ,2).ToString("C",formato)%</td>
+                                                <td class="text-center">@Math.Round(((((@item.TotalLinea - @item.TotalImpuesto) - ( (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0: Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Costo) * item.Cantidad)) / (@item.TotalLinea - @item.TotalImpuesto)) * 100) ,2).ToString("C",formato)%</td>
                                         }
                                         </tr>
                                     }

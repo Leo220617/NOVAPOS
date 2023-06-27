@@ -71,7 +71,7 @@ function ImprimirPantalla() {
             ImprimirTiquete();
 
         } else {
-            ImprimirFactura();
+            ImprimirTiqueteC();
 
         }
     } catch (e) {
@@ -165,6 +165,90 @@ function ImprimirTiquete() {
     }
 }
 
+
+
+function ImprimirTiqueteC() {
+    try {
+
+
+
+        var ventana = window.open('', 'PRINT', 'height=400,width=600');
+        var texto = htmlCredito2;
+        texto = texto.replace("@Fecha", Documento.Fecha.split("T")[0]);
+        texto = texto.replace("@NumInterno", Documento.id);
+        texto = texto.replace("CO-Pital", "");
+        texto = texto.replace("@NumComprobante", Documento.ConsecutivoHacienda);
+        texto = texto.replace("@NumFactura", Documento.id);
+
+        var cond = CP.find(a => a.id == Documento.idCondPago);
+        texto = texto.replace("@selectCondPago", cond.Nombre);
+
+
+        if (Documento.tipoDocumento == "04") {
+            texto = texto.replace("FACTURA", "TIQUETE");
+
+        }
+        texto = texto.replace("@CodCliente", " " + Documento.idCliente);
+
+        var Cli = Clientes.find(a => a.id == Documento.idCliente);
+        texto = texto.replace("@NombreCliente", Cli.Nombre);
+        texto = texto.replace("@Vendedor", Vendedor.Nombre);
+        texto = texto.replace("@Comentario", Documento.Comentarios);
+
+
+        var tabla = "";
+
+        for (var i = 0; i < Documento.Detalle.length; i++) {
+
+            var Prod = Productos.find(a => a.id == Documento.Detalle[i].idProducto)
+
+            tabla += "<tr>" + "<td colspan='3'>  " + Prod.Codigo + "-" + Prod.Nombre + "  </td></tr>";
+
+
+            tabla += "<tr>";
+
+            tabla += "<td style='text-align left;'>" + Documento.Detalle[i].Cantidad + " </td>";
+
+            tabla += "<td style='text-align left;'>" + formatoDecimal(Documento.Detalle[i].PrecioUnitario) + " </td>";
+            tabla += "<td style='text-align left;'>" + formatoDecimal(Documento.Detalle[i].TotalLinea) + " </td>";
+            //tabla += "<p style=' text-align left; color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;'>" + Prod.Codigo + "-" + Prod.Nombre + " </p>";
+
+
+
+            tabla += "</tr>";
+
+        }
+        texto = texto.replace("@Tabla", tabla);
+
+        if (Documento.Moneda == "CRC") {
+            texto = texto.replace("@SubTotal", "₡" + formatoDecimal(Documento.Subtotal));
+            texto = texto.replace("@TotalDescuento", "₡" + formatoDecimal(Documento.TotalDescuento));
+            texto = texto.replace("@TotalImpuestos", "₡" + formatoDecimal(Documento.TotalImpuestos));
+            texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.TotalCompra));
+        } else {
+            texto = texto.replace("@SubTotal", "$" + formatoDecimal(Documento.Subtotal));
+            texto = texto.replace("@TotalDescuento", "$" + formatoDecimal(Documento.TotalDescuento));
+            texto = texto.replace("@TotalImpuestos", "$" + formatoDecimal(Documento.TotalImpuestos));
+            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.TotalCompra));
+        }
+
+
+
+
+        ventana.document.write(texto);
+        ventana.document.close();
+        ventana.focus();
+        ventana.print();
+        ventana.close();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+}
 function ImprimirFactura() {
     try {
 

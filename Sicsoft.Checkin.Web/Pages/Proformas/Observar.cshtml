@@ -336,7 +336,8 @@
                                             <td class="text-center">@Math.Round(@item.TotalLinea,2).ToString("C",formato)</td>
                                             @if (!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))
                                             {
-                                                <td class="text-center">@Math.Round(((((@item.TotalLinea - @item.TotalImpuesto) - ( Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0: Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Costo)) / (@item.TotalLinea - @item.TotalImpuesto)) * 100) ,2).ToString("C",formato)%</td>
+                                               
+                                                <td class="text-center">@Math.Round(((((@item.TotalLinea - @item.TotalImpuesto) - ( (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0: Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Costo) * item.Cantidad)) / (@item.TotalLinea - @item.TotalImpuesto)) * 100) ,2).ToString("C",formato)%</td>
                                             }
                                         </tr>
                                     }
@@ -543,8 +544,8 @@
                                         <th class="text-center">Producto</th>
                                         <th class="text-center">Cantidad</th>
                                         <th class="text-center">Precio Unitario</th>
-                                        <th class="text-center">% Descuento</th>
-                                        <th class="text-center">Descuento</th>
+                                       @* <th class="text-center">% Descuento</th>*@
+                                     @*   <th class="text-center">Descuento</th>*@
                                         <th class="text-center">Impuesto</th>
                                         @*  <th class="text-center">% Exoneración</th>*@
 
@@ -567,8 +568,8 @@
 
 
                                             <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
-                                            <td class="text-center">@Math.Round(@item.PorDescto) %</td>
-                                            <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>
+                                     @*       <td class="text-center">@Math.Round(@item.PorDescto) %</td>
+                                            <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>*@
                                             <td class="text-center">@Math.Round(@item.TotalImpuesto, 2).ToString("C", formato)</td>
                                             @* <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>*@
 
@@ -589,7 +590,7 @@
                             <div>
 
                                 <p>Sub Total  :  <span id="Subtotal"> @Math.Round(Model.Oferta.Subtotal, 2).ToString("C",formato)</span> </p>
-                                <p>Descuento  :  <span id="Descuento"> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>
+                                @*<p>Descuento  :  <span id="Descuento"> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>*@
                                 <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C",formato)</span></p>
 
                             </div>

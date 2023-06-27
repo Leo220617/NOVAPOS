@@ -213,10 +213,13 @@ namespace NOVAAPP.Pages.Proformas
 
             try
             {
+                var Condiciones = await serviceCP.ObtenerLista("");
                 recibidos.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
                 recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
                 recibidos.Tipo = "01";
                 recibidos.BaseEntry = 0;
+                var Dias = Condiciones.Where(a => a.id == recibidos.idCondPago).FirstOrDefault() == null ? 0 : Condiciones.Where(a => a.id == recibidos.idCondPago).FirstOrDefault().Dias;
+                recibidos.FechaVencimiento = recibidos.Fecha.AddDays(Dias);
                 var resp = await service.Agregar(recibidos);
 
                 var resp2 = new

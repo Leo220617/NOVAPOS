@@ -42,6 +42,7 @@ namespace NOVAAPP.Pages.PagoCuentas
                 filtro.Externo = true;
                 filtro.Activo = true;
                 ClientesLista = await clientes.ObtenerLista(filtro);
+                ClientesLista = ClientesLista.Where(a => !a.Nombre.ToLower().Contains("contado")).ToArray();
                 return Page();
             }
             catch (Exception ex)

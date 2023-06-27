@@ -24,6 +24,7 @@ namespace NOVAAPP.Pages.Proformas
         private readonly ICrudApi<ExoneracionesViewModel, int> exoneracion;
         private readonly ICrudApi<CondicionesPagosViewModel, int> condiconesPago;
         private readonly ICrudApi<VendedoresViewModel, int> vendedor;
+        private readonly ICrudApi<SucursalesViewModel, string> sucursales;
 
         [BindProperty]
         public ClientesViewModel[] Clientes { get; set; }
@@ -43,7 +44,13 @@ namespace NOVAAPP.Pages.Proformas
         [BindProperty]
         public VendedoresViewModel Vendedor { get; set; }
 
-        public ObservarModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor)
+        [BindProperty]
+        public SucursalesViewModel[] Sucursal { get; set; }
+
+        [BindProperty]
+        public SucursalesViewModel MiSucursal { get; set; }
+
+        public ObservarModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<SucursalesViewModel, string> sucursales)
         {
             this.service = service;
             this.serviceE = serviceE;
@@ -51,6 +58,7 @@ namespace NOVAAPP.Pages.Proformas
             this.exoneracion = exoneracion;
             this.condiconesPago = condiconesPago;
             this.vendedor = vendedor;
+            this.sucursales = sucursales;
         }
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -72,7 +80,9 @@ namespace NOVAAPP.Pages.Proformas
                 Clientes = await serviceE.ObtenerLista(filtro);
                 Productos = await serviceP.ObtenerLista("");
                 Exoneraciones = await exoneracion.ObtenerLista("");
-
+                var Suc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                Sucursal = await sucursales.ObtenerLista("");
+                MiSucursal = Sucursal.Where(a => a.CodSuc.ToUpper().Contains(Suc)).FirstOrDefault();
                 return Page();
             }
             catch (Exception ex)

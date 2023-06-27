@@ -221,7 +221,7 @@
                                             {
                                                 <td class="text-center">@Math.Round(((((@item.TotalLinea - @item.TotalImpuesto) - ( (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0: Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Costo) * item.Cantidad)) / (@item.TotalLinea - @item.TotalImpuesto)) * 100) ,2).ToString("C",formato)%</td>
                                                
-                                                Ganancia += Convert.ToDouble(@Math.Round(((((@item.TotalLinea - @item.TotalImpuesto) - (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Costo)) / (@item.TotalLinea - @item.TotalImpuesto)) * 100), 2)) /Model.Documento.Detalle.Length;
+                                                Ganancia += Convert.ToDouble(@Math.Round(((((@item.TotalLinea - @item.TotalImpuesto) - ((Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Costo) * item.Cantidad)) / (@item.TotalLinea - @item.TotalImpuesto)) * 100), 2)) /Model.Documento.Detalle.Length;
 
                                             }
 

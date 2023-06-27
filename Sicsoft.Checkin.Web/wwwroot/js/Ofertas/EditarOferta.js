@@ -471,6 +471,10 @@ function RecolectarFacturas() {
 }
 function RellenaCondiciones(CPS) {
     try {
+        var idClientes = $("#ClienteSeleccionado").val();
+        var Cliente = Clientes.find(a => a.id == idClientes).Nombre;
+        var Name = Cliente.includes("CONTADO");
+
         var valorCondicion = Oferta != null || Oferta != undefined ? Oferta.idCondPago : 0;
         var text = "";
         $("#selectCondPago").html(text);
@@ -481,7 +485,7 @@ function RellenaCondiciones(CPS) {
 
 
         text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
-        if (FP == false) {
+        if (FP == false && !Name) {
             text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
         }
 

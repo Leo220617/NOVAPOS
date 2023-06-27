@@ -14,6 +14,7 @@ namespace NOVAAPP.Pages.PagoCuentas
     {
         private readonly ICrudApi<PagoCuentasViewModel, int> service; //API
         private readonly ICrudApi<ClientesViewModel, string> clientes;
+        private readonly ICrudApi<SucursalesViewModel, string> sucursales;
 
         [BindProperty]
         public PagoCuentasViewModel Cuenta { get; set; }
@@ -21,10 +22,16 @@ namespace NOVAAPP.Pages.PagoCuentas
         [BindProperty]
         public ClientesViewModel[] ClientesLista { get; set; }
 
-        public ObservarModel(ICrudApi<PagoCuentasViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes) //CTOR 
+        [BindProperty]
+        public SucursalesViewModel[] Sucursal { get; set; }
+
+        [BindProperty]
+        public SucursalesViewModel MiSucursal { get; set; }
+        public ObservarModel(ICrudApi<PagoCuentasViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<SucursalesViewModel, string> sucursales) //CTOR 
         {
             this.service = service;
             this.clientes = clientes;
+            this.sucursales = sucursales;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -41,6 +48,9 @@ namespace NOVAAPP.Pages.PagoCuentas
                 filtro.Externo = true;
                 filtro.Activo = true;
                 ClientesLista = await clientes.ObtenerLista(filtro);
+                var Suc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                Sucursal = await sucursales.ObtenerLista("");
+                MiSucursal = Sucursal.Where(a => a.CodSuc.ToUpper().Contains(Suc)).FirstOrDefault();
                 return Page();
             }
             catch (Exception ex)

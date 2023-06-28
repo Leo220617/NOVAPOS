@@ -1,6 +1,7 @@
 using InversionGloblalWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
 using NOVAAPP.Models;
 using Sicsoft.Checkin.Web.Servicios;
 using System;
@@ -12,6 +13,7 @@ namespace NOVAAPP.Pages.PagoCuentas
 {
     public class ObservarModel : PageModel
     {
+        private readonly IConfiguration configuration;
         private readonly ICrudApi<PagoCuentasViewModel, int> service; //API
         private readonly ICrudApi<ClientesViewModel, string> clientes;
         private readonly ICrudApi<SucursalesViewModel, string> sucursales;
@@ -27,11 +29,15 @@ namespace NOVAAPP.Pages.PagoCuentas
 
         [BindProperty]
         public SucursalesViewModel MiSucursal { get; set; }
-        public ObservarModel(ICrudApi<PagoCuentasViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<SucursalesViewModel, string> sucursales) //CTOR 
+
+        [BindProperty]
+        public string NombreCliente { get; set; }
+        public ObservarModel(IConfiguration configuration, ICrudApi<PagoCuentasViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<SucursalesViewModel, string> sucursales) //CTOR 
         {
             this.service = service;
             this.clientes = clientes;
             this.sucursales = sucursales;
+            this.configuration = configuration;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -51,6 +57,7 @@ namespace NOVAAPP.Pages.PagoCuentas
                 var Suc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 Sucursal = await sucursales.ObtenerLista("");
                 MiSucursal = Sucursal.Where(a => a.CodSuc.ToUpper().Contains(Suc)).FirstOrDefault();
+                NombreCliente = configuration["Cliente"].ToString();
                 return Page();
             }
             catch (Exception ex)

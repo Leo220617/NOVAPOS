@@ -18,6 +18,7 @@ namespace NOVAAPP.Pages.Proformas
 {
     public class ObservarModel : PageModel
     {
+        private readonly IConfiguration configuration;
         private readonly ICrudApi<OfertasViewModel, int> service;
         private readonly ICrudApi<ClientesViewModel, string> serviceE;
         private readonly ICrudApi<ProductosViewModel, string> serviceP;
@@ -49,8 +50,10 @@ namespace NOVAAPP.Pages.Proformas
 
         [BindProperty]
         public SucursalesViewModel MiSucursal { get; set; }
+        [BindProperty]
+        public string NombreCliente { get; set; }
 
-        public ObservarModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<SucursalesViewModel, string> sucursales)
+        public ObservarModel(IConfiguration configuration, ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<SucursalesViewModel, string> sucursales)
         {
             this.service = service;
             this.serviceE = serviceE;
@@ -59,6 +62,7 @@ namespace NOVAAPP.Pages.Proformas
             this.condiconesPago = condiconesPago;
             this.vendedor = vendedor;
             this.sucursales = sucursales;
+            this.configuration = configuration;
         }
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -83,6 +87,7 @@ namespace NOVAAPP.Pages.Proformas
                 var Suc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 Sucursal = await sucursales.ObtenerLista("");
                 MiSucursal = Sucursal.Where(a => a.CodSuc.ToUpper().Contains(Suc)).FirstOrDefault();
+                NombreCliente = configuration["Cliente"].ToString();
                 return Page();
             }
             catch (Exception ex)

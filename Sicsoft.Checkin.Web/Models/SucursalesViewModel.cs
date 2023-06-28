@@ -8,7 +8,7 @@
    
         public string Nombre { get; set; }
 
-        public byte[] Imagen { get; set; }
+        public string Imagen { get; set; }
 
     
         public string TipoCedula { get; set; }

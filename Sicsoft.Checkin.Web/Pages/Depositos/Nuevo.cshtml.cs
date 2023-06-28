@@ -118,9 +118,14 @@ namespace NOVAAPP.Pages.Depositos
             }
             catch (ApiException ex)
             {
-                Errores errores = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
-                ModelState.AddModelError(string.Empty, errores.Message);
-                return new JsonResult(error);
+                BitacoraErroresViewModel be = JsonConvert.DeserializeObject<BitacoraErroresViewModel>(ex.Content.ToString());
+
+                var resp2 = new
+                {
+                    success = false,
+                    Deposito = be.Descripcion
+                };
+                return new JsonResult(resp2);
                 //return new JsonResult(false);
             }
             catch (Exception ex)
@@ -130,7 +135,7 @@ namespace NOVAAPP.Pages.Depositos
                 var resp2 = new
                 {
                     success = false,
-                    Deposito = ""
+                    Deposito = ex.Message
                 };
                 return new JsonResult(resp2);
             }

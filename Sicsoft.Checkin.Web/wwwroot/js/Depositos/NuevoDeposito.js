@@ -202,7 +202,7 @@ function Generar() {
                         success: function (json) {
 
 
-                            console.log("resultado " + json.Oferta);
+                            console.log("resultado " + json);
                             if (json.success == true) {
                                 $("#divProcesando").modal("hide");
                                 Swal.fire({
@@ -232,7 +232,7 @@ function Generar() {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: 'Ha ocurrido un error al intentar guardar'
+                                    text: 'Ha ocurrido un error al intentar guardar ' + json.deposito
 
                                 })
                             }
@@ -249,6 +249,12 @@ function Generar() {
                         error: function (error) {
                             $("#divProcesando").modal("hide");
 
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Ha ocurrido un error al intentar guardar ' + error
+
+                            })
 
                         }
                     });

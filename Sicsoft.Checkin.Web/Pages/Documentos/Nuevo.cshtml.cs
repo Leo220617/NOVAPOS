@@ -242,9 +242,14 @@ namespace NOVAAPP.Pages.Documentos
             }
             catch (ApiException ex)
             {
-                Errores errores = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
-                ModelState.AddModelError(string.Empty, errores.Message);
-                return new JsonResult(error);
+                BitacoraErroresViewModel be = JsonConvert.DeserializeObject<BitacoraErroresViewModel>(ex.Content.ToString());
+
+                var resp2 = new
+                {
+                    success = false,
+                    Cliente = be.Descripcion
+                };
+                return new JsonResult(resp2);
                 //return new JsonResult(false);
             }
             catch (Exception ex)
@@ -254,7 +259,7 @@ namespace NOVAAPP.Pages.Documentos
                 var resp2 = new
                 {
                     success = false,
-                    Cliente = ""
+                    Cliente = ex.Message
                 };
                 return new JsonResult(resp2);
             }
@@ -292,10 +297,12 @@ namespace NOVAAPP.Pages.Documentos
             }
             catch (ApiException ex)
             {
+                BitacoraErroresViewModel be = JsonConvert.DeserializeObject<BitacoraErroresViewModel>(ex.Content.ToString());
+
                 var resp2 = new
                 {
                     success = false,
-                    Documento = ex.Content.ToString()
+                    Documento = be.Descripcion
                 };
                 return new JsonResult(resp2);
                 //return new JsonResult(false);
@@ -307,7 +314,7 @@ namespace NOVAAPP.Pages.Documentos
                 var resp2 = new
                 {
                     success = false,
-                    Documento = ""
+                    Documento = ex.Message
                 };
                 return new JsonResult(resp2);
             }

@@ -887,7 +887,7 @@ function AgregarCliente() {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: 'Ha ocurrido un error al intentar guardar'
+                                    text: 'Ha ocurrido un error al intentar guardar ' + json.cliente
 
                                 })
                             }
@@ -902,7 +902,12 @@ function AgregarCliente() {
                         },
                         error: function (error) {
 
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Ha ocurrido un error al intentar guardar ' + error
 
+                            })
                         }
                     });
                 }
@@ -1306,7 +1311,7 @@ function Generar() {
                         success: function (json) {
 
 
-                            console.log("resultado " + json.Oferta);
+                            console.log("resultado " + json.oferta);
                             if (json.success == true) {
                                 $("#divProcesando").modal("hide");
                                 Swal.fire({
@@ -1336,7 +1341,7 @@ function Generar() {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: 'Ha ocurrido un error al intentar guardar'
+                                    text: 'Ha ocurrido un error al intentar guardar ' + json.oferta
 
                                 })
                             }
@@ -1351,7 +1356,12 @@ function Generar() {
                         },
                         error: function (error) {
                             $("#divProcesando").modal("hide");
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Ha ocurrido un error al intentar guardar ' + error
 
+                            })
                         }
                     });
                 }

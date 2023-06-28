@@ -178,10 +178,14 @@ namespace NOVAAPP.Pages.Ofertas
             }
             catch (ApiException ex)
             {
-                Errores errores = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
-                ModelState.AddModelError(string.Empty, errores.Message);
-                return new JsonResult(error);
-                //return new JsonResult(false);
+                BitacoraErroresViewModel be = JsonConvert.DeserializeObject<BitacoraErroresViewModel>(ex.Content.ToString());
+
+                var resp2 = new
+                {
+                    success = false,
+                    Cliente = be.Descripcion
+                };
+                return new JsonResult(resp2);
             }
             catch (Exception ex)
             {
@@ -217,10 +221,13 @@ namespace NOVAAPP.Pages.Ofertas
             }
             catch (ApiException ex)
             {
-                Errores errores = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
-                ModelState.AddModelError(string.Empty, errores.Message);
-                return new JsonResult(error);
-                //return new JsonResult(false);
+                BitacoraErroresViewModel be = JsonConvert.DeserializeObject<BitacoraErroresViewModel>(ex.Content.ToString());
+                var resp2 = new
+                {
+                    success = false,
+                    Oferta = be.Descripcion
+                };
+                return new JsonResult(resp2);
             }
             catch (Exception ex)
             {
@@ -229,7 +236,7 @@ namespace NOVAAPP.Pages.Ofertas
                 var resp2 = new
                 {
                     success = false,
-                    Oferta = ""
+                    Oferta = ex.Message
                 };
                 return new JsonResult(resp2);
             }

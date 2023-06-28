@@ -1004,7 +1004,7 @@ function AgregarCliente() {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: 'Ha ocurrido un error al intentar guardar'
+                                    text: 'Ha ocurrido un error al intentar guardar ' + json.cliente
 
                                 })
                             }
@@ -1019,7 +1019,12 @@ function AgregarCliente() {
                         },
                         error: function (error) {
 
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Ha ocurrido un error al intentar guardar ' + error
 
+                            })
                         }
                     });
                 }
@@ -1445,7 +1450,7 @@ function Generar() {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: 'Ha ocurrido un error al intentar guardar'
+                                    text: 'Ha ocurrido un error al intentar guardar ' + json.documento
 
                                 })
                             }
@@ -1461,6 +1466,12 @@ function Generar() {
                         error: function (error) {
 
                             $("#divProcesando").modal("hide");
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Ha ocurrido un error al intentar guardar ' + error
+
+                            })
                         }
                     });
                 }

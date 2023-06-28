@@ -135,6 +135,7 @@ namespace NOVAAPP.Pages.Documentos
                 {
                     var Oferta = await serviceO.ObtenerPorId(id);
                     Documento = new DocumentosViewModel();
+                    Documento.Fecha = Oferta.Fecha;
                     Documento.idOferta = id;
                     Documento.CodSuc = Oferta.CodSuc;
                     Documento.idCliente = Oferta.idCliente;
@@ -291,9 +292,12 @@ namespace NOVAAPP.Pages.Documentos
             }
             catch (ApiException ex)
             {
-                Errores errores = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
-                ModelState.AddModelError(string.Empty, errores.Message);
-                return new JsonResult(error);
+                var resp2 = new
+                {
+                    success = false,
+                    Documento = ex.Content.ToString()
+                };
+                return new JsonResult(resp2);
                 //return new JsonResult(false);
             }
             catch (Exception ex)

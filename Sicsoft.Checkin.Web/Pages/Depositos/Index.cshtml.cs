@@ -71,19 +71,20 @@ namespace NOVAAPP.Pages.Depositos
                     DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
 
                     filtro.FechaFinal = ultimoDia;
-
-
                     filtro.Codigo2 = 0;
-                    filtro.Codigo3 = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault());
 
-
-                    filtro.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
 
 
                 }
-              
 
-             
+               
+                filtro.Codigo3 = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault());
+
+
+                filtro.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
+
+
+
                 Listas = await service.ObtenerLista(filtro);
               
 

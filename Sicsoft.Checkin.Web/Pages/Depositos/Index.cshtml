@@ -198,10 +198,7 @@
 
 
 
-                            <div class="col-2 " style="text-align: center; padding-top: 2%;">
-                                <input type="checkbox" id="md_checkbox_1" class="chk-col-red" asp-for="filtro.Procesado" onclick="this.form.submit()" />
-                                <label for="md_checkbox_1">Procesado SAP</label>
-                            </div>
+                           
 
 
 
@@ -250,7 +247,7 @@
                                     <th>Sucursal</th>
                                     <th>Fecha</th>
                                     <th>Generado Por</th>
-                                    <th>Procesado SAP</th>
+                                 
 
 
                                 </tr>
@@ -268,11 +265,7 @@
 
                                             &nbsp;
                                             <a asp-page="./Observar" asp-route-id="@item.id" class="fa fa-info-circle icono"> </a> &nbsp;
-                                            &nbsp;
-                                            @if (item.ProcesadoSAP == false)
-                                            {
-                                                <a onclick="javascript: onClickModal('@item.id')" title="Insertar a SAP"><img src="/sapX.png" /></a>
-                                            }
+                                           
                                         </td>
                                         <td> @item.DocEntry</td>
                                         <td> @item.CuentaInicial</td>
@@ -305,17 +298,7 @@
 
 
                                         </td>
-                                        <td>
-                                            @if (item.ProcesadoSAP)
-                                            {
-                                                <span class="badge badge-pill badge-success">Procesado</span>
-
-                                            }
-                                            else
-                                            {
-                                                <span class="badge badge-pill badge-danger">Sin Procesar</span>
-                                            }
-                                        </td>
+                                     
 
 
 
@@ -340,7 +323,7 @@
                                     <th>Sucursal</th>
                                     <th>Fecha</th>
                                     <th>Generado Por</th>
-                                    <th>Procesado SAP</th>
+                                    
 
 
                                 </tr>

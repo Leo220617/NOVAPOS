@@ -86,7 +86,7 @@ namespace NOVAAPP.Pages.PagoCuentas
 
                 }
 
-                filtro.Activo = true;
+               
                 Listas = await service.ObtenerLista(filtro);
                 Sucursales = await sucursales.ObtenerLista(filtro);
 

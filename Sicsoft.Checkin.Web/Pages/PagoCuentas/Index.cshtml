@@ -210,10 +210,7 @@
                             </div>
 
 
-                            <div class="col-md-2 " style="text-align: center; padding-top: 2%;">
-                                <input type="checkbox" id="md_checkbox_1" class="chk-col-red" asp-for="filtro.Procesado" onclick="this.form.submit()" />
-                                <label for="md_checkbox_1"> Procesado SAP</label>
-                            </div>
+                          
 
 
 
@@ -260,7 +257,7 @@
                                     <th>Fecha Contabilización</th>
                                     <th>Moneda</th>
                                     <th>Total</th>
-                                    <th>Procesado SAP</th>
+                                  
 
 
 
@@ -282,12 +279,9 @@
                                         <td align="center" style="padding-top:15px;">
 
                                             <a asp-page="./Observar" asp-route-id="@item.id" class="fa fa-info-circle icono"> </a> &nbsp;
-                                            &nbsp;
+                                        
 
-                                            @if (item.ProcesadaSAP == false)
-                                            {
-                                                <a onclick="javascript: onClickModal('@item.id')" title="Insertar a SAP"><img src="/sapX.png" /></a>
-                                            }
+                                          
 
                                         </td>
                                         <td>
@@ -315,17 +309,7 @@
                                             @Math.Round(@item.Total, 2).ToString("C",formato)
                                         </td>
 
-                                        <td>
-                                            @if (item.ProcesadaSAP)
-                                            {
-                                                <span class="badge badge-pill badge-success">Procesado</span>
-
-                                            }
-                                            else
-                                            {
-                                                <span class="badge badge-pill badge-danger">Sin Procesar</span>
-                                            }
-                                        </td>
+                                    
 
 
 
@@ -357,7 +341,7 @@
                                     <th>Fecha Contabilización</th>
                                     <th>Moneda</th>
                                     <th>Total</th>
-                                    <th>Procesado SAP</th>
+                                   
 
 
                                 </tr>

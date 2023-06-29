@@ -805,8 +805,7 @@
                                             <td>@item.NumLinea</td>
 
 
-                                            <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Nombre)   </td>
-
+                                            <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
                                             <td class="text-right">@(Math.Round(item.Cantidad))</td>
 
 

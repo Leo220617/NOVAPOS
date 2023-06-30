@@ -440,7 +440,7 @@ function onChangeCliente() {
 
         var Contado = CP.find(a => a.Nombre == "Contado");
 
-        if (Cliente.LimiteCredito <= 0 && Cliente.idCondicionPago != Contado.id) {
+        if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Advertencia',
@@ -523,14 +523,14 @@ function RecolectarFacturas() {
 
                     })
                 } else {
-                    if (Cliente.LimiteCredito <= 0 && Cliente.idCondicionPago != Contado.id) {
+                    if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
                         Swal.fire({
                             icon: 'warning',
                             title: 'Advertencia',
                             text: 'Limite de crédito excedido'
 
                         })
-                    } else if (Cliente.LimiteCredito > 0  && Cliente.idCondicionPago != Contado.id) {
+                    } else if ((Cliente.LimiteCredito - Cliente.Saldo) > 0  && Cliente.idCondicionPago != Contado.id) {
                         FP = true;
                         //$("#selectCondPago").attr("disabled", false);
                     }
@@ -1684,7 +1684,7 @@ function AbrirPago() {
             totalG = totalG * TipodeCambio.TipoCambio;
         }
 
-        if (Cliente.LimiteCredito < totalG && CondPago != Contado.id && CondPago != Transito.id) {
+        if ((Cliente.LimiteCredito - Cliente.Saldo ) < totalG && CondPago != Contado.id && CondPago != Transito.id) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

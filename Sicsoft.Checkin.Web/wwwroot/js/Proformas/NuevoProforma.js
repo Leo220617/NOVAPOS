@@ -171,14 +171,14 @@ function RecolectarFacturas() {
 
                     })
                 } else {
-                    if (Cliente.LimiteCredito <= 0 && Cliente.idCondicionPago != Contado.id) {
+                    if ((Cliente.LimiteCredito - - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
                         Swal.fire({
                             icon: 'warning',
                             title: 'Advertencia',
                             text: 'Limite de crédito excedido'
 
                         })
-                    } else if (Cliente.LimiteCredito > 0 && Cliente.idCondicionPago != Contado.id) {
+                    } else if ((Cliente.LimiteCredito - Cliente.Saldo) > 0 && Cliente.idCondicionPago != Contado.id) {
                         FP = true; 
                         //$("#selectCondPago").attr("disabled", false);
                     }
@@ -423,7 +423,7 @@ function onChangeCliente() {
         $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
         $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)));
 
-        if (Cliente.LimiteCredito <= 0 && Cliente.idCondicionPago != Contado.id) {
+        if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Advertencia',
@@ -1447,7 +1447,7 @@ function validarOferta(e) {
             else {
                 return true;
             }
-        } if (Cliente.LimiteCredito < totalG && CondPago != Contado.id && CondPago != Transito.id) {
+        } if ((Cliente.LimiteCredito - Cliente.Saldo) < totalG && CondPago != Contado.id && CondPago != Transito.id) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

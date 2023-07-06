@@ -734,9 +734,9 @@ function onChangeRevisado(i) {
 
         var TotalF = Saldo + interes;
 
-        if (valorCheck == true && valorCheckI == true) {
+        if (valorCheck == true && valorCheckI == true && valorCheckI != undefined) {
             $("#" + i + "_Fac").val(Saldo);
-        } else if (valorCheck == true && valorCheckI == false) {
+        } else if (valorCheck == true) {
             $("#" + i + "_Fac").val(TotalF.toFixed(2));
         }
         else {

@@ -128,6 +128,7 @@ namespace NOVAAPP.Pages.Proformas
                 filtro.Externo = true;
                 filtro.Activo = true;
                 Clientes = await clientes.ObtenerLista(filtro);
+                Clientes = Clientes.Where(a => a.Activo == true).ToArray();
                 filtro.CardCode = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 filtro.CardName = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 var Suc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();

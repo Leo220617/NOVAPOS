@@ -26,6 +26,7 @@ namespace NOVAAPP.Pages.Documentos
         private readonly ICrudApi<GruposClientesViewModel, int> grupo;
 
         private readonly ICrudApi<TipoCambiosViewModel, int> tipoCambio;
+        private readonly ICrudApi<SucursalesViewModel, string> sucursales;
 
 
         [BindProperty]
@@ -56,8 +57,13 @@ namespace NOVAAPP.Pages.Documentos
         public GruposClientesViewModel[] Grupos { get; set; }
         [BindProperty]
         public TipoCambiosViewModel[] TP { get; set; }
+        [BindProperty]
+        public SucursalesViewModel[] Sucursal { get; set; }
 
-        public CancelarModel(ICrudApi<DocumentosViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio) //CTOR 
+        [BindProperty]
+        public SucursalesViewModel MiSucursal { get; set; }
+
+        public CancelarModel(ICrudApi<DocumentosViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<SucursalesViewModel, string> sucursales) //CTOR 
         {
             this.service = service;
             this.serviceU = serviceU;
@@ -70,6 +76,7 @@ namespace NOVAAPP.Pages.Documentos
             this.exo = exo;
             this.grupo = grupo;
             this.tipoCambio = tipoCambio;
+            this.sucursales = sucursales;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -105,6 +112,9 @@ namespace NOVAAPP.Pages.Documentos
                 Exoneraciones = await exo.ObtenerLista("");
                 Grupos = await grupo.ObtenerLista("");
                 filtro.FechaInicial = DateTime.Now.Date;
+                var Suc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                Sucursal = await sucursales.ObtenerLista("");
+                MiSucursal = Sucursal.Where(a => a.CodSuc.ToUpper().Contains(Suc)).FirstOrDefault();
                 TP = await tipoCambio.ObtenerLista(filtro);
 
                 foreach(var item in NCAnteriores)

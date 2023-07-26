@@ -26,6 +26,7 @@ var Exoneraciones = [];
 var Documento = [];
 var TipoCambio = [];
 var MetodosPagos = [];
+var Sucursal = [];
 
 function Recuperar() {
     try {
@@ -38,6 +39,7 @@ function Recuperar() {
         Exoneraciones = JSON.parse($("#Exoneraciones").val());
         Documento = JSON.parse($("#Documento").val());
         TipoCambio = JSON.parse($("#TipoCambio").val());
+        Sucursal = JSON.parse($("#Sucursal").val());
 
         ExoneracionesCliente = [];
 
@@ -166,7 +168,7 @@ function onChangeCliente() {
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
 
-        ProdClientes = Productos.filter(a => a.idListaPrecios == Cliente.idListaPrecios);
+        ProdClientes = Productos.filter(a => a.idListaPrecios == Sucursal.idListaPrecios);
         ProdClientes = ProdClientes.sort(function (a, b) {
             if (a.Stock < b.Stock) {
                 return 1;

@@ -12517,6 +12517,7 @@ table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTa
     height: 100%;
     width: 100%;
     position: fixed;
+    background-color: #74BA3E;
 }
 .login-box .fog-pwd {
     position: relative;

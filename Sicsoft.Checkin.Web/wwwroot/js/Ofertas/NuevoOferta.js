@@ -31,6 +31,7 @@ var Bodega = [];
 var Sucursal = [];
 var FP = false;
 var Inicio = false;
+var Duplicado = false;
 
 function Recuperar() {
     try {
@@ -169,6 +170,34 @@ function ValidarStocks() {
 
         }
         ValidarTotales();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar informacion ' + e
+
+        })
+    }
+
+}
+
+function ValidarDuplicados() {
+    try {
+        for (var i = 0; i <ProdCadena.length; i++) {
+            var PE = Productos.find(a => a.id == ProdCadena[i].idProducto);
+
+            if (PE.id == ProdCadena[i].idProducto) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'El producto esta duplicado '
+
+                })
+
+                return false;
+            }
+        }
+           
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -1138,6 +1167,7 @@ function ValidarCosto() {
 
 function AgregarProductoTabla() {
     try {
+        Duplicado = false;
         var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
         var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
         var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
@@ -1172,6 +1202,25 @@ function AgregarProductoTabla() {
         var Descuento = parseFloat($("#DES").val());
         var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
 
+    
+
+        for (var i = 0; i < ProdCadena.length; i++) {
+          
+
+            if (PE.id == ProdCadena[i].idProducto) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ya se ingreso el mismo producto en otra línea, si necesita mas unidades actualiza la cantidad en la linea ' + ' ' + (ProdCadena[i].NumLinea + 1)
+
+                })
+                Duplicado = true;
+                return false;
+            } else {
+                Duplicado = false;
+            }
+        }
+
         if ((PE.Stock - Producto.Cantidad) < 0 && PE.Codigo != PS.Codigo) {
             Swal.fire({
                 icon: 'error',
@@ -1183,7 +1232,7 @@ function AgregarProductoTabla() {
 
 
         }
-
+     
         if (PE.PrecioUnitario > Producto.PrecioUnitario) {
             Swal.fire({
                 icon: 'error',
@@ -1223,8 +1272,8 @@ function AgregarProductoTabla() {
                 text: 'Usted no puede aplicar este descuento, el descuento máximo asignado a su usuario es de' + ' ' + parseFloat(Descuento).toFixed(2) + '%'
 
             })
-
-        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) && PE.PrecioUnitario <= Producto.PrecioUnitario || PE.Codigo == PS.Codigo) {
+            
+        } else if ( Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) && PE.PrecioUnitario <= Producto.PrecioUnitario || PE.Codigo == PS.Codigo) {
 
             if (Producto.Cabys.length >= 13) {
 

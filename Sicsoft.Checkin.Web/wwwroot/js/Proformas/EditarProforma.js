@@ -30,7 +30,7 @@ var Bodega = [];
 var Sucursal = [];
 var FP = false;
 var Inicio = false;
-
+var Duplicado = false;
 
 function Recuperar() {
     try {
@@ -1117,7 +1117,22 @@ function AgregarProductoTabla() {
         };
 
         var Descuento = parseFloat($("#DES").val());
+        for (var i = 0; i < ProdCadena.length; i++) {
 
+
+            if (PE.id == ProdCadena[i].idProducto) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ya se ingreso el mismo producto en otra línea, si necesita mas unidades actualiza la cantidad en la linea ' + ' ' + (ProdCadena[i].NumLinea + 1)
+
+                })
+                Duplicado = true;
+                return false;
+            } else {
+                Duplicado = false;
+            }
+        }
 
         if (PE.PrecioUnitario > Producto.PrecioUnitario && PE.Editable == false) {
             Swal.fire({
@@ -1167,7 +1182,7 @@ function AgregarProductoTabla() {
 
             })
 
-        } else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0)) {
+        } else if (Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0)) {
 
             if (Producto.Cabys.length >= 13) {
 

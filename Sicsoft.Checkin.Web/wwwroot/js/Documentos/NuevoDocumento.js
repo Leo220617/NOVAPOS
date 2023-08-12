@@ -34,7 +34,7 @@ var Bodega = [];
 var Sucursal = [];
 var FP = false;
 var Inicio = false;
-
+var Duplicado = false;
 function HideP() {
     try {
         $("#boxP").hide();
@@ -1225,6 +1225,24 @@ function AgregarProductoTabla() {
         };
         var Descuento = parseFloat($("#DES").val());
         var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
+
+        for (var i = 0; i < ProdCadena.length; i++) {
+
+
+            if (PE.id == ProdCadena[i].idProducto) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ya se ingreso el mismo producto en otra línea, si necesita mas unidades actualiza la cantidad en la linea ' + ' ' + (ProdCadena[i].NumLinea + 1)
+
+                })
+                Duplicado = true;
+                return false;
+            } else {
+                Duplicado = false;
+            }
+        }
+
         if ((PE.Stock - Producto.Cantidad) < 0 && PE.Codigo != PS.Codigo) {
             Swal.fire({
                 icon: 'error',
@@ -1261,7 +1279,7 @@ function AgregarProductoTabla() {
 
         }
 
-        else if (Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) || Producto.Codigo == PS.Codigo) {
+        else if (Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) || Producto.Codigo == PS.Codigo) {
             if (Producto.Cabys.length >= 13) {
 
 
@@ -1359,7 +1377,7 @@ function EliminarProducto(i) {
 function Generar() {
     try {
 
-
+        var button = document.getElementById("botonG");
         var EncDocumento = {
             id: 0,
             idCliente: $("#ClienteSeleccionado").val(),
@@ -1396,7 +1414,7 @@ function Generar() {
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
-
+                    button.disabled = true;
 
 
                     $.ajax({
@@ -1446,6 +1464,7 @@ function Generar() {
                                 })
 
                             } else {
+                                button.disabled = false;
                                 $("#divProcesando").modal("hide");
                                 Swal.fire({
                                     icon: 'error',
@@ -1464,7 +1483,7 @@ function Generar() {
                             $("#divProcesando").modal("hide");
                         },
                         error: function (error) {
-
+                            button.disabled = false;
                             $("#divProcesando").modal("hide");
                             Swal.fire({
                                 icon: 'error',

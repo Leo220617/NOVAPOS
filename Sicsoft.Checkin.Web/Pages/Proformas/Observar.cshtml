@@ -322,8 +322,13 @@
                                         <tr>
                                             <td>@item.NumLinea</td>
 
+                                            @if (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Stock <= 0)
+                                            {
+                                                <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : "*" + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
+                                            }else{
+                                                <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
+                                            }
 
-                                            <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
 
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
 
@@ -455,7 +460,7 @@
                                             <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
 
                                         </div>
-                                        Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo
+                                      
 
                                         <div class="col-4">
                                             <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
@@ -562,7 +567,14 @@
                                             <td>@item.NumLinea</td>
 
 
-                                            <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
+                                            @if (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Stock <= 0)
+                                            {
+                                                <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : "*" + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
+                                            }
+                                            else
+                                            {
+                                                <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
+                                            }
 
 
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
@@ -606,8 +618,15 @@
 
                 </div>
             </div>
+            <div class="row">
+                <div class="col-6">
+                    <h4>* Producto sin stock</h4>
 
-
+                </div>
+               
+            </div>
+            
+            <br />
             <!-- Default box -->
             <div class="col-6 box">
                 <div class="col-6 box-header with-border">
@@ -806,7 +825,15 @@
                                             <td>@item.NumLinea</td>
 
 
-                                            <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
+
+                                            @if (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Stock <= 0)
+                                            {
+                                                <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : "*" + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
+                                            }
+                                            else
+                                            {
+                                                <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
+                                            }
 
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
 
@@ -1043,7 +1070,15 @@
                                             <td>@item.NumLinea</td>
 
 
-                                            <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
+
+                                            @if (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Stock <= 0)
+                                            {
+                                                <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : "*" + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
+                                            }
+                                            else
+                                            {
+                                                <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
+                                            }
 
 
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>

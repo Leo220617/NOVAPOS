@@ -1073,6 +1073,382 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="box">
+
+                    <div class="box-body">
+                        <!-- title row -->
+                        <!-- info row -->
+                        <div class="row invoice-info">
+                            <div class="col-md-4 invoice-col">
+
+                                <address>
+                                    <strong class="text-blue font-size-24">Notas de Crédito </strong>
+
+
+                                </address>
+                            </div>
+
+                            <!-- /.col -->
+                        </div>
+                        <!-- /.row -->
+                        <!-- Table row -->
+                        <div class="row">
+                            <div class="col-md-12 table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr class="bg-pale-info">
+                                            <th class="text-center">#</th>
+                                            <th class="text-center">Cliente</th>
+                                            <th class="text-center">Referencia</th>
+                                            <th class="text-center">Moneda</th>
+                                            <th class="text-center">Total</th>
+
+
+
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @{
+                                            var TotalNC = 0.00;
+                                            var TotalND = 0.00;
+
+
+                                        }
+                                        @foreach (var item2 in Model.Documento.Where(a => a.TipoDocumento == "03"))
+                                        {
+
+
+                                            <tr>
+                                                <td class="text-center">@item2.id</td>
+
+                                                <td> @(Model.Clientes.Where(a => a.id == item2.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" : Model.Clientes.Where(a => a.id == item2.idCliente).FirstOrDefault().Codigo + " - " + Model.Clientes.Where(a => a.id == item2.idCliente).FirstOrDefault().Nombre)</td>
+
+
+                                                <td>@item2.Comentarios</td>
+                                                <td class="text-center"> @item2.Moneda </td>
+
+
+
+
+
+                                                <td class="text-right">@item2.TotalCompra.ToString("C",formato)</td>
+
+
+
+                                                @{
+                                                    if (@item2.Moneda == "CRC")
+                                                    {
+                                                        TotalNC += Convert.ToDouble(@item2.TotalCompra);
+                                                    }
+                                                    else
+                                                    {
+                                                        TotalND += Convert.ToDouble(@item2.TotalCompra);
+                                                    }
+
+
+                                                }
+
+
+
+
+                                            </tr>
+
+
+                                        }
+
+
+
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.col -->
+
+                            <div class="col-md-12  text-right">
+                                <div>
+                                    @{
+
+                                    }
+                                    <p>Total Colones  : <span> ₡ @Math.Round( Convert.ToDecimal(TotalNC), 2).ToString("C",formato)</span> </p>
+                                    <p>Total Dólares  : <span> $ @Math.Round(Convert.ToDecimal(TotalND), 2).ToString("C",formato)</span></p>
+
+
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+                        <!-- /.row -->
+                        <!-- /.row -->
+
+                    </div>
+                </div>
+
+
+                <!-- Default box -->
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="box">
+
+                    <div class="box-body">
+                        <!-- title row -->
+                        <!-- info row -->
+                        <div class="row invoice-info">
+                            <div class="col-md-4 invoice-col">
+
+                                <address>
+                                    <strong class="text-blue font-size-24">Pagos a Cuenta </strong>
+
+
+                                </address>
+                            </div>
+
+                            <!-- /.col -->
+                        </div>
+                        <!-- /.row -->
+                        <!-- Table row -->
+                        <div class="row">
+                            <div class="col-md-12 table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr class="bg-pale-info">
+                                            <th class="text-center">#</th>
+                                            <th class="text-center">Cliente</th>
+                                            <th class="text-center">Moneda</th>
+                                            <th class="text-center">Total</th>
+
+
+
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @{
+                                            var TotalPC = 0.00;
+                                            var TotalPD = 0.00;
+
+
+                                        }
+                                        @foreach (var item2 in Model.PagoCuentas)
+                                        {
+
+
+                                            <tr>
+                                                <td class="text-center">@item2.id</td>
+
+                                                <td> @(Model.Clientes.Where(a => a.id == item2.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" : Model.Clientes.Where(a => a.id == item2.idCliente).FirstOrDefault().Codigo + " - " + Model.Clientes.Where(a => a.id == item2.idCliente).FirstOrDefault().Nombre)</td>
+
+
+
+                                                <td class="text-center"> @item2.Moneda </td>
+
+
+
+
+
+                                                <td class="text-right">@item2.Total.ToString("C",formato)</td>
+
+
+
+                                                @{
+                                                    if (@item2.Moneda == "CRC")
+                                                    {
+                                                        TotalPC += Convert.ToDouble(@item2.Total);
+                                                    }
+                                                    else
+                                                    {
+                                                        TotalPD += Convert.ToDouble(@item2.Total);
+                                                    }
+
+
+                                                }
+
+
+
+
+                                            </tr>
+
+
+                                        }
+
+
+
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.col -->
+
+                            <div class="col-md-12  text-right">
+                                <div>
+                                    @{
+
+                                    }
+                                    <p>Total Colones  : <span> ₡ @Math.Round( Convert.ToDecimal(TotalPC), 2).ToString("C",formato)</span> </p>
+                                    <p>Total Dólares  : <span> $ @Math.Round(Convert.ToDecimal(TotalPD), 2).ToString("C",formato)</span></p>
+
+
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+                        <!-- /.row -->
+                        <!-- /.row -->
+
+                    </div>
+                </div>
+
+
+                <!-- Default box -->
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="box">
+
+                    <div class="box-body">
+                        <!-- title row -->
+                        <!-- info row -->
+                        <div class="row invoice-info">
+                            <div class="col-md-4 invoice-col">
+
+                                <address>
+                                    <strong class="text-blue font-size-24">Depósitos </strong>
+
+
+                                </address>
+                            </div>
+
+                            <!-- /.col -->
+                        </div>
+                        <!-- /.row -->
+                        <!-- Table row -->
+                        <div class="row">
+                            <div class="col-md-12 table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr class="bg-pale-info">
+                                            <th class="text-center">#</th>
+                                            <th class="text-center">Banco</th>
+                                            <th class="text-center">Moneda</th>
+                                            <th class="text-center">Total</th>
+
+
+
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @{
+                                            var TotalDC = 0.00;
+                                            var TotalDD = 0.00;
+
+
+                                        }
+                                        @foreach (var item2 in Model.Depositos)
+                                        {
+
+
+                                            <tr>
+                                                <td class="text-center">@item2.id</td>
+                                                <td class="text-center"> @item2.Banco </td>
+
+                                                <td class="text-center"> @item2.Moneda </td>
+
+
+
+
+
+                                                <td class="text-right">@item2.Saldo.ToString("C",formato)</td>
+
+
+
+                                                @{
+                                                    if (@item2.Moneda == "CRC")
+                                                    {
+                                                        TotalDC += Convert.ToDouble(@item2.Saldo);
+                                                    }
+                                                    else
+                                                    {
+                                                        TotalDD += Convert.ToDouble(@item2.Saldo);
+                                                    }
+
+
+                                                }
+
+
+
+
+                                            </tr>
+
+
+                                        }
+
+
+
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.col -->
+
+                            <div class="col-md-12  text-right">
+                                <div>
+                                    @{
+
+                                    }
+                                    <p>Total Colones  : <span> ₡ @Math.Round( Convert.ToDecimal(TotalDC), 2).ToString("C",formato)</span> </p>
+                                    <p>Total Dólares  : <span> $ @Math.Round(Convert.ToDecimal(TotalDD), 2).ToString("C",formato)</span></p>
+
+
+                                </div>
+
+
+
+                            </div>
+                           
+                        </div>
+                        <!-- /.row -->
+                        <!-- /.row -->
+
+                    </div>
+                </div>
+
+
+                <!-- Default box -->
+
+            </div>
+        </div>
+
     </div>
 </div>
 

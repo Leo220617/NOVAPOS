@@ -108,8 +108,8 @@ function RecuperarInformacion() {
                 Cabys: Documento.Detalle[i].Cabys,
                 idExoneracion: Documento.Detalle[i].Cabys,
                 Costo: PE.Costo,
-                PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon
-
+                PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon,
+                NumSerie: Documento.Detalle[i].NumSerie
             };
 
             ProdCadena.push(Producto);
@@ -580,6 +580,13 @@ function onChangeProducto() {
                 $("#inputNomPro").attr("disabled", false);
             } else {
                 $("#inputNomPro").attr("disabled", true);
+            }
+            if (Producto.Serie == true) {
+                $("#SerieSelect").removeAttr("hidden");
+
+                RellenaSeriesProductos();
+            } else {
+                $("#SerieSelect").attr("hidden", true);
             }
             ExoneracionxCliente();
             //EX => Exoneracion
@@ -1156,7 +1163,7 @@ function AgregarProductoTabla() {
             NomPro: $("#inputNomPro").val(),
             PorExoneracion: 0,
             Costo: PE.Costo,
-            NumSerie: $("#SerieSeleccionado").val
+            NumSerie: $("#SerieSeleccionado").val()
 
         };
 
@@ -1178,6 +1185,15 @@ function AgregarProductoTabla() {
             } else {
                 Duplicado = false;
             }
+        }
+
+        if (PE.Editable == true && Producto.NumSerie == "0") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Por favor seleccione la serie del producto'
+
+            })
         }
 
         if (PE.PrecioUnitario > Producto.PrecioUnitario && PE.Editable == false) {
@@ -1270,6 +1286,7 @@ function AgregarProductoTabla() {
                 onChangeMoneda();
 
                 $("#ProductoSeleccionado").val("0").trigger('change.select2');
+                $("#SerieSeleccionado").val("0").trigger('change.select2');
             } else {
                 Swal.fire({
                     icon: 'error',

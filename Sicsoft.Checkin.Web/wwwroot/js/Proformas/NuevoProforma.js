@@ -1155,7 +1155,8 @@ function AgregarProductoTabla() {
             idExoneracion: $("#exoneracion").val(),
             NomPro: $("#inputNomPro").val(),
             PorExoneracion: 0,
-            Costo: PE.Costo
+            Costo: PE.Costo,
+            NumSerie: $("#SerieSeleccionado").val
 
         };
 

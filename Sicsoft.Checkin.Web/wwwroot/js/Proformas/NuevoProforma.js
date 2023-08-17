@@ -31,6 +31,8 @@ var Bodega = [];
 var Sucursal = [];
 var FP = false;
 var Duplicado = false;
+var SeriesProductos = [];
+var ProdSeries = [];
 
 
 function Recuperar() {
@@ -51,6 +53,7 @@ function Recuperar() {
         Bodega = JSON.parse($("#Bodega").val());
         Sucursal = JSON.parse($("#Sucursal").val());
         ExoneracionesCliente = [];
+        SeriesProductos = JSON.parse($("#SeriesProductos").val());
 
         RellenaClientes();
         RellenaVendedores();
@@ -129,6 +132,41 @@ function RecuperarInformacion() {
         })
     }
 }
+function RellenaSeriesProductos() {
+    try {
+
+        var idProducto = $("#ProductoSeleccionado").val();
+
+        var Producto = ProdClientes.find(a => a.id == idProducto && a.Serie == true);
+
+        ProdSeries = SeriesProductos.filter(a => a.CodProducto == Producto.Codigo);
+       
+
+        var html = "";
+        $("#SerieSeleccionado").html(html);
+
+        html += "<option value='0' > Seleccione Serie </option>";
+
+        for (var i = 0; i < ProdSeries.length; i++) {
+            
+            html += "<option value='" + ProdSeries[i].Series + "' > " + "Serie: " + ProdSeries[i].Series + " -  Stock: " + ProdSeries[i].Cantidad + " </option>";
+
+        }
+
+
+
+        $("#SerieSeleccionado").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+
+}
+
 
 function RecolectarFacturas() {
     try {
@@ -1127,7 +1165,7 @@ function AgregarProductoTabla() {
         for (var i = 0; i < ProdCadena.length; i++) {
 
 
-            if (PE.id == ProdCadena[i].idProducto) {
+            if (PE.id == ProdCadena[i].idProducto && PE.Editable == false) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -1679,7 +1717,7 @@ function BuscarCliente() {
     $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: 'https://api.hacienda.go.cr/fe/ae?identificacion=' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8', //Nombre del metodo
+        url: 'https://apis.gometa.org/cedulas/' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8', //Nombre del metodo
         data: {},
         success: function (result) {
 

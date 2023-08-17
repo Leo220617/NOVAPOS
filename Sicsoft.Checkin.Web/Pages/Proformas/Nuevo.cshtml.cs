@@ -34,6 +34,7 @@ namespace NOVAAPP.Pages.Proformas
         private readonly ICrudApi<BodegasViewModel, int> bodegas;
         private readonly ICrudApi<DocumentosCreditoViewModel, int> documentos;
         private readonly ICrudApi<SucursalesViewModel, string> sucursales;
+        private readonly ICrudApi<SeriesProductosViewModel, int> series;
 
 
         [BindProperty]
@@ -95,7 +96,10 @@ namespace NOVAAPP.Pages.Proformas
         [BindProperty]
         public SucursalesViewModel[] Sucursal { get; set; }
 
-        public NuevoModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<UsuariosViewModel, int> usuario, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<DocumentosCreditoViewModel, int> documentos, ICrudApi<SucursalesViewModel, string> sucursales) //CTOR 
+        [BindProperty]
+        public SeriesProductosViewModel SeriesProductos { get; set; }
+
+        public NuevoModel(ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<UsuariosViewModel, int> usuario, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<DocumentosCreditoViewModel, int> documentos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<SeriesProductosViewModel, int> series) //CTOR 
         {
             this.service = service;
             this.serviceU = serviceU;
@@ -114,6 +118,7 @@ namespace NOVAAPP.Pages.Proformas
             this.bodegas = bodegas;
             this.documentos = documentos;
             this.sucursales = sucursales;
+            this.series = series;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -158,6 +163,7 @@ namespace NOVAAPP.Pages.Proformas
                 Bodega = await bodegas.ObtenerLista("");
                 Sucursal = await sucursales.ObtenerLista("");
                 MiSucursal = Sucursal.Where(a => a.CodSuc.ToUpper().Contains(Suc)).FirstOrDefault();
+                SeriesProductos = await series.ObtenerListaEspecial("");
                 return Page();
             }
             catch (Exception ex)

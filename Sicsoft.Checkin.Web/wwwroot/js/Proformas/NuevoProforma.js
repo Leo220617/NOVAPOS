@@ -1,13 +1,18 @@
 ﻿
 $(document).ready(function () {
     jQuery(document).ready(function ($) {
+        
         Recuperar();
     });
 
 
 
     $(document).ready(function () {
-
+        
+         
+            // init select 2
+        
+        
     });
 
 
@@ -327,7 +332,8 @@ function RellenaClientes() {
 
 
 
-        $("#ClienteSeleccionado").html(html);
+        $("#ClienteSeleccionado").html(html); 
+
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -354,6 +360,42 @@ function RellenaProductos() {
 
 
         $("#ProductoSeleccionado").html(html);
+
+        //var retorno = [];
+        //for (var i = 0; i < ProdClientes.length; i++) {
+        //    var Bodegas = Bodega.find(a => a.id == ProdClientes[i].idBodega) == undefined ? undefined : Bodega.find(a => a.id == ProdClientes[i].idBodega);
+        //    var d =  {
+        //        id: ProdClientes[i].id,
+        //        text: ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP
+        //    }
+        //    retorno.push(d);
+        //}
+        //(function () {
+        //$('#ProductoSeleccionado').select2({
+        //    data: retorno,
+        //    placeholder: 'search',
+        //    // query with pagination
+        //    query: function (q) {
+        //        var pageSize,
+        //            results,
+        //            that = this;
+        //        pageSize = 20; // or whatever pagesize
+        //        results = [];
+        //        if (q.term && q.term !== '') {
+        //            // HEADS UP; for the _.filter function i use underscore (actually lo-dash) here
+        //            results = _.filter(that.data, function (e) {
+        //                return e.text.toUpperCase().indexOf(q.term.toUpperCase()) >= 0;
+        //            });
+        //        } else if (q.term === '') {
+        //            results = that.data;
+        //        }
+        //        q.callback({
+        //            results: results.slice((q.page - 1) * pageSize, q.page * pageSize),
+        //            more: results.length >= q.page * pageSize,
+        //        });
+        //    },
+        //});
+        //})();
     } catch (e) {
         Swal.fire({
             icon: 'error',

@@ -140,7 +140,8 @@ namespace NOVAAPP.Pages.CierreCajas
                     filtro.Codigo3 = Cierres.idCaja;
 
                     Documento = await documento.ObtenerLista(filtro);
-
+                    PagoCuentas = await pagocuentas.ObtenerLista(filtro);
+                    Depositos = await depositos.ObtenerLista(filtro);
 
                     filtro.Codigo1 = Cierres.idCaja;
                     Pagos = await pagos.ObtenerLista(filtro);

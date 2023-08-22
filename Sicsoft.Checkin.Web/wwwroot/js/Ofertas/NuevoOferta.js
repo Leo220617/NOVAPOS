@@ -32,6 +32,8 @@ var Sucursal = [];
 var FP = false;
 var Inicio = false;
 var Duplicado = false;
+var SeriesProductos = [];
+var ProdSeries = [];
 
 function Recuperar() {
     try {
@@ -52,6 +54,7 @@ function Recuperar() {
         DES = JSON.parse($("#DES").val());
 
         ExoneracionesCliente = [];
+        SeriesProductos = JSON.parse($("#SeriesProductos").val());
 
         RellenaClientes();
         RellenaVendedores();
@@ -110,7 +113,8 @@ function RecuperarInformacion() {
                 NomPro: Documento.Detalle[i].NomPro,
                 Costo: PE.Costo,
                 PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon,
-                idExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).id
+                idExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).id,
+                NumSerie: Documento.Detalle[i].NumSerie
 
             };
 
@@ -137,6 +141,41 @@ function RecuperarInformacion() {
         })
     }
 }
+function RellenaSeriesProductos() {
+    try {
+
+        var idProducto = $("#ProductoSeleccionado").val();
+
+        var Producto = ProdClientes.find(a => a.id == idProducto && a.Serie == true);
+
+        ProdSeries = SeriesProductos.filter(a => a.CodProducto == Producto.Codigo);
+
+
+        var html = "";
+        $("#SerieSeleccionado").html(html);
+
+        html += "<option value='0' > Seleccione Serie </option>";
+
+        for (var i = 0; i < ProdSeries.length; i++) {
+
+            html += "<option value='" + ProdSeries[i].Series + "' > " + "Serie: " + ProdSeries[i].Series + " -  Stock: " + ProdSeries[i].Cantidad + " </option>";
+
+        }
+
+
+
+        $("#SerieSeleccionado").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+
+}
+
 function ValidarStocks() {
     try {
         for (var i = 0; i < Documento.Detalle.length; i++) {
@@ -611,7 +650,13 @@ function onChangeProducto() {
             $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
             $("#inputCabys").val(Producto.Cabys);
             $("#inputNomPro").val(Producto.Nombre);
+            if (Producto.Serie == true) {
+                $("#SerieSelect").removeAttr("hidden");
 
+                RellenaSeriesProductos();
+            } else {
+                $("#SerieSelect").attr("hidden", true);
+            }
             ExoneracionxCliente();
             //EX => Exoneracion
             var Exonera = parseInt($("#exoneracion").val());
@@ -1196,7 +1241,8 @@ function AgregarProductoTabla() {
             NomPro: $("#inputNomPro").val(),
             idExoneracion: $("#exoneracion").val(),
             PorExoneracion: 0,
-            Costo: PE.Costo
+            Costo: PE.Costo,
+            NumSerie: $("#SerieSeleccionado").val()
         };
 
         var Descuento = parseFloat($("#DES").val());
@@ -1220,7 +1266,14 @@ function AgregarProductoTabla() {
                 Duplicado = false;
             }
         }
+        if (PE.Serie == true && Producto.NumSerie == "0") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Por favor seleccione la serie del producto'
 
+            })
+        }
         if ((PE.Stock - Producto.Cantidad) < 0 && PE.Codigo != PS.Codigo) {
             Swal.fire({
                 icon: 'error',
@@ -1273,7 +1326,7 @@ function AgregarProductoTabla() {
 
             })
             
-        } else if ( Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) && PE.PrecioUnitario <= Producto.PrecioUnitario || PE.Codigo == PS.Codigo) {
+        } else if (((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false) ) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) && PE.PrecioUnitario <= Producto.PrecioUnitario || PE.Codigo == PS.Codigo) {
 
             if (Producto.Cabys.length >= 13) {
 
@@ -1314,6 +1367,7 @@ function AgregarProductoTabla() {
                 onChangeMoneda();
 
                 $("#ProductoSeleccionado").val("0").trigger('change.select2');
+                $("#SerieSeleccionado").val("0").trigger('change.select2');
             } else {
                 Swal.fire({
                     icon: 'error',

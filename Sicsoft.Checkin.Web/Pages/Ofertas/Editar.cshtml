@@ -63,6 +63,8 @@
                 <input hidden id="DES" value="@JsonConvert.SerializeObject(Model.Descuento)" />
                 <input hidden id="Bodega" value="@JsonConvert.SerializeObject(Model.Bodega)" />
                 <input hidden id="Sucursal" value="@JsonConvert.SerializeObject(Model.MiSucursal)" />
+
+            <input hidden id="SeriesProductos" value="@JsonConvert.SerializeObject(Model.SeriesProductos.SeriesProductos)" />
                 <input hidden id="urlGenerar" value="@Url.Page("Editar", "AgregarOferta")" />
                 <input hidden id="urlCliente" value="@Url.Page("Editar", "AgregarCliente")" />
                 <input hidden id="urlFacturas" value="@Url.Page("Editar", "Facturas")" />
@@ -202,8 +204,8 @@
 
 
 
-                                        <div class="row">
-                                            <div class="col-12">
+                                         <div class="row">
+                                            <div class="col-md-9">
                                                 <select id="ProductoSeleccionado" class="form-control select2" onchange="javascript: onChangeProducto()">
                                                     <option value="0"> Seleccione Productos</option>
 
@@ -211,7 +213,14 @@
 
                                                 </select>
                                             </div>
+                                        <div id="SerieSelect"class="col-md-3" >
+                                            <select id="SerieSeleccionado"  class="form-control select2"">
+                                                <option value="0"> Seleccione Serie</option>
 
+
+
+                                            </select>
+                                        </div>
                                         </div>
                                         <br />
                                         <div class="row">

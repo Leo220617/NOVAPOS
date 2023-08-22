@@ -1187,7 +1187,7 @@ function AgregarProductoTabla() {
             }
         }
 
-        if (PE.Editable == true && Producto.NumSerie == "0") {
+        if (PE.Serie == true && Producto.NumSerie == "0") {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1245,7 +1245,7 @@ function AgregarProductoTabla() {
 
             })
 
-        } else if (Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0)) {
+        } else if (((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0)) {
 
             if (Producto.Cabys.length >= 13) {
 

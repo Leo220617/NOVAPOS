@@ -15,5 +15,7 @@
 
         public decimal Cantidad { get; set; }
 
+        public string Manufactura { get; set; }
+
     }
 }

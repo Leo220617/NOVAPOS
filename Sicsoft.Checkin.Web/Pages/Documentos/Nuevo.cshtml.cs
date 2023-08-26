@@ -176,11 +176,35 @@ namespace NOVAAPP.Pages.Documentos
                         det.TotalLinea = item.TotalLinea;
                         det.Cabys = item.Cabys;
                         det.idExoneracion = item.idExoneracion;
-                        det.NumSerie = item.NumSerie;
+                  
                         Documento.Detalle[i] = det;
                         i++;
                     }
+                    var x = 0;
+                    var Tamaño2 = Oferta.Lotes.Length;
+                    Documento.Lotes = new LotesViewModel[Tamaño2];
 
+                    foreach (var item2 in Oferta.Lotes)
+                    {
+                        Documento.Lotes[x] = new LotesViewModel();
+                        LotesViewModel lot = new LotesViewModel();
+                        lot.Serie = item2.Serie;
+                        lot.ItemCode = item2.ItemCode;
+                        lot.Cantidad = item2.Cantidad;
+                        lot.Tipo = item2.Tipo;
+                        lot.Manufactura = item2.Manufactura;
+                        //lot.idDetalle = item.id;
+                        //lot.idEncabezado = item2.idEncabezado;
+
+
+                        Documento.Lotes[x] = lot;
+                        x++;
+                    }
+
+                }
+                else
+                {
+                    Documento = new DocumentosViewModel();
                 }
 
                 CP = await serviceCP.ObtenerLista("");

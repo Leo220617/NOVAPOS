@@ -64,6 +64,7 @@
                             <input hidden id="Vendedor" value="@JsonConvert.SerializeObject(Model.Vendedor)" />
                             <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
                             <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
+                            <input hidden id="Lotes" value="@JsonConvert.SerializeObject(Model.Documento.Lotes.Where(a => a.Tipo == "F"))" />
 
 
 
@@ -85,6 +86,7 @@
                     <!-- title row -->
                     <div class="row">
                         <div class="col-12">
+
                             <div class="page-header mt-0">
                                 <h2 class="d-inline"><span class="font-size-24">Documento No: @Model.Documento.id</span></h2>
                                 <br />
@@ -195,7 +197,7 @@
                                         {
                                             <th class="text-center">% Ganancia</th>
                                         }
-
+                                        <th class="text-center">Serie</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -225,7 +227,19 @@
                                                 Ganancia += Convert.ToDouble(@Math.Round(((((@item.TotalLinea - @item.TotalImpuesto) - ((Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Costo) * item.Cantidad)) / (@item.TotalLinea - @item.TotalImpuesto)) * 100), 2)) /Model.Documento.Detalle.Length;
 
                                             }
+                                            <td align="center" style="padding-top:15px;">
 
+                                                @{
+                                                    var Codigo = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo;
+                                                    var Serie = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? false : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Serie;
+
+                                                }
+                                                @if (Serie == true)
+                                                {
+                                                    <a href="#test-form" onclick="javascript: onClickModal('@Codigo', '@item.id');" class=" popup-with-form fa fa-info-circle icono"> </a>
+                                                }
+
+                                            </td>
 
                                         </tr>
                                     }
@@ -560,3 +574,31 @@
     </div>
 </div>
 <!-- /.modal -->
+
+<form id="test-form" class="mfp-hide white-popup-block">
+    <h1>Series</h1>
+    <fieldset style="border:0;">
+        <p>A continuación se presentan las series utilizados en el producto con el código: <span id="spanProd"> </span> </p>
+        <!-- Table row -->
+        <div class="row">
+            <div class="col-12 table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="bg-pale-info">
+                            <th class="text-center">#</th>
+                            <th class="text-center">Serie</th>
+
+                            <th class="text-center">Cantidad</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </fieldset>
+</form>

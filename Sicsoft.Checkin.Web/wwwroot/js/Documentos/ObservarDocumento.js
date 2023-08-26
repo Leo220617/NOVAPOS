@@ -17,7 +17,10 @@ var Clientes = [];
 var Vendedor = [];
 var Productos = [];
 var TipoCambio = [];
-
+var ids = '';
+var idDetalles = 0;
+var LotesCadena = [];
+var EstadosLotes = [];
 
 
 function Recuperar() {
@@ -29,7 +32,24 @@ function Recuperar() {
         Productos = JSON.parse($("#Productos").val());
         TipoCambio = JSON.parse($("#TipoCambio").val());
 
+        var lot = JSON.parse($("#Lotes").val());
 
+
+
+
+        for (var i = 0; i < lot.length; i++) {
+            var lote = {
+                id: i,
+                idEncabezado: 0,
+                Serie: lot[i].Serie,
+                ItemCode: lot[i].ItemCode,
+                Cantidad: lot[i].Cantidad,
+                idDetalle: 0
+
+
+            }
+            LotesCadena.push(lote);
+        }
 
 
 
@@ -42,6 +62,32 @@ function Recuperar() {
 
         })
     }
+}
+
+function onClickModal(id, idDetalle) {
+    ids = id;
+    idDetalles = idDetalle;
+    var LotesArray = LotesCadena.filter(a => a.ItemCode == ids);
+    $("#spanProd").text(ids);
+    var sOptions = '';
+
+    $("#tbody").html('');
+    for (var i = 0; i < LotesArray.length; i++) {
+        sOptions += '<tr>';
+        sOptions += '<td >' + i + '</td>';
+        sOptions += '<td class="text-center">' + LotesArray[i].Serie + '</td>';
+
+
+        sOptions += '<td class="text-center">' + LotesArray[i].Cantidad + '</td>';
+
+
+
+
+        sOptions += '</tr>'
+
+    }
+    $("#tbody").html(sOptions);
+
 }
 function ImprimirPantalla() {
     try {

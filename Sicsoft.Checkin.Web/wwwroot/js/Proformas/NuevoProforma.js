@@ -33,8 +33,15 @@ var FP = false;
 var Duplicado = false;
 var SeriesProductos = [];
 var ProdSeries = [];
+var LotesCadena = [];
 
-
+function CerrarPopUpLotes() {
+    try {
+        $('#listoCerrar').magnificPopup('close');
+    } catch (e) {
+        alert(e);
+    }
+}
 function Recuperar() {
     try {
         Cantones = JSON.parse($("#Cantones").val());
@@ -115,6 +122,8 @@ function RecuperarInformacion() {
             ProdCadena.push(Producto);
 
         }
+     
+
 
         RellenaTabla();
         onChangeCliente();
@@ -132,6 +141,46 @@ function RecuperarInformacion() {
         })
     }
 }
+function onClickModal() {
+    try {
+        $("#plusButton").show();
+
+        var idProducto = $("#ProductoSeleccionado").val();
+        var Producto = ProdClientes.find(a => a.id == idProducto && a.Serie == true);
+
+        var Bod = Bodega.find(a => a.id == Producto.idBodega);
+
+        var LotesArray = LotesCadena.filter(a => a.ItemCode == Producto.Codigo);
+
+
+
+
+        var sOptions = '';
+        $("#rowLotes").html('');
+        for (var i = 0; i < LotesArray.length; i++) {
+            sOptions += "<div class='col-3' hidden> <div class='form-group'> <h5>ItemCode</h5> <div class='controls'> <input type='text' readonly id='producto" + i + "' class='form-control' value='" + LotesArray[i].ItemCode + "'> </div></div> </div> ";
+
+            sOptions += "<div class='col-6'> <div class='form-group'> <h5>Lote</h5> <div class='controls'> <input type='text' readonly class='form-control' value='" + LotesArray[i].Serie + "' id='lote" + i + "'> </div></div> </div>";
+
+            sOptions += "<div class='col-4'> <div class='form-group'> <h5>Cantidad</h5> <div class='controls'> <input type='number' readonly  id='cantidad" + i + "' class='form-control' value='" + LotesArray[i].Cantidad + "'> </div></div> </div> ";
+
+            sOptions += "<div class='col-2'> <a style='margin-top: 35%; style='cursor: pointer;' ' onclick='javascript: EliminarLinea(" + LotesArray[i].id + ") ' class='fa fa-trash icono'> </a> </div>"
+
+        }
+        $("#rowLotes").html(sOptions);
+
+        ContadorLotes();
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: e
+
+        });
+    }
+
+}
 function RellenaSeriesProductos() {
     try {
 
@@ -139,8 +188,10 @@ function RellenaSeriesProductos() {
 
         var Producto = ProdClientes.find(a => a.id == idProducto && a.Serie == true);
 
-        ProdSeries = SeriesProductos.filter(a => a.CodProducto == Producto.Codigo);
-       
+        var Bod = Bodega.find(a => a.id == Producto.idBodega);
+
+        ProdSeries = SeriesProductos.filter(a => a.CodProducto == Producto.Codigo && a.CodBodega == Bod.CodSAP);
+
 
         var html = "";
         $("#SerieSeleccionado").html(html);
@@ -148,7 +199,7 @@ function RellenaSeriesProductos() {
         html += "<option value='0' > Seleccione Serie </option>";
 
         for (var i = 0; i < ProdSeries.length; i++) {
-            
+
             html += "<option value='" + ProdSeries[i].Series + "' > " + "Serie: " + ProdSeries[i].Series + " -  Stock: " + ProdSeries[i].Cantidad + " </option>";
 
         }
@@ -167,6 +218,316 @@ function RellenaSeriesProductos() {
 
 }
 
+function rellenaRowLotes() {
+    try {
+        $("#plusButton").hide();
+        var idProducto = $("#ProductoSeleccionado").val();
+        var Producto = ProdClientes.find(a => a.id == idProducto && a.Serie == true);
+        var LotesArray = LotesCadena.filter(a => a.ItemCode == Producto.Codigo);
+
+
+        var Bod = Bodega.find(a => a.id == Producto.idBodega);
+        ProdSeries = SeriesProductos.filter(a => a.CodProducto == Producto.Codigo && a.CodBodega == Bod.CodSAP);
+
+
+        var sOptions = '';
+        $("#rowLotes").html('');
+        $("#rowLotes").html('');
+        var z = 0;
+        for (var i = 0; i < LotesArray.length; i++) {
+            sOptions += "<div class='col-6'> <div class='form-group'> <h5>Serie</h5> <div class='controls'> <input type='text' readonly class='form-control' value='" + LotesArray[i].Serie + "' id='lote" + i + "'> </div></div> </div>";
+            sOptions += "<div class='col-3' hidden> <div class='form-group'> <h5>ItemCode</h5> <div class='controls'> <input type='text' readonly id='producto" + i + "' class='form-control' value='" + LotesArray[i].ItemCode + "'> </div></div> </div> ";
+
+
+
+            sOptions += "<div class='col-4'> <div class='form-group'> <h5>Cantidad</h5> <div class='controls'> <input type='number' readonly id='cantidad" + i + "' class='form-control' value='" + LotesArray[i].Cantidad + "'> </div></div> </div> ";
+            sOptions += "<div class='col-2'> <a style='margin-top: 35%; style='cursor: pointer;' ' onclick='javascript: EliminarLinea(" + LotesArray[i].id + ") ' class='fa fa-trash icono'> </a> </div>"
+
+            z++;
+        }
+
+        sOptions += "<div class='col-4'> <div class='form-group'> <h5>Serie</h5> <div class='controls'> <select class='form-control' id='lote" + z + "' onchange='javascript: onChangeLote(" + z + ")'>  <option value='0' selected> Seleccione </option>";
+
+
+        for (var zi = 0; zi < ProdSeries.length; zi++) {
+            sOptions += " <option value= '" + ProdSeries[zi].Series + "' >" + ProdSeries[zi].Series + " | " + "Stock" + " " + ProdSeries[zi].Cantidad + "</option>";
+        }
+        sOptions += " </select>  </div></div> </div> ";
+        /*  sOptions += "<div class='col-3' hidden> <div class='form-group'> <h5>ItemCode</h5> <div class='controls'> <input type='text' readonly id='producto" + z + "' class='form-control' value='" + ids + "'  > </div></div> </div> ";*/
+
+
+        sOptions += " </select>  </div></div> </div> ";
+
+        sOptions += "<div class='col-4'> <div class='form-group'> <h5>Cantidad</h5> <div class='controls'> <input type='number'  id='cantidad" + z + "' onchange='javascript: onChangeCantidad(" + z + ")' class='form-control'  > </div>  </div> </div> ";
+        sOptions += "<div class='col-2'> <a style='margin-top: 35%; style='cursor: pointer;' ' onclick='javascript: GuardadoLinea(" + z + ") ' class='fa fa-check-square-o icono'> </a> </div>"
+        $("#rowLotes").html(sOptions);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: e
+
+        });
+    }
+
+}
+
+
+function ContadorLotes() {
+    try {
+
+        var idProducto = $("#ProductoSeleccionado").val();
+        var Producto = ProdClientes.find(a => a.id == idProducto && a.Serie == true);
+        var LotesArray = LotesCadena.filter(a => a.ItemCode == Producto.Codigo);
+
+
+
+
+
+
+        var cantidad = $("#cantidad").val();
+        var totalC = 0;
+        var Contador = 0;
+        for (var i = 0; i < LotesArray.length; i++) {
+            totalC += parseInt(LotesArray[i].Cantidad);
+        }
+        Contador = parseInt(cantidad) - totalC;
+        $("#Contador").text(Contador);
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
+
+        })
+    }
+}
+function onChangeCantidad(z) {
+    try {
+        var idProducto = $("#ProductoSeleccionado").val();
+
+        var Producto = ProdClientes.find(a => a.id == idProducto && a.Serie == true);
+
+        var Bod = Bodega.find(a => a.id == Producto.idBodega);
+
+
+        var Lote = ProdSeries.find(a => a.Series == $("#lote" + z).val() && a.CodProducto == Producto.Codigo && a.CodBodega == Bod.CodSAP);
+
+        var CantidadDigitada = parseFloat($("#cantidad" + z).val());
+        var CantidadLote = Lote.Cantidad;
+
+        if (CantidadDigitada > CantidadLote) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No puede ser mayor a la cantidad real del lote, el maximo a elegir por este lote es:  ' + Lote.Cantidad
+
+            });
+
+            $("#cantidad" + z).val(Lote.Cantidad);
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar cambiar la cantidad ' + e
+
+        })
+    }
+}
+
+function onChangeLote(z) {
+    try {
+
+        var idProducto = $("#ProductoSeleccionado").val();
+
+        var Producto = ProdClientes.find(a => a.id == idProducto && a.Serie == true);
+
+        var Bod = Bodega.find(a => a.id == Producto.idBodega);
+
+
+        var Lote = ProdSeries.find(a => a.Series == $("#lote" + z).val() && a.CodProducto == Producto.Codigo && a.CodBodega == Bod.CodSAP);
+
+
+
+        $("#cantidad" + z).prop('max', Lote.Cantidad);
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar cambiar el lote ' + e
+
+        })
+    }
+}
+
+function GuardadoLinea(z) {
+    try {
+        var idProducto = $("#ProductoSeleccionado").val();
+
+        var Producto = ProdClientes.find(a => a.id == idProducto && a.Serie == true);
+       
+
+      
+
+        var Bod = Bodega.find(a => a.id == Producto.idBodega);
+
+     
+        var Seriesx = SeriesProductos.find(a => a.CodProducto == Producto.Codigo && a.CodBodega == Bod.CodSAP && $("#lote" + z).val() == a.Series);
+
+        var lote = {
+            id: LotesCadena.length,
+            idEncabezado: 0,
+            Serie: $("#lote" + z).val(),
+            ItemCode: Producto.Codigo,
+            Cantidad: $("#cantidad" + z).val(),
+            idDetalle: 0,
+            Manufactura: Seriesx.Manufactura
+        }
+        if (ValidarLinea(z)) {
+            LotesCadena.push(lote);
+            ContadorLotes();
+
+
+
+            onClickModal();
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: e
+
+        });
+    }
+
+
+
+}
+
+function EliminarLinea(z) {
+    try {
+        LotesCadena.splice(z, 1);
+        for (var i = 0; i < LotesCadena.length; i++) {
+            LotesCadena[i].id = i;
+        }
+        onClickModal();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: e
+
+        });
+    }
+
+}
+
+
+function ValidarLinea(z) {
+    try {
+
+        var idProducto = $("#ProductoSeleccionado").val();
+
+        var Producto = ProdClientes.find(a => a.id == idProducto && a.Serie == true);
+
+
+
+        var LotesArray = LotesCadena.filter(a => a.ItemCode == Producto.Codigo);
+        var cantidad = $("#cantidad").val();
+
+        var cantidades = 0;
+
+        for (var i = 0; i < LotesArray.length; i++) {
+            cantidades += parseInt(LotesArray[i].Cantidad);
+        }
+
+        if ($("#lote" + z).val() == "") {
+            return false;
+        } else if ($("#cantidad" + z).val() == undefined || $("#cantidad" + z).val() <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Digite una cantidad valida'
+
+            });
+            return false;
+        } else if (parseInt($("#cantidad" + z).val()) + cantidades > cantidad) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'La cantidad digita es mayor a la cantidad restante'
+
+            });
+            return false;
+        }
+
+
+
+        else {
+            return true;
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: e
+
+        });
+        return false;
+    }
+
+}
+
+function AbrirModalSeries(i) {
+    try {
+        $("#ModalObservarSeries").modal("show");
+        var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+
+        var Producto = ProdClientes.find(a => a.id == PE.id && a.Serie == true);
+
+        var Bod = Bodega.find(a => a.id == Producto.idBodega);
+
+        var LotesArray = LotesCadena.filter(a => a.ItemCode == Producto.Codigo);
+
+
+        var LotesArray = LotesCadena.filter(a => a.ItemCode == Producto.Codigo);
+
+
+        var Bod = Bodega.find(a => a.id == Producto.idBodega);
+        ProdSeries = SeriesProductos.filter(a => a.CodProducto == Producto.Codigo && a.CodBodega == Bod.CodSAP);
+
+
+        var sOptions = '';
+        $("#rowLotes2").html('');
+        $("#rowLotes2").html('');
+        var z = 0;
+        for (var i = 0; i < LotesArray.length; i++) {
+            sOptions += "<div class='col-6'> <div class='form-group'> <h5>Serie</h5> <div class='controls'> <input type='text' readonly class='form-control' value='" + LotesArray[i].Serie + "' id='lote" + i + "'> </div></div> </div>";
+            sOptions += "<div class='col-3' hidden> <div class='form-group'> <h5>ItemCode</h5> <div class='controls'> <input type='text' readonly id='producto" + i + "' class='form-control' value='" + LotesArray[i].ItemCode + "'> </div></div> </div> ";
+
+
+
+            sOptions += "<div class='col-4'> <div class='form-group'> <h5>Cantidad</h5> <div class='controls'> <input type='number' readonly id='cantidad" + i + "' class='form-control' value='" + LotesArray[i].Cantidad + "'> </div></div> </div> ";
+           
+
+            z++;
+        }
+
+        
+        $("#rowLotes2").html(sOptions);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+
+}
 
 function RecolectarFacturas() {
     try {
@@ -218,10 +579,10 @@ function RecolectarFacturas() {
 
                         })
                     } else if ((Cliente.LimiteCredito - Cliente.Saldo) > 0 && Cliente.idCondicionPago != Contado.id) {
-                        FP = true; 
+                        FP = true;
                         //$("#selectCondPago").attr("disabled", false);
                     }
-                  
+
                 }
                 if (CondP.length > 0 && FP == true) {
                     var Cond30 = CP.filter(a => a.Dias <= CondP[0].Dias).sort(function (a, b) {
@@ -241,7 +602,7 @@ function RecolectarFacturas() {
                     RellenaCondiciones(Cond30);
                 }
 
-               
+
             },
             beforeSend: function () {
 
@@ -453,7 +814,7 @@ function onChangeCliente() {
         var Cliente = Clientes.find(a => a.id == idCliente);
         var Contado = CP.find(a => a.Nombre == "Contado");
 
-       
+
         //Preguntarle a CP cual es la de 30 dias
 
 
@@ -472,7 +833,7 @@ function onChangeCliente() {
         }
 
         RecolectarFacturas();
-  
+
         ProdClientes = Productos.filter(a => a.idListaPrecios == Sucursal.idListaPrecios);
         ProdClientes = ProdClientes.sort(function (a, b) {
             if (a.Stock < b.Stock) {
@@ -504,7 +865,7 @@ function RellenaCondiciones(CPS) {
         var idClientes = $("#ClienteSeleccionado").val();
         var Cliente = Clientes.find(a => a.id == idClientes).Nombre;
         var Name = Cliente.includes("CONTADO");
-       
+
 
         var valorCondicion = Documento != null || Documento != undefined ? Documento.idCondPago : 0;
         var text = "";
@@ -516,35 +877,35 @@ function RellenaCondiciones(CPS) {
 
 
         text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
-        if (FP == false && !Name) { 
-        text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
-    }
+        if (FP == false && !Name) {
+            text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
+        }
 
         for (var i = 0; i < CPS.length; i++) {
-        if (CPS[i].id != Contado.id && FP == true) {
-            if (valorCondicion == CPS[i].id && FP == true) {
-                text += "<option selected value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+            if (CPS[i].id != Contado.id && FP == true) {
+                if (valorCondicion == CPS[i].id && FP == true) {
+                    text += "<option selected value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
 
-            } else {
-                text += "<option value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+                } else {
+                    text += "<option value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+
+                }
 
             }
-
         }
-    }
 
 
         $("#selectCondPago").html(text);
 
 
-} catch (e) {
-    Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar cliente ' + e
 
-    })
-}
+        })
+    }
 }
 function ExoneracionxCliente() {
     try {
@@ -996,6 +1357,7 @@ function RellenaTabla() {
 
 
         for (var i = 0; i < ProdCadena.length; i++) {
+            var PE = Productos.find(a => a.id == ProdCadena[i].idProducto);
             var TotalGanancia = (ProdCadena[i].TotalLinea - ProdCadena[i].TotalImpuesto);
             var MonedaDoc = $("#selectMoneda").val();
             var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
@@ -1024,7 +1386,7 @@ function RellenaTabla() {
                         }
 
                     } else {
-                        var Costo = (ProdCadena[i].Costo / TipodeCambio.TipoCambio) * ProdCadena[i].Cantidad ;
+                        var Costo = (ProdCadena[i].Costo / TipodeCambio.TipoCambio) * ProdCadena[i].Cantidad;
                         if (retornaMargenGanancia(TotalGanancia, Costo) > 0) {
                             html += "<td class='text-right' style='background-color:  #EFFFE9'> " + formatoDecimal(retornaMargenGanancia(TotalGanancia, Costo).toFixed(2)) + "%" + " </td>";
                         } else {
@@ -1057,6 +1419,13 @@ function RellenaTabla() {
 
 
             html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
+
+            
+            if (PE.Serie == true) {
+                html += "<td class='text-center'> <a href='#test-form' class='popup-with-form fa fa-info-circle icono' onclick='javascript:AbrirModalSeries(" + i + ") '> </a> </td>";
+            }
+
+
 
             html += "</tr>";
 
@@ -1108,7 +1477,7 @@ function ValidarCosto() {
         for (var i = 0; i < ProdCadena.length; i++) {
             var Produc = Productos.find(a => a.id == ProdCadena[i].idProducto);
 
-            totalC += ProdCadena[i].Costo  * ProdCadena[i].Cantidad;
+            totalC += ProdCadena[i].Costo * ProdCadena[i].Cantidad;
 
 
 
@@ -1162,12 +1531,28 @@ function AgregarProductoTabla() {
             idExoneracion: $("#exoneracion").val(),
             NomPro: $("#inputNomPro").val(),
             PorExoneracion: 0,
-            Costo: PE.Costo,
-            NumSerie: $("#SerieSeleccionado").val()
+            Costo: PE.Costo
 
         };
 
         var Descuento = parseFloat($("#DES").val());
+        var LotesArray = LotesCadena.filter(a => a.ItemCode == PE.Codigo);
+        var cantidad = parseInt($("#cantidad").val());
+
+        var cantidades = 0;
+
+        for (var i = 0; i < LotesArray.length; i++) {
+            cantidades += parseInt(LotesArray[i].Cantidad);
+        }
+        if (cantidades < cantidad && PE.Serie == true) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'La cantidad de Series es menor a la cantidad digitada'
+
+            })
+            return false;
+        }
 
 
         for (var i = 0; i < ProdCadena.length; i++) {
@@ -1187,14 +1572,7 @@ function AgregarProductoTabla() {
             }
         }
 
-        if (PE.Serie == true && Producto.NumSerie == "0") {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Por favor seleccione la serie del producto'
-
-            })
-        }
+       
 
         if (PE.PrecioUnitario > Producto.PrecioUnitario && PE.Editable == false) {
             Swal.fire({
@@ -1317,7 +1695,7 @@ function AgregarProductoTabla() {
 function EliminarProducto(i) {
     try {
         var Producto = ProdCadena[i];
-
+        var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
 
 
         var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
@@ -1334,6 +1712,14 @@ function EliminarProducto(i) {
         $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
         ProdCadena.splice(i, 1);
+
+        var Lotes2 = LotesCadena.filter(a => a.ItemCode == PE.Codigo);
+
+        for (var x = 0; x < Lotes2.length; x++) {
+
+            LotesCadena.splice(LotesCadena.indexOf(LotesCadena.find(a => a.ItemCode == PE.Codigo)), 1);
+
+        }
         RellenaTabla();
     } catch (e) {
         Swal.fire({
@@ -1370,7 +1756,8 @@ function Generar() {
             Moneda: $("#selectMoneda").val(),
             TipoDocumento: $("#selectTD").val(),
             BaseEntry: $("#BaseEntry").val(),
-            Detalle: ProdCadena
+            Detalle: ProdCadena,
+            Lotes: LotesCadena
         }
 
         if (validarOferta(EncOferta)) {

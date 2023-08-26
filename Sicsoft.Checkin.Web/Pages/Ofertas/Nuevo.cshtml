@@ -70,6 +70,7 @@
             <input hidden id="urlCliente" value="@Url.Page("Nuevo", "AgregarCliente")" />
             <input hidden id="urlFacturas" value="@Url.Page("Nuevo", "Facturas")" />
             <input hidden id="RolGanancia" value="@(!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))" />
+            <input hidden id="Lotes" value="@JsonConvert.SerializeObject( Model.Oferta.Lotes)" />
 
 
             <!-- Content Header (Page header) -->
@@ -217,12 +218,7 @@
                                                 </select>
                                             </div>
                                         <div id="SerieSelect"class="col-md-3" >
-                                            <select id="SerieSeleccionado"  class="form-control select2"">
-                                                <option value="0"> Seleccione Serie</option>
-
-
-
-                                            </select>
+                                            <a href="#test-form" class="popup-with-form fa fa-info-circle icono" onclick="onClickModal(-1)"></a>&nbsp;
                                         </div>
                                         </div>
                                     <br />
@@ -376,6 +372,8 @@
                                             <th class="text-right">% Ganancia</th>
                                         }
                                         <th class="text-right">Eliminar</th>
+                                        <th class="text-right">Series</th>
+
 
                                     </tr>
                                 </thead>
@@ -740,3 +738,86 @@
         }
     }
 </script>
+
+<!-- form itself -->
+<form id="test-form" class="mfp-hide white-popup-block">
+    <h2>Series</h2>
+    <fieldset style="border:0;">
+        <div class="row">
+            <div class="col-md-8">
+                <p>A continuación inserte los series seleccionados.</p>
+            </div>
+
+            <div class="col-md-4">
+                <p> <b>Restante:</b> <a id="Contador">0</a></p>
+            </div>
+
+        </div>
+        <!-- Table row -->
+        <div class="row" id="rowLotes">
+        </div>
+
+
+        <a class="fa fa-plus-circle icono" style="cursor:pointer;" id="plusButton" onclick="javascript: rellenaRowLotes()"> </a>
+        <!-- /.row -->
+    </fieldset>
+    <div class="row">
+
+        <div class="col-4">
+        </div>
+        <div class="col-4">
+        </div>
+        <div class="col-4" style=" text-align: right;">
+            <button type="button" class="btn btn-primary waves-effect text-right" id="listoCerrar" onclick="javascript: CerrarPopUpLotes();">Listo</button>
+        </div>
+
+    </div>
+</form>
+
+
+<div class="modal fade bs-example-modal-lg" id="ModalObservarSeries" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="myLargeModalLabel">Series</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+
+
+                <fieldset style="border:0;">
+                    <div class="row">
+                    </div>
+                    <!-- Table row -->
+                    <div class="row" id="rowLotes2">
+                    </div>
+
+
+
+                    <!-- /.row -->
+                </fieldset>
+
+
+
+            </div>
+            <div class="modal-footer">
+
+                <div class="row">
+
+                    <div class="col-4">
+                    </div>
+                    <div class="col-4">
+                    </div>
+                    <div class="col-4" style=" text-align: right;">
+                        <button type="button" class="btn btn-primary waves-effect text-left" data-dismiss="modal">Listo</button> &nbsp;
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

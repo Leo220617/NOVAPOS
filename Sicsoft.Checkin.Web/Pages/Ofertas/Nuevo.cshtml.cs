@@ -156,7 +156,9 @@ namespace NOVAAPP.Pages.Ofertas
                     Oferta.BaseEntry = id;
                     Oferta.idCondPago = Ofertas.idCondPago;
                     var Tamaño = Ofertas.Detalle.Length;
+                
                     Oferta.Detalle = new DetOfertaViewModel[Tamaño];
+              
 
                     var i = 0;
                     foreach (var item in Ofertas.Detalle)
@@ -174,11 +176,36 @@ namespace NOVAAPP.Pages.Ofertas
                         det.Cabys = item.Cabys;
                         det.idExoneracion = item.idExoneracion;
                         det.NomPro = item.NomPro;
-                        det.NumSerie = item.NumSerie;
+                      
                         Oferta.Detalle[i] = det;
                         i++;
                     }
 
+
+                    var x = 0;
+                    var Tamaño2 = Ofertas.Lotes.Length;
+                    Oferta.Lotes = new LotesViewModel[Tamaño2];
+
+                    foreach (var item2 in Ofertas.Lotes)
+                    {
+                        Oferta.Lotes[x] = new LotesViewModel();
+                        LotesViewModel lot = new LotesViewModel();
+                        lot.Serie = item2.Serie;
+                        lot.ItemCode = item2.ItemCode;
+                        lot.Cantidad = item2.Cantidad;
+                        lot.Tipo = item2.Tipo;
+                        lot.Manufactura = item2.Manufactura;
+                        //lot.idDetalle = item.id;
+                        //lot.idEncabezado = item2.idEncabezado;
+
+
+                        Oferta.Lotes[x] = lot;
+                        x++;
+                    }
+                }
+                else
+                {
+                    Oferta = new OfertasViewModel();
                 }
 
                 CP = await serviceCP.ObtenerLista("");

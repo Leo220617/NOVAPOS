@@ -142,7 +142,76 @@
                 })
             }
         }
+        $(document).ready(function () {
+            jQuery(document).ready(function ($) {
+                $(document).ready(function () {
 
+                });
+            });
+
+            Recuperar();
+
+        });
+        var ids = '';
+        var idDetalles = 0;
+        var LotesCadena = [];
+        var EstadosLotes = [];
+
+        function onClickModal(id, idDetalle) {
+            ids = id;
+            idDetalles = idDetalle;
+            var LotesArray = LotesCadena.filter(a => a.ItemCode == ids);
+            $("#spanProd").text(ids);
+            var sOptions = '';
+
+            $("#tbody").html('');
+            for (var i = 0; i < LotesArray.length; i++) {
+                sOptions += '<tr>';
+                sOptions += '<td >' + i + '</td>';
+                sOptions += '<td class="text-center">' + LotesArray[i].Serie + '</td>';
+
+
+                sOptions += '<td class="text-center">' + LotesArray[i].Cantidad + '</td>';
+
+
+
+
+                sOptions += '</tr>'
+
+            }
+            $("#tbody").html(sOptions);
+
+        }
+        function Recuperar() {
+            try {
+                var lot = JSON.parse($("#Lotes").val());
+
+
+
+
+                for (var i = 0; i < lot.length; i++) {
+                    var lote = {
+                        id: i,
+                        idEncabezado: 0,
+                        Serie: lot[i].Serie,
+                        ItemCode: lot[i].ItemCode,
+                        Cantidad: lot[i].Cantidad,
+                        idDetalle: 0
+
+
+                    }
+                    LotesCadena.push(lote);
+                }
+
+            } catch (e) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: e
+
+                });
+            }
+        }
 
     </script>
 }
@@ -163,7 +232,9 @@
 
 <section class="content ">
     <div class="row">
+
         <div class="col-12">
+            <input hidden id="Lotes" value="@JsonConvert.SerializeObject(Model.Oferta.Lotes.Where(a => a.Tipo == "P"))" />
 
             <div class="box">
                 <div class="box-header with-border">
@@ -312,6 +383,7 @@
                                         {
                                             <th class="text-center">% Ganancia</th>
                                         }
+                                        <th class="text-center">Serie</th>
 
                                     </tr>
                                 </thead>
@@ -344,6 +416,19 @@
 
                                                 <td class="text-center">@Math.Round(((((@item.TotalLinea - @item.TotalImpuesto) - ( (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0: Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Costo) * item.Cantidad)) / (@item.TotalLinea - @item.TotalImpuesto)) * 100) ,2).ToString("C",formato)%</td>
                                             }
+                                            <td align="center" style="padding-top:15px;">
+
+                                                @{
+                                                    var Codigo = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo;
+                                                    var Serie = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? false : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Serie;
+
+                                                }
+                                                @if (Serie == true)
+                                                {
+                                                    <a href="#test-form" onclick="javascript: onClickModal('@Codigo', '@item.id');" class=" popup-with-form fa fa-info-circle icono"> </a>
+                                                }
+
+                                            </td>
                                         </tr>
                                     }
 
@@ -1159,3 +1244,31 @@
         </div>
     </div>
 </div>
+
+<form id="test-form" class="mfp-hide white-popup-block">
+    <h1>Series</h1>
+    <fieldset style="border:0;">
+        <p>A continuación se presentan las series utilizados en el producto con el código: <span id="spanProd"> </span> </p>
+        <!-- Table row -->
+        <div class="row">
+            <div class="col-12 table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="bg-pale-info">
+                            <th class="text-center">#</th>
+                            <th class="text-center">Serie</th>
+
+                            <th class="text-center">Cantidad</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </fieldset>
+</form>

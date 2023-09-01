@@ -1218,6 +1218,7 @@ function AgregarCliente() {
             Barrio: $("#selectB").val(),
             Sennas: $("#Sennas").val(),
             Saldo: 0,
+            LimiteCredito: 0,
             Activo: true,
             ProcesadoSAP: false,
             idCondicionPago: 0
@@ -1291,6 +1292,7 @@ function AgregarCliente() {
                                             Barrio: json.cliente.barrio,
                                             Sennas: json.cliente.sennas,
                                             Saldo: json.cliente.saldo,
+                                            LimiteCredito: json.cliente.limiteCredito,
                                             Activo: true,
                                             ProcesadoSAP: false,
                                             idCondicionPago: 0

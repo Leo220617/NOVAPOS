@@ -150,6 +150,9 @@ namespace NOVAAPP.Pages.CierreCajas
 
                     var Condiciones = await cond.ObtenerLista("");
                     Condicion = Condiciones.Where(a => a.Dias == 0).FirstOrDefault();
+                    ParametrosFiltros filtro3 = new ParametrosFiltros();
+                    filtro3.Externo = true;
+                    Clientes = await clientes.ObtenerLista(filtro3);
 
                     return Page();
                 }

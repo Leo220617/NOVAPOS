@@ -274,6 +274,11 @@ namespace Sicsoft.Checkin.Web
 .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
 
+            services.AddRefitClient<ICrudApi<PreCierresViewModel, int>>()
+.ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/PreCierres"))
+.AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+
+
 
             return services;
         }

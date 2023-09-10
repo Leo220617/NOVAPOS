@@ -317,7 +317,10 @@
                                         {
                                             <th class="text-center">% Ganancia</th>
                                         }
-                                        <th class="text-center">Serie</th>
+                                           @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
+                                        {
+                                            <th class="text-center">Serie</th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -556,6 +559,15 @@
 
                                         <th class="text-center">Total</th>
 
+                                        @if (!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))
+                                        {
+                                            <th class="text-center">% Ganancia</th>
+                                        }
+                                         @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
+                                        {
+                                            <th class="text-center">Serie</th>
+                                        }
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -578,8 +590,27 @@
                                             <td class="text-center">@(Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" : Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
 
                                             <td class="text-center">@Math.Round(@item.TotalLinea, 2).ToString("C", formato)</td>
-                                       
 
+                                            @if (!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))
+                                            {
+
+                                                <td class="text-center">@Math.Round(((((@item.TotalLinea - @item.TotalImpuesto) - ( (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0: Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Costo) * item.Cantidad)) / (@item.TotalLinea - @item.TotalImpuesto)) * 100) ,2).ToString("C",formato)%</td>
+                                            }
+                                            <td align="center" style="padding-top:15px;">
+
+                                                @{
+                                                    var Codigo = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo;
+                                                    var Serie = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? false : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Serie;
+
+                                                }
+                                                @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
+                                                {
+                                                    @if (Serie == true)
+                                                    {
+                                                        <a href="#test-form" onclick="javascript: onClickModal('@Codigo', '@item.id');" class=" popup-with-form fa fa-info-circle icono"> </a>
+                                                    }
+                                                }
+                                            </td>
                                         </tr>
                                     }
 
@@ -626,7 +657,7 @@
 
             </div>
         </div>
-   @*     <div class="col-md-6">
+        <div class="col-md-6">
             <div style="   font-size: 17px;">
                 <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
                 <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128153</p>
@@ -649,7 +680,7 @@
 
 
             </div>
-        </div>*@
+        </div>
     </div>
 </div>
 <form id="test-form" class="mfp-hide white-popup-block">

@@ -383,8 +383,10 @@
                                         {
                                             <th class="text-center">% Ganancia</th>
                                         }
-                                        <th class="text-center">Serie</th>
-
+                                         @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
+                                        {
+                                            <th class="text-center">Serie</th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -423,11 +425,13 @@
                                                     var Serie = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? false : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Serie;
 
                                                 }
+                                                 @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
+                                        {
                                                 @if (Serie == true)
                                                 {
                                                     <a href="#test-form" onclick="javascript: onClickModal('@Codigo', '@item.id');" class=" popup-with-form fa fa-info-circle icono"> </a>
                                                 }
-
+                                        }
                                             </td>
                                         </tr>
                                     }
@@ -729,7 +733,7 @@
             </div>
 
         </div>
-      @*  <div class="col-md-6">
+        <div class="col-md-6">
             <div style="   font-size: 17px;">
                 <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
                 <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128153</p>
@@ -752,7 +756,7 @@
 
 
             </div>
-        </div>*@
+        </div>
     </div>
 </div>
 
@@ -977,7 +981,7 @@
 
             </div>
         </div>
-      @*  <div class="col-md-6">
+        <div class="col-md-6">
             <div style="   font-size: 17px;">
                 <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
                 <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128153</p>
@@ -999,7 +1003,7 @@
                 <p><b>BAC SAN JOSÉ</b>: CR71010200009487514827</p>
 
             </div>
-        </div>*@
+        </div>
     </div>
 </div>
 
@@ -1218,7 +1222,7 @@
 
             </div>
         </div>
-    @*    <div class="col-md-6">
+        <div class="col-md-6">
             <div style="   font-size: 17px;">
                 <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
                 <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128153</p>
@@ -1241,7 +1245,7 @@
 
 
             </div>
-        </div>*@
+        </div>
     </div>
 </div>
 

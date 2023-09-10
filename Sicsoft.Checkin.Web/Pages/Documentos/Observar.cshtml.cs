@@ -25,7 +25,7 @@ namespace NOVAAPP.Pages.Documentos
         private readonly ICrudApi<CondicionesPagosViewModel, int> condiconesPago;
         private readonly ICrudApi<VendedoresViewModel, int> vendedor;
         private readonly ICrudApi<TipoCambiosViewModel, int> tipoCambio;
-
+        private readonly ICrudApi<ParametrosViewModel, int> parametro;
 
 
         [BindProperty]
@@ -51,7 +51,10 @@ namespace NOVAAPP.Pages.Documentos
         [BindProperty]
         public VendedoresViewModel Vendedor { get; set; }
 
-        public ObservarModel(ICrudApi<DocumentosViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor,ICrudApi<TipoCambiosViewModel, int> tipoCambio)
+        [BindProperty]
+        public ParametrosViewModel[] Parametro { get; set; }
+
+        public ObservarModel(ICrudApi<ParametrosViewModel, int> parametro, ICrudApi<DocumentosViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor,ICrudApi<TipoCambiosViewModel, int> tipoCambio)
         {
             this.service = service;
             this.serviceE = serviceE;
@@ -60,6 +63,7 @@ namespace NOVAAPP.Pages.Documentos
             this.condiconesPago = condiconesPago;
             this.vendedor = vendedor;
             this.tipoCambio = tipoCambio;
+            this.parametro = parametro;
         }
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -73,7 +77,7 @@ namespace NOVAAPP.Pages.Documentos
 
                 var CondPago = await condiconesPago.ObtenerLista("");
                 var Vendedores = await vendedor.ObtenerLista("");
-
+                Parametro = await parametro.ObtenerLista("");
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true; 
 

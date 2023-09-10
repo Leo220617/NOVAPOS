@@ -26,7 +26,7 @@
     @section scripts{
 
 
-    <script src="/js/Ofertas/EditarOferta.js?v=0.0.6"></script>
+    <script src="/js/Ofertas/EditarOferta.js?v=0.0.7"></script>
 
 
 }
@@ -214,10 +214,13 @@
 
                                                 </select>
                                             </div>
-                                        <div id="SerieSelect"class="col-md-3" hidden >
-                                            <a href="#test-form" class="popup-with-form fa fa-info-circle icono" onclick="onClickModal(-1)"></a>&nbsp;
-                                        </div>
-                                        </div>
+                                             @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
+                                        {
+                                            <div id="SerieSelect"class="col-md-3" hidden >
+                                                <a href="#test-form" class="popup-with-form fa fa-info-circle icono" onclick="onClickModal(-1)"></a>&nbsp;
+                                            </div>
+                                        }
+                                    </div>
                                         <br />
                                         <div class="row">
                                             <div class="col-md-12">
@@ -360,7 +363,7 @@
                                         <th class="text-right"> % Descuento</th>
                                         <th class="text-right">Descuento</th>
                                         <th class="text-right">Impuesto</th>
-                                       @* <th class="text-right">% Exoneración</th>*@
+                                        <th class="text-right">% Exoneración</th>
 
                                         <th class="text-right">Total</th>
                                         @if (!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))
@@ -368,8 +371,10 @@
                                             <th class="text-right">% Ganancia</th>
                                         }
                                         <th class="text-right">Eliminar</th>
-                                        <th class="text-right">Series</th>
-
+                                         @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
+                                        {
+                                            <th class="text-right">Series</th>
+                                        }
 
                                     </tr>
                                 </thead>

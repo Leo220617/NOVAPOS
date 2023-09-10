@@ -25,6 +25,7 @@ namespace NOVAAPP.Pages.Ofertas
         private readonly ICrudApi<CondicionesPagosViewModel, int> condiconesPago;
         private readonly ICrudApi<VendedoresViewModel, int> vendedor;
         private readonly ICrudApi<SucursalesViewModel, string> sucursales;
+        private readonly ICrudApi<ParametrosViewModel, int> parametro;
 
         [BindProperty]
         public ClientesViewModel[] Clientes { get; set; }
@@ -53,8 +54,11 @@ namespace NOVAAPP.Pages.Ofertas
         [BindProperty]
         public string NombreCliente { get; set; }
 
+        [BindProperty]
+        public ParametrosViewModel[] Parametro { get; set; }
 
-        public ObservarModel(IConfiguration configuration, ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<SucursalesViewModel, string> sucursales)
+
+        public ObservarModel(ICrudApi<ParametrosViewModel, int> parametro, IConfiguration configuration, ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<SucursalesViewModel, string> sucursales)
         {
             this.service = service;
             this.serviceE = serviceE;
@@ -64,6 +68,7 @@ namespace NOVAAPP.Pages.Ofertas
             this.vendedor = vendedor;
             this.sucursales = sucursales;
             this.configuration = configuration;
+            this.parametro = parametro;
         }
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -76,6 +81,7 @@ namespace NOVAAPP.Pages.Ofertas
                 }
                 var CondPago = await condiconesPago.ObtenerLista("");
                 Oferta = await service.ObtenerPorId(id);
+                Parametro = await parametro.ObtenerLista("");
                 var Vendedores = await vendedor.ObtenerLista("");
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;

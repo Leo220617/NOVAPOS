@@ -28,7 +28,7 @@
 
 }
     @section scripts{
-    <script src="/js/Documentos/ObservarDocumento.js?v=0.0.6"></script>
+    <script src="/js/Documentos/ObservarDocumento.js?v=0.0.7"></script>
 
 }
     @{
@@ -197,7 +197,10 @@
                                         {
                                             <th class="text-center">% Ganancia</th>
                                         }
-                                        <th class="text-center">Serie</th>
+                                         @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
+                                        {
+                                            <th class="text-center">Serie</th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>

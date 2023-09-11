@@ -63,6 +63,16 @@ namespace NOVAAPP.Pages.CierreCajas
         public decimal Totalizado { get; set; }
 
 
+
+        [BindProperty]
+        public decimal TotalColonesD { get; set; }
+
+        [BindProperty]
+        public decimal TotalFCD { get; set; }
+        [BindProperty]
+        public decimal TotalizadoD { get; set; }
+
+
         [BindProperty]
         public CuentasBancariasViewModel[] CuentasBancarias { get; set; }
 
@@ -154,6 +164,10 @@ namespace NOVAAPP.Pages.CierreCajas
                     filtro3.Externo = true;
                     Clientes = await clientes.ObtenerLista(filtro3);
 
+                   
+
+
+
                     return Page();
                 }
                 else
@@ -193,12 +207,20 @@ namespace NOVAAPP.Pages.CierreCajas
                     filtro2.Externo = true;
                     Clientes = await clientes.ObtenerLista(filtro2);
 
+                   
+
+
+
                     //TotalColones = Documento.Where(a => a.Moneda == "CRC" && a.idCondPago == Condicion.id && a.TipoDocumento != "03").Sum(a => a.TotalCompra) - Documento.Where(a => a.Moneda == "CRC" && a.idCondPago == Condicion.id && a.TipoDocumento == "03").Sum(a => a.TotalCompra) + Pagos.Where(a => a.Metodo.ToLower().Contains("pago a cuenta") && a.Moneda == "CRC").Sum(a => a.Monto);
                     //TotalFC = Documento.Where(a => a.Moneda == "USD" && a.idCondPago == Condicion.id && a.TipoDocumento != "03").Sum(a => a.TotalCompra) - Documento.Where(a => a.Moneda == "USD" && a.idCondPago == Condicion.id && a.TipoDocumento == "03").Sum(a => a.TotalCompra) + Pagos.Where(a => a.Metodo.ToLower().Contains("pago a cuenta") && a.Moneda == "USD").Sum(a => a.Monto);
 
                     TotalColones = Pagos.Where(a => a.Moneda == "CRC").Sum(a => a.Monto) == null ? 0 : Pagos.Where(a => a.Moneda == "CRC").Sum(a => a.Monto);
                     TotalFC = Pagos.Where(a => a.Moneda == "USD").Sum(a => a.Monto) == null ? 0 : Pagos.Where(a => a.Moneda == "USD").Sum(a => a.Monto);
                     Totalizado = TotalColones + (TotalFC * TC.Where(a => a.Moneda == "USD").FirstOrDefault().TipoCambio);
+                   
+                    TotalColonesD = Depositos.Where(a => a.Moneda == "CRC").Sum(a => a.Saldo) == null ? 0 : Depositos.Where(a => a.Moneda == "CRC").Sum(a => a.Saldo);
+                    TotalFCD = Depositos.Where(a => a.Moneda == "USD").Sum(a => a.Saldo) == null ? 0 : Depositos.Where(a => a.Moneda == "USD").Sum(a => a.Saldo);
+                    TotalizadoD = TotalColonesD + (TotalFCD * TC.Where(a => a.Moneda == "USD").FirstOrDefault().TipoCambio);
                     return Page();
                 }
                

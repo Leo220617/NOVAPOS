@@ -146,18 +146,18 @@
 
         function Generar() {
             try {
-                var TotalizadoD = parseFloat($("#TotalizadoD").val());
-                var TotalizadoMonedas = parseFloat($("#TotalizadoMonedas").val());
-                var Valor = TotalizadoMonedas - TotalizadoD;
-                if (Valor > 0) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Error, el Totalizado del Cierre no puede ser menor al Totalizado de los Depósitos, la diferencia es de ₡' + Valor
+                //var TotalizadoD = parseFloat($("#TotalizadoD").val());
+                //var TotalizadoMonedas = parseFloat($("#TotalizadoMonedas").val());
+                //var Valor = TotalizadoMonedas - TotalizadoD;
+                //if (Valor > 0) {
+                //    Swal.fire({
+                //        icon: 'error',
+                //        title: 'Oops...',
+                //        text: 'Error, el Totalizado del Cierre no puede ser menor al Totalizado de los Depósitos, la diferencia es de ₡' + Valor
 
-                    })
-                    return false;
-                } else {
+                //    })
+                //    return false;
+                //} else {
 
 
                     Rellenar();
@@ -177,7 +177,7 @@
                             $("#formTipos").submit();
                         }
                     })
-                }
+                //}
 
             } catch (e) {
                 alert(e);

@@ -92,25 +92,25 @@ function onClickModal(id, idDetalle) {
 function ImprimirPantalla() {
     try {
 
-        //// window.print();
-        //var margins = {
-        //    top: 10,
-        //    bottom: 10,
-        //    left: 10,
-        //    width: 595
-        //};
+        // window.print();
+        var margins = {
+            top: 10,
+            bottom: 10,
+            left: 10,
+            width: 595
+        };
 
 
-        //html = $(".html").html();
-        //html2pdf(html, {
-        //    margin: 1,
-        //    padding: 0,
-        //    filename: 'Documento.pdf',
-        //    image: { type: 'jpeg', quality: 1 },
-        //    html2canvas: { scale: 2, logging: true },
-        //    jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
-        //    class: ImprimirPantalla
-        //});
+        html = $(".html").html();
+        html2pdf(html, {
+            margin: 1,
+            padding: 0,
+            filename: 'Documento.pdf',
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 2, logging: true },
+            jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
+            class: ImprimirPantalla
+        });
         var Contado = CP.find(a => a.Nombre == "Contado");
 
         if (Documento.idCondPago == Contado.id) {
@@ -118,7 +118,7 @@ function ImprimirPantalla() {
             //    ImprimirTiqueteNC();
             //} else {
                 ImprimirTiquete();
-           /* }*/
+            /*}*/
             
 
         } else {

@@ -2411,6 +2411,7 @@ function insertarPago() {
                             NumCheque: "",
                             Metodo: "Efectivo",
                             Moneda: $("#selectMonedaP").val(),
+                            MonedaVuelto: $("#selectMonedaV").val(),
                             PagadoCon: parseFloat(ReplaceLetra($("#PagadoCon").val()))
                         };
                         MetodosPagos.push(Detalle);
@@ -2432,6 +2433,7 @@ function insertarPago() {
                             NumCheque: "",
                             Metodo: "Tarjeta",
                             Moneda: $("#selectMonedaP").val(),
+                            MonedaVuelto: "",
                             PagadoCon: 0
                         };
                         MetodosPagos.push(Detalle);
@@ -2450,6 +2452,7 @@ function insertarPago() {
                             NumCheque: "",
                             Metodo: "Transferencia",
                             Moneda: $("#selectMonedaP").val(),
+                            MonedaVuelto: "",
                             PagadoCon: 0
                         };
                         MetodosPagos.push(Detalle);
@@ -2469,6 +2472,7 @@ function insertarPago() {
                             NumCheque: $("#ChequePago").val(),
                             Metodo: "Cheque",
                             Moneda: $("#selectMonedaP").val(),
+                            MonedaVuelto: "",
                             PagadoCon: 0
                         };
                         MetodosPagos.push(Detalle);
@@ -2487,6 +2491,7 @@ function insertarPago() {
                             NumCheque: "",
                             Metodo: "Otros | " + $("#otroPago").val(),
                             Moneda: $("#selectMonedaP").val(),
+                            MonedaVuelto: "",
                             PagadoCon: 0
                         };
                         MetodosPagos.push(Detalle);
@@ -2506,6 +2511,7 @@ function insertarPago() {
                             NumCheque: $("#ReferenciaPago").val(),
                             Metodo: "Pago a Cuenta",
                             Moneda: $("#selectMonedaP").val(),
+                            MonedaVuelto: "",
                             PagadoCon: 0
                         };
                         MetodosPagos.push(Detalle);

@@ -383,7 +383,7 @@
                                         {
                                             <th class="text-center">% Ganancia</th>
                                         }
-                                         @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
+                                        @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
                                         {
                                             <th class="text-center">Serie</th>
                                         }
@@ -399,7 +399,9 @@
                                             @if (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Stock <= 0)
                                             {
                                                 <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : "*" + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
-                                            }else{
+                                            }
+                                            else
+                                            {
                                                 <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
                                             }
 
@@ -425,13 +427,13 @@
                                                     var Serie = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? false : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Serie;
 
                                                 }
-                                                 @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
-                                        {
-                                                @if (Serie == true)
+                                                @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
                                                 {
-                                                    <a href="#test-form" onclick="javascript: onClickModal('@Codigo', '@item.id');" class=" popup-with-form fa fa-info-circle icono"> </a>
+                                                    @if (Serie == true)
+                                                    {
+                                                        <a href="#test-form" onclick="javascript: onClickModal('@Codigo', '@item.id');" class=" popup-with-form fa fa-info-circle icono"> </a>
+                                                    }
                                                 }
-                                        }
                                             </td>
                                         </tr>
                                     }
@@ -549,7 +551,7 @@
                                             <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
 
                                         </div>
-                                      
+
 
                                         <div class="col-4">
                                             <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
@@ -712,9 +714,9 @@
                     <h4>* Producto sin stock</h4>
 
                 </div>
-               
+
             </div>
-            
+
             <br />
             <!-- Default box -->
             <div class="col-6 box">
@@ -733,29 +735,29 @@
             </div>
 
         </div>
-       @* <div class="col-md-6">
-            <div style="   font-size: 17px;">
-                <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
-                <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128153</p>
-                <p><b>BANCO NACIONAL:</b> CR55015109210010004595</p>
-                <p><b>BAC SAN JOSÉ:</b>  CR64010200009326955703</p>
-                <p><b>BANCO POPULAR:</b>  CR70016111006152606645</p>
-                <p><b>SINPE MOVIL BNCR:</b>  8770-2222</p>
-                <p><b>SINPE MOVIL BCR:</b> 8770-2221</p>
+        @* <div class="col-md-6">
+        <div style="   font-size: 17px;">
+        <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
+        <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128153</p>
+        <p><b>BANCO NACIONAL:</b> CR55015109210010004595</p>
+        <p><b>BAC SAN JOSÉ:</b>  CR64010200009326955703</p>
+        <p><b>BANCO POPULAR:</b>  CR70016111006152606645</p>
+        <p><b>SINPE MOVIL BNCR:</b>  8770-2222</p>
+        <p><b>SINPE MOVIL BCR:</b> 8770-2221</p>
 
 
-            </div>
+        </div>
         </div>
 
         <div class="col-md-4">
-            <div style="  font-size: 17px;">
-                <b style="  font-size: 22px !important; ">CUENTAS DÓLARES</b>
-                <p> <b>BANCO DE COSTA RICA:</b> CR62015201345000147451</p>
-                <p><b>BANCO NACIONAL</b>: CR67015105810026000819</p>
-                <p><b>BAC SAN JOSÉ</b>: CR71010200009487514827</p>
+        <div style="  font-size: 17px;">
+        <b style="  font-size: 22px !important; ">CUENTAS DÓLARES</b>
+        <p> <b>BANCO DE COSTA RICA:</b> CR62015201345000147451</p>
+        <p><b>BANCO NACIONAL</b>: CR67015105810026000819</p>
+        <p><b>BAC SAN JOSÉ</b>: CR71010200009487514827</p>
 
 
-            </div>
+        </div>
         </div>*@
     </div>
 </div>
@@ -981,28 +983,28 @@
 
             </div>
         </div>
-     @*   <div class="col-md-6">
-            <div style="   font-size: 17px;">
-                <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
-                <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128153</p>
-                <p><b>BANCO NACIONAL:</b>  CR55015109210010004595</p>
-                <p><b>BAC SAN JOSÉ:</b>  CR64010200009326955703</p>
-                <p><b>BANCO POPULAR:</b>  CR70016111006152606645</p>
-                <p><b>SINPE MOVIL BNCR:</b>  8770-2222</p>
-                <p><b>SINPE MOVIL BCR:</b> 8770-2221</p>
+        @*   <div class="col-md-6">
+        <div style="   font-size: 17px;">
+        <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
+        <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128153</p>
+        <p><b>BANCO NACIONAL:</b>  CR55015109210010004595</p>
+        <p><b>BAC SAN JOSÉ:</b>  CR64010200009326955703</p>
+        <p><b>BANCO POPULAR:</b>  CR70016111006152606645</p>
+        <p><b>SINPE MOVIL BNCR:</b>  8770-2222</p>
+        <p><b>SINPE MOVIL BCR:</b> 8770-2221</p>
 
 
-            </div>
+        </div>
         </div>
 
         <div class="col-md-4">
-            <div style="  font-size: 17px;">
-                <b style="  font-size: 22px !important; ">CUENTAS DÓLARES</b>
-                <p> <b>BANCO DE COSTA RICA:</b> CR62015201345000147451</p>
-                <p><b>BANCO NACIONAL</b>: CR67015105810026000819</p>
-                <p><b>BAC SAN JOSÉ</b>: CR71010200009487514827</p>
+        <div style="  font-size: 17px;">
+        <b style="  font-size: 22px !important; ">CUENTAS DÓLARES</b>
+        <p> <b>BANCO DE COSTA RICA:</b> CR62015201345000147451</p>
+        <p><b>BANCO NACIONAL</b>: CR67015105810026000819</p>
+        <p><b>BAC SAN JOSÉ</b>: CR71010200009487514827</p>
 
-            </div>
+        </div>
         </div>*@
     </div>
 </div>
@@ -1222,29 +1224,29 @@
 
             </div>
         </div>
-      @*  <div class="col-md-6">
-            <div style="   font-size: 17px;">
-                <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
-                <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128153</p>
-                <p><b>BANCO NACIONAL:</b>  CR55015109210010004595</p>
-                <p><b>BAC SAN JOSÉ:</b>  CR64010200009326955703</p>
-                <p><b>BANCO POPULAR:</b>  CR70016111006152606645</p>
-                <p><b>SINPE MOVIL BNCR:</b>  8770-2222</p>
-                <p><b>SINPE MOVIL BCR:</b> 8770-2221</p>
+        @*  <div class="col-md-6">
+        <div style="   font-size: 17px;">
+        <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
+        <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128153</p>
+        <p><b>BANCO NACIONAL:</b>  CR55015109210010004595</p>
+        <p><b>BAC SAN JOSÉ:</b>  CR64010200009326955703</p>
+        <p><b>BANCO POPULAR:</b>  CR70016111006152606645</p>
+        <p><b>SINPE MOVIL BNCR:</b>  8770-2222</p>
+        <p><b>SINPE MOVIL BCR:</b> 8770-2221</p>
 
 
-            </div>
+        </div>
         </div>
 
         <div class="col-md-4">
-            <div style="  font-size: 17px;">
-                <b style="  font-size: 22px !important; ">CUENTAS DÓLARES</b>
-                <p> <b>BANCO DE COSTA RICA:</b> CR62015201345000147451</p>
-                <p><b>BANCO NACIONAL</b>: CR67015105810026000819</p>
-                <p><b>BAC SAN JOSÉ</b>: CR71010200009487514827</p>
+        <div style="  font-size: 17px;">
+        <b style="  font-size: 22px !important; ">CUENTAS DÓLARES</b>
+        <p> <b>BANCO DE COSTA RICA:</b> CR62015201345000147451</p>
+        <p><b>BANCO NACIONAL</b>: CR67015105810026000819</p>
+        <p><b>BAC SAN JOSÉ</b>: CR71010200009487514827</p>
 
 
-            </div>
+        </div>
         </div>*@
     </div>
 </div>

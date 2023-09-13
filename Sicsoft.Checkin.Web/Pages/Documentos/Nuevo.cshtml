@@ -26,7 +26,7 @@
     @section scripts{
 
 
-    <script src="/js/Documentos/NuevoDocumento.js?v=0.0.7"></script>
+    <script src="/js/Documentos/NuevoDocumento.js?v=0.0.8"></script>
 
 
 }
@@ -798,6 +798,18 @@
 
 
                     </div>
+                    <div class="col-md-4 EFECTIVODIV">
+                        <div class="form-group">
+                            <label>Moneda Vuelto:  </label>
+                            <select class="form-control" id="selectMonedaV" >
+                                <option value="CRC" selected>CRC</option>
+                                <option value="USD">USD</option>
+
+                            </select>
+
+
+                        </div>
+                    </div>
                     <div class="col-md-4 CUENTADIV">
                         <div class="form-group">
 
@@ -952,12 +964,12 @@
                 }
             case "03":
                 {
-                    $("#Cedula").mask("9999999999999");
+                    $("#Cedula").mask("999999999999");
                     break;
                 }
             case "04":
                 {
-                    $("#Cedula").mask("9999999999999");
+                    $("#Cedula").mask("999999999999");
                     break;
                 }
         }

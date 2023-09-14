@@ -27,7 +27,7 @@
     @section scripts{
 
 
-    <script src="/js/Proformas/NuevoProforma.js?v=0.0.7"></script>
+    <script src="/js/Proformas/NuevoProforma.js?v=0.0.8"></script>
 
 
 }
@@ -373,7 +373,7 @@
                                         <th class="text-right">% Descuento</th>
                                         <th class="text-right">Descuento</th>
                                         <th class="text-right">Impuesto</th>
-                                    @*    <th class="text-right">% Exoneración</th>*@
+                                        <th class="text-right">% Exoneración</th>
 
                                         <th class="text-right">Total</th>
                                         @if (!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))
@@ -408,10 +408,15 @@
                                 <p>Sub Total  : <span id="subG">0</span> </p>
                                 <p>Descuento  : <span id="descG">0</span></p>
                                 <p>Impuesto :  <span id="impG"> 0</span></p>
+                                <p>Redondeo :  <span id="redondeo"> 0</span></p>
 
                             </div>
+                           
                             <div class="total-payment">
                                 <h3><b>Total :</b>  <span id="totG">0 </span></h3>
+                            </div>
+                            <div class="total-payment" hidden>
+                                <h3><b>Total :</b>  <span id="totGX">0 </span></h3>
                             </div>
                             @if (!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))
                             {

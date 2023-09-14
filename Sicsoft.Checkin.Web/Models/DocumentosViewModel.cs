@@ -36,6 +36,8 @@ namespace NOVAAPP.Models
         public bool PagoProcesadaSAP { get; set; }
         public string ClaveHacienda { get; set; }
         public string ConsecutivoHacienda { get; set; }
+
+        public decimal Redondeo { get; set; }
         public MetodosPagosViewModel[] MetodosPagos { get; set; }
 
         public DetDocumentoViewModel[] Detalle { get; set; }

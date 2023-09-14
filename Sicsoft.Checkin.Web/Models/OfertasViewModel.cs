@@ -33,5 +33,7 @@ namespace NOVAAPP.Models
         public int idVendedor { get; set; }
 
         public bool ProcesadaSAP { get; set; }
+
+        public decimal Redondeo { get; set; }
     }
 }

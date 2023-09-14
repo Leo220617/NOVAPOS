@@ -20,7 +20,9 @@ throw new Error('template requires jQuery')
 //  Configure any options by passing data-option="value"
 //  to the body tag.
 
-
+function redondearAl5(numero) {
+    return Math.round(numero / 5) * 5;
+}
 
 +function ($) {
   'use strict'

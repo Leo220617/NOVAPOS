@@ -101,6 +101,7 @@ function RecuperarInformacion() {
         $("#impG").text(formatoDecimal(Oferta.TotalImpuestos.toFixed(2)));
         $("#descG").text(formatoDecimal(Oferta.TotalDescuento.toFixed(2)));
         $("#totG").text(formatoDecimal(Oferta.TotalCompra.toFixed(2)));
+        $("#redondeo").text(formatoDecimal(Oferta.Redondeo.toFixed(2)));
         $("#descuento").text(formatoDecimal(Oferta.PorDescto.toFixed(2)));
 
         Inicio = true;
@@ -585,6 +586,8 @@ function onChangeMoneda() {
         var impuestoG = 0;
         var descuentoG = 0;
         var totalG = 0;
+        var totalGX = 0;
+        var redondeo = 0;
 
         var Moneda = $("#selectMoneda").val();
 
@@ -623,11 +626,21 @@ function onChangeMoneda() {
             impuestoG += ProdCadena[i].TotalImpuesto;
             descuentoG += ProdCadena[i].Descuento;
             totalG += ProdCadena[i].TotalLinea;
+            totalGX += ProdCadena[i].TotalLinea;
         }
         $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
         $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
         $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+        var TotalAntesRedondeo = totalG;
+        totalG = redondearAl5(totalG);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+
+
+        $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
+
+        redondeo = TotalAntesRedondeo - totalG;
+
+        $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
         RellenaTabla();
     } catch (e) {
@@ -1548,6 +1561,8 @@ function AgregarProductoTabla() {
         var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
         var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
         var totalG = parseFloat(ReplaceLetra($("#totG").text()));
+        var totalGX = parseFloat(ReplaceLetra($("#totGX").text()));
+        var redondeo = parseFloat(ReplaceLetra($("#redondeo").text()));
 
         var id = $("#ProductoSeleccionado").val();
         var id = $("#ProductoSeleccionado").val();
@@ -1694,11 +1709,18 @@ function AgregarProductoTabla() {
                 impuestoG += Producto.TotalImpuesto;
                 descuentoG += Producto.Descuento;
                 totalG += Producto.TotalLinea;
+                totalGX += Producto.TotalLinea;
 
                 $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
                 $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
                 $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+                var TotalAntesRedondeo = totalG;
+                totalG = redondearAl5(totalG);
                 $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+                $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
+                redondeo = TotalAntesRedondeo - totalG;
+
+                $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
                 ProdCadena.push(Producto);
 
@@ -1744,15 +1766,25 @@ function EliminarProducto(i) {
     var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
     var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
     var totalG = parseFloat(ReplaceLetra($("#totG").text()));
+    var totalGX = parseFloat(ReplaceLetra($("#totGX").text()));
+    var redondeo = parseFloat(ReplaceLetra($("#redondeo").text()));
 
     subtotalG -= (Producto.Cantidad * Producto.PrecioUnitario);
     impuestoG -= Producto.TotalImpuesto;
     descuentoG -= Producto.Descuento;
     totalG -= Producto.TotalLinea;
+    totalGX -= Producto.TotalLinea;
+    redondeo -= Producto.TotalLinea;
     $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
     $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
     $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+    var TotalAntesRedondeo = totalG;
+    totalG = redondearAl5(totalG);
     $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+    $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
+    redondeo = TotalAntesRedondeo - totalG;
+
+    $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
     ProdCadena.splice(i, 1);
     var Lotes2 = LotesCadena.filter(a => a.ItemCode == PE.Codigo);
 
@@ -1780,7 +1812,8 @@ function Generar() {
             Subtotal: parseFloat(ReplaceLetra($("#subG").text())),
             TotalImpuestos: parseFloat(ReplaceLetra($("#impG").text())),
             TotalDescuento: parseFloat(ReplaceLetra($("#descG").text())),
-            TotalCompra: parseFloat(ReplaceLetra($("#totG").text())),
+            TotalCompra: parseFloat(ReplaceLetra($("#totGX").text())),
+            Redondeo: parseFloat(ReplaceLetra($("#redondeo").text())),
             PorDescto: parseFloat(ReplaceLetra($("#descuento").val())),
             CodSuc: "",
             Moneda: $("#selectMoneda").val(),
@@ -1897,6 +1930,8 @@ function validarOferta(e) {
         var Transito = CP.find(a => a.Nombre == "Transito");
         var idCliente = $("#ClienteSeleccionado").val();
         var totalG = parseFloat(ReplaceLetra($("#totG").text()));
+        var redondeo = parseFloat(ReplaceLetra($("#redondeo").text()));
+        var totalGX = parseFloat(ReplaceLetra($("#totGX").text())); 
 
         var Cliente = Clientes.find(a => a.id == idCliente);
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
@@ -1904,6 +1939,8 @@ function validarOferta(e) {
 
         if ($("#selectMoneda").val() != "CRC") {
             totalG = totalG * TipodeCambio.TipoCambio;
+            redondeo = redondeo * TipodeCambio.TipoCambio;
+            totalGX = totalGX * TipodeCambio.TipoCambio;
         }
         for (var i = 0; i < e.Detalle.length; i++) {
             var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
@@ -2117,6 +2154,8 @@ function ValidarTotales() {
         var impuestoG = 0;
         var descuentoG = 0;
         var totalG = 0;
+        var totalGX = 0;
+        var redondeo = 0;
 
         for (var i = 0; i < ProdCadena.length; i++) {
             var idCliente = $("#ClienteSeleccionado").val();
@@ -2147,13 +2186,21 @@ function ValidarTotales() {
             impuestoG += ProdCadena[i].TotalImpuesto;
             descuentoG += ProdCadena[i].Descuento;
             totalG += ProdCadena[i].TotalLinea;
+            totalGX += ProdCadena[i].TotalLinea;
 
         }
 
         $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
         $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
         $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+        var TotalAntesRedondeo = totalG;
+        totalG = redondearAl5(totalG);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+        $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
+
+        redondeo = TotalAntesRedondeo - totalG;
+
+        $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
         RellenaTabla();
     } catch (e) {

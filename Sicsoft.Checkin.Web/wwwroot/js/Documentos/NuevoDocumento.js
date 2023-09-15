@@ -2075,7 +2075,7 @@ function validarDocumento(e) {
             }
             else if (e.MetodosPagos.length == 0 || e.MetodosPagos == null) {
                 return false;
-            } else if (parseFloat(sumatoriaPagos.toFixed(2)) < e.TotalCompra) {
+            } else if (parseFloat(sumatoriaPagos.toFixed(2)) < (e.TotalCompra - e.Redondeo)) {
                 return false;
             }
             else {
@@ -3007,12 +3007,12 @@ function ImprimirTiquete(Documento) {
             texto = texto.replace("@SubTotal", "₡" + formatoDecimal(Documento.subtotal));
             texto = texto.replace("@TotalDescuento", "₡" + formatoDecimal(Documento.totalDescuento));
             texto = texto.replace("@TotalImpuestos", "₡" + formatoDecimal(Documento.totalImpuestos));
-            texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.totalCompra));
+            texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.totalCompra + Documento.redondeo));
         } else {
             texto = texto.replace("@SubTotal", "$" + formatoDecimal(Documento.subtotal));
             texto = texto.replace("@TotalDescuento", "$" + formatoDecimal(Documento.totalDescuento));
             texto = texto.replace("@TotalImpuestos", "$" + formatoDecimal(Documento.totalImpuestos));
-            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.totalCompra));
+            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.totalCompra + Documento.redondeo));
         }
 
 
@@ -3091,12 +3091,12 @@ function ImprimirTiqueteC(Documento) {
             texto = texto.replace("@SubTotal", "₡" + formatoDecimal(Documento.subtotal));
             texto = texto.replace("@TotalDescuento", "₡" + formatoDecimal(Documento.totalDescuento));
             texto = texto.replace("@TotalImpuestos", "₡" + formatoDecimal(Documento.totalImpuestos));
-            texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.totalCompra));
+            texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.totalCompra + Documento.redondeo));
         } else {
             texto = texto.replace("@SubTotal", "$" + formatoDecimal(Documento.subtotal));
             texto = texto.replace("@TotalDescuento", "$" + formatoDecimal(Documento.totalDescuento));
             texto = texto.replace("@TotalImpuestos", "$" + formatoDecimal(Documento.totalImpuestos));
-            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.totalCompra));
+            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.totalCompra + Documento.redondeo));
         }
 
 
@@ -3154,7 +3154,7 @@ function ImprimirFactura(Documento) {
         texto = texto.replace("@FechaEnvio", "");
         texto = texto.replace("@TipoCambio", TipoCambio[0].TipoCambio);
 
-        texto = texto.replace("@TotalLetras", NumeroALetras(Documento.totalCompra));
+        texto = texto.replace("@TotalLetras", NumeroALetras(Documento.totalCompra + Documento.redondeo));
 
 
 
@@ -3192,7 +3192,7 @@ function ImprimirFactura(Documento) {
             texto = texto.replace("@SubTotal", "$" + formatoDecimal(Documento.subtotal));
             texto = texto.replace("@TotalDescuento", "$" + formatoDecimal(Documento.totalDescuento));
             texto = texto.replace("@TotalImpuestos", "$" + formatoDecimal(Documento.totalImpuestos));
-            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.totalCompra));
+            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.totalCompra + Documento.redondeo));
         }
 
 

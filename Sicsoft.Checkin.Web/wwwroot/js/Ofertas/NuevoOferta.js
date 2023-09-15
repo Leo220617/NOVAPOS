@@ -697,7 +697,7 @@ function onChangeMoneda() {
 
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
 
-        redondeo = TotalAntesRedondeo - totalG;
+         redondeo = totalG - TotalAntesRedondeo;
 
         $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
@@ -1786,7 +1786,7 @@ function AgregarProductoTabla() {
                 totalG = redondearAl5(totalG);
                 $("#totG").text(formatoDecimal(totalG.toFixed(2)));
                 $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
-                redondeo = TotalAntesRedondeo - totalG;
+                 redondeo = totalG - TotalAntesRedondeo;
 
                 $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
@@ -1850,7 +1850,7 @@ function EliminarProducto(i) {
         totalG = redondearAl5(totalG);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
-        redondeo = TotalAntesRedondeo - totalG;
+         redondeo = totalG - TotalAntesRedondeo;
 
         $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
         ProdCadena.splice(i, 1);
@@ -2284,7 +2284,7 @@ function ValidarTotales() {
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
 
-        redondeo = TotalAntesRedondeo - totalG;
+         redondeo = totalG - TotalAntesRedondeo;
 
         $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 

@@ -262,7 +262,7 @@
 
                             </div>
                             <div class="total-payment">
-                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Documento.TotalCompra, 2).ToString("C",formato)</span></h3>
+                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Documento.TotalCompra + Model.Documento.Redondeo, 2).ToString("C",formato)</span></h3>
 
 
                             </div>
@@ -483,7 +483,7 @@
 
                             </div>
                             <div class="total-payment">
-                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Documento.TotalCompra, 2).ToString("C",formato)</span></h3>
+                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Documento.TotalCompra + Model.Documento.Redondeo, 2).ToString("C",formato)</span></h3>
                             </div>
 
                         </div>

@@ -1527,7 +1527,7 @@ function RellenaTabla() {
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+             /*   html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
 
                 if ($("#RolGanancia").val() == "value") {
@@ -3007,12 +3007,14 @@ function ImprimirTiquete(Documento) {
             texto = texto.replace("@SubTotal", "₡" + formatoDecimal(Documento.subtotal));
             texto = texto.replace("@TotalDescuento", "₡" + formatoDecimal(Documento.totalDescuento));
             texto = texto.replace("@TotalImpuestos", "₡" + formatoDecimal(Documento.totalImpuestos));
-            texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.totalCompra + Documento.redondeo));
+            texto = texto.replace("@Redondeo", "₡" + formatoDecimal(Documento.redondeo * -1));
+            texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.totalCompra - Documento.redondeo));
         } else {
             texto = texto.replace("@SubTotal", "$" + formatoDecimal(Documento.subtotal));
             texto = texto.replace("@TotalDescuento", "$" + formatoDecimal(Documento.totalDescuento));
             texto = texto.replace("@TotalImpuestos", "$" + formatoDecimal(Documento.totalImpuestos));
-            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.totalCompra + Documento.redondeo));
+            texto = texto.replace("@Redondeo", "$" + formatoDecimal(Documento.redondeo * -1));
+            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.totalCompra - Documento.redondeo));
         }
 
 
@@ -3091,11 +3093,13 @@ function ImprimirTiqueteC(Documento) {
             texto = texto.replace("@SubTotal", "₡" + formatoDecimal(Documento.subtotal));
             texto = texto.replace("@TotalDescuento", "₡" + formatoDecimal(Documento.totalDescuento));
             texto = texto.replace("@TotalImpuestos", "₡" + formatoDecimal(Documento.totalImpuestos));
-            texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.totalCompra + Documento.redondeo));
+            texto = texto.replace("@Redondeo", "₡" + formatoDecimal(Documento.redondeo * -1));
+            texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.totalCompra - Documento.redondeo));
         } else {
             texto = texto.replace("@SubTotal", "$" + formatoDecimal(Documento.subtotal));
             texto = texto.replace("@TotalDescuento", "$" + formatoDecimal(Documento.totalDescuento));
             texto = texto.replace("@TotalImpuestos", "$" + formatoDecimal(Documento.totalImpuestos));
+            texto = texto.replace("@Redondeo", "$" + formatoDecimal(Documento.redondeo * -1));
             texto = texto.replace("@Total", "$" + formatoDecimal(Documento.totalCompra + Documento.redondeo));
         }
 

@@ -3007,13 +3007,13 @@ function ImprimirTiquete(Documento) {
             texto = texto.replace("@SubTotal", "₡" + formatoDecimal(Documento.subtotal));
             texto = texto.replace("@TotalDescuento", "₡" + formatoDecimal(Documento.totalDescuento));
             texto = texto.replace("@TotalImpuestos", "₡" + formatoDecimal(Documento.totalImpuestos));
-            texto = texto.replace("@Redondeo", "₡" + formatoDecimal(Documento.redondeo * -1));
+            texto = texto.replace("@Redondeo", "₡" + formatoDecimal(Documento.redondeo));
             texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.totalCompra - Documento.redondeo));
         } else {
             texto = texto.replace("@SubTotal", "$" + formatoDecimal(Documento.subtotal));
             texto = texto.replace("@TotalDescuento", "$" + formatoDecimal(Documento.totalDescuento));
             texto = texto.replace("@TotalImpuestos", "$" + formatoDecimal(Documento.totalImpuestos));
-            texto = texto.replace("@Redondeo", "$" + formatoDecimal(Documento.redondeo * -1));
+            texto = texto.replace("@Redondeo", "$" + formatoDecimal(Documento.redondeo));
             texto = texto.replace("@Total", "$" + formatoDecimal(Documento.totalCompra - Documento.redondeo));
         }
 
@@ -3093,14 +3093,14 @@ function ImprimirTiqueteC(Documento) {
             texto = texto.replace("@SubTotal", "₡" + formatoDecimal(Documento.subtotal));
             texto = texto.replace("@TotalDescuento", "₡" + formatoDecimal(Documento.totalDescuento));
             texto = texto.replace("@TotalImpuestos", "₡" + formatoDecimal(Documento.totalImpuestos));
-            texto = texto.replace("@Redondeo", "₡" + formatoDecimal(Documento.redondeo * -1));
+            texto = texto.replace("@Redondeo", "₡" + formatoDecimal(Documento.redondeo));
             texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.totalCompra - Documento.redondeo));
         } else {
             texto = texto.replace("@SubTotal", "$" + formatoDecimal(Documento.subtotal));
             texto = texto.replace("@TotalDescuento", "$" + formatoDecimal(Documento.totalDescuento));
             texto = texto.replace("@TotalImpuestos", "$" + formatoDecimal(Documento.totalImpuestos));
-            texto = texto.replace("@Redondeo", "$" + formatoDecimal(Documento.redondeo * -1));
-            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.totalCompra + Documento.redondeo));
+            texto = texto.replace("@Redondeo", "$" + formatoDecimal(Documento.redondeo));
+            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.totalCompra - Documento.redondeo));
         }
 
 

@@ -114,11 +114,11 @@ function ImprimirPantalla() {
         var Contado = CP.find(a => a.Nombre == "Contado");
 
         if (Documento.idCondPago == Contado.id) {
-            if (Documento.TipoDocumento == "03") {
-                ImprimirTiqueteNC();
-            } else {
+            //if (Documento.TipoDocumento == "03") {
+            //    ImprimirTiqueteNC();
+            //} else {
                 ImprimirTiquete();
-            }
+           /* }*/
             
 
         } else {

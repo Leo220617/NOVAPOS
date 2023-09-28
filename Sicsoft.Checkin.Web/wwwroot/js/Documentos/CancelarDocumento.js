@@ -71,6 +71,7 @@ function RecuperarInformacion() {
         $("#descG").text(formatoDecimal(Documento.TotalDescuento.toFixed(2)));
         $("#totG").text(formatoDecimal(Documento.TotalCompra.toFixed(2)));
         $("#descuento").text(formatoDecimal(Documento.PorDescto.toFixed(2)));
+        $("#redondeo").text(formatoDecimal(Documento.Redondeo.toFixed(2)));
 
         for (var i = 0; i < Documento.Detalle.length; i++) {
             var PE = Productos.find(a => a.id == Documento.Detalle[i].idProducto);
@@ -166,7 +167,7 @@ function onChangeCliente() {
         var Cliente = Clientes.find(a => a.id == idCliente);
 
         $("#spanDireccion").text(Cliente.Sennas);
-        $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
+        $("#strongInfo").text("Cédula: " + Cliente.Cedula + " " + "Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
 
         ProdClientes = Productos.filter(a => a.idListaPrecios == Sucursal.idListaPrecios);
         ProdClientes = ProdClientes.sort(function (a, b) {
@@ -269,6 +270,8 @@ function ValidarTotales() {
         var impuestoG = 0;
         var descuentoG = 0;
         var totalG = 0;
+        var totalGX = 0;
+        var redondeo = 0;
 
         for (var i = 0; i < ProdCadena.length; i++) {
             var idCliente = $("#ClienteSeleccionado").val();
@@ -299,13 +302,21 @@ function ValidarTotales() {
             impuestoG += ProdCadena[i].TotalImpuesto;
             descuentoG += ProdCadena[i].Descuento;
             totalG += ProdCadena[i].TotalLinea;
+            totalGX += ProdCadena[i].TotalLinea;
 
         }
 
         $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
         $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
         $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+        var TotalAntesRedondeo = totalG;
+        totalG = redondearAl5(totalG);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+        $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
+
+        redondeo =  totalG - TotalAntesRedondeo ;
+
+        $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
         RellenaTabla();
     } catch (e) {
@@ -328,15 +339,25 @@ function EliminarProducto(i) {
         var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
         var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
         var totalG = parseFloat(ReplaceLetra($("#totG").text()));
+        var totalGX = parseFloat(ReplaceLetra($("#totGX").text()));
+        var redondeo = parseFloat(ReplaceLetra($("#redondeo").text()));
 
         subtotalG -= (Producto.Cantidad * Producto.PrecioUnitario);
         impuestoG -= Producto.TotalImpuesto;
         descuentoG -= Producto.Descuento;
         totalG -= Producto.TotalLinea;
+        totalGX -= Producto.TotalLinea;
+        redondeo -= Producto.TotalLinea;
         $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
         $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
         $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
+        var TotalAntesRedondeo = totalG;
+        totalG = redondearAl5(totalG);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
+        $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
+        redondeo =  totalG - TotalAntesRedondeo ;
+
+        $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
         ProdCadena.splice(i, 1);
         RellenaTabla();
     } catch (e) {
@@ -368,7 +389,8 @@ function Generar() {
             Subtotal: parseFloat(ReplaceLetra($("#subG").text())),
             TotalImpuestos: parseFloat(ReplaceLetra($("#impG").text())),
             TotalDescuento: parseFloat(ReplaceLetra($("#descG").text())),
-            TotalCompra: parseFloat(ReplaceLetra($("#totG").text())),
+            TotalCompra: parseFloat(ReplaceLetra($("#totGX").text())),
+            Redondeo: parseFloat(ReplaceLetra($("#redondeo").text())),
             PorDescto: parseFloat(Documento.PorDescto),
             CodSuc: "",
             Moneda: $("#selectMoneda").val(),

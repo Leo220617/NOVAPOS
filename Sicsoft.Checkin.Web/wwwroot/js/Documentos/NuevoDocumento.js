@@ -678,7 +678,7 @@ function ValidarTotales() {
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
 
-        redondeo = TotalAntesRedondeo - totalG;
+        redondeo = totalG - TotalAntesRedondeo;
 
         $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
@@ -751,7 +751,7 @@ function onChangeMoneda() {
 
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
 
-        redondeo = TotalAntesRedondeo - totalG;
+        redondeo = totalG - TotalAntesRedondeo;
 
         $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
@@ -900,7 +900,7 @@ function onChangeCliente() {
 
 
         $("#spanDireccion").text(Cliente.Sennas);
-        $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
+        $("#strongInfo").text("Cédula: " + Cliente.Cedula + " " + "Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
         $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)));
 
       
@@ -1527,7 +1527,7 @@ function RellenaTabla() {
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+                /*html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
 
                 if ($("#RolGanancia").val() == "value") {
@@ -1800,7 +1800,7 @@ function AgregarProductoTabla() {
                 totalG = redondearAl5(totalG);
                 $("#totG").text(formatoDecimal(totalG.toFixed(2)));
                 $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
-                redondeo = TotalAntesRedondeo - totalG;
+                redondeo = totalG - TotalAntesRedondeo;
 
                 $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
@@ -1857,7 +1857,7 @@ function EliminarProducto(i) {
         totalG = redondearAl5(totalG);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
-        redondeo = TotalAntesRedondeo - totalG;
+        redondeo = totalG - TotalAntesRedondeo;
 
         $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
         ProdCadena.splice(i, 1);
@@ -2136,9 +2136,7 @@ function BuscarCliente() {
                 $("#Nombre").attr("readonly", "readonly");
 
 
-            } else {
-                $("#Nombre").removeAttr("readonly");
-            }
+            } 
 
 
 

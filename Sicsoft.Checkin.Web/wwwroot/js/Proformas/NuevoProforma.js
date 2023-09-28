@@ -849,7 +849,7 @@ function onChangeCliente() {
 
 
         $("#spanDireccion").text(Cliente.Sennas);
-        $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
+        $("#strongInfo").text("Cédula: " + Cliente.Cedula + " " + "Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email );
         $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)));
 
         if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
@@ -1403,7 +1403,7 @@ function RellenaTabla() {
             html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+           /* html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
             if ($("#RolGanancia").val() == "value") {
                 if (ProdCadena[i].Moneda != MonedaDoc) {
@@ -1737,7 +1737,7 @@ function AgregarProductoTabla() {
 function EliminarProducto(i) {
     try {
         var Producto = ProdCadena[i];
-        var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+        var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);redondeo = totalG - TotalAntesRedondeo;
 
 
         var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
@@ -1760,7 +1760,7 @@ function EliminarProducto(i) {
         totalG = redondearAl5(totalG);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
-        redondeo = totalG - TotalAntesRedondeo;
+        redondeo = totalG - TotalAntesRedondeo ;
 
         $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
         ProdCadena.splice(i, 1);
@@ -2170,7 +2170,7 @@ function ValidarTotales() {
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
 
-        redondeo = totalG - TotalAntesRedondeo;
+        redondeo =  totalG - TotalAntesRedondeo ;
 
         $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
@@ -2201,9 +2201,7 @@ function BuscarCliente() {
                 $("#Nombre").attr("readonly", "readonly");
 
 
-            } else {
-                $("#Nombre").removeAttr("readonly");
-            }
+            } 
 
 
 

@@ -2300,33 +2300,77 @@ function ValidarTotales() {
 }
 
 function BuscarCliente() {
-    $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: 'https://apis.gometa.org/cedulas/' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8', //Nombre del metodo
-        data: {},
-        success: function (result) {
+    try {
+        //$.ajax({
+        //    type: 'GET',
+        //    dataType: 'json',
+        //    url: 'https://apis.gometa.org/cedulas/' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8', //Nombre del metodo
+        //    data: {},
+        //    success: function (result) {
 
-            console.log(result);
+        //        console.log(result);
 
-            if (result.nombre != undefined) {
-                $("#Nombre").val(result.nombre);
-                $("#selectTP").val(result.tipoIdentificacion);
-                $("#Nombre").attr("readonly", "readonly");
-
-
-            } 
+        //        if (result.nombre != undefined) {
+        //            $("#Nombre").val(result.nombre);
+        //            $("#selectTP").val(result.tipoIdentificacion);
+        //            $("#Nombre").attr("readonly", "readonly");
 
 
+        //        }
 
-        },
-        beforeSend: function () {
 
-        },
-        complete: function () {
 
-        }
-    });
+        //    },
+        //    beforeSend: function () {
+
+        //    },
+        //    complete: function () {
+
+        //    }
+        //});
+
+
+        fetch('https://apis.gometa.org/cedulas/' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parsea la respuesta como JSON
+            })
+            .then(data => {
+                // Maneja los datos obtenidos
+                console.log(data);
+
+                if (data.nombre != undefined) {
+                    $("#Nombre").val(data.nombre);
+                    $("#selectTP").val(data.tipoIdentificacion);
+                    $("#Nombre").attr("readonly", "readonly");
+
+
+                }
+            })
+            .catch(error => {
+                // Maneja errores
+                console.error('Fetch error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error  ' + error
+
+                })
+            });
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error ' + e
+
+        })
+    }
+
+
+
 }
 
 

@@ -15,6 +15,7 @@ $(document).ready(function () {
 
 });
 var Clientes = []; // variables globales
+var Grupos = [];
 var Productos = [];
 var ProdClientes = [];
 var Impuestos = [];
@@ -93,6 +94,7 @@ function Recuperar() {
         Distritos = JSON.parse($("#Distritos").val());
         Barrios = JSON.parse($("#Barrios").val());
         Clientes = JSON.parse($("#Clientes").val());
+        Grupos = JSON.parse($("#Grupos").val());
         Vendedores = JSON.parse($("#Vendedores").val());
         Productos = JSON.parse($("#Productos").val());
         Impuestos = JSON.parse($("#Impuestos").val());
@@ -611,9 +613,11 @@ function ValidarStocks() {
                     hideAfter: 100000000000,
                     stack: 6
                 });
-                ProdCadena[i].Cantidad = PE.Stock;
+                ProdCadena[i].Cantidad = 0;
 
             }
+          
+               
 
 
         }
@@ -638,12 +642,17 @@ function ValidarTotales() {
         var redondeo = 0;
 
         for (var i = 0; i < ProdCadena.length; i++) {
+           
             var idCliente = $("#ClienteSeleccionado").val();
             var Cliente = Clientes.find(a => a.id == idCliente);
             var IMP2 = Impuestos.find(a => a.Tarifa == 1);
             var EX = Exoneraciones.find(a => a.id == ProdCadena[i].idExoneracion);
 
             var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+            var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
+            if (ProdCadena[i].Cantidad <= 0 && PE.Codigo != PS.Codigo) {
+                EliminarProducto(i);
+            }
             var ImpuestoTarifa = (Cliente.MAG == true && PE.MAG == true && (EX == undefined || EX.PorExon < 13) ? IMP2.id : PE.idImpuesto);
             var IMP = Impuestos.find(a => a.id == ImpuestoTarifa);
 
@@ -797,7 +806,7 @@ function RellenaClientes() {
         html += "<option value='0' > Seleccione Cliente </option>";
 
         for (var i = 0; i < Clientes.length; i++) {
-            html += "<option value='" + Clientes[i].id + "' > " + Clientes[i].Codigo + " - " + Clientes[i].Nombre + " </option>";
+            html += "<option value='" + Clientes[i].id + "' > " + Clientes[i].Codigo + " - " + Clientes[i].Cedula + " - " + Clientes[i].Nombre + " </option>";
         }
 
 
@@ -885,7 +894,7 @@ function onChangeCliente() {
         var idCliente = $("#ClienteSeleccionado").val();
 
         var Cliente = Clientes.find(a => a.id == idCliente);
-
+        var Grupo = Grupos.find(a => a.id == Cliente.idGrupo);
         var Contado = CP.find(a => a.Nombre == "Contado");
 
         if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
@@ -901,7 +910,7 @@ function onChangeCliente() {
 
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Cédula: " + Cliente.Cedula + " " + "Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
-        $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)));
+        $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)) + "  " + "Grupo: " + Grupo.CodSAP + "-" + Grupo.Nombre);
 
       
 
@@ -1590,7 +1599,7 @@ function RellenaTabla() {
                 html += "</tr>";
             } else {
 
-                EliminarProducto(i);
+              
 
 
             }

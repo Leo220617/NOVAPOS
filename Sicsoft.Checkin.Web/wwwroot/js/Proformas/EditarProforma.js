@@ -13,6 +13,7 @@ $(document).ready(function () {
 
 });
 var Clientes = []; // variables globales
+var Grupos = [];
 var Productos = [];
 var ProdClientes = [];
 var Impuestos = [];
@@ -58,6 +59,7 @@ function Recuperar() {
         Distritos = JSON.parse($("#Distritos").val());
         Barrios = JSON.parse($("#Barrios").val());
         Clientes = JSON.parse($("#Clientes").val());
+        Grupos = JSON.parse($("#Grupos").val());
         Vendedores = JSON.parse($("#Vendedores").val());
         Productos = JSON.parse($("#Productos").val());
         Impuestos = JSON.parse($("#Impuestos").val());
@@ -660,7 +662,7 @@ function RellenaClientes() {
         html += "<option value='0' > Seleccione Cliente </option>";
 
         for (var i = 0; i < Clientes.length; i++) {
-            html += "<option value='" + Clientes[i].id + "' > " + Clientes[i].Codigo + " - " + Clientes[i].Nombre + " </option>";
+            html += "<option value='" + Clientes[i].id + "' > " + Clientes[i].Codigo + " - " + Clientes[i].Cedula + " - " + Clientes[i].Nombre + " </option>";
         }
 
 
@@ -750,6 +752,7 @@ function onChangeCliente() {
 
   
         var Cliente = Clientes.find(a => a.id == idCliente);
+        var Grupo = Grupos.find(a => a.id == Cliente.idGrupo);
      
         var Contado = CP.find(a => a.Nombre == "Contado");
 
@@ -758,7 +761,7 @@ function onChangeCliente() {
 
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Cédula: " + Cliente.Cedula + " " + "Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
-        $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)));
+        $("#strongInfo2").text("Grupo: " + Grupo.CodSAP + "-" + Grupo.Nombre + "  " + "Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)));
 
         if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
             Swal.fire({

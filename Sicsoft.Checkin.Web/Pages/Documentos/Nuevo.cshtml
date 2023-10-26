@@ -26,7 +26,7 @@
     @section scripts{
 
 
-    <script src="/js/Documentos/NuevoDocumento.js?v=0.0.9"></script>
+    <script src="/js/Documentos/NuevoDocumento.js?v=0.1.0"></script>
 
 
 }
@@ -51,6 +51,7 @@
                 <input hidden id="Distritos" value="@JsonConvert.SerializeObject(Model.Distritos)" />
                 <input hidden id="Barrios" value="@JsonConvert.SerializeObject(Model.Barrios)" />
                 <input hidden id="Clientes" value="@JsonConvert.SerializeObject(Model.Clientes)" />
+                <input hidden id="Grupos" value="@JsonConvert.SerializeObject(Model.Grupos)" />
                 <input hidden id="Vendedores" value="@JsonConvert.SerializeObject(Model.Vendedores)" />
                 <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
                 <input hidden id="Impuestos" value="@JsonConvert.SerializeObject(Model.Impuestos)" />
@@ -150,7 +151,7 @@
                                 <strong id="strongInfo">  Cédula: &nbsp;&nbsp;&nbsp;&nbsp; Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
 
                                     <br><br>
-                                    <strong id="strongInfo2">Saldo:   &nbsp;&nbsp;&nbsp;&nbsp; Limite Crédito:  </strong>
+                                <strong id="strongInfo2">Saldo:   &nbsp;&nbsp;&nbsp;&nbsp; Limite Crédito:  &nbsp;&nbsp;&nbsp;&nbsp;  Grupo:</strong>
                                 </address>
                             </div>
                             <div class="col-sm-3">

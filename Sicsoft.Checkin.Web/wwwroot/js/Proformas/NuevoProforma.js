@@ -36,6 +36,7 @@ var Duplicado = false;
 var SeriesProductos = [];
 var ProdSeries = [];
 var LotesCadena = [];
+var DetPromociones = [];
 
 function CerrarPopUpLotes() {
     try {
@@ -64,6 +65,7 @@ function Recuperar() {
         Sucursal = JSON.parse($("#Sucursal").val());
         ExoneracionesCliente = [];
         SeriesProductos = JSON.parse($("#SeriesProductos").val());
+        DetPromociones = JSON.parse($("#DetPromociones").val());
 
         RellenaClientes();
         RellenaVendedores();
@@ -771,14 +773,28 @@ function RellenaClientes() {
 function RellenaProductos() {
     try {
         var html = "";
+      
         $("#ProductoSeleccionado").html(html);
 
         html += "<option value='0' > Seleccione Producto </option>";
 
         for (var i = 0; i < ProdClientes.length; i++) {
+
+            var Promo = DetPromociones.find(a => a.ItemCode == ProdClientes[i].Codigo && a.idListaPrecio == ProdClientes[i].idListaPrecios && a.idCategoria == ProdClientes[i].idCategoria);
+           
+
+           
             var Bodegas = Bodega.find(a => a.id == ProdClientes[i].idBodega) == undefined ? undefined : Bodega.find(a => a.id == ProdClientes[i].idBodega);
 
-            html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " </option>";
+            if (Promo != undefined) {
+
+                html += "<option class='Promo' value='" + ProdClientes[i].id + "' > " +  "**PROMO** " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " **PROMO** " + " </option>";
+
+            } else {
+                html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " </option>";
+            }
+
+           
         }
 
 

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NOVAAPP.Models;
+using NOVAPOS.Models;
 using Refit;
 using Sicsoft.Checkin.Web.Models;
 using Sicsoft.Checkin.Web.Servicios;
@@ -283,6 +284,9 @@ namespace Sicsoft.Checkin.Web
 .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Parametros"))
 .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
+            services.AddRefitClient<ICrudApi<PromocionesViewModel, int>>()
+.ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/DetPromociones"))
+.AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
 
             return services;

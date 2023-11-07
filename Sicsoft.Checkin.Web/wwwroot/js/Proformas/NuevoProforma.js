@@ -778,6 +778,20 @@ function RellenaProductos() {
 
         html += "<option value='0' > Seleccione Producto </option>";
 
+        ProdClientes.sort(function (a, b) {
+            // Compara si a y b tienen promoción, y coloca los que tienen promoción primero
+            var promoA = DetPromociones.find(promo => promo.ItemCode === a.Codigo && promo.idListaPrecio === a.idListaPrecios && promo.idCategoria === a.idCategoria);
+            var promoB = DetPromociones.find(promo => promo.ItemCode === b.Codigo && promo.idListaPrecio === b.idListaPrecios && promo.idCategoria === b.idCategoria);
+
+            if (promoA && !promoB) {
+                return -1;
+            } else if (!promoA && promoB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
         for (var i = 0; i < ProdClientes.length; i++) {
 
             var Promo = DetPromociones.find(a => a.ItemCode == ProdClientes[i].Codigo && a.idListaPrecio == ProdClientes[i].idListaPrecios && a.idCategoria == ProdClientes[i].idCategoria);
@@ -788,13 +802,20 @@ function RellenaProductos() {
 
             if (Promo != undefined) {
 
-                html += "<option class='Promo' value='" + ProdClientes[i].id + "' > " +  "**PROMO** " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " **PROMO** " + " </option>";
+                html += "<option class='Promo' value='" + ProdClientes[i].id + "' > " + "**PROMO** " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " -  Precio Anterior: " + formatoDecimal(parseFloat(Promo.PrecioAnterior).toFixed(2)) + " </option>";
+                //var options = document.querySelectorAll('.select2-results__option');
+
+                //options.forEach(function (option) {
+                //    if (option.textContent.includes("**PROMO**")) {
+                //        option.style.backgroundColor = 'green';
+                //    }
+                //});
 
             } else {
                 html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " </option>";
             }
 
-           
+          
         }
 
 
@@ -811,7 +832,21 @@ function RellenaProductos() {
 
 }
 
+function CambiarColor() {
+    var selectElement = document.querySelector('#ProductoSeleccionado');
 
+    if (selectElement) {
+        // Encuentra las opciones dentro del elemento select con la clase select2-results__option
+        var options = selectElement.querySelectorAll('.select2-results__option');
+
+        options.forEach(function (option) {
+            // Realiza cualquier acción que necesites con las opciones aquí
+            if (option.textContent.includes("**PROMO**")) {
+                option.style.backgroundColor = 'green';
+            }
+        });
+    }
+}
 function RellenaExoneraciones() {
 
     try {

@@ -35,6 +35,7 @@ var Duplicado = false;
 var SeriesProductos = [];
 var ProdSeries = [];
 var LotesCadena = [];
+var DetPromociones = [];
 
 
 function CerrarPopUpLotes() {
@@ -72,7 +73,8 @@ function Recuperar() {
         Sucursal = JSON.parse($("#Sucursal").val());
         ExoneracionesCliente = [];
         SeriesProductos = JSON.parse($("#SeriesProductos").val());
-      
+        DetPromociones = JSON.parse($("#DetPromociones").val());
+
 
         RellenaClientes();
         RellenaVendedores();
@@ -616,7 +618,7 @@ function onChangeMoneda() {
 
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
 
-       redondeo = totalG - TotalAntesRedondeo;
+        redondeo = totalG - TotalAntesRedondeo;
 
         $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
@@ -681,13 +683,49 @@ function RellenaClientes() {
 function RellenaProductos() {
     try {
         var html = "";
+
         $("#ProductoSeleccionado").html(html);
 
         html += "<option value='0' > Seleccione Producto </option>";
 
+        ProdClientes.sort(function (a, b) {
+            // Compara si a y b tienen promoción, y coloca los que tienen promoción primero
+            var promoA = DetPromociones.find(promo => promo.ItemCode === a.Codigo && promo.idListaPrecio === a.idListaPrecios && promo.idCategoria === a.idCategoria);
+            var promoB = DetPromociones.find(promo => promo.ItemCode === b.Codigo && promo.idListaPrecio === b.idListaPrecios && promo.idCategoria === b.idCategoria);
+
+            if (promoA && !promoB) {
+                return -1;
+            } else if (!promoA && promoB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
         for (var i = 0; i < ProdClientes.length; i++) {
+
+            var Promo = DetPromociones.find(a => a.ItemCode == ProdClientes[i].Codigo && a.idListaPrecio == ProdClientes[i].idListaPrecios && a.idCategoria == ProdClientes[i].idCategoria);
+
+
+
             var Bodegas = Bodega.find(a => a.id == ProdClientes[i].idBodega) == undefined ? undefined : Bodega.find(a => a.id == ProdClientes[i].idBodega);
-            html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " </option>";
+
+            if (Promo != undefined) {
+
+                html += "<option class='Promo' value='" + ProdClientes[i].id + "' > " + "**PROMO** " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " -  Precio Anterior: " + formatoDecimal(parseFloat(Promo.PrecioAnterior).toFixed(2)) + " </option>";
+                //var options = document.querySelectorAll('.select2-results__option');
+
+                //options.forEach(function (option) {
+                //    if (option.textContent.includes("**PROMO**")) {
+                //        option.style.backgroundColor = 'green';
+                //    }
+                //});
+
+            } else {
+                html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " </option>";
+            }
+
+
         }
 
 
@@ -697,7 +735,7 @@ function RellenaProductos() {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Ha ocurrido un error al intentar recuperar ' + e
+            text: 'Error ' + e
 
         })
     }
@@ -750,13 +788,13 @@ function onChangeCliente() {
     try {
         var idCliente = $("#ClienteSeleccionado").val();
 
-  
+
         var Cliente = Clientes.find(a => a.id == idCliente);
         var Grupo = Grupos.find(a => a.id == Cliente.idGrupo);
-     
+
         var Contado = CP.find(a => a.Nombre == "Contado");
 
-        
+
 
 
         $("#spanDireccion").text(Cliente.Sennas);
@@ -840,7 +878,7 @@ function RecolectarFacturas() {
 
                     })
                 } else {
-                    if ((Cliente.LimiteCredito - Cliente.Saldo)  <= 0 && Cliente.idCondicionPago != Contado.id) {
+                    if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
                         Swal.fire({
                             icon: 'warning',
                             title: 'Advertencia',
@@ -927,7 +965,7 @@ function RellenaCondiciones(CPS) {
         if (Inicio == true) {
             $("#selectCondPago").val(Oferta.idCondPago);
             Inicio = false;
-        } 
+        }
 
     } catch (e) {
         Swal.fire({
@@ -1406,7 +1444,7 @@ function RellenaTabla() {
             html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-        /*    html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
+            /*    html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
             if ($("#RolGanancia").val() == "value") {
                 if (ProdCadena[i].Moneda != MonedaDoc) {
@@ -1451,12 +1489,12 @@ function RellenaTabla() {
                 ValidarCosto();
             }
             html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
-            
+
             if (PE.Serie == true) {
                 html += "<td class='text-center'> <a href='#test-form' class='popup-with-form fa fa-info-circle icono' onclick='javascript:AbrirModalSeries(" + i + ") '> </a> </td>";
             }
             html += "</tr>";
-          
+
 
         }
 
@@ -1591,7 +1629,7 @@ function AgregarProductoTabla() {
                 Duplicado = false;
             }
         }
-    
+
         if (PE.PrecioUnitario > Producto.PrecioUnitario && PE.Editable == false) {
             Swal.fire({
                 icon: 'error',
@@ -1640,7 +1678,7 @@ function AgregarProductoTabla() {
 
             })
 
-        } else if ( Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0)) {
+        } else if (Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0)) {
 
             if (Producto.Cabys.length >= 13) {
 
@@ -1678,7 +1716,7 @@ function AgregarProductoTabla() {
                 totalG = redondearAl5(totalG);
                 $("#totG").text(formatoDecimal(totalG.toFixed(2)));
                 $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
-                redondeo =  totalG - TotalAntesRedondeo;
+                redondeo = totalG - TotalAntesRedondeo;
 
                 $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
@@ -1738,12 +1776,12 @@ function EliminarProducto(i) {
     $("#subG").text(formatoDecimal(subtotalG.toFixed(2)));
     $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
     $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
-   
+
     var TotalAntesRedondeo = totalG;
     totalG = redondearAl5(totalG);
     $("#totG").text(formatoDecimal(totalG.toFixed(2)));
     $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
-    redondeo =  totalG - TotalAntesRedondeo ;
+    redondeo = totalG - TotalAntesRedondeo;
 
     $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
     ProdCadena.splice(i, 1);
@@ -1797,7 +1835,7 @@ function Generar() {
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
-                 
+
 
 
                     $.ajax({
@@ -2083,7 +2121,7 @@ function ValidarTotales() {
         var impuestoG = 0;
         var descuentoG = 0;
         var totalG = 0;
-      
+
         var totalGX = 0;
         var redondeo = 0;
 

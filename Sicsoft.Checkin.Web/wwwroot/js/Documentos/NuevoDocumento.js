@@ -39,6 +39,8 @@ var Duplicado = false;
 var SeriesProductos = [];
 var ProdSeries = [];
 var LotesCadena = [];
+var DetPromociones = [];
+
 function HideP() {
     try {
         $("#boxP").hide();
@@ -108,6 +110,7 @@ function Recuperar() {
         Sucursal = JSON.parse($("#Sucursal").val());
         ExoneracionesCliente = [];
         SeriesProductos = JSON.parse($("#SeriesProductos").val());
+        DetPromociones = JSON.parse($("#DetPromociones").val());
 
         RellenaClientes();
         RellenaVendedores();
@@ -825,13 +828,49 @@ function RellenaClientes() {
 function RellenaProductos() {
     try {
         var html = "";
+
         $("#ProductoSeleccionado").html(html);
 
         html += "<option value='0' > Seleccione Producto </option>";
 
+        ProdClientes.sort(function (a, b) {
+            // Compara si a y b tienen promoción, y coloca los que tienen promoción primero
+            var promoA = DetPromociones.find(promo => promo.ItemCode === a.Codigo && promo.idListaPrecio === a.idListaPrecios && promo.idCategoria === a.idCategoria);
+            var promoB = DetPromociones.find(promo => promo.ItemCode === b.Codigo && promo.idListaPrecio === b.idListaPrecios && promo.idCategoria === b.idCategoria);
+
+            if (promoA && !promoB) {
+                return -1;
+            } else if (!promoA && promoB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
         for (var i = 0; i < ProdClientes.length; i++) {
+
+            var Promo = DetPromociones.find(a => a.ItemCode == ProdClientes[i].Codigo && a.idListaPrecio == ProdClientes[i].idListaPrecios && a.idCategoria == ProdClientes[i].idCategoria);
+
+
+
             var Bodegas = Bodega.find(a => a.id == ProdClientes[i].idBodega) == undefined ? undefined : Bodega.find(a => a.id == ProdClientes[i].idBodega);
-            html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " </option>";
+
+            if (Promo != undefined) {
+
+                html += "<option class='Promo' value='" + ProdClientes[i].id + "' > " + "**PROMO** " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " -  Precio Anterior: " + formatoDecimal(parseFloat(Promo.PrecioAnterior).toFixed(2)) + " </option>";
+                //var options = document.querySelectorAll('.select2-results__option');
+
+                //options.forEach(function (option) {
+                //    if (option.textContent.includes("**PROMO**")) {
+                //        option.style.backgroundColor = 'green';
+                //    }
+                //});
+
+            } else {
+                html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " </option>";
+            }
+
+
         }
 
 
@@ -841,13 +880,12 @@ function RellenaProductos() {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Ha ocurrido un error al intentar imprimir ' + e
+            text: 'Error ' + e
 
         })
     }
 
 }
-
 function RellenaExoneraciones() {
 
     try {

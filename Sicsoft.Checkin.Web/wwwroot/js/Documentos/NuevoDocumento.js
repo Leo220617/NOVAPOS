@@ -1741,7 +1741,7 @@ function AgregarProductoTabla() {
 
         var LotesArray = LotesCadena.filter(a => a.ItemCode == PE.Codigo);
         var cantidad = parseInt($("#cantidad").val());
-
+        var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria);
         var cantidades = 0;
 
         for (var i = 0; i < LotesArray.length; i++) {
@@ -1799,7 +1799,15 @@ function AgregarProductoTabla() {
             })
 
         }
+        if (Promo != undefined && Producto.PorDescto > 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No se puede aplicar más descuentos, el Producto ' + Producto.Descripcion + 'ya tiene una Promoción'
 
+            })
+
+        }
         if (Producto.PorDescto > Descuento) {
             Swal.fire({
                 icon: 'error',
@@ -1810,7 +1818,7 @@ function AgregarProductoTabla() {
 
         }
 
-        else if ( Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) || Producto.Codigo == PS.Codigo) {
+        else if (Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) || Producto.Codigo == PS.Codigo && ((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined))) {
             if (Producto.Cabys.length >= 13) {
 
 

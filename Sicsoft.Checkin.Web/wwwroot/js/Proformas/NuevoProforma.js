@@ -1625,6 +1625,8 @@ function AgregarProductoTabla() {
         var Descuento = parseFloat($("#DES").val());
         var LotesArray = LotesCadena.filter(a => a.ItemCode == PE.Codigo);
         var cantidad = parseInt($("#cantidad").val());
+        var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria);
+
 
         var cantidades = 0;
 
@@ -1702,6 +1704,15 @@ function AgregarProductoTabla() {
 
         }
 
+        if (Promo != undefined && Producto.PorDescto > 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No se puede aplicar más descuentos, el Producto ' + Producto.Descripcion + 'ya tiene una Promoción'
+
+            })
+
+        }
         if (Producto.PorDescto > Descuento) {
             Swal.fire({
                 icon: 'error',
@@ -1710,7 +1721,7 @@ function AgregarProductoTabla() {
 
             })
 
-        } else if (((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0)) {
+        } else if (((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0) && ((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) ) {
 
             if (Producto.Cabys.length >= 13) {
 
@@ -2048,7 +2059,9 @@ function onChangeDescuentoProducto(i) {
         ProdCadena[i].PorDescto = parseFloat($("#" + i + "_Prod2").val()).toFixed(2);
         var Descuento = parseFloat($("#DES").val());
 
-        if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento) {
+        var Promo = DetPromociones.find(a => a.ItemCode == ProdClientes[i].Codigo && a.idListaPrecio == ProdClientes[i].idListaPrecios && a.idCategoria == ProdClientes[i].idCategoria);
+
+        if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento && Promo == undefined) {
             ValidarTotales();
         }
 
@@ -2061,6 +2074,17 @@ function onChangeDescuentoProducto(i) {
 
             })
 
+            ValidarTotales();
+            ValidarCosto();
+        }
+        if (Promo != undefined) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No se puede aplicar más descuentos, el Producto ' + ProdCadena[i].Descripcion + 'ya tiene una Promoción'
+
+            })
+            ProdCadena[i].PorDescto = 0;
             ValidarTotales();
             ValidarCosto();
         }

@@ -38,6 +38,8 @@ namespace NOVAAPP.Pages.Ofertas
         private readonly ICrudApi<SeriesProductosViewModel, int> series;
         private readonly ICrudApi<ParametrosViewModel, int> parametro;
         private readonly ICrudApi<PromocionesViewModel, int> promociones;
+        private readonly ICrudApi<EncMargenesViewModel, int> margenes;
+        private readonly ICrudApi<DetMargenesViewModel, int> detmargenes;
 
 
 
@@ -111,8 +113,13 @@ namespace NOVAAPP.Pages.Ofertas
         [BindProperty]
         public PromocionesViewModel[] DetPromociones { get; set; }
 
+        [BindProperty]
+        public EncMargenesViewModel[] Margenes { get; set; }
 
-        public NuevoModel(ICrudApi<ParametrosViewModel, int> parametro, ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos,ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<UsuariosViewModel, int> usuario, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<DocumentosCreditoViewModel, int> documentos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<SeriesProductosViewModel, int> series, ICrudApi<PromocionesViewModel, int> promociones) //CTOR 
+        [BindProperty]
+        public DetMargenesViewModel[] DetMargenes { get; set; }
+
+        public NuevoModel(ICrudApi<ParametrosViewModel, int> parametro, ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos,ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<UsuariosViewModel, int> usuario, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<DocumentosCreditoViewModel, int> documentos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<SeriesProductosViewModel, int> series, ICrudApi<PromocionesViewModel, int> promociones, ICrudApi<EncMargenesViewModel, int> margenes, ICrudApi<DetMargenesViewModel, int> detmargenes) //CTOR 
         {
             this.service = service;
             this.serviceU = serviceU;
@@ -134,6 +141,8 @@ namespace NOVAAPP.Pages.Ofertas
             this.series = series;
             this.parametro = parametro;
             this.promociones = promociones;
+            this.margenes = margenes;
+            this.detmargenes = detmargenes;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -254,6 +263,11 @@ namespace NOVAAPP.Pages.Ofertas
                 ParametrosFiltros filtro2 = new ParametrosFiltros();
                 filtro2.Activo = true;
                 DetPromociones = await promociones.ObtenerLista(filtro2);
+
+                ParametrosFiltros filtro3 = new ParametrosFiltros();
+                filtro3.Codigo1 = MiSucursal.idListaPrecios;
+                Margenes = await margenes.ObtenerLista(filtro3);
+                DetMargenes = await detmargenes.ObtenerLista(filtro3);
 
                 return Page();
             }

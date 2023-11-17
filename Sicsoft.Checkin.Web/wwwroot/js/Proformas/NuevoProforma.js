@@ -37,6 +37,8 @@ var SeriesProductos = [];
 var ProdSeries = [];
 var LotesCadena = [];
 var DetPromociones = [];
+var Margenes = [];
+var DetMargenes = [];
 
 function CerrarPopUpLotes() {
     try {
@@ -66,6 +68,8 @@ function Recuperar() {
         ExoneracionesCliente = [];
         SeriesProductos = JSON.parse($("#SeriesProductos").val());
         DetPromociones = JSON.parse($("#DetPromociones").val());
+        Margenes = JSON.parse($("#Margenes").val());
+        DetMargenes = JSON.parse($("#DetMargenes").val());
 
         RellenaClientes();
         RellenaVendedores();
@@ -122,8 +126,19 @@ function RecuperarInformacion() {
                 idExoneracion: Documento.Detalle[i].Cabys,
                 Costo: PE.Costo,
                 PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon,
-                NumSerie: Documento.Detalle[i].NumSerie
+                NumSerie: Documento.Detalle[i].NumSerie,
+                PrecioMin: 0
             };
+            var DetMargen = DetMargenes.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
+            var Margen = Margenes.find(a => a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
+
+            if (DetMargen != undefined) {
+                Producto.PrecioMin = DetMargen.PrecioMin;
+
+            } else if (Margen != undefined) {
+                var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
+                Producto.PrecioMin = PrecioCob / (1 - (Margen.MargenMin / 100));
+            }
 
             ProdCadena.push(Producto);
 
@@ -1599,6 +1614,8 @@ function AgregarProductoTabla() {
         var id = $("#ProductoSeleccionado").val();
         var PE = ProdClientes.find(a => a.id == id);
 
+       
+
 
 
         var Producto =
@@ -1618,7 +1635,8 @@ function AgregarProductoTabla() {
             idExoneracion: $("#exoneracion").val(),
             NomPro: $("#inputNomPro").val(),
             PorExoneracion: 0,
-            Costo: PE.Costo
+            Costo: PE.Costo,
+            PrecioMin: 0
 
         };
 
@@ -1626,7 +1644,16 @@ function AgregarProductoTabla() {
         var LotesArray = LotesCadena.filter(a => a.ItemCode == PE.Codigo);
         var cantidad = parseInt($("#cantidad").val());
         var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria);
+        var DetMargen = DetMargenes.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
+        var Margen = Margenes.find(a => a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
 
+        if (DetMargen != undefined) {
+            Producto.PrecioMin = DetMargen.PrecioMin;
+
+        } else if (Margen != undefined) {
+            var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
+            Producto.PrecioMin = PrecioCob / (1 - (Margen.MargenMin / 100));
+        }
 
         var cantidades = 0;
 
@@ -1708,7 +1735,20 @@ function AgregarProductoTabla() {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'No se puede aplicar más descuentos, el Producto ' + Producto.Descripcion + 'ya tiene una Promoción'
+                text: 'No se puede aplicar más descuentos, el Producto ' + Producto.Descripcion + ' ya tiene una Promoción'
+
+            })
+
+        }
+        var DescuentoMaximo = ((Producto.PrecioUnitario - Producto.PrecioMin) / Producto.PrecioUnitario) * 100;
+        var Descuento =  Producto.PrecioUnitario * (Producto.PorDescto / 100);
+        var PrecioFinal = Producto.PrecioUnitario - Descuento;
+
+        if (Producto.PrecioMin  > PrecioFinal) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No se puede aplicar el descuento debido a que es menor al Precio Minimo, el Producto ' + Producto.Descripcion + ' lo maximo que se le puede aplicar de Descuento es de ' + parseFloat(DescuentoMaximo).toFixed(2) + '%'
 
             })
 
@@ -1721,7 +1761,7 @@ function AgregarProductoTabla() {
 
             })
 
-        } else if (((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0) && ((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) ) {
+        } else if (((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined) ) && Producto.PrecioMin <= PrecioFinal &&((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0) ) {
 
             if (Producto.Cabys.length >= 13) {
 
@@ -2059,9 +2099,16 @@ function onChangeDescuentoProducto(i) {
         ProdCadena[i].PorDescto = parseFloat($("#" + i + "_Prod2").val()).toFixed(2);
         var Descuento = parseFloat($("#DES").val());
 
-        var Promo = DetPromociones.find(a => a.ItemCode == ProdClientes[i].Codigo && a.idListaPrecio == ProdClientes[i].idListaPrecios && a.idCategoria == ProdClientes[i].idCategoria);
+        var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+        var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria);
+     
 
-        if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento && Promo == undefined) {
+        var DescuentoMaximo = ((ProdCadena[i].PrecioUnitario - ProdCadena[i].PrecioMin) / ProdCadena[i].PrecioUnitario) * 100;
+        var Descuento = ProdCadena[i].PrecioUnitario * (ProdCadena[i].PorDescto / 100);
+        var PrecioFinal = ProdCadena[i].PrecioUnitario - Descuento;
+
+
+        if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento && Promo == undefined && ProdCadena[i].PrecioMin <= PrecioFinal) {
             ValidarTotales();
         }
 
@@ -2081,18 +2128,30 @@ function onChangeDescuentoProducto(i) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'No se puede aplicar más descuentos, el Producto ' + ProdCadena[i].Descripcion + 'ya tiene una Promoción'
+                text: 'No se puede aplicar más descuentos, el Producto ' + ProdCadena[i].Descripcion + ' ya tiene una Promoción'
 
             })
             ProdCadena[i].PorDescto = 0;
             ValidarTotales();
             ValidarCosto();
         }
+     
         if (ProdCadena[i].PorDescto > Descuento) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Usted no puede aplicar este descuento, el descuento máximo asignado a su usuario es de' + ' ' + parseFloat(Descuento).toFixed(2) + '%'
+
+            })
+            ProdCadena[i].PorDescto = 0;
+            ValidarTotales();
+            ValidarCosto();
+        }
+        if (ProdCadena[i].PrecioMin > PrecioFinal) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No se puede aplicar el descuento debido a que es menor al Precio Minimo, el Producto ' + ProdCadena[i].Descripcion + ' lo maximo que se le puede aplicar de Descuento es de ' + parseFloat(DescuentoMaximo).toFixed(2) + '%'
 
             })
             ProdCadena[i].PorDescto = 0;
@@ -2114,7 +2173,7 @@ function onChangePrecioProducto(i) {
     try {
 
         var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
-        ;
+        
         ProdCadena[i].PrecioUnitario = parseFloat($("#" + i + "_Prod3").val()).toFixed(2);
 
         if (ProdCadena[i].PrecioUnitario >= PE.PrecioUnitario || (PE.Editable == true && ProdCadena[i].PrecioUnitario > 0)) {

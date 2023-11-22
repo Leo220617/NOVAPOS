@@ -1,4 +1,5 @@
 ﻿@page
+@using Newtonsoft.Json;
 @model NOVAAPP.Pages.PagoCuentas.NuevoModel
 @{
     ViewData["Title"] = "PagoCuentas";
@@ -10,105 +11,136 @@
 
 }
 
-    @section scripts{
+@section scripts{
 
     <script>
+        var ProdCB = [];
+        ProdCB = JSON.parse($("#CuentaB").val());
+
+        onChangeMoneda();
         var btn = document.getElementById('Guardar');
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             btn.disabled = false;
         });
         function onGuardar() {
-            try{
+            try {
                 btn.disabled = true;
                 $("#formTipos").submit();
-            }catch(e)
-            {
+            } catch (e) {
                 btn.disabled = true;
 
-                 Swal.fire({
+                Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Ha ocurrido un error ' + e
 
                 })
             }
-            
-             
+
+
 
         }
+        function onChangeMoneda() {
+            try {
+                var html = "";
+                var Moneda = $("#Moneda").val();
+
+               
+
+                var Cuentas = ProdCB.filter(a => a.Moneda == Moneda);
+                $("#CuentaSeleccionada").html(html);
+                html += "<option value='0' > Seleccione </option>";
+
+                for (var i = 0; i < Cuentas.length; i++) {
+                    html += "<option value='" + Cuentas[i].id + "' > " + Cuentas[i].CuentaSAP + " - " + Cuentas[i].Nombre + " </option>";
+                }
+
+                $("#CuentaSeleccionada").html(html);
+            } catch (e) {
+              
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error ' + e
+
+                })
+            }
+        }
+      
     </script>
 
 
 }
 
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <h1>
-            Pago a Cuenta
-        </h1>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
-            <li class="breadcrumb-item active">Crear Nuevo Pago a Cuenta</li>
-        </ol>
-    </section>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Pago a Cuenta
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+        <li class="breadcrumb-item active">Crear Nuevo Pago a Cuenta</li>
+    </ol>
+</section>
+
+<input hidden id="CuentaB" value="@JsonConvert.SerializeObject(Model.CB)" />
+
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-8">
+                            <h6 class="box-subtitle"> Crear Nuevo Pago a Cuenta</h6>
+
+                        </div>
+                        <div class="col-4">
+                            <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
 
 
-
-    <section class="content">
-        <div class="row">
-            <div class="col-12">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <div class="row">
-                            <div class="col-8">
-                                <h6 class="box-subtitle"> Crear Nuevo Pago a Cuenta</h6>
-
-                            </div>
-                            <div class="col-4">
-                                <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
-
-
-                            </div>
                         </div>
                     </div>
-                    <div class="box-body">
-                        <form method="post" id="formTipos" role="form" novalidate class="needs-validation " enctype="multipart/form-data">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Fecha</label>
-                                        <input type="date" disabled class="form-control" asp-for="Cuenta.Fecha" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")">
+                </div>
+                <div class="box-body">
+                    <form method="post" id="formTipos" role="form" novalidate class="needs-validation " enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Fecha</label>
+                                    <input type="date" disabled class="form-control" asp-for="Cuenta.Fecha" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")">
 
 
-                                    </div>
                                 </div>
+                            </div>
 
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Fecha de Vencimiento</label>
-                                        <input type="date" class="form-control" asp-for="Cuenta.FechaVencimiento" value="@DateTime.Now.Date.AddDays(3).ToString("yyyy-MM-dd")">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Fecha de Vencimiento</label>
+                                    <input type="date" class="form-control" asp-for="Cuenta.FechaVencimiento" value="@DateTime.Now.Date.AddDays(3).ToString("yyyy-MM-dd")">
 
 
-                                    </div>
                                 </div>
+                            </div>
 
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Fecha de Contabilización</label>
-                                        <input type="date" class="form-control" asp-for="Cuenta.FechaContabilizacion" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Fecha de Contabilización</label>
+                                    <input type="date" class="form-control" asp-for="Cuenta.FechaContabilizacion" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")">
 
 
-                                    </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <h5>Cliente<span class="text-danger">*</span></h5>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <h5>Cliente<span class="text-danger">*</span></h5>
 
-                                        <select class="form-control select2  " asp-for="Cuenta.idCliente">
-                                            <option value="0"> Seleccione</option>
-                                            @foreach (var item in Model.ClientesLista)
+                                    <select class="form-control select2  " asp-for="Cuenta.idCliente">
+                                        <option value="0"> Seleccione</option>
+                                        @foreach (var item in Model.ClientesLista)
                                         {
                                             <option value="@item.id">@item.Codigo - @item.Nombre</option>
                                         }
@@ -120,12 +152,26 @@
 
                                 </div>
                             </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <h5>Cuenta Bancaria<span class="text-danger">*</span></h5>
+
+                                    <select class="form-control select2  " id="CuentaSeleccionada" asp-for="Cuenta.idCuentaBancaria">
+                                        <option value="0"> Seleccione</option>
+                                       
 
 
-                            <div class="col-md-4">
+                                    </select>
+
+
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <h5>Moneda<span class="text-danger">*</span></h5>
-                                    <select class="form-control select2" asp-for="Cuenta.Moneda">
+                                    <select class="form-control select2" id="Moneda" asp-for="Cuenta.Moneda" onchange="javascript: onChangeMoneda()">
                                         <option value="CRC" selected>CRC</option>
                                         <option value="USD">USD</option>
 
@@ -137,7 +183,7 @@
 
 
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <h5>Total<span class="text-danger">*</span></h5>
                                     <div class="controls">

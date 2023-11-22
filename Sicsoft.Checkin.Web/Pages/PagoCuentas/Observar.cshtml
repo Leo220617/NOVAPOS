@@ -111,15 +111,18 @@
 
                                             <br />
                                             <br />
-                                       
 
 
-                                            <div class="col-md-6">
+                                        <div class="col-4">
+                                            <h5> <b>Cuenta Bancaria: @(Model.CB.Where(a => a.id == Model.Cuenta.idCuentaBancaria).FirstOrDefault() == null ? "Cuenta Inexistente" : Model.CB.Where(a => a.id == Model.Cuenta.idCuentaBancaria).FirstOrDefault().CuentaSAP + " - " + Model.CB.Where(a => a.id == Model.Cuenta.idCuentaBancaria).FirstOrDefault().Nombre) </b> </h5>
+
+                                        </div>
+                                            <div class="col-md-4">
                                                 <h5> <b>DocEntry:</b> @Model.Cuenta.DocEntry</h5>
 
                                             </div>
 
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <h5>
                                                     <b>Procesado SAP:</b>
                                                     @if (Model.Cuenta.ProcesadaSAP)

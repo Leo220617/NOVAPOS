@@ -16,6 +16,7 @@ namespace NOVAAPP.Pages.PagoCuentas
     {
         private readonly ICrudApi<PagoCuentasViewModel, int> service; //API
         private readonly ICrudApi<ClientesViewModel, string> clientes;
+        private readonly ICrudApi<CuentasBancariasViewModel, int> serviceCB;
 
         [BindProperty]
         public PagoCuentasViewModel Cuenta { get; set; }
@@ -23,10 +24,13 @@ namespace NOVAAPP.Pages.PagoCuentas
         [BindProperty]
         public ClientesViewModel[] ClientesLista { get; set; }
 
-        public NuevoModel(ICrudApi<PagoCuentasViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes) //CTOR 
+        [BindProperty]
+        public CuentasBancariasViewModel[] CB { get; set; }
+        public NuevoModel(ICrudApi<PagoCuentasViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<CuentasBancariasViewModel, int> serviceCB) //CTOR 
         {
             this.service = service;
             this.clientes = clientes;
+            this.serviceCB = serviceCB;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -43,6 +47,9 @@ namespace NOVAAPP.Pages.PagoCuentas
                 filtro.Activo = true;
                 ClientesLista = await clientes.ObtenerLista(filtro);
                 ClientesLista = ClientesLista.Where(a => a.Activo == true && !a.Nombre.ToLower().Contains("contado")).ToArray();
+                ParametrosFiltros FiltroCB = new ParametrosFiltros();
+                FiltroCB.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                CB = await serviceCB.ObtenerLista(FiltroCB);
                 return Page();
             }
             catch (Exception ex)

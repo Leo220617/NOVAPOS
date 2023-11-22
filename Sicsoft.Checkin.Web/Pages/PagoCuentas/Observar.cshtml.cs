@@ -17,6 +17,7 @@ namespace NOVAAPP.Pages.PagoCuentas
         private readonly ICrudApi<PagoCuentasViewModel, int> service; //API
         private readonly ICrudApi<ClientesViewModel, string> clientes;
         private readonly ICrudApi<SucursalesViewModel, string> sucursales;
+        private readonly ICrudApi<CuentasBancariasViewModel, int> serviceCB;
 
         [BindProperty]
         public PagoCuentasViewModel Cuenta { get; set; }
@@ -32,12 +33,16 @@ namespace NOVAAPP.Pages.PagoCuentas
 
         [BindProperty]
         public string NombreCliente { get; set; }
-        public ObservarModel(IConfiguration configuration, ICrudApi<PagoCuentasViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<SucursalesViewModel, string> sucursales) //CTOR 
+
+        [BindProperty]
+        public CuentasBancariasViewModel[] CB { get; set; }
+        public ObservarModel(IConfiguration configuration, ICrudApi<PagoCuentasViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<CuentasBancariasViewModel, int> serviceCB) //CTOR 
         {
             this.service = service;
             this.clientes = clientes;
             this.sucursales = sucursales;
             this.configuration = configuration;
+            this.serviceCB = serviceCB;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -58,6 +63,9 @@ namespace NOVAAPP.Pages.PagoCuentas
                 Sucursal = await sucursales.ObtenerLista("");
                 MiSucursal = Sucursal.Where(a => a.CodSuc.ToUpper().Contains(Suc)).FirstOrDefault();
                 NombreCliente = configuration["Cliente"].ToString();
+                ParametrosFiltros FiltroCB = new ParametrosFiltros();
+                FiltroCB.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                CB = await serviceCB.ObtenerLista(FiltroCB);
                 return Page();
             }
             catch (Exception ex)

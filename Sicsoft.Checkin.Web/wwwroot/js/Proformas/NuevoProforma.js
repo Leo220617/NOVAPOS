@@ -2169,6 +2169,40 @@ function onChangeDescuentoProducto(i) {
     }
 }
 
+
+function Setear() {
+    try {
+     
+        var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+
+
+        for (var i = 0; i < ProdCadena.length; i++) {
+
+           
+            var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+
+            var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria);
+
+
+            var DescuentoMaximo = ((ProdCadena[i].PrecioUnitario - ProdCadena[i].PrecioMin) / ProdCadena[i].PrecioUnitario) * 100;
+            var Descuento = ProdCadena[i].PrecioUnitario * (ProdCadena[i].PorDescto / 100);
+            var PrecioFinal = ProdCadena[i].PrecioUnitario - Descuento;
+            ProdCadena[i].PorDescto = DescuentoMaximo;
+            parseFloat($("#" + i + "_Prod2").val(DescuentoMaximo)).toFixed(2);
+            onChangeDescuentoProducto(i);
+        }
+
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar   ' + e
+
+        })
+    }
+}
 function onChangePrecioProducto(i) {
     try {
 

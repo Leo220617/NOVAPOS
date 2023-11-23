@@ -13,6 +13,7 @@ using Sicsoft.Checkin.Web.Servicios;
 
 using NOVAAPP.Models;
 using InversionGloblalWeb.Models;
+using NOVAPOS.Models;
 
 namespace NOVAAPP.Pages.Productos
 {
@@ -23,6 +24,7 @@ namespace NOVAAPP.Pages.Productos
         private readonly ICrudApi<BodegasViewModel, int> serviceBodegas;
         private readonly ICrudApi<ListaPreciosViewModel, int> serviceListas;
         private readonly ICrudApi<ImpuestosViewModel, int> serviceImpuestos;
+        private readonly ICrudApi<CategoriasViewModel, int> categorias;
 
 
         [BindProperty(SupportsGet = true)]
@@ -30,6 +32,8 @@ namespace NOVAAPP.Pages.Productos
 
         [BindProperty]
         public ProductosViewModel[] Objeto { get; set; }
+
+
 
         [BindProperty]
         public BodegasViewModel[] Bodegas { get; set; }
@@ -40,12 +44,16 @@ namespace NOVAAPP.Pages.Productos
         [BindProperty]
         public ImpuestosViewModel[] Impuestos { get; set; }
 
-        public IndexModel(ICrudApi<ProductosViewModel, string> service, ICrudApi<BodegasViewModel, int> serviceBodegas, ICrudApi<ListaPreciosViewModel, int> serviceListas, ICrudApi<ImpuestosViewModel, int> serviceImpuestos)
+        [BindProperty]
+        public CategoriasViewModel[] Categorias { get; set; }
+
+        public IndexModel(ICrudApi<ProductosViewModel, string> service, ICrudApi<BodegasViewModel, int> serviceBodegas, ICrudApi<ListaPreciosViewModel, int> serviceListas, ICrudApi<ImpuestosViewModel, int> serviceImpuestos, ICrudApi<CategoriasViewModel, int> categorias)
         {
             this.service = service;
             this.serviceBodegas = serviceBodegas;
             this.serviceListas = serviceListas;
             this.serviceImpuestos = serviceImpuestos;
+            this.categorias = categorias;
         }
         public async Task<IActionResult> OnGetAsync()
         {
@@ -60,14 +68,20 @@ namespace NOVAAPP.Pages.Productos
                 Bodegas = await serviceBodegas.ObtenerLista("");
                 Listas = await serviceListas.ObtenerLista("");
                 Impuestos = await serviceImpuestos.ObtenerLista("");
+                Categorias = await categorias.ObtenerLista("");
 
-                if (filtro.Codigo1 == 0 && filtro.Codigo2 == 0)
+               
+            
+                if (filtro.Codigo3 == 0)
                 {
-                    filtro.Codigo1 = Bodegas.FirstOrDefault() == null ? 0 : Bodegas.FirstOrDefault().id;
-                    filtro.Codigo2 = Listas.FirstOrDefault() == null ? 0 : Listas.FirstOrDefault().id;
+                    filtro.Codigo3 = Categorias.FirstOrDefault() == null ? 0 : Categorias.FirstOrDefault().id;
+                   
                 }
+                var Producto = await service.ObtenerLista(filtro);
 
-                Objeto = await service.ObtenerLista(filtro);
+                Objeto = Producto.Where(a => a.Stock > 0).ToArray();
+                //Productos = await service.ObtenerLista("");
+
 
 
                 return Page();

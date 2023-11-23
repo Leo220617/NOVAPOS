@@ -42,11 +42,14 @@
                     <div class="box-body">
                         <form method="get">
                             <div class="row">
-                                <div class="col-sm-3 pr-1">
-                                    <div class="form-group">
-                                        <label>Bodega</label>
-                                        <select class="form-control select2  " asp-for="filtro.Codigo1">
-                                            @foreach (var item in Model.Bodegas)
+                             
+
+                            <div class="col-sm-3 pr-1">
+                                <div class="form-group">
+                                    <label>Categoria</label>
+                                    <select class="form-control select2  " asp-for="filtro.Codigo3">
+                                        <option value="0"> Seleccione Categoria</option>
+                                        @foreach (var item in Model.Categorias)
                                         {
                                             <option value="@item.id"> @item.CodSAP - @item.Nombre</option>
                                         }

@@ -139,18 +139,40 @@ function RecuperarInformacion() {
                 PorExoneracion: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).PorExon,
                 /*    idExo: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).id*/
                 idExoneracion: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).id,
-                PrecioMin: 0
+                PrecioMin: 0,
+                MargenMin: 0
+
 
             };
             var DetMargen = DetMargenes.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
             var Margen = Margenes.find(a => a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
+            var PrecioMin = 0;
+            var MargenMin = 0;
 
             if (DetMargen != undefined) {
-                Producto.PrecioMin = DetMargen.PrecioMin;
+
+                PrecioMin = DetMargen.PrecioMin;
+                MargenMin = DetMargen.MargenMin;
 
             } else if (Margen != undefined) {
                 var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
-                Producto.PrecioMin = PrecioCob / (1 - (Margen.MargenMin / 100));
+                PrecioMin = PrecioCob / (1 - (Margen.MargenMin / 100));
+                MargenMin = Margen.MargenMin;
+            }
+
+
+            var idClientes = $("#ClienteSeleccionado").val();
+            var Cliente = Clientes.find(a => a.id == idClientes);
+            var DescuentoCliente = Cliente.Descuento / 100;
+
+            if (DescuentoCliente > 0) {
+                Producto.MargenMin = MargenMin - (MargenMin * DescuentoCliente);
+
+                Producto.PrecioMin = PrecioMin - (PrecioMin * DescuentoCliente);
+            } else {
+                Producto.MargenMin = MargenMin;
+                Producto.PrecioMin = PrecioMin;
+
             }
 
             ProdCadena.push(Producto);
@@ -1625,20 +1647,36 @@ function AgregarProductoTabla() {
             idExoneracion: $("#exoneracion").val(),
             PorExoneracion: 0,
             Costo: PE.Costo,
-            PrecioMin: 0
+            PrecioMin: 0,
+            MargenMin: 0
         };
 
         var Descuento = parseFloat($("#DES").val());
         var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria);
         var DetMargen = DetMargenes.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
         var Margen = Margenes.find(a => a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
-
+        var PrecioMin = 0;
+        var MargenMin = 0;
         if (DetMargen != undefined) {
-            Producto.PrecioMin = DetMargen.PrecioMin;
+            PrecioMin = DetMargen.PrecioMin;
+            MargenMin = DetMargen.MargenMin;
 
         } else if (Margen != undefined) {
             var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
-            Producto.PrecioMin = PrecioCob / (1 - (Margen.MargenMin / 100));
+            PrecioMin = PrecioCob / (1 - (Margen.MargenMin / 100));
+            MargenMin = Margen.MargenMin;
+        }
+        var idClientes = $("#ClienteSeleccionado").val();
+        var Cliente = Clientes.find(a => a.id == idClientes);
+        var DescuentoCliente = Cliente.Descuento / 100;
+
+        if (DescuentoCliente > 0) {
+            Producto.MargenMin = MargenMin - (MargenMin * DescuentoCliente);
+
+            Producto.PrecioMin = PrecioMin - (PrecioMin * DescuentoCliente);
+        } else {
+            Producto.MargenMin = MargenMin;
+            Producto.PrecioMin = PrecioMin;
         }
 
         for (var i = 0; i < ProdCadena.length; i++) {
@@ -2109,6 +2147,41 @@ function onChangeDescuentoProducto(i) {
             icon: 'error',
             title: 'Oops...',
             text: 'Error en: ' + e
+
+        })
+    }
+}
+
+function Setear() {
+    try {
+
+        var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+
+
+        for (var i = 0; i < ProdCadena.length; i++) {
+
+
+            var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+
+            var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria);
+
+
+            var DescuentoMaximoX = ((ProdCadena[i].PrecioUnitario - ProdCadena[i].PrecioMin) / ProdCadena[i].PrecioUnitario) * 100;
+            var DescuentoMaximo = Math.floor(DescuentoMaximoX * 100) / 100;
+            var Descuento = ProdCadena[i].PrecioUnitario * (ProdCadena[i].PorDescto / 100);
+            var PrecioFinal = ProdCadena[i].PrecioUnitario - Descuento;
+            ProdCadena[i].PorDescto = DescuentoMaximo;
+            parseFloat($("#" + i + "_Prod2").val(DescuentoMaximo)).toFixed(2);
+            onChangeDescuentoProducto(i);
+        }
+
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar   ' + e
 
         })
     }

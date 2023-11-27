@@ -84,20 +84,20 @@ function Recuperar() {
 
         var lot = JSON.parse($("#Lotes").val());
 
-        if (lot != null) { 
-        for (var i = 0; i < lot.length; i++) {
-            var lote = {
-                id: i,
-                idEncabezado: 0,
-                Serie: lot[i].Serie,
-                ItemCode: lot[i].ItemCode,
-                Cantidad: lot[i].Cantidad,
-                idDetalle: 0,
-                Manufactura: lot[i].Manufactura
+        if (lot != null) {
+            for (var i = 0; i < lot.length; i++) {
+                var lote = {
+                    id: i,
+                    idEncabezado: 0,
+                    Serie: lot[i].Serie,
+                    ItemCode: lot[i].ItemCode,
+                    Cantidad: lot[i].Cantidad,
+                    idDetalle: 0,
+                    Manufactura: lot[i].Manufactura
 
 
-            }
-            LotesCadena.push(lote);
+                }
+                LotesCadena.push(lote);
             }
         }
 
@@ -124,7 +124,7 @@ function Recuperar() {
 }
 function RecuperarInformacion() {
     try {
-       
+
         $("#ClienteSeleccionado").val(Documento.idCliente);
         $("#Fecha").val(Documento.Fecha);
         $("#selectTD").val(Documento.TipoDocumento);
@@ -164,25 +164,46 @@ function RecuperarInformacion() {
                 Costo: PE.Costo,
                 PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon,
                 idExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).id,
-                PrecioMin: 0
+                PrecioMin: 0,
+                MargenMin: 0
 
             };
             var DetMargen = DetMargenes.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
             var Margen = Margenes.find(a => a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
+            var PrecioMin = 0;
+            var MargenMin = 0;
 
             if (DetMargen != undefined) {
-                Producto.PrecioMin = DetMargen.PrecioMin;
+
+                PrecioMin = DetMargen.PrecioMin;
+                MargenMin = DetMargen.MargenMin;
 
             } else if (Margen != undefined) {
                 var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
-                Producto.PrecioMin = PrecioCob / (1 - (Margen.MargenMin / 100));
+                PrecioMin = PrecioCob / (1 - (Margen.MargenMin / 100));
+                MargenMin = Margen.MargenMin;
+            }
+
+
+            var idClientes = $("#ClienteSeleccionado").val();
+            var Cliente = Clientes.find(a => a.id == idClientes);
+            var DescuentoCliente = Cliente.Descuento / 100;
+
+            if (DescuentoCliente > 0) {
+                Producto.MargenMin = MargenMin - (MargenMin * DescuentoCliente);
+
+                Producto.PrecioMin = PrecioMin - (PrecioMin * DescuentoCliente);
+            } else {
+                Producto.MargenMin = MargenMin;
+                Producto.PrecioMin = PrecioMin;
+
             }
 
             ProdCadena.push(Producto);
 
 
         }
-       
+
         if (PE.Stock - ProdCadena.Cantidad > 0) {
             RellenaTabla();
         }
@@ -550,7 +571,7 @@ function AbrirModalSeries(i) {
 
         var Bod = Bodega.find(a => a.id == Producto.idBodega);
 
-        var LotesArray = LotesCadena.filter(a => a.ItemCode == Producto.Codigo );
+        var LotesArray = LotesCadena.filter(a => a.ItemCode == Producto.Codigo);
 
 
         var LotesArray = LotesCadena.filter(a => a.ItemCode == Producto.Codigo);
@@ -634,7 +655,7 @@ function ValidarStocks() {
 
 function ValidarDuplicados() {
     try {
-        for (var i = 0; i <ProdCadena.length; i++) {
+        for (var i = 0; i < ProdCadena.length; i++) {
             var PE = Productos.find(a => a.id == ProdCadena[i].idProducto);
 
             if (PE.id == ProdCadena[i].idProducto) {
@@ -648,7 +669,7 @@ function ValidarDuplicados() {
                 return false;
             }
         }
-           
+
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -718,7 +739,7 @@ function onChangeMoneda() {
 
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
 
-         redondeo = totalG - TotalAntesRedondeo;
+        redondeo = totalG - TotalAntesRedondeo;
 
         $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
@@ -895,18 +916,18 @@ function RellenaExoneraciones() {
 function onChangeCliente() {
     try {
         var idCliente = $("#ClienteSeleccionado").val();
-       
+
         var Cliente = Clientes.find(a => a.id == idCliente);
         var Grupo = Grupos.find(a => a.id == Cliente.idGrupo);
         var Contado = CP.find(a => a.Nombre == "Contado");
 
-       
+
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Cédula: " + Cliente.Cedula + " " + "Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
         $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)) + "  " + "Grupo: " + Grupo.CodSAP + "-" + Grupo.Nombre);
 
         if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
-  
+
             Swal.fire({
                 icon: 'warning',
                 title: 'Advertencia',
@@ -1591,7 +1612,7 @@ function RellenaTabla() {
                 html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
 
-              
+
                 if (PE.Serie == true) {
                     html += "<td class='text-center'> <a href='#test-form' class='popup-with-form fa fa-info-circle icono' onclick='javascript:AbrirModalSeries(" + i + ") '> </a> </td>";
                 }
@@ -1600,7 +1621,7 @@ function RellenaTabla() {
 
             } else {
 
-              
+
 
 
             }
@@ -1711,7 +1732,8 @@ function AgregarProductoTabla() {
             idExoneracion: $("#exoneracion").val(),
             PorExoneracion: 0,
             Costo: PE.Costo,
-            PrecioMin: 0
+            PrecioMin: 0,
+            MargenMin: 0
         };
 
         var Descuento = parseFloat($("#DES").val());
@@ -1722,13 +1744,28 @@ function AgregarProductoTabla() {
         var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria);
         var DetMargen = DetMargenes.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
         var Margen = Margenes.find(a => a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
-
+        var PrecioMin = 0;
+        var MargenMin = 0;
         if (DetMargen != undefined) {
-            Producto.PrecioMin = DetMargen.PrecioMin;
+            PrecioMin = DetMargen.PrecioMin;
+            MargenMin = DetMargen.MargenMin;
 
         } else if (Margen != undefined) {
             var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
-            Producto.PrecioMin = PrecioCob / (1 - (Margen.MargenMin / 100));
+            PrecioMin = PrecioCob / (1 - (Margen.MargenMin / 100));
+            MargenMin = Margen.MargenMin;
+        }
+        var idClientes = $("#ClienteSeleccionado").val();
+        var Cliente = Clientes.find(a => a.id == idClientes);
+        var DescuentoCliente = Cliente.Descuento / 100;
+
+        if (DescuentoCliente > 0) {
+            Producto.MargenMin = MargenMin - (MargenMin * DescuentoCliente);
+
+            Producto.PrecioMin = PrecioMin - (PrecioMin * DescuentoCliente);
+        } else {
+            Producto.MargenMin = MargenMin;
+            Producto.PrecioMin = PrecioMin;
         }
         var cantidades = 0;
 
@@ -1744,10 +1781,10 @@ function AgregarProductoTabla() {
             })
             return false;
         }
-    
+
 
         for (var i = 0; i < ProdCadena.length; i++) {
-          
+
 
             if (PE.id == ProdCadena[i].idProducto) {
                 Swal.fire({
@@ -1762,7 +1799,7 @@ function AgregarProductoTabla() {
                 Duplicado = false;
             }
         }
-     
+
         if ((PE.Stock - Producto.Cantidad) < 0 && PE.Codigo != PS.Codigo) {
             Swal.fire({
                 icon: 'error',
@@ -1774,7 +1811,7 @@ function AgregarProductoTabla() {
 
 
         }
-     
+
         if (PE.PrecioUnitario > Producto.PrecioUnitario) {
             Swal.fire({
                 icon: 'error',
@@ -1836,7 +1873,7 @@ function AgregarProductoTabla() {
                 text: 'Usted no puede aplicar este descuento, el descuento máximo asignado a su usuario es de' + ' ' + parseFloat(Descuento).toFixed(2) + '%'
 
             })
-            
+
         } else if (((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && Producto.PrecioMin <= PrecioFinal && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) && PE.PrecioUnitario <= Producto.PrecioUnitario || PE.Codigo == PS.Codigo) {
 
             if (Producto.Cabys.length >= 13) {
@@ -1875,7 +1912,7 @@ function AgregarProductoTabla() {
                 totalG = redondearAl5(totalG);
                 $("#totG").text(formatoDecimal(totalG.toFixed(2)));
                 $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
-                 redondeo = totalG - TotalAntesRedondeo;
+                redondeo = totalG - TotalAntesRedondeo;
 
                 $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
@@ -1939,11 +1976,11 @@ function EliminarProducto(i) {
         totalG = redondearAl5(totalG);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
-         redondeo = totalG - TotalAntesRedondeo;
+        redondeo = totalG - TotalAntesRedondeo;
 
         $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
         ProdCadena.splice(i, 1);
-       
+
         var Lotes2 = LotesCadena.filter(a => a.ItemCode == PE.Codigo);
 
         for (var x = 0; x < Lotes2.length; x++) {
@@ -2252,11 +2289,46 @@ function onChangeDescuentoProducto(i) {
     }
 }
 
+function Setear() {
+    try {
+
+        var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+
+
+        for (var i = 0; i < ProdCadena.length; i++) {
+
+
+            var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+
+            var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria);
+
+
+            var DescuentoMaximoX = ((ProdCadena[i].PrecioUnitario - ProdCadena[i].PrecioMin) / ProdCadena[i].PrecioUnitario) * 100;
+            var DescuentoMaximo = Math.floor(DescuentoMaximoX * 100) / 100;
+            var Descuento = ProdCadena[i].PrecioUnitario * (ProdCadena[i].PorDescto / 100);
+            var PrecioFinal = ProdCadena[i].PrecioUnitario - Descuento;
+            ProdCadena[i].PorDescto = DescuentoMaximo;
+            parseFloat($("#" + i + "_Prod2").val(DescuentoMaximo)).toFixed(2);
+            onChangeDescuentoProducto(i);
+        }
+
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar   ' + e
+
+        })
+    }
+}
+
 function onChangePrecioProducto(i) {
     try {
 
         var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
-        
+
         ProdCadena[i].PrecioUnitario = parseFloat($("#" + i + "_Prod3").val()).toFixed(2);
 
         if (ProdCadena[i].PrecioUnitario >= PE.PrecioUnitario || (PE.Editable == true && ProdCadena[i].PrecioUnitario > 0)) {
@@ -2406,7 +2478,7 @@ function ValidarTotales() {
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
 
-         redondeo = totalG - TotalAntesRedondeo;
+        redondeo = totalG - TotalAntesRedondeo;
 
         $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 

@@ -1688,9 +1688,12 @@ function AgregarProductoTabla() {
         var DescuentoCliente = Cliente.Descuento / 100;
 
         if (DescuentoCliente > 0) {
+            var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
             Producto.MargenMin = MargenMin - (MargenMin * DescuentoCliente);
 
-            Producto.PrecioMin = PrecioMin - (PrecioMin * DescuentoCliente);
+            var MargenNuevo = Producto.MargenMin / 100;
+
+            Producto.PrecioMin = PrecioCob / (1 - MargenNuevo);
         } else {
             Producto.MargenMin = MargenMin;
             Producto.PrecioMin = PrecioMin;

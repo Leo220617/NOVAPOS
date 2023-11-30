@@ -139,38 +139,58 @@ function RecuperarInformacion() {
                 idExoneracion: Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Oferta.Detalle[i].idExoneracion).id,
                 PrecioMin: 0,
                 MargenMin: 0
-               
+
             };
             var DetMargen = DetMargenes.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
             var Margen = Margenes.find(a => a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
             var PrecioMin = 0;
             var MargenMin = 0;
 
-            if (DetMargen != undefined) {
-
-                PrecioMin = DetMargen.PrecioMin;
-                MargenMin = DetMargen.MargenMin;
-
-            } else if (Margen != undefined) {
-                var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
-                PrecioMin = PrecioCob / (1 - (Margen.MargenMin / 100));
-                MargenMin = Margen.MargenMin;
-            }
-
 
             var idClientes = $("#ClienteSeleccionado").val();
             var Cliente = Clientes.find(a => a.id == idClientes);
             var DescuentoCliente = Cliente.Descuento / 100;
 
-            if (DescuentoCliente > 0) {
-                Producto.MargenMin = MargenMin - (MargenMin * DescuentoCliente);
+            if (DetMargen != undefined) {
 
-                Producto.PrecioMin = PrecioMin - (PrecioMin * DescuentoCliente);
-            } else {
-                Producto.MargenMin = MargenMin;
-                Producto.PrecioMin = PrecioMin;
+                PrecioMin = DetMargen.PrecioMin;
+                MargenMin = DetMargen.MargenMin;
 
+
+                if (DescuentoCliente > 0) {
+                    var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
+                    Producto.MargenMin = MargenMin - (MargenMin * DescuentoCliente);
+
+                    var MargenNuevo = Producto.MargenMin / 100;
+
+                    Producto.PrecioMin = PrecioCob / (1 - MargenNuevo);
+                } else {
+                    Producto.MargenMin = MargenMin;
+                    Producto.PrecioMin = PrecioMin;
+
+                }
+
+            } else if (Margen != undefined) {
+                var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
+                PrecioMin = PrecioCob / (1 - (Margen.MargenMin / 100));
+                MargenMin = Margen.MargenMin;
+
+                if (DescuentoCliente > 0) {
+                    var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
+                    Producto.MargenMin = MargenMin - (MargenMin * DescuentoCliente);
+
+                    var MargenNuevo = Producto.MargenMin / 100;
+
+                    Producto.PrecioMin = PrecioCob / (1 - MargenNuevo);
+                } else {
+                    Producto.MargenMin = MargenMin;
+                    Producto.PrecioMin = PrecioMin;
+
+                }
             }
+
+
+
 
             ProdCadena.push(Producto);
         }
@@ -848,7 +868,7 @@ function onChangeCliente() {
 
     try {
         var idCliente = $("#ClienteSeleccionado").val();
-    
+
         var Cliente = Clientes.find(a => a.id == idCliente);
         var Grupo = Grupos.find(a => a.id == Cliente.idGrupo);
 
@@ -867,7 +887,7 @@ function onChangeCliente() {
         $("#strongInfo").text("Cédula: " + Cliente.Cedula + " " + "Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
         $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)) + "  " + "Grupo: " + Grupo.CodSAP + "-" + Grupo.Nombre);
 
-      
+
         RecolectarFacturas();
         ProdClientes = Productos.filter(a => a.idListaPrecios == Sucursal.idListaPrecios);
         ProdClientes = ProdClientes.sort(function (a, b) {
@@ -1485,17 +1505,17 @@ function RellenaTabla() {
             var PE = Productos.find(a => a.id == ProdCadena[i].idProducto);
             if (PE.Stock - ProdCadena[i].Cantidad > 0 || PE.Stock > 0 || PE.Codigo == PS.Codigo || PE.Editable == true) {
                 var TotalGanancia = (ProdCadena[i].TotalLinea - ProdCadena[i].TotalImpuesto);
-            html += "<tr>";
+                html += "<tr>";
 
-            html += "<td> " + (i + 1) + " </td>";
+                html += "<td> " + (i + 1) + " </td>";
 
-            html += "<td > " + ProdCadena[i].Descripcion + " </td>";
-            html += "<td class='text-center'> <input onchange='javascript: onChangeCantidadProducto(" + i + ")' type='number' id='" + i + "_Prod' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + "' min='1'/>  </td>";
-            html += "<td class='text-center'> <input onchange='javascript: onChangePrecioProducto(" + i + ")' type='number' id='" + i + "_Prod3' class='form-control'   value= '" + parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2) + "' min='1'/> </td>";
-            html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+                html += "<td > " + ProdCadena[i].Descripcion + " </td>";
+                html += "<td class='text-center'> <input onchange='javascript: onChangeCantidadProducto(" + i + ")' type='number' id='" + i + "_Prod' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + "' min='1'/>  </td>";
+                html += "<td class='text-center'> <input onchange='javascript: onChangePrecioProducto(" + i + ")' type='number' id='" + i + "_Prod3' class='form-control'   value= '" + parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2) + "' min='1'/> </td>";
+                html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
                 if ($("#RolGanancia").val() == "value") {
                     if (ProdCadena[i].Moneda != MonedaDoc) {
@@ -1545,10 +1565,10 @@ function RellenaTabla() {
                     html += "<td class='text-center'> <a href='#test-form' class='popup-with-form fa fa-info-circle icono' onclick='javascript:AbrirModalSeries(" + i + ") '> </a> </td>";
                 }
 
-            html += "</tr>";
+                html += "</tr>";
             } else {
 
-     
+
 
 
             }
@@ -1681,27 +1701,41 @@ function AgregarProductoTabla() {
         var Margen = Margenes.find(a => a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
         var PrecioMin = 0;
         var MargenMin = 0;
+        var idClientes = $("#ClienteSeleccionado").val();
+        var Cliente = Clientes.find(a => a.id == idClientes);
+        var DescuentoCliente = Cliente.Descuento / 100;
         if (DetMargen != undefined) {
             PrecioMin = DetMargen.PrecioMin;
             MargenMin = DetMargen.MargenMin;
+            if (DescuentoCliente > 0) {
+                var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
+                Producto.MargenMin = MargenMin - (MargenMin * DescuentoCliente);
+
+                var MargenNuevo = Producto.MargenMin / 100;
+
+                Producto.PrecioMin = PrecioCob / (1 - MargenNuevo);
+            } else {
+                Producto.MargenMin = MargenMin;
+                Producto.PrecioMin = PrecioMin;
+            }
 
         } else if (Margen != undefined) {
             var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
             PrecioMin = PrecioCob / (1 - (Margen.MargenMin / 100));
             MargenMin = Margen.MargenMin;
-        }
-        var idClientes = $("#ClienteSeleccionado").val();
-        var Cliente = Clientes.find(a => a.id == idClientes);
-        var DescuentoCliente = Cliente.Descuento / 100;
 
-        if (DescuentoCliente > 0) {
-            Producto.MargenMin = MargenMin - (MargenMin * DescuentoCliente);
+            if (DescuentoCliente > 0) {
+                Producto.MargenMin = MargenMin - (MargenMin * DescuentoCliente);
 
-            Producto.PrecioMin = PrecioMin - (PrecioMin * DescuentoCliente);
-        } else {
-            Producto.MargenMin = MargenMin;
-            Producto.PrecioMin = PrecioMin;
+                Producto.PrecioMin = PrecioMin - (PrecioMin * DescuentoCliente);
+            } else {
+                Producto.MargenMin = MargenMin;
+                Producto.PrecioMin = PrecioMin;
+            }
         }
+
+
+
         var cantidades = 0;
 
         for (var i = 0; i < LotesArray.length; i++) {
@@ -1733,7 +1767,7 @@ function AgregarProductoTabla() {
                 Duplicado = false;
             }
         }
-      
+
 
         if ((PE.Stock - Producto.Cantidad) < 0 && PE.Codigo != PS.Codigo) {
             Swal.fire({
@@ -1758,7 +1792,7 @@ function AgregarProductoTabla() {
 
 
         }
-      
+
         if (Producto.Cantidad <= 0) {
             Swal.fire({
                 icon: 'error',
@@ -1963,7 +1997,7 @@ function Generar() {
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
-                  
+
 
 
                     $.ajax({
@@ -2058,7 +2092,7 @@ function validarOferta(e) {
         var idCliente = $("#ClienteSeleccionado").val();
         var totalG = parseFloat(ReplaceLetra($("#totG").text()));
         var redondeo = parseFloat(ReplaceLetra($("#redondeo").text()));
-        var totalGX = parseFloat(ReplaceLetra($("#totGX").text())); 
+        var totalGX = parseFloat(ReplaceLetra($("#totGX").text()));
 
         var Cliente = Clientes.find(a => a.id == idCliente);
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
@@ -2104,19 +2138,19 @@ function validarOferta(e) {
                 return false;
 
 
-            } 
+            }
             else {
                 return true;
             }
-        } if ((Cliente.LimiteCredito - Cliente.Saldo) < totalG && CondPago != Contado.id && CondPago != Transito.id ) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'El total de la factura es mayor al Limite de crédito'
+        } if ((Cliente.LimiteCredito - Cliente.Saldo) < totalG && CondPago != Contado.id && CondPago != Transito.id) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'El total de la factura es mayor al Limite de crédito'
 
-        })
-        return false;
-    } 
+            })
+            return false;
+        }
         else {
             return true;
         }

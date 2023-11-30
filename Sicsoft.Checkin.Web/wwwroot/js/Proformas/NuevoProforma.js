@@ -152,9 +152,12 @@ function RecuperarInformacion() {
             var DescuentoCliente = Cliente.Descuento / 100;
 
             if (DescuentoCliente > 0) {
+                var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
                 Producto.MargenMin = MargenMin - (MargenMin * DescuentoCliente);
 
-                Producto.PrecioMin = PrecioMin - (PrecioMin * DescuentoCliente);
+                var MargenNuevo = Producto.MargenMin / 100;
+
+                Producto.PrecioMin = PrecioCob / (1 - MargenNuevo);
             } else {
                 Producto.MargenMin = MargenMin;
                 Producto.PrecioMin = PrecioMin;
@@ -1674,30 +1677,46 @@ function AgregarProductoTabla() {
         var Margen = Margenes.find(a => a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
         var PrecioMin = 0;
         var MargenMin = 0;
+        var idClientes = $("#ClienteSeleccionado").val();
+        var Cliente = Clientes.find(a => a.id == idClientes);
+        var DescuentoCliente = Cliente.Descuento / 100;
+
         if (DetMargen != undefined) {
             PrecioMin = DetMargen.PrecioMin;
             MargenMin = DetMargen.MargenMin;
+
+            if (DescuentoCliente > 0) {
+                var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
+                Producto.MargenMin = MargenMin - (MargenMin * DescuentoCliente);
+
+                var MargenNuevo = Producto.MargenMin / 100;
+
+                Producto.PrecioMin = PrecioCob / (1 - MargenNuevo);
+            } else {
+                Producto.MargenMin = MargenMin;
+                Producto.PrecioMin = PrecioMin;
+            }
 
         } else if (Margen != undefined) {
             var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
             PrecioMin = PrecioCob / (1 - (Margen.MargenMin / 100));
             MargenMin = Margen.MargenMin;
+
+            if (DescuentoCliente > 0) {
+                var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
+                Producto.MargenMin = MargenMin - (MargenMin * DescuentoCliente);
+
+                var MargenNuevo = Producto.MargenMin / 100;
+
+                Producto.PrecioMin = PrecioCob / (1 - MargenNuevo);
+            } else {
+                Producto.MargenMin = MargenMin;
+                Producto.PrecioMin = PrecioMin;
+            }
+
+
         }
-        var idClientes = $("#ClienteSeleccionado").val();
-        var Cliente = Clientes.find(a => a.id == idClientes);
-        var DescuentoCliente = Cliente.Descuento / 100;
 
-        if (DescuentoCliente > 0) {
-            var PrecioCob = PE.Costo / (1 - (Margen.Cobertura / 100));
-            Producto.MargenMin = MargenMin - (MargenMin * DescuentoCliente);
-
-            var MargenNuevo = Producto.MargenMin / 100;
-
-            Producto.PrecioMin = PrecioCob / (1 - MargenNuevo);
-        } else {
-            Producto.MargenMin = MargenMin;
-            Producto.PrecioMin = PrecioMin;
-        }
 
         var cantidades = 0;
 

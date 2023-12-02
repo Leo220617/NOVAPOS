@@ -1835,8 +1835,8 @@ function AgregarProductoTabla() {
 
         }
         var DescuentoMaximo = ((Producto.PrecioUnitario - Producto.PrecioMin) / Producto.PrecioUnitario) * 100;
-        var Descuento = Producto.PrecioUnitario * (Producto.PorDescto / 100);
-        var PrecioFinal = Producto.PrecioUnitario - Descuento;
+        var DescuentoX = Producto.PrecioUnitario * (Producto.PorDescto / 100);
+        var PrecioFinal = Producto.PrecioUnitario - DescuentoX;
 
         if (Producto.PrecioMin > PrecioFinal) {
             Swal.fire({

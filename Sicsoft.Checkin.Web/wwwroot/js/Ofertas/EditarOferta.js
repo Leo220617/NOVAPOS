@@ -1821,8 +1821,8 @@ function AgregarProductoTabla() {
 
         }
         var DescuentoMaximo = ((Producto.PrecioUnitario - Producto.PrecioMin) / Producto.PrecioUnitario) * 100;
-        var Descuento = Producto.PrecioUnitario * (Producto.PorDescto / 100);
-        var PrecioFinal = Producto.PrecioUnitario - Descuento;
+        var DescuentoX = Producto.PrecioUnitario * (Producto.PorDescto / 100);
+        var PrecioFinal = Producto.PrecioUnitario - DescuentoX;
 
         if (Producto.PrecioMin > PrecioFinal) {
             Swal.fire({
@@ -2176,8 +2176,8 @@ function onChangeDescuentoProducto(i) {
 
         var DescuentoMaximoX = ((ProdCadena[i].PrecioUnitario - ProdCadena[i].PrecioMin) / ProdCadena[i].PrecioUnitario) * 100;
         var DescuentoMaximo = Math.floor(DescuentoMaximoX * 100) / 100;
-        var Descuento = ProdCadena[i].PrecioUnitario * (ProdCadena[i].PorDescto / 100);
-        var PrecioFinal = ProdCadena[i].PrecioUnitario - Descuento;
+        var DescuentoX = ProdCadena[i].PrecioUnitario * (ProdCadena[i].PorDescto / 100);
+        var PrecioFinal = ProdCadena[i].PrecioUnitario - DescuentoX;
 
         if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento && Promo == undefined && ProdCadena[i].PrecioMin <= PrecioFinal) {
             ValidarTotales();

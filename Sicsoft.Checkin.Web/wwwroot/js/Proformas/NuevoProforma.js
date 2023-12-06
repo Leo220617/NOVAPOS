@@ -39,6 +39,7 @@ var LotesCadena = [];
 var DetPromociones = [];
 var Margenes = [];
 var DetMargenes = [];
+var Aprobaciones = [];
 
 function CerrarPopUpLotes() {
     try {
@@ -53,6 +54,7 @@ function Recuperar() {
         Distritos = JSON.parse($("#Distritos").val());
         Barrios = JSON.parse($("#Barrios").val());
         Clientes = JSON.parse($("#Clientes").val());
+        Aprobaciones = JSON.parse($("#Aprobaciones").val());
         Grupos = JSON.parse($("#Grupos").val());
         Vendedores = JSON.parse($("#Vendedores").val());
         Productos = JSON.parse($("#Productos").val());
@@ -592,10 +594,11 @@ function RecolectarFacturas() {
     try {
         var idClientes = $("#ClienteSeleccionado").val();
         var Cliente = Clientes.find(a => a.id == idClientes);
-
+        var Aprobado = Aprobaciones.find(a => a.idCliente == idClientes);
         var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
-
+        FP = true;
         var Contado = CP.find(a => a.Nombre == "Contado");
+
 
         $.ajax({
             type: 'GET',
@@ -603,46 +606,54 @@ function RecolectarFacturas() {
             url: $("#urlFacturas").val(),
             data: { idCliente: idClientes },
             success: function (result) {
+                if (Aprobado == undefined) {
 
-                if (result == null) {
+                    if (result == null) {
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Ha ocurrido un error al intentar recuperar facturas'
-
-                    })
-
-                } else if (result.length > 0) {
-                    console.log(result);
-                    // $("#selectCondPago").attr("disabled", "disabled");
-                    FP = false;
-
-                    var textoF = "";
-                    for (var i = 0; i < result.length; i++) {
-                        textoF += " " + result[i].docNum + ", ";
-                    }
-
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Advertencia...',
-                        text: 'El Cliente tiene las siguientes facturas pendientes: ' + textoF + " por lo tanto se bloquea el crédito"
-
-                    })
-                } else {
-                    if ((Cliente.LimiteCredito - - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
                         Swal.fire({
-                            icon: 'warning',
-                            title: 'Advertencia',
-                            text: 'Limite de crédito excedido'
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Ha ocurrido un error al intentar recuperar facturas'
 
                         })
-                    } else if ((Cliente.LimiteCredito - Cliente.Saldo) > 0 && Cliente.idCondicionPago != Contado.id) {
-                        FP = true;
-                        //$("#selectCondPago").attr("disabled", false);
-                    }
 
+                    } else if (result.length > 0) {
+                        console.log(result);
+                        // $("#selectCondPago").attr("disabled", "disabled");
+                        FP = false;
+
+                        var textoF = "";
+                        for (var i = 0; i < result.length; i++) {
+                            textoF += " " + result[i].docNum + ", ";
+                        }
+
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Advertencia...',
+                            html: 'El Cliente tiene las siguientes facturas pendientes: ' + textoF + " por lo tanto se bloquea el crédito" +
+                                '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
+
+
+                        })
+                    } else {
+                        if ((Cliente.LimiteCredito - - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Advertencia',
+                                html: 'Limite de crédito excedido' +
+                                    '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
+
+                            })
+                        } else if ((Cliente.LimiteCredito - Cliente.Saldo) > 0 && Cliente.idCondicionPago != Contado.id) {
+                            FP = true;
+                            //$("#selectCondPago").attr("disabled", false);
+                        }
+
+                    }
                 }
+             
+
+
                 if (CondP.length > 0 && FP == true) {
                     var Cond30 = CP.filter(a => a.Dias <= CondP[0].Dias).sort(function (a, b) {
                         if (a.Dias > b.Dias) {
@@ -673,6 +684,121 @@ function RecolectarFacturas() {
             icon: 'error',
             title: 'Oops...',
             text: 'Ha ocurrido un error al intentar recuperar facturas:  ' + e
+
+        })
+    }
+}
+
+function Solicitar() {
+    try {
+        var AprobacionesCreditos =
+        {
+            id: 0,
+            
+            idCliente: $("#ClienteSeleccionado").val(),
+            FechaCreacion: $("#Fecha").val(),
+            Status: "P",
+            Activo: true,
+            Total: 0
+          
+        };
+
+        if (AprobacionesCreditos != undefined) {
+            Swal.fire({
+                title: '¿Desea guardar la solicitud de crédito de este cliente?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: `Aceptar`,
+                denyButtonText: `Cancelar`,
+                customClass: {
+                    confirmButton: 'swalBtnColor',
+                    denyButton: 'swalDeny'
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    var recibidos = JSON.stringify(AprobacionesCreditos);
+
+                    $.ajax({
+                        type: 'POST',
+
+                        url: $("#urlAprobacion").val(),
+                        dataType: 'json',
+                        data: { recibidos: AprobacionesCreditos },
+                        headers: {
+                            RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (json) {
+
+
+                            console.log("resultado " + json.aprobacionesCreditos);
+                            if (json.success == true) {
+                                Swal.fire({
+                                    title: "Ha sido generado con éxito",
+
+                                    icon: 'success',
+                                    showCancelButton: false,
+
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'swalBtnColor',
+
+                                    },
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                     
+
+
+
+                                    }
+                                })
+
+                            } else {
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Ha ocurrido un error al intentar guardar ' + json.aprobacionesCreditos
+
+                                })
+                            }
+                        },
+
+                        beforeSend: function (xhr) {
+
+
+                        },
+                        complete: function () {
+
+                        },
+                        error: function (error) {
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Ha ocurrido un error al intentar guardar ' + error
+
+                            })
+                        }
+                    });
+                }
+            })
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Pareciera que aún falta un campo por llenar'
+
+            });
+        }
+
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar hacer la solicitud:  ' + e
 
         })
     }
@@ -937,7 +1063,7 @@ function onChangeCliente() {
         var Cliente = Clientes.find(a => a.id == idCliente);
         var Grupo = Grupos.find(a => a.id == Cliente.idGrupo);
         var Contado = CP.find(a => a.Nombre == "Contado");
-
+        var Aprobado = Aprobaciones.find(a => a.idCliente == idCliente);
 
         //Preguntarle a CP cual es la de 30 dias
 
@@ -947,13 +1073,16 @@ function onChangeCliente() {
         $("#strongInfo").text("Cédula: " + Cliente.Cedula + " " + "Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
         $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)) + "  " + "Grupo: " + Grupo.CodSAP + "-" + Grupo.Nombre);
 
+        if (Aprobado == undefined) {
         if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Advertencia',
-                text: 'Limite de crédito excedido'
+                html: 'Limite de crédito excedido' +
+                '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
 
             })
+            }
         }
 
         RecolectarFacturas();

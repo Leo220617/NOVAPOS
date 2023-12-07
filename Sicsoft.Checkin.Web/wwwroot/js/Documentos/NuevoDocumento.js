@@ -42,6 +42,7 @@ var LotesCadena = [];
 var DetPromociones = [];
 var Margenes = [];
 var DetMargenes = [];
+var Aprobaciones = [];
 
 function HideP() {
     try {
@@ -93,11 +94,12 @@ function CerrarPopUpLotes() {
 }
 function Recuperar() {
     try {
-      
+
         Cantones = JSON.parse($("#Cantones").val());
         Distritos = JSON.parse($("#Distritos").val());
         Barrios = JSON.parse($("#Barrios").val());
         Clientes = JSON.parse($("#Clientes").val());
+        Aprobaciones = JSON.parse($("#Aprobaciones").val());
         Grupos = JSON.parse($("#Grupos").val());
         Vendedores = JSON.parse($("#Vendedores").val());
         Productos = JSON.parse($("#Productos").val());
@@ -125,9 +127,9 @@ function Recuperar() {
         if (Documento != null || Documento != undefined) {
             if (Documento.BaseEntry != 0) {
                 RecuperarInformacion();
-           
-            HideP();
-            ReadOnlyC();
+
+                HideP();
+                ReadOnlyC();
             }
             // HIDDEN por medio de jquery lo de agregar productos y poner readonly el resto de cosas
             // Puede ser un metodo nuevo o hacerlo todo chorreado aqui 
@@ -200,20 +202,20 @@ function RecuperarInformacion() {
             }
             ProdCadena.push(Producto);
         }
-        if (lot != null) { 
-        for (var i = 0; i < lot.length; i++) {
-            var lote = {
-                id: i,
-                idEncabezado: 0,
-                Serie: lot[i].Serie,
-                ItemCode: lot[i].ItemCode,
-                Cantidad: lot[i].Cantidad,
-                idDetalle: lot[i].idDetalle,
-                Manufactura: lot[i].Manufactura
+        if (lot != null) {
+            for (var i = 0; i < lot.length; i++) {
+                var lote = {
+                    id: i,
+                    idEncabezado: 0,
+                    Serie: lot[i].Serie,
+                    ItemCode: lot[i].ItemCode,
+                    Cantidad: lot[i].Cantidad,
+                    idDetalle: lot[i].idDetalle,
+                    Manufactura: lot[i].Manufactura
 
 
-            }
-            LotesCadena.push(lote);
+                }
+                LotesCadena.push(lote);
             }
         }
         RellenaTabla();
@@ -634,8 +636,8 @@ function ValidarStocks() {
                 ProdCadena[i].Cantidad = 0;
 
             }
-          
-               
+
+
 
 
         }
@@ -660,7 +662,7 @@ function ValidarTotales() {
         var redondeo = 0;
 
         for (var i = 0; i < ProdCadena.length; i++) {
-           
+
             var idCliente = $("#ClienteSeleccionado").val();
             var Cliente = Clientes.find(a => a.id == idCliente);
             var IMP2 = Impuestos.find(a => a.Tarifa == 1);
@@ -949,12 +951,14 @@ function onChangeCliente() {
         var Cliente = Clientes.find(a => a.id == idCliente);
         var Grupo = Grupos.find(a => a.id == Cliente.idGrupo);
         var Contado = CP.find(a => a.Nombre == "Contado");
+        var Aprobado = Aprobaciones.find(a => a.idCliente == idCliente);
 
-        if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
+        if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id && Aprobado == undefined) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Advertencia',
-                text: 'Limite de crédito excedido'
+                html: 'Limite de crédito excedido' +
+                    '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
 
             })
         }
@@ -965,7 +969,7 @@ function onChangeCliente() {
         $("#strongInfo").text("Cédula: " + Cliente.Cedula + " " + "Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
         $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)) + "  " + "Grupo: " + Grupo.CodSAP + "-" + Grupo.Nombre);
 
-      
+
 
         RecolectarFacturas();
         ProdClientes = Productos.filter(a => a.idListaPrecios == Sucursal.idListaPrecios);
@@ -997,8 +1001,9 @@ function RecolectarFacturas() {
         var Cliente = Clientes.find(a => a.id == idClientes);
 
         var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
-
+        var Aprobado = Aprobaciones.find(a => a.idCliente == idClientes);
         var Contado = CP.find(a => a.Nombre == "Contado");
+        FP = true;
 
         $.ajax({
             type: 'GET',
@@ -1006,45 +1011,48 @@ function RecolectarFacturas() {
             url: $("#urlFacturas").val(),
             data: { idCliente: idClientes },
             success: function (result) {
+                if (Aprobado == undefined) {
+                    if (result == null) {
 
-                if (result == null) {
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Ha ocurrido un error al intentar recuperar facturas'
-
-                    })
-
-                } else if (result.length > 0) {
-                    console.log(result);
-                    // $("#selectCondPago").attr("disabled", "disabled");
-                    FP = false;
-
-                    var textoF = "";
-                    for (var i = 0; i < result.length; i++) {
-                        textoF += " " + result[i].docNum + ", ";
-                    }
-
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Advertencia...',
-                        text: 'El Cliente tiene las siguientes facturas pendientes: ' + textoF + " por lo tanto se bloquea el crédito"
-
-                    })
-                } else {
-                    if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
                         Swal.fire({
-                            icon: 'warning',
-                            title: 'Advertencia',
-                            text: 'Limite de crédito excedido'
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Ha ocurrido un error al intentar recuperar facturas'
 
                         })
-                    } else if ((Cliente.LimiteCredito - Cliente.Saldo) > 0  && Cliente.idCondicionPago != Contado.id) {
-                        FP = true;
-                        //$("#selectCondPago").attr("disabled", false);
-                    }
 
+                    } else if (result.length > 0) {
+                        console.log(result);
+                        // $("#selectCondPago").attr("disabled", "disabled");
+                        FP = false;
+
+                        var textoF = "";
+                        for (var i = 0; i < result.length; i++) {
+                            textoF += " " + result[i].docNum + ", ";
+                        }
+
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Advertencia...',
+                            html: 'El Cliente tiene las siguientes facturas pendientes: ' + textoF + " por lo tanto se bloquea el crédito" +
+                                '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
+
+                        })
+                    } else {
+                        if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Advertencia',
+                                html: 'Limite de crédito excedido' +
+                                    '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
+
+                            })
+                        } else if ((Cliente.LimiteCredito - Cliente.Saldo) > 0 && Cliente.idCondicionPago != Contado.id) {
+                            FP = true;
+                            //$("#selectCondPago").attr("disabled", false);
+                        }
+
+                    }
                 }
                 if (CondP.length > 0 && FP == true) {
                     var Cond30 = CP.filter(a => a.Dias <= CondP[0].Dias).sort(function (a, b) {
@@ -1076,6 +1084,124 @@ function RecolectarFacturas() {
             icon: 'error',
             title: 'Oops...',
             text: 'Ha ocurrido un error al intentar recuperar facturas:  ' + e
+
+        })
+    }
+}
+function Solicitar() {
+    try {
+        var AprobacionesCreditos =
+        {
+            id: 0,
+
+
+            idCliente: $("#ClienteSeleccionado").val(),
+            FechaCreacion: $("#Fecha").val(),
+            idUsuarioCreador: 0,
+            idUsuarioCreador: 0,
+            Status: "P",
+            Activo: true,
+            Total: 0,
+            TotalAprobado: 0
+
+        };
+
+        if (AprobacionesCreditos != undefined) {
+            Swal.fire({
+                title: '¿Desea guardar la solicitud de crédito de este cliente?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: `Aceptar`,
+                denyButtonText: `Cancelar`,
+                customClass: {
+                    confirmButton: 'swalBtnColor',
+                    denyButton: 'swalDeny'
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    var recibidos = JSON.stringify(AprobacionesCreditos);
+
+                    $.ajax({
+                        type: 'POST',
+
+                        url: $("#urlAprobacion").val(),
+                        dataType: 'json',
+                        data: { recibidos: AprobacionesCreditos },
+                        headers: {
+                            RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (json) {
+
+
+                            console.log("resultado " + json.aprobacionesCreditos);
+                            if (json.success == true) {
+                                Swal.fire({
+                                    title: "Ha sido generado con éxito",
+
+                                    icon: 'success',
+                                    showCancelButton: false,
+
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'swalBtnColor',
+
+                                    },
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+
+
+
+
+                                    }
+                                })
+
+                            } else {
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Ha ocurrido un error al intentar guardar ' + json.aprobacionesCreditos
+
+                                })
+                            }
+                        },
+
+                        beforeSend: function (xhr) {
+
+
+                        },
+                        complete: function () {
+
+                        },
+                        error: function (error) {
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Ha ocurrido un error al intentar guardar ' + error
+
+                            })
+                        }
+                    });
+                }
+            })
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Pareciera que aún falta un campo por llenar'
+
+            });
+        }
+
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar hacer la solicitud:  ' + e
 
         })
     }
@@ -1635,16 +1761,16 @@ function RellenaTabla() {
                     ValidarCosto();
                 }
 
-             
 
 
-              
+
+
 
 
                 html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
-               
 
-                if (PE.Serie == true) { 
+
+                if (PE.Serie == true) {
 
                     html += "<td class='text-center'> <a href='#test-form' class='popup-with-form fa fa-info-circle icono' onclick='javascript:AbrirModalSeries(" + i + ") '> </a> </td>";
                 }
@@ -1652,7 +1778,7 @@ function RellenaTabla() {
                 html += "</tr>";
             } else {
 
-              
+
 
 
             }
@@ -1799,7 +1925,7 @@ function AgregarProductoTabla() {
                 Duplicado = false;
             }
         }
-       
+
         if ((PE.Stock - Producto.Cantidad) < 0 && PE.Codigo != PS.Codigo) {
             Swal.fire({
                 icon: 'error',
@@ -1857,7 +1983,7 @@ function AgregarProductoTabla() {
 
         }
 
-        else if (((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && Producto.PrecioMin <= PrecioFinal && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) &&  Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) || Producto.Codigo == PS.Codigo) {
+        else if (((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && Producto.PrecioMin <= PrecioFinal && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) || Producto.Codigo == PS.Codigo) {
             if (Producto.Cabys.length >= 13) {
 
 
@@ -2006,7 +2132,7 @@ function Generar() {
         }
 
         if (validarDocumento(EncDocumento)) {
-          
+
             Swal.fire({
                 title: '¿Desea guardar el Documento?',
                 showDenyButton: true,
@@ -2132,7 +2258,10 @@ function validarDocumento(e) {
 
 
         var sumatoriaPagos = 0;
+        var idCliente = $("#ClienteSeleccionado").val();
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+        var Aprobado = Aprobaciones.find(a => a.idCliente == idCliente);
+
 
         for (var i = 0; i < e.MetodosPagos.length; i++) {
             if ($("#selectMoneda").val() != e.MetodosPagos[i].Moneda) {
@@ -2346,11 +2475,12 @@ function AbrirPago() {
         var Cliente = Clientes.find(a => a.id == idCliente);
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
         var CondPago = $("#selectCondPago").val();
+        var Aprobado = Aprobaciones.find(a => a.idCliente == idCliente);
         if ($("#selectMoneda").val() != "CRC") {
             totalG = totalG * TipodeCambio.TipoCambio;
         }
 
-        if ((Cliente.LimiteCredito - Cliente.Saldo ) < totalG && CondPago != Contado.id && CondPago != Transito.id) {
+        if ((Cliente.LimiteCredito - Cliente.Saldo) < totalG && CondPago != Contado.id && CondPago != Transito.id && Aprobado == undefined) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -2358,7 +2488,23 @@ function AbrirPago() {
 
             })
             return false;
-        } else {
+        }
+        if (Aprobado != undefined) {
+            if (Aprobado.Total < totalG && CondPago != Contado.id && CondPago != Transito.id) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'El total de la factura es mayor al crédito aprobado en la solicitud, el cual el monto es de ' + parseFloat(Aprobado.Total).toFixed(2)
+
+                })
+                return false;
+
+            } else {
+                return true;
+            }
+
+        }
+        else {
 
 
 

@@ -651,7 +651,7 @@ function RecolectarFacturas() {
 
                     }
                 }
-             
+
 
 
                 if (CondP.length > 0 && FP == true) {
@@ -694,13 +694,16 @@ function Solicitar() {
         var AprobacionesCreditos =
         {
             id: 0,
-            
+
             idCliente: $("#ClienteSeleccionado").val(),
             FechaCreacion: $("#Fecha").val(),
+            idUsuarioCreador: 0,
+            idUsuarioCreador: 0,
             Status: "P",
             Activo: true,
-            Total: 0
-          
+            Total: 0,
+            TotalAprobado: 0
+
         };
 
         if (AprobacionesCreditos != undefined) {
@@ -746,7 +749,7 @@ function Solicitar() {
                                     },
                                 }).then((result) => {
                                     if (result.isConfirmed) {
-                                     
+
 
 
 
@@ -1073,17 +1076,17 @@ function onChangeCliente() {
         $("#strongInfo").text("Cédula: " + Cliente.Cedula + " " + "Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
         $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)) + "  " + "Grupo: " + Grupo.CodSAP + "-" + Grupo.Nombre);
 
-        if (Aprobado == undefined) {
-        if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
+
+        if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id && Aprobado == undefined) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Advertencia',
                 html: 'Limite de crédito excedido' +
-                '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
+                    '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
 
             })
-            }
         }
+
 
         RecolectarFacturas();
 
@@ -2226,6 +2229,7 @@ function validarOferta(e) {
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
         var CondPago = $("#selectCondPago").val();
 
+        var Aprobado = Aprobaciones.find(a => a.idCliente == idCliente);
 
         if ($("#selectMoneda").val() != "CRC") {
             totalG = totalG * TipodeCambio.TipoCambio;
@@ -2261,7 +2265,19 @@ function validarOferta(e) {
             else {
                 return true;
             }
-        } if ((Cliente.LimiteCredito - Cliente.Saldo) < totalG && CondPago != Contado.id && CondPago != Transito.id) {
+        }
+        if (e.idVendedor == "0" || e.idVendedor == null) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Ha ocurrido un error al intentar agregar, falta el vendedor '
+
+            })
+            return false;
+
+
+        }
+        if ((Cliente.LimiteCredito - Cliente.Saldo) < totalG && CondPago != Contado.id && CondPago != Transito.id && Aprobado == undefined) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -2269,7 +2285,23 @@ function validarOferta(e) {
 
             })
             return false;
-        } else {
+        }
+        if (Aprobado != undefined) {
+            if (Aprobado.Total < totalG && CondPago != Contado.id && CondPago != Transito.id) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'El total de la factura es mayor al crédito aprobado en la solicitud, el cual el monto es de ' + parseFloat(Aprobado.Total).toFixed(2)
+
+                })
+                return false;
+
+            } else {
+                return true;
+            }
+
+        }
+        else {
             return true;
         }
     } catch (e) {

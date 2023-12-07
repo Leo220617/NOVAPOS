@@ -201,7 +201,7 @@ namespace NOVAAPP.Pages.Proformas
                 DetMargenes = await detmargenes.ObtenerLista(filtro3);
                 ParametrosFiltros filtro4 = new ParametrosFiltros();
                 filtro4.Activo = true;
-                filtro4.FechaInicial = DateTime.Now;
+                filtro4.FechaInicial = DateTime.Now.Date;
                 filtro4.FechaFinal = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
                 filtro4.Texto = "A";
                 Aprobaciones = await aprobaciones.ObtenerLista(filtro4);
@@ -265,7 +265,7 @@ namespace NOVAAPP.Pages.Proformas
 
             try
             {
-
+                recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
 
                 var resp = await aprobaciones.Agregar(recibidos);
 

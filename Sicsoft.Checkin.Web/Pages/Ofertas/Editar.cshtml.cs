@@ -38,7 +38,7 @@ namespace NOVAAPP.Pages.Ofertas
         private readonly ICrudApi<PromocionesViewModel, int> promociones;
         private readonly ICrudApi<EncMargenesViewModel, int> margenes;
         private readonly ICrudApi<DetMargenesViewModel, int> detmargenes;
-
+        private readonly ICrudApi<AprobacionesCreditosViewModel, int> aprobaciones;
 
         [BindProperty]
         public OfertasViewModel Oferta { get; set; }
@@ -109,7 +109,11 @@ namespace NOVAAPP.Pages.Ofertas
 
         [BindProperty]
         public DetMargenesViewModel[] DetMargenes { get; set; }
-        public EditarModel(ICrudApi<ParametrosViewModel, int> parametro, ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<UsuariosViewModel, int> usuario, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<DocumentosCreditoViewModel, int> documentos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<SeriesProductosViewModel, int> series, ICrudApi<PromocionesViewModel, int> promociones, ICrudApi<EncMargenesViewModel, int> margenes, ICrudApi<DetMargenesViewModel, int> detmargenes) //CTOR 
+
+
+        [BindProperty]
+        public AprobacionesCreditosViewModel[] Aprobaciones { get; set; }
+        public EditarModel(ICrudApi<ParametrosViewModel, int> parametro, ICrudApi<OfertasViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<UsuariosViewModel, int> usuario, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<DocumentosCreditoViewModel, int> documentos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<SeriesProductosViewModel, int> series, ICrudApi<PromocionesViewModel, int> promociones, ICrudApi<EncMargenesViewModel, int> margenes, ICrudApi<DetMargenesViewModel, int> detmargenes, ICrudApi<AprobacionesCreditosViewModel, int> aprobaciones) //CTOR 
         {
             this.service = service;
             this.serviceU = serviceU;
@@ -133,6 +137,7 @@ namespace NOVAAPP.Pages.Ofertas
             this.promociones = promociones;
             this.margenes = margenes;
             this.detmargenes = detmargenes;
+            this.aprobaciones = aprobaciones;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -186,6 +191,12 @@ namespace NOVAAPP.Pages.Ofertas
                 filtro3.Codigo1 = MiSucursal.idListaPrecios;
                 Margenes = await margenes.ObtenerLista(filtro3);
                 DetMargenes = await detmargenes.ObtenerLista(filtro3);
+                ParametrosFiltros filtro4 = new ParametrosFiltros();
+                filtro4.Activo = true;
+                filtro4.FechaInicial = DateTime.Now.Date;
+                filtro4.FechaFinal = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
+                filtro4.Texto = "A";
+                Aprobaciones = await aprobaciones.ObtenerLista(filtro4);
                 return Page();
             }
             catch (Exception ex)
@@ -238,6 +249,47 @@ namespace NOVAAPP.Pages.Ofertas
             }
         }
 
+        public async Task<IActionResult> OnPostAgregarAprobacion(AprobacionesCreditosViewModel recibidos)
+        {
+            string error = "";
+
+
+            try
+            {
+                recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
+
+                var resp = await aprobaciones.Agregar(recibidos);
+
+                var resp2 = new
+                {
+                    success = true,
+                    Aprobaciones = resp
+                };
+                return new JsonResult(resp2);
+            }
+            catch (ApiException ex)
+            {
+                BitacoraErroresViewModel be = JsonConvert.DeserializeObject<BitacoraErroresViewModel>(ex.Content.ToString());
+
+                var resp2 = new
+                {
+                    success = false,
+                    Aprobaciones = be.Descripcion
+                };
+                return new JsonResult(resp2);
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError(string.Empty, ex.Message);
+                var resp2 = new
+                {
+                    success = false,
+                    Cliente = ex.Message
+                };
+                return new JsonResult(resp2);
+            }
+        }
         public async Task<IActionResult> OnPostAgregarOferta(OfertasViewModel recibidos)
         {
             string error = "";

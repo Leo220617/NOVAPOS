@@ -1964,7 +1964,7 @@ function AgregarProductoTabla() {
         var DescuentoX = Producto.PrecioUnitario * (Producto.PorDescto / 100);
         var PrecioFinal = Producto.PrecioUnitario - DescuentoX;
 
-        if (Producto.PrecioMin > PrecioFinal) {
+        if (Producto.PrecioMin > PrecioFinal && Promo == undefined) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -2484,7 +2484,9 @@ function AbrirPago() {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'El total de la factura es mayor al Limite de crédito'
+                html: 'El total de la factura es mayor al Limite de crédito' +
+                    '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
+
 
             })
             return false;
@@ -2500,6 +2502,46 @@ function AbrirPago() {
                 return false;
 
             } else {
+
+               
+
+                $("#TipCam").val(TipodeCambio.TipoCambio);
+                if ($("#selectCondPago").val() == Contado.id) {
+
+                    if ($("#selectMoneda").val() == "CRC") {
+                        var Total = parseFloat(ReplaceLetra($("#totG").text()));
+                        $("#totPago").text(formatoDecimal(Total));
+                        $("#fatPago").text(formatoDecimal(Total));
+                        $("#selectMonedaP").val($("#selectMoneda").val());
+
+
+                        $("#totPagoD").text(formatoDecimal(Total / TipodeCambio.TipoCambio));
+                        $("#fatPagoD").text(formatoDecimal(Total / TipodeCambio.TipoCambio));
+
+
+                        onChangeMetodo();
+                        RellenaCB();
+
+
+                        $("#modalPagos").modal("show");
+                    } else {
+                        var Total = parseFloat(ReplaceLetra($("#totG").text()));
+                        $("#totPagoD").text(formatoDecimal(Total));
+                        $("#fatPagoD").text(formatoDecimal(Total));
+                        $("#selectMonedaP").val($("#selectMoneda").val());
+
+
+                        $("#totPago").text(formatoDecimal(Total * TipodeCambio.TipoCambio));
+                        $("#fatPago").text(formatoDecimal(Total * TipodeCambio.TipoCambio));
+
+
+                        onChangeMetodo();
+                        RellenaCB();
+                        $("#modalPagos").modal("show");
+                    }
+                } else {
+                    Generar();
+                }
                 return true;
             }
 

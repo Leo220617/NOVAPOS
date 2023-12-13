@@ -1939,7 +1939,7 @@ function AgregarProductoTabla() {
         var DescuentoX = Producto.PrecioUnitario * (Producto.PorDescto / 100);
         var PrecioFinal = Producto.PrecioUnitario - DescuentoX;
 
-        if (Producto.PrecioMin > PrecioFinal) {
+        if (Producto.PrecioMin > PrecioFinal && Promo == undefined) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -1956,7 +1956,7 @@ function AgregarProductoTabla() {
 
             })
 
-        } else if (((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && Producto.PrecioMin <= PrecioFinal && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0)) {
+        } else if (((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && (Producto.PrecioMin <= PrecioFinal && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0)) {
 
             if (Producto.Cabys.length >= 13) {
 
@@ -2281,7 +2281,8 @@ function validarOferta(e) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'El total de la factura es mayor al Limite de crédito'
+                html: 'El total de la factura es mayor al Limite de crédito' +
+                    '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
 
             })
             return false;

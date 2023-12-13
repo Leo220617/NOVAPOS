@@ -74,6 +74,7 @@
             <input hidden id="urlCliente" value="@Url.Page("Nuevo", "AgregarCliente")" />
             <input hidden id="urlFacturas" value="@Url.Page("Nuevo", "Facturas")" />
             <input hidden id="RolGanancia" value="@(!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))" />
+            <input hidden id="urlAprobacion" value="@Url.Page("Nuevo", "AgregarAprobacion")" />
             <input hidden id="Lotes" value="@JsonConvert.SerializeObject( Model.Oferta.Lotes)" />
 
 
@@ -221,12 +222,12 @@
 
                                                 </select>
                                             </div>
-                                             @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
+                                     @*        @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
                                         {
                                             <div id="SerieSelect"class="col-md-3" hidden>
                                                 <a href="#test-form" class="popup-with-form fa fa-info-circle icono" onclick="onClickModal(-1)"></a>&nbsp;
                                             </div>
-                                        }
+                                        }*@
                                     </div>
                                     <br />
                                     <div class="row">
@@ -380,10 +381,10 @@
                                             <th class="text-right">% Ganancia</th>
                                         }
                                         <th class="text-right">Eliminar</th>
-                                         @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
+                                       @*  @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
                                         {
                                             <th class="text-right">Series</th>
-                                        }
+                                        }*@
 
                                     </tr>
                                 </thead>
@@ -718,7 +719,7 @@
                 }
             case "02":
                 {
-                    $("#Cedula").mask("9999999999");
+                    $("#Cedula").mask("999999999999");
                     break;
                 }
             case "03":

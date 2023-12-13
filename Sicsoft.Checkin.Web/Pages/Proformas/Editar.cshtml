@@ -73,6 +73,7 @@
             <input hidden id="SeriesProductos" value="@JsonConvert.SerializeObject(Model.SeriesProductos.SeriesProductos)" />
             <input hidden id="Lotes" value="@JsonConvert.SerializeObject(Model.Oferta.Lotes.Where(a => a.Tipo == "P"))" />
             <input hidden id="urlFacturas" value="@Url.Page("Editar", "Facturas")" />
+            <input hidden id="urlAprobacion" value="@Url.Page("Editar", "AgregarAprobacion")" />
             <input hidden id="RolGanancia" value="@(!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))" />
 
 
@@ -715,7 +716,7 @@
                 }
             case "02":
                 {
-                    $("#Cedula").mask("9999999999");
+                    $("#Cedula").mask("999999999999");
                     break;
                 }
             case "03":

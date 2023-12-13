@@ -1906,7 +1906,7 @@ function AgregarProductoTabla() {
         var DescuentoX = Producto.PrecioUnitario * (Producto.PorDescto / 100);
         var PrecioFinal = Producto.PrecioUnitario - DescuentoX;
 
-        if (Producto.PrecioMin > PrecioFinal) {
+        if (Producto.PrecioMin > PrecioFinal && Promo == undefined) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -2227,7 +2227,9 @@ function validarOferta(e) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Ha ocurrido un error al intentar agregar, falta el vendedor '
+                html: 'El total de la factura es mayor al Limite de crédito' +
+                    '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
+
 
             })
             return false;

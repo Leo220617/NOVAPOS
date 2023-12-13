@@ -741,7 +741,7 @@
                 }
             case "02":
                 {
-                    $("#Cedula").mask("9999999999");
+                    $("#Cedula").mask("999999999999");
                     break;
                 }
             case "03":
@@ -774,7 +774,7 @@
                 }
             case "02":
                 {
-                    if ($("#Cedula").val().length < 10) {
+                    if ($("#Cedula").val().length < 12) {
 
                         $("#Cedula").focus();
                         $("#Cedula").select();

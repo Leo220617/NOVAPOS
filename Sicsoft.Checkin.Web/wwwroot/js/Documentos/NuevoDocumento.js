@@ -2298,7 +2298,7 @@ function validarDocumento(e) {
             }
             else if (e.MetodosPagos.length == 0 || e.MetodosPagos == null) {
                 return false;
-            } else if (parseFloat(sumatoriaPagos.toFixed(2)) < (e.TotalCompra + e.Redondeo)) {
+            } else if (parseFloat(sumatoriaPagos.toFixed(2)) < parseFloat((e.TotalCompra + e.Redondeo).toFixed(2))) {
                 return false;
             }
             else {

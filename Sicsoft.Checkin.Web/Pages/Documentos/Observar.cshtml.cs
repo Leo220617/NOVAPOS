@@ -18,6 +18,8 @@ namespace NOVAAPP.Pages.Documentos
 {
     public class ObservarModel : PageModel
     {
+
+        private readonly IConfiguration configuration;
         private readonly ICrudApi<DocumentosViewModel, int> service;
         private readonly ICrudApi<ClientesViewModel, string> serviceE;
         private readonly ICrudApi<ProductosViewModel, string> serviceP;
@@ -26,7 +28,7 @@ namespace NOVAAPP.Pages.Documentos
         private readonly ICrudApi<VendedoresViewModel, int> vendedor;
         private readonly ICrudApi<TipoCambiosViewModel, int> tipoCambio;
         private readonly ICrudApi<ParametrosViewModel, int> parametro;
-
+        private readonly ICrudApi<SucursalesViewModel, string> sucursales;
 
         [BindProperty]
         public ClientesViewModel[] Clientes { get; set; }
@@ -54,7 +56,16 @@ namespace NOVAAPP.Pages.Documentos
         [BindProperty]
         public ParametrosViewModel[] Parametro { get; set; }
 
-        public ObservarModel(ICrudApi<ParametrosViewModel, int> parametro, ICrudApi<DocumentosViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor,ICrudApi<TipoCambiosViewModel, int> tipoCambio)
+        [BindProperty]
+        public SucursalesViewModel[] Sucursal { get; set; }
+
+        [BindProperty]
+        public SucursalesViewModel MiSucursal { get; set; }
+
+        [BindProperty]
+        public string NombreCliente { get; set; }
+
+        public ObservarModel(ICrudApi<ParametrosViewModel, int> parametro, IConfiguration configuration, ICrudApi<DocumentosViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor,ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<SucursalesViewModel, string> sucursales)
         {
             this.service = service;
             this.serviceE = serviceE;
@@ -64,6 +75,8 @@ namespace NOVAAPP.Pages.Documentos
             this.vendedor = vendedor;
             this.tipoCambio = tipoCambio;
             this.parametro = parametro;
+            this.sucursales = sucursales;
+            this.configuration = configuration;
         }
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -93,10 +106,12 @@ namespace NOVAAPP.Pages.Documentos
 
                 ParametrosFiltros filtro2 = new ParametrosFiltros();
                 filtro2.CardCode = Documento.CodSuc;
-         
+                var Suc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                Sucursal = await sucursales.ObtenerLista("");
+                MiSucursal = Sucursal.Where(a => a.CodSuc.ToUpper().Contains(Suc)).FirstOrDefault();
                 Productos = await serviceP.ObtenerLista(filtro2);
                 Exoneraciones = await exoneracion.ObtenerLista("");
-
+                NombreCliente = configuration["Cliente"].ToString();
                 return Page();
             }
             catch (Exception ex)

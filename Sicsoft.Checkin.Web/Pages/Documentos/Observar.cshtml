@@ -317,6 +317,24 @@
 
 <div class="html" hidden>
     <div class="row">
+        <div class="col-md-6">
+            <img id="base64image" style="width: 85%;"
+                 src="data:image/jpeg;base64,@Model.MiSucursal.Imagen.ToString()" />
+        </div>
+        <div class="col-md-6">
+            <div style=" font-weight: bold;  font-size: 15px;">
+              @*  <p style="  font-size: 20px !important; ">@Model.NombreCliente</p>*@
+                <p style="  font-size: 20px !important; ">@Model.MiSucursal.Nombre</p>
+                <p>Cedula Juridica:  @Model.MiSucursal.Cedula</p>
+                <p>Telefax: @Model.MiSucursal.Telefono</p>
+
+                <p>Email: @Model.MiSucursal.Correo</p>
+
+                <p> @Model.MiSucursal.Sennas   </p>
+
+
+            </div>
+        </div>
         <div class="col-12">
 
             <div class="box">
@@ -514,6 +532,30 @@
 
 
 
+        </div>
+        <div class="col-md-6">
+            <div style="   font-size: 17px;">
+                <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
+                <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128152</p>
+                <p><b>BANCO NACIONAL:</b>  CR55015109210010004595</p>
+                <p><b>BAC SAN JOSÉ:</b>  CR64010200009326955703</p>
+                <p><b>BANCO POPULAR:</b>  CR70016111006152606645</p>
+                <p><b>SINPE MOVIL BNCR:</b>  8770-2222</p>
+                <p><b>SINPE MOVIL BCR:</b> 8770-2221</p>
+
+
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div style="  font-size: 17px;">
+                <b style="  font-size: 22px !important; ">CUENTAS DÓLARES</b>
+                <p> <b>BANCO DE COSTA RICA:</b> CR62015201345000147451</p>
+                <p><b>BANCO NACIONAL</b>: CR67015105810026000819</p>
+                <p><b>BAC SAN JOSÉ</b>: CR71010200009487514827</p>
+
+
+            </div>
         </div>
     </div>
 </div>

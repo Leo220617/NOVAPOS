@@ -2287,6 +2287,18 @@ function validarDocumento(e) {
 
         }
 
+        if (e.idCondPago == "0" || e.idCondPago == null) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Ha ocurrido un error al intentar agregar, falta el la condición de pago'
+
+            })
+            return false;
+
+
+        }
+
         if ($("#selectCondPago").val() == Contado.id) {
             if (e.idCliente == "0" || e.idCliente == null) {
                 return false;

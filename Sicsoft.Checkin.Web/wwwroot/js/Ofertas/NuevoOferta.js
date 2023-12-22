@@ -1484,7 +1484,7 @@ function validar(cliente) {
         } else if (cliente.CorreoPublicitario == "" || cliente.CorreoPublicitario == null) {
             return false;
 
-        } else if (cliente.idGrupo == "" || cliente.idGrupo == null) {
+        } else if (cliente.idGrupo == "" || cliente.idGrupo == null || cliente.idGrupo == '0') {
             return false;
         }
 

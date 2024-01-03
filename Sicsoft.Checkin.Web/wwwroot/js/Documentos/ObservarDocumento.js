@@ -155,9 +155,10 @@ function ImprimirTiquete() {
             texto = texto.replace("FACTURA", "TIQUETE");
 
         }
-        texto = texto.replace("@CodCliente", " " + Documento.idCliente);
-
         var Cli = Clientes.find(a => a.id == Documento.idCliente);
+        texto = texto.replace("@CodCliente", " " + Cli.Codigo);
+
+        
         texto = texto.replace("@NombreCliente", Cli.Nombre);
         texto = texto.replace("@Vendedor", Vendedor.Nombre);
         texto = texto.replace("@Comentario", Documento.Comentarios);
@@ -239,9 +240,10 @@ function ImprimirTiqueteNC() {
             texto = texto.replace("FACTURA", "TIQUETE");
 
         }
-        texto = texto.replace("@CodCliente", " " + Documento.idCliente);
-
         var Cli = Clientes.find(a => a.id == Documento.idCliente);
+        texto = texto.replace("@CodCliente", " " + Cli.Codigo);
+
+    
         texto = texto.replace("@NombreCliente", Cli.Nombre);
         texto = texto.replace("@Vendedor", Vendedor.Nombre);
         texto = texto.replace("@Comentario", Documento.Comentarios);
@@ -275,12 +277,12 @@ function ImprimirTiqueteNC() {
             texto = texto.replace("@SubTotal", "₡" + formatoDecimal(Documento.Subtotal));
             texto = texto.replace("@TotalDescuento", "₡" + formatoDecimal(Documento.TotalDescuento));
             texto = texto.replace("@TotalImpuestos", "₡" + formatoDecimal(Documento.TotalImpuestos));
-            texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.TotalCompra + Documento.redondeo));
+            texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.TotalCompra + Documento.Redondeo));
         } else {
             texto = texto.replace("@SubTotal", "$" + formatoDecimal(Documento.Subtotal));
             texto = texto.replace("@TotalDescuento", "$" + formatoDecimal(Documento.TotalDescuento));
             texto = texto.replace("@TotalImpuestos", "$" + formatoDecimal(Documento.TotalImpuestos));
-            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.TotalCompra + Documento.redondeo));
+            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.TotalCompra + Documento.Redondeo));
         }
 
 
@@ -322,9 +324,10 @@ function ImprimirTiqueteC() {
             texto = texto.replace("FACTURA", "TIQUETE");
 
         }
-        texto = texto.replace("@CodCliente", " " + Documento.idCliente);
-
         var Cli = Clientes.find(a => a.id == Documento.idCliente);
+        texto = texto.replace("@CodCliente", " " + Cli.Codigo);
+
+        
         texto = texto.replace("@NombreCliente", Cli.Nombre);
         texto = texto.replace("@Vendedor", Vendedor.Nombre);
         texto = texto.replace("@Comentario", Documento.Comentarios);
@@ -404,10 +407,11 @@ function ImprimirFactura() {
             texto = texto.replace("FACTURA", "TIQUETE");
 
         }
-        texto = texto.replace("@CodCliente", " " + Documento.idCliente);
+        var Cli = Clientes.find(a => a.id == Documento.idCliente);
+        texto = texto.replace("@CodCliente", " " + Cli.Codigo);
         texto = texto.replace("@idCliente", " " + Documento.idCliente);
 
-        var Cli = Clientes.find(a => a.id == Documento.idCliente);
+     
         texto = texto.replace("@NombreCliente", Cli.Nombre);
         texto = texto.replace("@DireccionCliente", Cli.Sennas);
 
@@ -421,7 +425,7 @@ function ImprimirFactura() {
         texto = texto.replace("@FechaEnvio", "");
         texto = texto.replace("@TipoCambio", TipoCambio[0].TipoCambio);
 
-        texto = texto.replace("@TotalLetras", NumeroALetras(Documento.TotalCompra + Documento.redondeo));
+        texto = texto.replace("@TotalLetras", NumeroALetras(Documento.TotalCompra + Documento.Redondeo));
 
 
 
@@ -436,11 +440,11 @@ function ImprimirFactura() {
 
             tabla += "<tr>";
             tabla += "<td align ='center'>" + Documento.Detalle[i].Cantidad + " </td>";
-            tabla += "<td align ='center'>" + Prod.Codigo + " </td>";
+            tabla += "<td align ='left'>" + Prod.Codigo + " </td>";
 
-            tabla += "<td  align ='center' style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;'>" + Prod.Nombre + " </td>";
-            tabla += "<td  align ='center'>" + formatoDecimal(Documento.Detalle[i].PrecioUnitario) + " </td>";
-            tabla += "<td  align ='center'>" + formatoDecimal(Documento.Detalle[i].TotalLinea) + " </td>";
+            tabla += "<td  align ='left' style=' color: black; font-family:Arial, sans-serif; font-style: normal; font-weight: normal; text-decoration: none; font-size: 9pt;'>" + Prod.Nombre + " </td>";
+            tabla += "<td  align ='right'>" + formatoDecimal(Documento.Detalle[i].PrecioUnitario) + " </td>";
+            tabla += "<td  align ='right'>" + formatoDecimal(Documento.Detalle[i].TotalLinea) + " </td>";
 
 
 
@@ -451,15 +455,17 @@ function ImprimirFactura() {
         texto = texto.replace("@INYECTADO", tabla);
 
         if (Documento.Moneda == "CRC") {
-            texto = texto.replace("@SubTotal", "₡" + formatoDecimal(Documento.Subtotal));
-            texto = texto.replace("@TotalDescuento", "₡" + formatoDecimal(Documento.TotalDescuento));
-            texto = texto.replace("@TotalImpuestos", "₡" + formatoDecimal(Documento.TotalImpuestos));
-            texto = texto.replace("@Total", "₡" + formatoDecimal(Documento.TotalCompra + Documento.redondeo));
+            texto = texto.replace("@SubTotal", "₡" + formatoDecimalX(Documento.Subtotal));
+            texto = texto.replace("@TotalDescuento", "₡" + formatoDecimalX(Documento.TotalDescuento));
+            texto = texto.replace("@TotalImpuestos", "₡" + formatoDecimalX(Documento.TotalImpuestos));
+            texto = texto.replace("@Redondeo", "₡" + formatoDecimalX(Documento.Redondeo));
+            texto = texto.replace("@Total", "₡" + formatoDecimalX(Documento.TotalCompra + Documento.Redondeo));
         } else {
             texto = texto.replace("@SubTotal", "$" + formatoDecimal(Documento.Subtotal));
             texto = texto.replace("@TotalDescuento", "$" + formatoDecimal(Documento.TotalDescuento));
             texto = texto.replace("@TotalImpuestos", "$" + formatoDecimal(Documento.TotalImpuestos));
-            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.TotalCompra + Documento.redondeo));
+            texto = texto.replace("@Redondeo", "$" + formatoDecimal(Documento.Redondeo));
+            texto = texto.replace("@Total", "$" + formatoDecimal(Documento.TotalCompra + Documento.Redondeo));
         }
 
 

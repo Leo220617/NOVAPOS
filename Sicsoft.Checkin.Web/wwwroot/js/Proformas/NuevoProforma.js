@@ -40,6 +40,7 @@ var DetPromociones = [];
 var Margenes = [];
 var DetMargenes = [];
 var Aprobaciones = [];
+var DocumentosC = [];
 
 function CerrarPopUpLotes() {
     try {
@@ -596,6 +597,8 @@ function RecolectarFacturas() {
         var Cliente = Clientes.find(a => a.id == idClientes);
         var Aprobado = Aprobaciones.find(a => a.idCliente == idClientes);
         var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
+        var CondTransito = CP.find(a => a.Nombre == "Transito");
+      
         FP = true;
         var Contado = CP.find(a => a.Nombre == "Contado");
 
@@ -626,7 +629,8 @@ function RecolectarFacturas() {
                         for (var i = 0; i < result.length; i++) {
                             textoF += " " + result[i].docNum + ", ";
                         }
-
+                        DocumentosC = result.find(a => a.idCondPago == CondTransito.id && a.saldo > 0 && a.idCliente == idClientes );
+                        
                         Swal.fire({
                             icon: 'warning',
                             title: 'Advertencia...',
@@ -1087,7 +1091,7 @@ function onChangeCliente() {
             })
         }
 
-
+        DocumentosC = [];
         RecolectarFacturas();
 
         ProdClientes = Productos.filter(a => a.idListaPrecios == Sucursal.idListaPrecios);
@@ -1128,12 +1132,15 @@ function RellenaCondiciones(CPS) {
         $("#selectCondPago").html(text);
 
         var Contado = CP.find(a => a.Nombre == "Contado");
+
         var Transito = CP.find(a => a.Nombre == "Transito");
+
+       
 
 
 
         text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
-        if (FP == false && !Name) {
+        if (FP == false && !Name && DocumentosC.length == 0) {
             text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
         }
 
@@ -1631,7 +1638,7 @@ function RellenaTabla() {
             html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+         /*   html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
             if ($("#RolGanancia").val() == "value") {
                 if (ProdCadena[i].Moneda != MonedaDoc) {
@@ -1956,7 +1963,7 @@ function AgregarProductoTabla() {
 
             })
 
-        } else if (((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && (Producto.PrecioMin <= PrecioFinal && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0)) {
+        } else if (((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && ((Producto.PrecioMin <= PrecioFinal) || (Promo != undefined)) && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0)) {
 
             if (Producto.Cabys.length >= 13) {
 
@@ -2033,6 +2040,7 @@ function AgregarProductoTabla() {
 
 
 }
+
 
 function EliminarProducto(i) {
     try {
@@ -2249,6 +2257,18 @@ function validarOferta(e) {
             else if (e.Detalle.length == 0 || e.Detalle == null) {
                 return false;
             }
+         
+            if (e.idCondPago == "0" || e.idCondPago == null) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar agregar, falta el la condición de pago'
+
+                })
+                return false;
+
+
+            }
             if (e.idVendedor == "0" || e.idVendedor == null) {
                 Swal.fire({
                     icon: 'error',
@@ -2266,17 +2286,7 @@ function validarOferta(e) {
                 return true;
             }
         }
-        if (e.idVendedor == "0" || e.idVendedor == null) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Ha ocurrido un error al intentar agregar, falta el vendedor '
-
-            })
-            return false;
-
-
-        }
+        
         if ((Cliente.LimiteCredito - Cliente.Saldo) < totalG && CondPago != Contado.id && CondPago != Transito.id && Aprobado == undefined) {
             Swal.fire({
                 icon: 'error',

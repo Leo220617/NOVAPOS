@@ -219,6 +219,7 @@ function RecuperarInformacion() {
             }
         }
         RellenaTabla();
+
         onChangeCliente();
         ValidarStocks();
 
@@ -668,7 +669,7 @@ function ValidarTotales() {
             var IMP2 = Impuestos.find(a => a.Tarifa == 1);
             var EX = Exoneraciones.find(a => a.id == ProdCadena[i].idExoneracion);
 
-            var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+            var PE = Productos.find(a => a.id == ProdCadena[i].idProducto);
             var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
             if (ProdCadena[i].Cantidad <= 0 && PE.Codigo != PS.Codigo) {
                 EliminarProducto(i);
@@ -1715,7 +1716,7 @@ function RellenaTabla() {
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+              /*  html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
 
                 if ($("#RolGanancia").val() == "value") {
@@ -3308,9 +3309,10 @@ function ImprimirTiquete(Documento) {
             texto = texto.replace("FACTURA", "TIQUETE");
 
         }
-        texto = texto.replace("@CodCliente", " " + Documento.idCliente);
-
         var Cli = Clientes.find(a => a.id == Documento.idCliente);
+        texto = texto.replace("@CodCliente", " " + Cli.Codigo);
+
+       
         texto = texto.replace("@NombreCliente", Cli.Nombre);
         texto = texto.replace("@Vendedor", Vendedores.find(a => a.id == $("#selectVendedor").val()).Nombre);
 
@@ -3394,9 +3396,10 @@ function ImprimirTiqueteC(Documento) {
             texto = texto.replace("FACTURA", "TIQUETE");
 
         }
-        texto = texto.replace("@CodCliente", " " + Documento.idCliente);
-
         var Cli = Clientes.find(a => a.id == Documento.idCliente);
+        texto = texto.replace("@CodCliente", " " + Cli.Codigo);
+
+       
         texto = texto.replace("@NombreCliente", Cli.Nombre);
         texto = texto.replace("@Vendedor", Vendedores.find(a => a.id == $("#selectVendedor").val()).Nombre);
 
@@ -3477,10 +3480,11 @@ function ImprimirFactura(Documento) {
             texto = texto.replace("FACTURA", "TIQUETE");
 
         }
-        texto = texto.replace("@CodCliente", " " + Documento.idCliente);
+        var Cli = Clientes.find(a => a.id == Documento.idCliente);
+        texto = texto.replace("@CodCliente", " " + Cli.Codigo);
         texto = texto.replace("@idCliente", " " + Documento.idCliente);
 
-        var Cli = Clientes.find(a => a.id == Documento.idCliente);
+     
         texto = texto.replace("@NombreCliente", Cli.Nombre);
         texto = texto.replace("@DireccionCliente", Cli.Sennas);
 

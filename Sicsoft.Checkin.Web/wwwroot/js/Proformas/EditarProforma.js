@@ -900,8 +900,14 @@ function RecolectarFacturas() {
         var Cliente = Clientes.find(a => a.id == idClientes);
         var Aprobado = Aprobaciones.find(a => a.idCliente == idClientes);
         var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
-        FP = true;
+    
         var Contado = CP.find(a => a.Nombre == "Contado");
+
+        if (Aprobado) {
+            FP = true;
+        } else if (Cliente.idCondicionPago == Contado.id) {
+            FP = false;
+        }
 
         $.ajax({
             type: 'GET',

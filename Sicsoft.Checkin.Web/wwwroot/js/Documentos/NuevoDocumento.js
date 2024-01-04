@@ -1004,7 +1004,12 @@ function RecolectarFacturas() {
         var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
         var Aprobado = Aprobaciones.find(a => a.idCliente == idClientes);
         var Contado = CP.find(a => a.Nombre == "Contado");
-        FP = true;
+
+        if (Aprobado) {
+            FP = true;
+        } else if (Cliente.idCondicionPago == Contado.id) {
+            FP = false;
+        }
 
         $.ajax({
             type: 'GET',

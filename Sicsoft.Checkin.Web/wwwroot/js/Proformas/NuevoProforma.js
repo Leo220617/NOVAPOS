@@ -593,14 +593,20 @@ function AbrirModalSeries(i) {
 
 function RecolectarFacturas() {
     try {
+       
         var idClientes = $("#ClienteSeleccionado").val();
         var Cliente = Clientes.find(a => a.id == idClientes);
         var Aprobado = Aprobaciones.find(a => a.idCliente == idClientes);
         var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
-        var CondTransito = CP.find(a => a.Nombre == "Transito");
-      
-        FP = true;
         var Contado = CP.find(a => a.Nombre == "Contado");
+        var CondTransito = CP.find(a => a.Nombre == "Transito");
+        if (Aprobado) {
+            FP = true;
+        } else if (Cliente.idCondicionPago == Contado.id) {
+            FP = false;
+        }
+     
+       
 
 
         $.ajax({
@@ -629,7 +635,7 @@ function RecolectarFacturas() {
                         for (var i = 0; i < result.length; i++) {
                             textoF += " " + result[i].docNum + ", ";
                         }
-                        DocumentosC = result.find(a => a.idCondPago == CondTransito.id && a.saldo > 0 && a.idCliente == idClientes );
+                  /*      DocumentosC = result.find(a => a.idCondPago == CondTransito.id && a.saldo > 0 && a.idCliente == idClientes );*/
                         
                         Swal.fire({
                             icon: 'warning',
@@ -692,6 +698,7 @@ function RecolectarFacturas() {
         })
     }
 }
+
 
 function Solicitar() {
     try {
@@ -1140,7 +1147,7 @@ function RellenaCondiciones(CPS) {
 
 
         text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
-        if (FP == false && !Name && DocumentosC.length == 0) {
+        if (FP == false && !Name) {
             text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
         }
 

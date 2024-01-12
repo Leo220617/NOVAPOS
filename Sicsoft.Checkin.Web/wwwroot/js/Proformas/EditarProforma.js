@@ -669,7 +669,7 @@ function onChangeMoneda() {
         $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
         $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
         var TotalAntesRedondeo = totalG;
-        totalG = redondearAl5(totalG);
+        totalG = redondearAl5(totalG, Moneda);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
 
 
@@ -853,7 +853,18 @@ function onChangeCliente() {
         var Aprobado = Aprobaciones.find(a => a.idCliente == idCliente);
 
 
+        var contieneContado = Cliente.Nombre.toUpperCase().includes("CONTADO");
 
+        if (contieneContado) {
+
+            $("#selectTD option[value='01']").remove();
+        } else {
+
+            if ($("#selectTD option[value='01']").length === 0) {
+                $("#selectTD").append('<option value="01">Factura Electrónica</option>');
+
+            }
+        }
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Cédula: " + Cliente.Cedula + " " + "Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
         $("#strongInfo2").text("Grupo: " + Grupo.CodSAP + "-" + Grupo.Nombre + "  " + "Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)));
@@ -1629,7 +1640,7 @@ function RellenaTabla() {
             html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-       /*     html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
             if ($("#RolGanancia").val() == "value") {
                 if (ProdCadena[i].Moneda != MonedaDoc) {
@@ -1774,6 +1785,7 @@ function AgregarProductoTabla() {
         var id = $("#ProductoSeleccionado").val();
         var id = $("#ProductoSeleccionado").val();
         var PE = ProdClientes.find(a => a.id == id);
+        var Moneda = $("#selectMoneda").val();
 
 
 
@@ -1964,7 +1976,7 @@ function AgregarProductoTabla() {
                 $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
                 $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
                 var TotalAntesRedondeo = totalG;
-                totalG = redondearAl5(totalG);
+                totalG = redondearAl5(totalG, Moneda);
                 $("#totG").text(formatoDecimal(totalG.toFixed(2)));
                 $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
                 redondeo = totalG - TotalAntesRedondeo;
@@ -2009,7 +2021,7 @@ function EliminarProducto(i) {
 
     var Producto = ProdCadena[i];
     var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
-
+    var Moneda = $("#selectMoneda").val();
 
     var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
     var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
@@ -2029,7 +2041,7 @@ function EliminarProducto(i) {
     $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
 
     var TotalAntesRedondeo = totalG;
-    totalG = redondearAl5(totalG);
+    totalG = redondearAl5(totalG, Moneda);
     $("#totG").text(formatoDecimal(totalG.toFixed(2)));
     $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
     redondeo = totalG - TotalAntesRedondeo;
@@ -2291,12 +2303,18 @@ function onChangeDescuentoProducto(i) {
         var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
         var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria);
 
+        var Moneda = $("#selectMoneda").val();
+        var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
 
-        var DescuentoMaximo = ((ProdCadena[i].PrecioUnitario - ProdCadena[i].PrecioMin) / ProdCadena[i].PrecioUnitario) * 100;
+        if (Moneda != "USD") {
+            var DescuentoMaximo = ((ProdCadena[i].PrecioUnitario - ProdCadena[i].PrecioMin) / ProdCadena[i].PrecioUnitario) * 100;
+        } else {
+            var DescuentoMaximo = ((ProdCadena[i].PrecioUnitario - (ProdCadena[i].PrecioMin / TipodeCambio.TipoCambio)) / ProdCadena[i].PrecioUnitario) * 100;
+        }
         var DescuentoX = ProdCadena[i].PrecioUnitario * (ProdCadena[i].PorDescto / 100);
         var PrecioFinal = ProdCadena[i].PrecioUnitario - DescuentoX;
 
-        if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento && Promo == undefined && ProdCadena[i].PrecioMin <= PrecioFinal) {
+        if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento && Promo == undefined && ((ProdCadena[i].PrecioMin <= PrecioFinal && Moneda == "CRC") || (ProdCadena[i].PrecioMin / TipodeCambio.TipoCambio <= PrecioFinal && Moneda == "USD"))) {
             ValidarTotales();
         }
 
@@ -2335,16 +2353,31 @@ function onChangeDescuentoProducto(i) {
             ValidarTotales();
             ValidarCosto();
         }
-        if (ProdCadena[i].PrecioMin > PrecioFinal) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'No se puede aplicar el descuento debido a que es menor al Precio Minimo, el Producto ' + ProdCadena[i].Descripcion + ' lo maximo que se le puede aplicar de Descuento es de ' + parseFloat(DescuentoMaximo).toFixed(2) + '%'
+        if (Moneda != "USD") {
+            if (ProdCadena[i].PrecioMin > PrecioFinal) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'No se puede aplicar el descuento debido a que es menor al Precio Minimo, el Producto ' + ProdCadena[i].Descripcion + ' lo maximo que se le puede aplicar de Descuento es de ' + parseFloat(DescuentoMaximo).toFixed(2) + '%'
 
-            })
-            ProdCadena[i].PorDescto = 0;
-            ValidarTotales();
-            ValidarCosto();
+                })
+                ProdCadena[i].PorDescto = 0;
+                ValidarTotales();
+                ValidarCosto();
+            }
+
+        } else {
+            if ((ProdCadena[i].PrecioMin / TipodeCambio.TipoCambio) > PrecioFinal) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'No se puede aplicar el descuento debido a que es menor al Precio Minimo, el Producto ' + ProdCadena[i].Descripcion + ' lo maximo que se le puede aplicar de Descuento es de ' + parseFloat(DescuentoMaximo).toFixed(2) + '%'
+
+                })
+                ProdCadena[i].PorDescto = 0;
+                ValidarTotales();
+                ValidarCosto();
+            }
         }
 
     } catch (e) {
@@ -2361,6 +2394,7 @@ function Setear() {
     try {
 
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+        var Moneda = $("#selectMoneda").val();
 
 
         for (var i = 0; i < ProdCadena.length; i++) {
@@ -2370,8 +2404,12 @@ function Setear() {
 
             var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria);
 
-
-            var DescuentoMaximoX = ((ProdCadena[i].PrecioUnitario - ProdCadena[i].PrecioMin) / ProdCadena[i].PrecioUnitario) * 100;
+            var DescuentoMaximoX = 0;
+            if (Moneda != "USD") {
+                DescuentoMaximoX = ((ProdCadena[i].PrecioUnitario - ProdCadena[i].PrecioMin) / ProdCadena[i].PrecioUnitario) * 100;
+            } else {
+                DescuentoMaximoX = ((ProdCadena[i].PrecioUnitario - (ProdCadena[i].PrecioMin / TipodeCambio.TipoCambio)) / ProdCadena[i].PrecioUnitario) * 100;
+            }
             var DescuentoMaximo = Math.floor(DescuentoMaximoX * 100) / 100;
             var Descuento = ProdCadena[i].PrecioUnitario * (ProdCadena[i].PorDescto / 100);
             var PrecioFinal = ProdCadena[i].PrecioUnitario - Descuento;
@@ -2395,14 +2433,16 @@ function onChangePrecioProducto(i) {
     try {
 
         var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
-        ;
+        var Moneda = $("#selectMoneda").val();
+        var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+
         ProdCadena[i].PrecioUnitario = parseFloat($("#" + i + "_Prod3").val()).toFixed(2);
 
-        if (ProdCadena[i].PrecioUnitario >= PE.PrecioUnitario || (PE.Editable == true && ProdCadena[i].PrecioUnitario > 0)) {
+        if (((ProdCadena[i].PrecioUnitario >= PE.PrecioUnitario && Moneda == "CRC") || (ProdCadena[i].PrecioUnitario >= (PE.PrecioUnitario / TipodeCambio.TipoCambio) && Moneda == "USD")) || (PE.Editable == true && ProdCadena[i].PrecioUnitario > 0)) {
             ValidarTotales();
             ValidarCosto();
         }
-        else if (PE.PrecioUnitario > ProdCadena[i].PrecioUnitario && PE.Editable == false) {
+        else if (PE.PrecioUnitario > ProdCadena[i].PrecioUnitario && PE.Editable == false && Moneda == "CRC") {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -2410,6 +2450,17 @@ function onChangePrecioProducto(i) {
 
             })
             ProdCadena[i].PrecioUnitario = PE.PrecioUnitario;
+            ValidarTotales();
+            ValidarCosto();
+
+        } else if ((PE.PrecioUnitario / TipodeCambio.TipoCambio) > ProdCadena[i].PrecioUnitario && PE.Editable == false && Moneda == "USD") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Precio invalido, el precio tiene que ser mayor o igual a ' + ' ' + (PE.PrecioUnitario / TipodeCambio.TipoCambio)
+
+            })
+            ProdCadena[i].PrecioUnitario = PE.PrecioUnitario / TipodeCambio.TipoCambio;
             ValidarTotales();
             ValidarCosto();
 
@@ -2425,6 +2476,7 @@ function onChangePrecioProducto(i) {
             ValidarCosto();
 
         }
+
 
 
 
@@ -2482,6 +2534,7 @@ function ValidarTotales() {
 
         var totalGX = 0;
         var redondeo = 0;
+        var Moneda = $("#selectMoneda").val();
 
         for (var i = 0; i < ProdCadena.length; i++) {
             var idCliente = $("#ClienteSeleccionado").val();
@@ -2520,7 +2573,7 @@ function ValidarTotales() {
         $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
         $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
         var TotalAntesRedondeo = totalG;
-        totalG = redondearAl5(totalG);
+        totalG = redondearAl5(totalG, Moneda);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
 

@@ -661,6 +661,7 @@ function ValidarTotales() {
         var totalG = 0;
         var totalGX = 0;
         var redondeo = 0;
+        var Moneda = $("#selectMoneda").val();
 
         for (var i = 0; i < ProdCadena.length; i++) {
 
@@ -704,7 +705,7 @@ function ValidarTotales() {
         $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
         $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
         var TotalAntesRedondeo = totalG;
-        totalG = redondearAl5(totalG);
+        totalG = redondearAl5(totalG, Moneda);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
 
@@ -775,7 +776,7 @@ function onChangeMoneda() {
         $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
         $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
         var TotalAntesRedondeo = totalG;
-        totalG = redondearAl5(totalG);
+        totalG = redondearAl5(totalG, Moneda);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
 
 
@@ -963,7 +964,18 @@ function onChangeCliente() {
 
             })
         }
+        var contieneContado = Cliente.Nombre.toUpperCase().includes("CONTADO");
 
+        if (contieneContado) {
+
+            $("#selectTD option[value='01']").remove();
+        } else {
+
+            if ($("#selectTD option[value='01']").length === 0) {
+                $("#selectTD").append('<option value="01">Factura Electrónica</option>');
+
+            }
+        }
 
 
         $("#spanDireccion").text(Cliente.Sennas);
@@ -1721,7 +1733,7 @@ function RellenaTabla() {
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-              /*  html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
 
                 if ($("#RolGanancia").val() == "value") {
@@ -1862,6 +1874,7 @@ function AgregarProductoTabla() {
 
         var id = $("#ProductoSeleccionado").val();
         var PE = ProdClientes.find(a => a.id == id);
+        var Moneda = $("#selectMoneda").val();
 
         var Producto =
         {
@@ -2023,7 +2036,7 @@ function AgregarProductoTabla() {
                 $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
                 $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
                 var TotalAntesRedondeo = totalG;
-                totalG = redondearAl5(totalG);
+                totalG = redondearAl5(totalG, Moneda);
                 $("#totG").text(formatoDecimal(totalG.toFixed(2)));
                 $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
                 redondeo = totalG - TotalAntesRedondeo;
@@ -2062,7 +2075,7 @@ function EliminarProducto(i) {
     try {
         var Producto = ProdCadena[i];
         var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
-
+        var Moneda = $("#selectMoneda").val();
 
         var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
         var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
@@ -2080,7 +2093,7 @@ function EliminarProducto(i) {
         $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
         $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
         var TotalAntesRedondeo = totalG;
-        totalG = redondearAl5(totalG);
+        totalG = redondearAl5(totalG, Moneda);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
         redondeo = totalG - TotalAntesRedondeo;
@@ -2267,6 +2280,7 @@ function validarDocumento(e) {
         var idCliente = $("#ClienteSeleccionado").val();
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
         var Aprobado = Aprobaciones.find(a => a.idCliente == idCliente);
+      
 
 
         for (var i = 0; i < e.MetodosPagos.length; i++) {
@@ -2281,6 +2295,7 @@ function validarDocumento(e) {
                 sumatoriaPagos += e.MetodosPagos[i].Monto;
             }
         }
+        var sumatoriaPagosX = parseFloat(sumatoriaPagos.toFixed(2));
         if (e.idVendedor == "0" || e.idVendedor == null) {
             Swal.fire({
                 icon: 'error',
@@ -2316,7 +2331,7 @@ function validarDocumento(e) {
             }
             else if (e.MetodosPagos.length == 0 || e.MetodosPagos == null) {
                 return false;
-            } else if (parseFloat(sumatoriaPagos.toFixed(2)) < parseFloat((e.TotalCompra + e.Redondeo).toFixed(2))) {
+            } else if (sumatoriaPagosX + 1 < parseFloat((e.TotalCompra + e.Redondeo).toFixed(2))) {
                 return false;
             }
             else {

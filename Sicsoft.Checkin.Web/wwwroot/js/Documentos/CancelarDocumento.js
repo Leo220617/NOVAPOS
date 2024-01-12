@@ -90,7 +90,7 @@ function RecuperarInformacion() {
                 Descuento: parseFloat(Documento.Detalle[i].Descuento.toFixed(2)),
                 TotalLinea: parseFloat(Documento.Detalle[i].TotalLinea.toFixed(2)),
                 Cabys: Documento.Detalle[i].Cabys,
-                idExoneracion: Documento.Detalle[i].Cabys,
+                idExoneracion: Documento.Detalle[i].idExoneracion,
                 PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon
             };
             ProdCadena.push(Producto);
@@ -272,7 +272,7 @@ function ValidarTotales() {
         var totalG = 0;
         var totalGX = 0;
         var redondeo = 0;
-
+        var Moneda = $("#selectMoneda").val();
         for (var i = 0; i < ProdCadena.length; i++) {
             var idCliente = $("#ClienteSeleccionado").val();
             var Cliente = Clientes.find(a => a.id == idCliente);
@@ -310,7 +310,7 @@ function ValidarTotales() {
         $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
         $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
         var TotalAntesRedondeo = totalG;
-        totalG = redondearAl5(totalG);
+        totalG = redondearAl5(totalG, Moneda);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
 
@@ -334,7 +334,7 @@ function EliminarProducto(i) {
         var Producto = ProdCadena[i];
 
 
-
+        var Moneda = $("#selectMoneda").val();
         var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
         var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
         var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
@@ -352,7 +352,7 @@ function EliminarProducto(i) {
         $("#descG").text(formatoDecimal(descuentoG.toFixed(2)));
         $("#impG").text(formatoDecimal(impuestoG.toFixed(2)));
         var TotalAntesRedondeo = totalG;
-        totalG = redondearAl5(totalG);
+        totalG = redondearAl5(totalG, Moneda);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
         redondeo =  totalG - TotalAntesRedondeo ;

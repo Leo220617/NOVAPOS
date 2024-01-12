@@ -175,6 +175,38 @@
                 })
             }
         }
+        function ImprimirCabys() {
+            try {
+                // window.print();
+                var margins = {
+                    top: 10,
+                    bottom: 10,
+                    left: 10,
+                    width: 595
+                };
+
+
+                html2 = $(".html5").html();
+                html2pdf(html2, {
+                    margin: 1,
+                    padding: 0,
+                    filename: 'Proforma.pdf',
+                    image: { type: 'jpeg', quality: 1 },
+                    html2canvas: { scale: 2, logging: true },
+                    jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
+                    class: ImprimirCabys
+                });
+
+            } catch (e) {
+                console.log(e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+                })
+            }
+        }
         $(document).ready(function () {
             jQuery(document).ready(function ($) {
                 $(document).ready(function () {
@@ -535,6 +567,10 @@
     <button id="print4" class="btn btn-info" type="button" onclick="javascript: ImprimirAumentado()">
         <span><i class="fa fa-print"></i> Imprimir Aumentado</span>
     </button>
+     &nbsp; &nbsp;
+    <button id="print4" class="btn btn-info" type="button" onclick="javascript: ImprimirCabys()">
+        <span><i class="fa fa-print"></i> Imprimir Cabys</span>
+    </button>
 
 
 
@@ -683,7 +719,7 @@
                                         @* <th class="text-center">% Descuento</th>*@
                                         @*   <th class="text-center">Descuento</th>*@
                                         <th class="text-center">Impuesto</th>
-                                        @*  <th class="text-center">% Exoneración</th>*@
+                                          <th class="text-center">% Exoneración</th>
 
                                         <th class="text-center">Total</th>
 
@@ -715,7 +751,7 @@
                                             @*       <td class="text-center">@Math.Round(@item.PorDescto) %</td>
                                         <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>*@
                                             <td class="text-center">@Math.Round(@item.TotalImpuesto, 2).ToString("C", formato)</td>
-                                            @* <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>*@
+                                             <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
 
                                             <td class="text-center">@Math.Round(@item.TotalLinea, 2).ToString("C", formato)</td>
 
@@ -943,7 +979,7 @@
                                         <th class="text-center">Precio Unitario</th>
 
                                         <th class="text-center">Impuesto</th>
-                                        @*  <th class="text-center">% Exoneración</th>*@
+                                          <th class="text-center">% Exoneración</th>
 
                                         <th class="text-center">Total</th>
 
@@ -973,7 +1009,7 @@
                                             <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
 
                                             <td class="text-center">@Math.Round(@item.TotalImpuesto, 2).ToString("C", formato)</td>
-                                            @*  <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>*@
+                                              <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
 
                                             <td class="text-center">@Math.Round(@item.TotalLinea, 2).ToString("C", formato)</td>
 
@@ -1024,7 +1060,7 @@
 
             </div>
         </div>
-     @*   <div class="col-md-6">
+        <div class="col-md-6">
             <div style="   font-size: 17px;">
                 <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
                 <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128152</p>
@@ -1046,7 +1082,7 @@
                 <p><b>BAC SAN JOSÉ</b>: CR71010200009487514827</p>
 
             </div>
-        </div>*@
+        </div>
     </div>
 </div>
 
@@ -1265,7 +1301,7 @@
 
             </div>
         </div>
-  @*      <div class="col-md-6">
+        <div class="col-md-6">
             <div style="   font-size: 17px;">
                 <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
                 <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128152</p>
@@ -1288,7 +1324,7 @@
 
 
             </div>
-        </div>*@
+        </div>
     </div>
 </div>
 
@@ -1436,7 +1472,7 @@
                                         @* <th class="text-center">% Descuento</th>*@
                                         @*   <th class="text-center">Descuento</th>*@
                                         <th class="text-center">Impuesto</th>
-                                        @*  <th class="text-center">% Exoneración</th>*@
+                                          <th class="text-center">% Exoneración</th>
 
                                         <th class="text-center">Total</th>
 
@@ -1471,7 +1507,7 @@
                                             @*       <td class="text-center">@Math.Round(@item.PorDescto) %</td>
                                         <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>*@
                                             <td class="text-center">@Math.Round((@item.TotalImpuesto) * PorcentajeDet, 2).ToString("C", formato)</td>
-                                            @* <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>*@
+                                             <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
 
                                             <td class="text-center">@Math.Round((@item.TotalLinea) * PorcentajeDet, 2).ToString("C", formato)</td>
 
@@ -1534,7 +1570,7 @@
             </div>
 
         </div>
-@*        <div class="col-md-6">
+        <div class="col-md-6">
             <div style="   font-size: 17px;">
                 <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
                 <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128152</p>
@@ -1557,7 +1593,271 @@
 
 
             </div>
-        </div>*@
+        </div>
+    </div>
+</div>
+
+<div class="html5" hidden>
+    <div class="row">
+        <div class="col-12">
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-8">
+                            <h6 class="box-subtitle">Proforma</h6>
+
+
+                        </div>
+                        <div class="col-4">
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <!-- title row -->
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <img id="base64image" style="width: 85%;"
+                                 src="data:image/jpeg;base64,@Model.MiSucursal.Imagen.ToString()" />
+                        </div>
+                        <div class="col-md-6">
+                            <div style=" font-weight: bold;  font-size: 15px;">
+                                <p style="  font-size: 20px !important; ">@Model.NombreCliente</p>
+                                <p style="  font-size: 20px !important; ">@Model.MiSucursal.Nombre</p>
+                                <p>Cedula Juridica:  @Model.MiSucursal.Cedula</p>
+                                <p>Telefax: @Model.MiSucursal.Telefono</p>
+
+                                <p>Email: @Model.MiSucursal.Correo</p>
+
+                                <p> @Model.MiSucursal.Sennas   </p>
+
+
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="page-header mt-0">
+                                <h2 class="d-inline"><span class="font-size-24">Proforma No: @Model.Oferta.id</span></h2>
+                                <br />
+                                <div class="text-left">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <h5> <b>Fecha</b> @Model.Oferta.Fecha.ToString("dd/MM/yyyy")</h5>
+
+                                        </div>
+
+
+                                        <div class="col-4">
+                                            <h5> <b>Fecha de Vencimiento</b> @Model.Oferta.FechaVencimiento.ToString("dd/MM/yyyy")</h5>
+
+                                        </div>
+
+                                        <div class="col-4">
+                                            <h5> <b>Vendedor: </b> @(Model.Vendedor.Nombre)</h5>
+
+                                        </div>
+                                        <br />
+                                        <br />
+                                        <br />
+
+
+
+                                        <div class="col-3">
+                                            <h5>
+                                                <b>Tipo de Documento:</b>  @switch (Model.Oferta.TipoDocumento)
+                                                {
+                                                    case "01":
+                                                        {
+                                                            <p>Factura Electrónica</p>
+                                                            break;
+                                                        }
+                                                    case "03":
+                                                        {
+                                                            <p>Nota de Crédito</p>
+                                                            break;
+                                                        }
+                                                    case "04":
+                                                        {
+                                                            <p>Tiquete Electrónico</p>
+                                                            break;
+                                                        }
+                                                }
+                                            </h5>
+
+                                        </div>
+
+                                        <div class="col-3">
+                                            <h5> <b>Moneda</b> @Model.Oferta.Moneda</h5>
+
+                                        </div>
+
+                                        <div class="col-3">
+                                            <h5> <b>Cond.Pago: </b> @(Model.CondicionesPago.Nombre)</h5>
+
+                                        </div>
+
+
+
+
+
+                                    </div>
+
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- info row -->
+                    <div class="row invoice-info">
+                        <div class="col-md-8 invoice-col">
+                            <strong>Cliente</strong>
+                            <address>
+                                <strong class="text-blue font-size-24">   @(Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" : Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault().Codigo + " - " + Model.Clientes.Where(a => a.id == Model.Oferta.idCliente).FirstOrDefault().Nombre)</strong>
+
+
+                            </address>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <!-- Table row -->
+                    <div class="row">
+                        <div class="col-12 table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="bg-pale-info">
+                                        <th class="text-center">#</th>
+                                        <th class="text-center">Producto</th>
+                                        <th class="text-center">Cabys</th>
+                                       
+                                        <th class="text-center">Cantidad</th>
+                                        <th class="text-center">Precio Unitario</th>
+                                        @* <th class="text-center">% Descuento</th>*@
+                                        @*   <th class="text-center">Descuento</th>*@
+                                        <th class="text-center">Impuesto</th>
+                                          <th class="text-center">% Exoneración</th>
+
+                                        <th class="text-center">Total</th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model.Oferta.Detalle)
+                                    {
+                                        <tr>
+                                            <td>@item.NumLinea</td>
+
+
+                                            @if (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Stock <= 0)
+                                            {
+                                                <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : "*" + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
+                                            }
+                                            else
+                                            {
+                                                <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro)   </td>
+                                            }
+                                            <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Cabys Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Cabys)   </td>
+
+
+                                            <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
+
+
+                                            <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
+                                            @*       <td class="text-center">@Math.Round(@item.PorDescto) %</td>
+                                        <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>*@
+                                            <td class="text-center">@Math.Round(@item.TotalImpuesto, 2).ToString("C", formato)</td>
+                                             <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
+
+                                            <td class="text-center">@Math.Round(@item.TotalLinea, 2).ToString("C", formato)</td>
+
+
+                                        </tr>
+                                    }
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-12  text-right">
+
+
+                            <div>
+
+                                <p>Sub Total  :  <span id="Subtotal"> @Math.Round(Model.Oferta.Subtotal, 2).ToString("C",formato)</span> </p>
+                                @*<p>Descuento  :  <span id="Descuento"> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>*@
+                                <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C",formato)</span></p>
+                                <p>Redondeo :  <span>  @Math.Round(Model.Oferta.Redondeo, 2).ToString("C",formato)</span></p>
+
+                            </div>
+                            <div class="total-payment">
+                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra + Model.Oferta.Redondeo , 2).ToString("C",formato)</span></h3>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- /.row -->
+                    <!-- /.row -->
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <h4>* Producto sin stock</h4>
+
+                </div>
+
+            </div>
+
+            <br />
+            <!-- Default box -->
+            <div class="col-6 box">
+                <div class="col-6 box-header with-border">
+                    <h4 class="box-title">Comentarios</h4>
+                </div>
+                <div class="box-body">
+                    <span>@Model.Oferta.Comentarios</span>
+
+                    <!-- /.box-body -->
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+            <div class="col-md-6">
+        <div style="   font-size: 17px;">
+        <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
+        <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128152</p>
+        <p><b>BANCO NACIONAL:</b> CR55015109210010004595</p>
+        <p><b>BAC SAN JOSÉ:</b>  CR64010200009326955703</p>
+        <p><b>BANCO POPULAR:</b>  CR70016111006152606645</p>
+        <p><b>SINPE MOVIL BNCR:</b>  8770-2222</p>
+        <p><b>SINPE MOVIL BCR:</b> 8770-2221</p>
+
+
+        </div>
+        </div>
+
+        <div class="col-md-4">
+        <div style="  font-size: 17px;">
+        <b style="  font-size: 22px !important; ">CUENTAS DÓLARES</b>
+        <p> <b>BANCO DE COSTA RICA:</b> CR62015201345000147451</p>
+        <p><b>BANCO NACIONAL</b>: CR67015105810026000819</p>
+        <p><b>BAC SAN JOSÉ</b>: CR71010200009487514827</p>
+
+
+        </div>
+        </div>
     </div>
 </div>
 

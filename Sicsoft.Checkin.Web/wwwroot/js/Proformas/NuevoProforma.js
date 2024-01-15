@@ -593,7 +593,7 @@ function AbrirModalSeries(i) {
 
 function RecolectarFacturas() {
     try {
-       
+
         var idClientes = $("#ClienteSeleccionado").val();
         var Cliente = Clientes.find(a => a.id == idClientes);
         var Aprobado = Aprobaciones.find(a => a.idCliente == idClientes);
@@ -605,8 +605,8 @@ function RecolectarFacturas() {
         } else if (Cliente.idCondicionPago == Contado.id) {
             FP = false;
         }
-     
-       
+
+
 
 
         $.ajax({
@@ -635,8 +635,8 @@ function RecolectarFacturas() {
                         for (var i = 0; i < result.length; i++) {
                             textoF += " " + result[i].docNum + ", ";
                         }
-                  /*      DocumentosC = result.find(a => a.idCondPago == CondTransito.id && a.saldo > 0 && a.idCliente == idClientes );*/
-                        
+                        /*      DocumentosC = result.find(a => a.idCondPago == CondTransito.id && a.saldo > 0 && a.idCliente == idClientes );*/
+
                         Swal.fire({
                             icon: 'warning',
                             title: 'Advertencia...',
@@ -874,7 +874,7 @@ function onChangeMoneda() {
 
         //Validar $
         var TotalAntesRedondeo = totalG;
-        
+
 
         totalG = redondearAl5(totalG, Moneda);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
@@ -1156,7 +1156,7 @@ function RellenaCondiciones(CPS) {
 
         var Transito = CP.find(a => a.Nombre == "Transito");
 
-       
+
 
 
 
@@ -2279,7 +2279,7 @@ function validarOferta(e) {
             else if (e.Detalle.length == 0 || e.Detalle == null) {
                 return false;
             }
-         
+
             if (e.idCondPago == "0" || e.idCondPago == null) {
                 Swal.fire({
                     icon: 'error',
@@ -2308,7 +2308,7 @@ function validarOferta(e) {
                 return true;
             }
         }
-        
+
         if ((Cliente.LimiteCredito - Cliente.Saldo) < totalG && CondPago != Contado.id && CondPago != Transito.id && Aprobado == undefined) {
             Swal.fire({
                 icon: 'error',
@@ -2367,14 +2367,14 @@ function onChangeDescuentoProducto(i) {
         if (Moneda != "USD") {
             var DescuentoMaximo = ((ProdCadena[i].PrecioUnitario - ProdCadena[i].PrecioMin) / ProdCadena[i].PrecioUnitario) * 100;
         } else {
-            var DescuentoMaximo = ((ProdCadena[i].PrecioUnitario - (ProdCadena[i].PrecioMin /TipodeCambio.TipoCambio)) / ProdCadena[i].PrecioUnitario) * 100;
+            var DescuentoMaximo = ((ProdCadena[i].PrecioUnitario - (ProdCadena[i].PrecioMin / TipodeCambio.TipoCambio)) / ProdCadena[i].PrecioUnitario) * 100;
         }
-        
+
         var DescuentoX = ProdCadena[i].PrecioUnitario * (ProdCadena[i].PorDescto / 100);
         var PrecioFinal = ProdCadena[i].PrecioUnitario - parseFloat(DescuentoX.toFixed(2));
 
 
-        if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento && Promo == undefined && ((ProdCadena[i].PrecioMin <= PrecioFinal && Moneda == "CRC") || (ProdCadena[i].PrecioMin / TipodeCambio.TipoCambio <= PrecioFinal && Moneda == "USD")) ) {
+        if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento && Promo == undefined && ((ProdCadena[i].PrecioMin <= PrecioFinal && Moneda == "CRC") || (ProdCadena[i].PrecioMin / TipodeCambio.TipoCambio <= PrecioFinal && Moneda == "USD"))) {
             ValidarTotales();
         }
 
@@ -2425,9 +2425,9 @@ function onChangeDescuentoProducto(i) {
                 ValidarTotales();
                 ValidarCosto();
             }
-        
+
         } else {
-            if ((ProdCadena[i].PrecioMin /TipodeCambio.TipoCambio) > PrecioFinal) {
+            if ((ProdCadena[i].PrecioMin / TipodeCambio.TipoCambio) > PrecioFinal) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -2468,9 +2468,9 @@ function Setear() {
             if (Moneda != "USD") {
                 DescuentoMaximoX = ((ProdCadena[i].PrecioUnitario - ProdCadena[i].PrecioMin) / ProdCadena[i].PrecioUnitario) * 100;
             } else {
-                DescuentoMaximoX = ((ProdCadena[i].PrecioUnitario - (ProdCadena[i].PrecioMin /TipodeCambio.TipoCambio)) / ProdCadena[i].PrecioUnitario) * 100;
+                DescuentoMaximoX = ((ProdCadena[i].PrecioUnitario - (ProdCadena[i].PrecioMin / TipodeCambio.TipoCambio)) / ProdCadena[i].PrecioUnitario) * 100;
             }
-            
+
             var DescuentoMaximo = Math.floor(DescuentoMaximoX * 100) / 100;
             var Descuento = ProdCadena[i].PrecioUnitario * (ProdCadena[i].PorDescto / 100);
             var PrecioFinal = ProdCadena[i].PrecioUnitario - Descuento;
@@ -2514,7 +2514,7 @@ function onChangePrecioProducto(i) {
             ValidarTotales();
             ValidarCosto();
 
-        } else if ((PE.PrecioUnitario /TipodeCambio.TipoCambio) > ProdCadena[i].PrecioUnitario && PE.Editable == false && Moneda == "USD") {
+        } else if ((PE.PrecioUnitario / TipodeCambio.TipoCambio) > ProdCadena[i].PrecioUnitario && PE.Editable == false && Moneda == "USD") {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -2641,7 +2641,7 @@ function ValidarTotales() {
         // if si es dolares, MONEDA != $
 
         var TotalAntesRedondeo = totalG;
-        
+
         totalG = redondearAl5(totalG, Moneda);
         $("#totG").text(formatoDecimal(totalG.toFixed(2)));
         $("#totGX").text(formatoDecimal(totalGX.toFixed(2)));
@@ -2660,37 +2660,24 @@ function ValidarTotales() {
         })
     }
 }
-
 function BuscarCliente() {
     try {
-        //$.ajax({
-        //    type: 'GET',
-        //    dataType: 'json',
-        //    url: 'https://apis.gometa.org/cedulas/' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8', //Nombre del metodo
-        //    data: {},
-        //    success: function (result) {
+        $("#Nombre").val("");
+        BuscarClienteRegistro();
+        console.log($("#Nombre").val());
 
-        //        console.log(result);
+        
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'ha ocurrido un error  ' + e
 
-        //        if (result.nombre != undefined) {
-        //            $("#Nombre").val(result.nombre);
-        //            $("#selectTP").val(result.tipoIdentificacion);
-        //            $("#Nombre").attr("readonly", "readonly");
-
-
-        //        }
-
-
-
-        //    },
-        //    beforeSend: function () {
-
-        //    },
-        //    complete: function () {
-
-        //    }
-        //});
-
+        })
+    }
+}
+function BuscarClienteRegistro() {
+    try {
 
         fetch('https://apis.gometa.org/cedulas/' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8')
             .then(response => {
@@ -2704,12 +2691,20 @@ function BuscarCliente() {
                 console.log(data);
 
                 if (data.nombre != undefined) {
-                    $("#Nombre").val(data.nombre);
-                    $("#selectTP").val(data.tipoIdentificacion);
+
+                    $("#Nombre").val(data.nombre.toString());
+                    $("#selectTP").val(data.tipoIdentificacion.toString());
                     $("#Nombre").attr("readonly", "readonly");
 
 
+                    console.log($("#Nombre").val());
                 }
+
+                if ($("#Nombre").val().toString() == "" || $("#Nombre").val().toString() == undefined || $("#Nombre").val().toString() == '' || $("#Nombre").val().toString() == null) {
+
+                    BuscarClienteHacienda();
+                }
+
             })
             .catch(error => {
                 // Maneja errores
@@ -2720,6 +2715,11 @@ function BuscarCliente() {
                     text: 'Ha ocurrido un error  ' + error
 
                 })
+
+                if ($("#Nombre").val().toString() == "" || $("#Nombre").val().toString() == undefined || $("#Nombre").val().toString() == '' || $("#Nombre").val().toString() == null) {
+
+                    BuscarClienteHacienda();
+                }
             });
 
     } catch (e) {
@@ -2734,7 +2734,62 @@ function BuscarCliente() {
 
 
 }
+function BuscarClienteHacienda() {
+    try {
+        fetch('https://api.hacienda.go.cr/fe/ae?identificacion=' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parsea la respuesta como JSON
+            })
+            .then(data => {
+                // Maneja los datos obtenidos
+                console.log(data);
 
+                if (data.nombre != undefined) {
+
+                    $("#Nombre").val(data.nombre.toString());
+                    $("#selectTP").val(data.tipoIdentificacion.toString());
+                    $("#Nombre").attr("readonly", "readonly");
+
+
+
+                }
+
+                if ($("#Nombre").val().toString() == "" || $("#Nombre").val().toString() == undefined || $("#Nombre").val().toString() == '' || $("#Nombre").val().toString() == null) {
+                    console.log($("#Nombre").val());
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Cliente no encontrado en registros. Contactar a soporte!  '
+
+                    })
+                }
+            })
+            .catch(error => {
+                // Maneja errores
+                console.error('Fetch error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error  ' + error
+
+                })
+            });
+
+        
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'ha ocurrido un error  ' + e
+
+        })
+    }
+}
 
 ///////Impresion
 

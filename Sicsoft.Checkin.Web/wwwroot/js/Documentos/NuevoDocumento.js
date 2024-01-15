@@ -2378,36 +2378,24 @@ function sumArray(array) {
 }
 function BuscarCliente() {
     try {
-        //$.ajax({
-        //    type: 'GET',
-        //    dataType: 'json',
-        //    url: 'https://apis.gometa.org/cedulas/' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8', //Nombre del metodo
-        //    data: {},
-        //    success: function (result) {
-
-        //        console.log(result);
-
-        //        if (result.nombre != undefined) {
-        //            $("#Nombre").val(result.nombre);
-        //            $("#selectTP").val(result.tipoIdentificacion);
-        //            $("#Nombre").attr("readonly", "readonly");
+        $("#Nombre").val("");
+        BuscarClienteRegistro();
+        console.log($("#Nombre").val());
 
 
-        //        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'ha ocurrido un error  ' + e
 
+        })
+    }
+}
+function BuscarClienteRegistro() {
+    try {
 
-
-        //    },
-        //    beforeSend: function () {
-
-        //    },
-        //    complete: function () {
-
-        //    }
-        //});
-
-
-        fetch('https://api.hacienda.go.cr/fe/ae?identificacion=' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8')
+        fetch('https://apis.gometa.org/cedulas/' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -2419,12 +2407,20 @@ function BuscarCliente() {
                 console.log(data);
 
                 if (data.nombre != undefined) {
-                    $("#Nombre").val(data.nombre);
-                    $("#selectTP").val(data.tipoIdentificacion);
+
+                    $("#Nombre").val(data.nombre.toString());
+                    $("#selectTP").val(data.tipoIdentificacion.toString());
                     $("#Nombre").attr("readonly", "readonly");
 
 
+                    console.log($("#Nombre").val());
                 }
+
+                if ($("#Nombre").val().toString() == "" || $("#Nombre").val().toString() == undefined || $("#Nombre").val().toString() == '' || $("#Nombre").val().toString() == null) {
+
+                    BuscarClienteHacienda();
+                }
+
             })
             .catch(error => {
                 // Maneja errores
@@ -2435,6 +2431,11 @@ function BuscarCliente() {
                     text: 'Ha ocurrido un error  ' + error
 
                 })
+
+                if ($("#Nombre").val().toString() == "" || $("#Nombre").val().toString() == undefined || $("#Nombre").val().toString() == '' || $("#Nombre").val().toString() == null) {
+
+                    BuscarClienteHacienda();
+                }
             });
 
     } catch (e) {
@@ -2448,6 +2449,62 @@ function BuscarCliente() {
 
 
 
+}
+function BuscarClienteHacienda() {
+    try {
+        fetch('https://api.hacienda.go.cr/fe/ae?identificacion=' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parsea la respuesta como JSON
+            })
+            .then(data => {
+                // Maneja los datos obtenidos
+                console.log(data);
+
+                if (data.nombre != undefined) {
+
+                    $("#Nombre").val(data.nombre.toString());
+                    $("#selectTP").val(data.tipoIdentificacion.toString());
+                    $("#Nombre").attr("readonly", "readonly");
+
+
+
+                }
+
+                if ($("#Nombre").val().toString() == "" || $("#Nombre").val().toString() == undefined || $("#Nombre").val().toString() == '' || $("#Nombre").val().toString() == null) {
+                    console.log($("#Nombre").val());
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Cliente no encontrado en registros. Contactar a soporte!  '
+
+                    })
+                }
+            })
+            .catch(error => {
+                // Maneja errores
+                console.error('Fetch error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error  ' + error
+
+                })
+            });
+
+
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'ha ocurrido un error  ' + e
+
+        })
+    }
 }
 
 

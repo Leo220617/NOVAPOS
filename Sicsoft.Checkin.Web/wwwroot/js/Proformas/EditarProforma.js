@@ -911,7 +911,7 @@ function RecolectarFacturas() {
         var Cliente = Clientes.find(a => a.id == idClientes);
         var Aprobado = Aprobaciones.find(a => a.idCliente == idClientes);
         var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
-    
+
         var Contado = CP.find(a => a.Nombre == "Contado");
 
         if (Aprobado) {
@@ -927,45 +927,45 @@ function RecolectarFacturas() {
             data: { idCliente: idClientes },
             success: function (result) {
                 if (Aprobado == undefined) {
-                if (result == null) {
+                    if (result == null) {
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Ha ocurrido un error al intentar recuperar facturas'
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Ha ocurrido un error al intentar recuperar facturas'
 
-                    })
+                        })
 
-                } else if (result.length > 0) {
-                    console.log(result);
-                    // $("#selectCondPago").attr("disabled", "disabled");
-                    FP = false;
+                    } else if (result.length > 0) {
+                        console.log(result);
+                        // $("#selectCondPago").attr("disabled", "disabled");
+                        FP = false;
 
-                    var textoF = "";
-                    for (var i = 0; i < result.length; i++) {
-                        textoF += " " + result[i].docNum + ", ";
-                    }
+                        var textoF = "";
+                        for (var i = 0; i < result.length; i++) {
+                            textoF += " " + result[i].docNum + ", ";
+                        }
 
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Advertencia...',
-                        html: 'El Cliente tiene las siguientes facturas pendientes: ' + textoF + " por lo tanto se bloquea el crédito" +
-                            '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
-
-                    })
-                } else {
-                    if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
                         Swal.fire({
                             icon: 'warning',
-                            title: 'Advertencia',
-                            html: 'Limite de crédito excedido' +
+                            title: 'Advertencia...',
+                            html: 'El Cliente tiene las siguientes facturas pendientes: ' + textoF + " por lo tanto se bloquea el crédito" +
                                 '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
 
                         })
-                    } else if ((Cliente.LimiteCredito - Cliente.Saldo) > 0 && Cliente.idCondicionPago != Contado.id) {
-                        FP = true;
-                        //$("#selectCondPago").attr("disabled", false);
-                    }
+                    } else {
+                        if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Advertencia',
+                                html: 'Limite de crédito excedido' +
+                                    '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
+
+                            })
+                        } else if ((Cliente.LimiteCredito - Cliente.Saldo) > 0 && Cliente.idCondicionPago != Contado.id) {
+                            FP = true;
+                            //$("#selectCondPago").attr("disabled", false);
+                        }
 
                     }
                 }
@@ -2596,34 +2596,22 @@ function ValidarTotales() {
 }
 function BuscarCliente() {
     try {
-        //$.ajax({
-        //    type: 'GET',
-        //    dataType: 'json',
-        //    url: 'https://apis.gometa.org/cedulas/' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8', //Nombre del metodo
-        //    data: {},
-        //    success: function (result) {
-
-        //        console.log(result);
-
-        //        if (result.nombre != undefined) {
-        //            $("#Nombre").val(result.nombre);
-        //            $("#selectTP").val(result.tipoIdentificacion);
-        //            $("#Nombre").attr("readonly", "readonly");
+        $("#Nombre").val("");
+        BuscarClienteRegistro();
+        console.log($("#Nombre").val());
 
 
-        //        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'ha ocurrido un error  ' + e
 
-
-
-        //    },
-        //    beforeSend: function () {
-
-        //    },
-        //    complete: function () {
-
-        //    }
-        //});
-
+        })
+    }
+}
+function BuscarClienteRegistro() {
+    try {
 
         fetch('https://apis.gometa.org/cedulas/' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8')
             .then(response => {
@@ -2637,12 +2625,20 @@ function BuscarCliente() {
                 console.log(data);
 
                 if (data.nombre != undefined) {
-                    $("#Nombre").val(data.nombre);
-                    $("#selectTP").val(data.tipoIdentificacion);
+
+                    $("#Nombre").val(data.nombre.toString());
+                    $("#selectTP").val(data.tipoIdentificacion.toString());
                     $("#Nombre").attr("readonly", "readonly");
 
 
+                    console.log($("#Nombre").val());
                 }
+
+                if ($("#Nombre").val().toString() == "" || $("#Nombre").val().toString() == undefined || $("#Nombre").val().toString() == '' || $("#Nombre").val().toString() == null) {
+
+                    BuscarClienteHacienda();
+                }
+
             })
             .catch(error => {
                 // Maneja errores
@@ -2653,6 +2649,11 @@ function BuscarCliente() {
                     text: 'Ha ocurrido un error  ' + error
 
                 })
+
+                if ($("#Nombre").val().toString() == "" || $("#Nombre").val().toString() == undefined || $("#Nombre").val().toString() == '' || $("#Nombre").val().toString() == null) {
+
+                    BuscarClienteHacienda();
+                }
             });
 
     } catch (e) {
@@ -2667,38 +2668,94 @@ function BuscarCliente() {
 
 
 }
-
-///////Impresion
-
-function ImprimirPantalla() {
+function BuscarClienteHacienda() {
     try {
-        // window.print();
-        var margins = {
-            top: 10,
-            bottom: 10,
-            left: 10,
-            width: 595
-        };
+        fetch('https://api.hacienda.go.cr/fe/ae?identificacion=' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parsea la respuesta como JSON
+            })
+            .then(data => {
+                // Maneja los datos obtenidos
+                console.log(data);
+
+                if (data.nombre != undefined) {
+
+                    $("#Nombre").val(data.nombre.toString());
+                    $("#selectTP").val(data.tipoIdentificacion.toString());
+                    $("#Nombre").attr("readonly", "readonly");
 
 
-        html = $(".html").html();
-        html2pdf(html, {
-            margin: 1,
-            padding: 0,
-            filename: 'OfertaVenta.pdf',
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: { scale: 2, logging: true },
-            jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
-            class: ImprimirPantalla
-        });
+
+                }
+
+                if ($("#Nombre").val().toString() == "" || $("#Nombre").val().toString() == undefined || $("#Nombre").val().toString() == '' || $("#Nombre").val().toString() == null) {
+                    console.log($("#Nombre").val());
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Cliente no encontrado en registros. Contactar a soporte!  '
+
+                    })
+                }
+            })
+            .catch(error => {
+                // Maneja errores
+                console.error('Fetch error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error  ' + error
+
+                })
+            });
+
+
+
 
     } catch (e) {
-        console.log(e);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Ha ocurrido un error al intentar imprimir ' + e
+            text: 'ha ocurrido un error  ' + e
 
         })
     }
 }
+
+    ///////Impresion
+
+    function ImprimirPantalla() {
+        try {
+            // window.print();
+            var margins = {
+                top: 10,
+                bottom: 10,
+                left: 10,
+                width: 595
+            };
+
+
+            html = $(".html").html();
+            html2pdf(html, {
+                margin: 1,
+                padding: 0,
+                filename: 'OfertaVenta.pdf',
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 2, logging: true },
+                jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
+                class: ImprimirPantalla
+            });
+
+        } catch (e) {
+            console.log(e);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+            })
+        }
+    }

@@ -1156,12 +1156,12 @@ function RellenaCondiciones(CPS) {
 
         var Transito = CP.find(a => a.Nombre == "Transito");
 
-
+        var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
 
 
 
         text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
-        if (FP == false && !Name) {
+        if (FP == false && !Name && CondP.Dias > 0) {
             text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
         }
 

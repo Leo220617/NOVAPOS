@@ -1016,11 +1016,11 @@ function RellenaCondiciones(CPS) {
 
         var Contado = CP.find(a => a.Nombre == "Contado");
         var Transito = CP.find(a => a.Nombre == "Transito");
-
+        var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
 
 
         text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
-        if (FP == false && !Name) {
+        if (FP == false && !Name && CondP.Dias > 0) {
             text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
         }
 
@@ -1944,7 +1944,7 @@ function AgregarProductoTabla() {
 
             })
 
-        } else if (((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && Producto.PrecioMin <= PrecioFinal && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0)) {
+        } else if (((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && ((Producto.PrecioMin <= PrecioFinal && Promo == undefined) || (Promo != undefined)) && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0)) {
 
             if (Producto.Cabys.length >= 13) {
 

@@ -1984,7 +1984,17 @@ function AgregarProductoTabla() {
 
             })
 
-        } else if (((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && ((Producto.PrecioMin <= PrecioFinal) || (Promo != undefined)) && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0)) {
+        }
+
+        if (Producto.PrecioUnitario  <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No se puede agregar un producto con Precio 0'
+
+            })
+
+        } else if (((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && ((Producto.PrecioMin <= PrecioFinal) || (Promo != undefined)) && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && (PE.PrecioUnitario <= Producto.PrecioUnitario) || (PE.Editable == true && Producto.Cantidad > 0 && Producto.PrecioUnitario > 0) && Producto.PrecioUnitario > 0) {
 
             if (Producto.Cabys.length >= 13) {
 

@@ -2002,8 +2002,16 @@ function AgregarProductoTabla() {
             })
 
         }
+        if (Producto.PrecioUnitario <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No se puede agregar un producto con Precio 0'
 
-        else if (((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && ((Producto.PrecioMin <= PrecioFinal && Promo == undefined) || (Promo != undefined)) && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) || Producto.Codigo == PS.Codigo) {
+            })
+
+        }
+        else if ( Producto.PrecioUnitario > 0 && ((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && ((Producto.PrecioMin <= PrecioFinal && Promo == undefined) || (Promo != undefined)) && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0)  || Producto.Codigo == PS.Codigo) {
             if (Producto.Cabys.length >= 13) {
 
 

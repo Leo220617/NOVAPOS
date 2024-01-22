@@ -249,6 +249,10 @@ namespace Sicsoft.Checkin.Web
 .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/MetodosPagos"))
 .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
+            services.AddRefitClient<ICrudApi<MetodosPagosCuentasViewModel, int>>()
+.ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/MetodosPagosCuentas"))
+.AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+
             services.AddRefitClient<ICrudApi<PagosViewModel, int>>()
 .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Pagos"))
 .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();

@@ -15,7 +15,7 @@ $(document).ready(function () {
 });
 var ProdCB = [];
 var TipoCambio = [];
-var MetodosPagos = [];
+var MetodosPagosCuentas = [];
 var Documento = [];
 var CB = [];
 
@@ -349,7 +349,7 @@ function insertarPago() {
                             MonedaVuelto: $("#selectMonedaV").val(),
                             PagadoCon: parseFloat(ReplaceLetra($("#PagadoCon").val()))
                         };
-                        MetodosPagos.push(Detalle);
+                        MetodosPagosCuentas.push(Detalle);
 
                         break;
                     }
@@ -371,7 +371,7 @@ function insertarPago() {
                             MonedaVuelto: "",
                             PagadoCon: 0
                         };
-                        MetodosPagos.push(Detalle);
+                        MetodosPagosCuentas.push(Detalle);
 
                         break;
                     }
@@ -390,7 +390,7 @@ function insertarPago() {
                             MonedaVuelto: "",
                             PagadoCon: 0
                         };
-                        MetodosPagos.push(Detalle);
+                        MetodosPagosCuentas.push(Detalle);
 
                         break;
                     }
@@ -410,7 +410,7 @@ function insertarPago() {
                             MonedaVuelto: "",
                             PagadoCon: 0
                         };
-                        MetodosPagos.push(Detalle);
+                        MetodosPagosCuentas.push(Detalle);
                         break;
                     }
                 case "Otros":
@@ -429,7 +429,7 @@ function insertarPago() {
                             MonedaVuelto: "",
                             PagadoCon: 0
                         };
-                        MetodosPagos.push(Detalle);
+                        MetodosPagosCuentas.push(Detalle);
 
                         break;
                     }
@@ -449,7 +449,7 @@ function insertarPago() {
                             MonedaVuelto: "",
                             PagadoCon: 0
                         };
-                        MetodosPagos.push(Detalle);
+                        MetodosPagosCuentas.push(Detalle);
 
                         break;
                     }
@@ -684,14 +684,14 @@ function RellenaTablaPagos() {
         var text = "";
         $("#tbodyPago").html(text);
 
-        for (var i = 0; i < MetodosPagos.length; i++) {
+        for (var i = 0; i < MetodosPagosCuentas.length; i++) {
             text += "<tr>";
-            text += "<td class='text-center'> " + MetodosPagos[i].Metodo + " </td>";
-            text += "<td class='text-center'> " + MetodosPagos[i].BIN + " </td>";
-            text += "<td class='text-center'> " + MetodosPagos[i].NumReferencia + " </td>";
-            /*  text += "<td class='text-center'> " + MetodosPagos[i].NumCheque + " </td>";*/
-            text += "<td class='text-center'> " + MetodosPagos[i].Moneda + " </td>";
-            text += "<td class='text-rigth'> " + formatoDecimal(MetodosPagos[i].Monto) + " </td>";
+            text += "<td class='text-center'> " + MetodosPagosCuentas[i].Metodo + " </td>";
+            text += "<td class='text-center'> " + MetodosPagosCuentas[i].BIN + " </td>";
+            text += "<td class='text-center'> " + MetodosPagosCuentas[i].NumReferencia + " </td>";
+            /*  text += "<td class='text-center'> " + MetodosPagosCuentas[i].NumCheque + " </td>";*/
+            text += "<td class='text-center'> " + MetodosPagosCuentas[i].Moneda + " </td>";
+            text += "<td class='text-rigth'> " + formatoDecimal(MetodosPagosCuentas[i].Monto) + " </td>";
             text += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarPago(" + i + ") '> </a> </td>";
             text += "</tr>";
 
@@ -741,60 +741,60 @@ function calcularPago() { //REVISAR
             TotalD = Total / TipodeCambio.TipoCambio;
         }
 
-        for (var i = 0; i < MetodosPagos.length; i++) {
+        for (var i = 0; i < MetodosPagosCuentas.length; i++) {
 
-            // if (MetodosPagos[i].Moneda == MonedaDoc) {
-            if (MetodosPagos[i].Moneda != "CRC") { // Moneda del Pago viene en USD
+            // if (MetodosPagosCuentas[i].Moneda == MonedaDoc) {
+            if (MetodosPagosCuentas[i].Moneda != "CRC") { // Moneda del Pago viene en USD
 
-                PagadoTD += MetodosPagos[i].Monto;
-                PagadoT += MetodosPagos[i].Monto * TipodeCambio.TipoCambio;
+                PagadoTD += MetodosPagosCuentas[i].Monto;
+                PagadoT += MetodosPagosCuentas[i].Monto * TipodeCambio.TipoCambio;
 
-                PagadoD += MetodosPagos[i].Monto;
-                //   Pagado += MetodosPagos[i].Monto * TipodeCambio.TipoCambio;
-                if (MetodosPagos[i].Metodo == "Efectivo") {
+                PagadoD += MetodosPagosCuentas[i].Monto;
+                //   Pagado += MetodosPagosCuentas[i].Monto * TipodeCambio.TipoCambio;
+                if (MetodosPagosCuentas[i].Metodo == "Efectivo") {
 
-                    if (MetodosPagos[i].PagadoCon > 0) {
+                    if (MetodosPagosCuentas[i].PagadoCon > 0) {
 
-                        if (MetodosPagos[i].Moneda != MonedaDoc) { // SI USD = Moneda DOC
-                            vueltoTD += (MetodosPagos[i].PagadoCon) - MetodosPagos[i].Monto;
-                            vueltoT += ((MetodosPagos[i].PagadoCon) - MetodosPagos[i].Monto) * TipodeCambio.TipoCambio;
+                        if (MetodosPagosCuentas[i].Moneda != MonedaDoc) { // SI USD = Moneda DOC
+                            vueltoTD += (MetodosPagosCuentas[i].PagadoCon) - MetodosPagosCuentas[i].Monto;
+                            vueltoT += ((MetodosPagosCuentas[i].PagadoCon) - MetodosPagosCuentas[i].Monto) * TipodeCambio.TipoCambio;
 
-                            vueltoD += (MetodosPagos[i].PagadoCon) - MetodosPagos[i].Monto;
+                            vueltoD += (MetodosPagosCuentas[i].PagadoCon) - MetodosPagosCuentas[i].Monto;
                         } else {
-                            vueltoTD += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
-                            vueltoT += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) * TipodeCambio.TipoCambio;
+                            vueltoTD += MetodosPagosCuentas[i].PagadoCon - MetodosPagosCuentas[i].Monto;
+                            vueltoT += (MetodosPagosCuentas[i].PagadoCon - MetodosPagosCuentas[i].Monto) * TipodeCambio.TipoCambio;
 
-                            vueltoD += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
+                            vueltoD += MetodosPagosCuentas[i].PagadoCon - MetodosPagosCuentas[i].Monto;
                         }
 
-                        // vuelto += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) * TipodeCambio.TipoCambio;
+                        // vuelto += (MetodosPagosCuentas[i].PagadoCon - MetodosPagosCuentas[i].Monto) * TipodeCambio.TipoCambio;
                     }
                 }
 
             } else {
 
-                PagadoT += MetodosPagos[i].Monto;
-                PagadoTD += MetodosPagos[i].Monto / TipodeCambio.TipoCambio;
-                Pagado += MetodosPagos[i].Monto;
-                // PagadoD += MetodosPagos[i].Monto / TipodeCambio.TipoCambio;
+                PagadoT += MetodosPagosCuentas[i].Monto;
+                PagadoTD += MetodosPagosCuentas[i].Monto / TipodeCambio.TipoCambio;
+                Pagado += MetodosPagosCuentas[i].Monto;
+                // PagadoD += MetodosPagosCuentas[i].Monto / TipodeCambio.TipoCambio;
 
-                if (MetodosPagos[i].Metodo == "Efectivo") {
+                if (MetodosPagosCuentas[i].Metodo == "Efectivo") {
 
-                    if (MetodosPagos[i].PagadoCon > 0) {
-                        if (MetodosPagos[i].Moneda != MonedaDoc) {
-                            vueltoT += (MetodosPagos[i].PagadoCon) - MetodosPagos[i].Monto;
-                            vueltoTD += ((MetodosPagos[i].PagadoCon) - MetodosPagos[i].Monto) / TipodeCambio.TipoCambio;
+                    if (MetodosPagosCuentas[i].PagadoCon > 0) {
+                        if (MetodosPagosCuentas[i].Moneda != MonedaDoc) {
+                            vueltoT += (MetodosPagosCuentas[i].PagadoCon) - MetodosPagosCuentas[i].Monto;
+                            vueltoTD += ((MetodosPagosCuentas[i].PagadoCon) - MetodosPagosCuentas[i].Monto) / TipodeCambio.TipoCambio;
 
-                            vuelto += (MetodosPagos[i].PagadoCon) - MetodosPagos[i].Monto;
+                            vuelto += (MetodosPagosCuentas[i].PagadoCon) - MetodosPagosCuentas[i].Monto;
 
                         } else {
-                            vueltoT += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
-                            vueltoTD += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) / TipodeCambio.TipoCambio;
+                            vueltoT += MetodosPagosCuentas[i].PagadoCon - MetodosPagosCuentas[i].Monto;
+                            vueltoTD += (MetodosPagosCuentas[i].PagadoCon - MetodosPagosCuentas[i].Monto) / TipodeCambio.TipoCambio;
 
-                            vuelto += MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto;
+                            vuelto += MetodosPagosCuentas[i].PagadoCon - MetodosPagosCuentas[i].Monto;
                         }
 
-                        // vueltoD += (MetodosPagos[i].PagadoCon - MetodosPagos[i].Monto) / TipodeCambio.TipoCambio;
+                        // vueltoD += (MetodosPagosCuentas[i].PagadoCon - MetodosPagosCuentas[i].Monto) / TipodeCambio.TipoCambio;
                     }
                 }
             }
@@ -832,7 +832,7 @@ function calcularPago() { //REVISAR
 function EliminarPago(i) {
     try {
 
-        MetodosPagos.splice(i, 1);
+        MetodosPagosCuentas.splice(i, 1);
         calcularPago();
         RellenaTablaPagos();
 
@@ -929,7 +929,7 @@ function Generar() {
             Total: parseFloat($("#totG").val()),
             CodSuc: "",
             Moneda: $("#selectMoneda").val(),
-            MetodosPagos: MetodosPagos
+            MetodosPagosCuentas: MetodosPagosCuentas
         }
 
         if (validarPagoCuenta(PagoCuenta)) {
@@ -1051,7 +1051,7 @@ function validarPagoCuenta(e) {
             } else if (e.FechaContabilizacion == "" || e.FechaContabilizacion == null) {
                 return false;
             }
-            else if (e.MetodosPagos.length == 0 || e.MetodosPagos == null) {
+            else if (e.MetodosPagosCuentas.length == 0 || e.MetodosPagosCuentas == null) {
                 return false;
             }
             else if (e.Total <= 0 || e.Total == null || e.Total == "") {

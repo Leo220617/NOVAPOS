@@ -171,7 +171,7 @@
 
                         <div class="col-md-4">
                             <h5> <b>Total:</b>   @Math.Round(@Model.Cuenta.Total, 2).ToString("C",formato)</h5>
-                            @if (Model.Cuenta.MetodosPagos.Count() > 0)
+                            @if (Model.Cuenta.MetodosPagosCuentas.Count() > 0)
                             {
                                 <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#modalPagos">
                                     Métodos de Pago
@@ -386,7 +386,7 @@
                                 </tr>
                             </thead>
                             <tbody id="">
-                                @foreach (var item in Model.Cuenta.MetodosPagos)
+                                @foreach (var item in Model.Cuenta.MetodosPagosCuentas)
                                 {
                                     <tr>
                                         <td align="left">@item.Metodo</td>

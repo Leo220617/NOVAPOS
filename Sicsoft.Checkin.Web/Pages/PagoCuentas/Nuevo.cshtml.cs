@@ -17,6 +17,7 @@ namespace NOVAAPP.Pages.PagoCuentas
         private readonly ICrudApi<PagoCuentasViewModel, int> service; //API
         private readonly ICrudApi<ClientesViewModel, string> clientes;
         private readonly ICrudApi<CuentasBancariasViewModel, int> serviceCB;
+        private readonly ICrudApi<TipoCambiosViewModel, int> tipoCambio;
 
         [BindProperty]
         public PagoCuentasViewModel Cuenta { get; set; }
@@ -26,11 +27,15 @@ namespace NOVAAPP.Pages.PagoCuentas
 
         [BindProperty]
         public CuentasBancariasViewModel[] CB { get; set; }
-        public NuevoModel(ICrudApi<PagoCuentasViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<CuentasBancariasViewModel, int> serviceCB) //CTOR 
+
+        [BindProperty]
+        public TipoCambiosViewModel[] TP { get; set; }
+        public NuevoModel(ICrudApi<PagoCuentasViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<CuentasBancariasViewModel, int> serviceCB, ICrudApi<TipoCambiosViewModel, int> tipoCambio) //CTOR 
         {
             this.service = service;
             this.clientes = clientes;
             this.serviceCB = serviceCB;
+            this.tipoCambio = tipoCambio;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -50,6 +55,9 @@ namespace NOVAAPP.Pages.PagoCuentas
                 ParametrosFiltros FiltroCB = new ParametrosFiltros();
                 FiltroCB.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 CB = await serviceCB.ObtenerLista(FiltroCB);
+                ParametrosFiltros filtro2 = new ParametrosFiltros();
+                filtro2.FechaInicial = DateTime.Now.Date;
+                TP = await tipoCambio.ObtenerLista(filtro2);
                 return Page();
             }
             catch (Exception ex)
@@ -60,27 +68,42 @@ namespace NOVAAPP.Pages.PagoCuentas
             }
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAgregarPagoCuenta(PagoCuentasViewModel recibidos)
         {
             try
             {
-                Cuenta.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
-                Cuenta.idCaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault().ToString());
-                Cuenta.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
-                await service.Agregar(Cuenta);
-                return RedirectToPage("./Index");
+                recibidos.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
+                recibidos.idCaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault().ToString());
+                recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
+                var resp = await service.Agregar(recibidos);
+
+                var resp2 = new
+                {
+                    success = true,
+                    PagoCuenta = resp
+                };
+                return new JsonResult(resp2);
+                
             }
             catch (ApiException ex)
-            { 
-                ModelState.AddModelError(string.Empty, ex.Content.ToString());
-
-                return Page();
+            {
+                BitacoraErroresViewModel be = JsonConvert.DeserializeObject<BitacoraErroresViewModel>(ex.Content.ToString());
+                var resp2 = new
+                {
+                    success = false,
+                    PagoCuenta = be.Descripcion
+                };
+                return new JsonResult(resp2);
             }
             catch (Exception ex)
             {
-
                 ModelState.AddModelError(string.Empty, ex.Message);
-                return Page();
+                var resp2 = new
+                {
+                    success = false,
+                    Oferta = ex.Message
+                };
+                return new JsonResult(resp2);
             }
         }
     }

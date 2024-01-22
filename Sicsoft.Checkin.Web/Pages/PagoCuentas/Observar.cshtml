@@ -113,10 +113,7 @@
                                             <br />
 
 
-                                        <div class="col-4">
-                                            <h5> <b>Cuenta Bancaria: @(Model.CB.Where(a => a.id == Model.Cuenta.idCuentaBancaria).FirstOrDefault() == null ? "Cuenta Inexistente" : Model.CB.Where(a => a.id == Model.Cuenta.idCuentaBancaria).FirstOrDefault().CuentaSAP + " - " + Model.CB.Where(a => a.id == Model.Cuenta.idCuentaBancaria).FirstOrDefault().Nombre) </b> </h5>
-
-                                        </div>
+                                     
                                             <div class="col-md-4">
                                                 <h5> <b>DocEntry:</b> @Model.Cuenta.DocEntry</h5>
 
@@ -174,8 +171,14 @@
 
                         <div class="col-md-4">
                             <h5> <b>Total:</b>   @Math.Round(@Model.Cuenta.Total, 2).ToString("C",formato)</h5>
+                            @if (Model.Cuenta.MetodosPagos.Count() > 0)
+                            {
+                                <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#modalPagos">
+                                    Métodos de Pago
+                                </button>
+                            }
                         </div>
-
+                     
 
 
 
@@ -211,6 +214,8 @@
 
 
     <button id="print" class="btn btn-warning" type="button" onclick="javascript: ImprimirPantalla()"> <span><i class="fa fa-print"></i> Imprimir</span> </button>
+
+  
 
 </section>
 
@@ -349,6 +354,64 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal modal-fill fade" data-backdrop="false" id="modalPagos" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 80%; max-width: 200%;  ">
+            <div class="modal-header">
+                <h5 class="modal-title">Métodos de Pago</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <!-- Table row -->
+                <div class="row">
+                    <div class="col-12 table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+
+
+                                    <th>Método</th>
+                                    <th class="text-right">Moneda</th>
+
+                                    <th class="text-right">BIN</th>
+                                    <th class="text-right">Referencia</th>
+                                    <th class="text-right">Cheque</th>
+
+                                    <th class="text-right">Total</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="">
+                                @foreach (var item in Model.Cuenta.MetodosPagos)
+                                {
+                                    <tr>
+                                        <td align="left">@item.Metodo</td>
+                                        <td align="center">@item.Moneda</td>
+
+                                        <td align="center">@item.BIN</td>
+                                        <td align="center">@item.NumReferencia</td>
+                                        <td align="center">@item.NumCheque</td>
+                                        <td align="right">@item.Monto.ToString("N",formato)</td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- /.modal -->
 
 
 

@@ -1883,15 +1883,15 @@ function AgregarProductoTabla() {
         for (var i = 0; i < LotesArray.length; i++) {
             cantidades += parseInt(LotesArray[i].Cantidad);
         }
-        if (cantidades < cantidad && PE.Serie == true) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'La cantidad de Series es menor a la cantidad digitada'
+        //if (cantidades < cantidad && PE.Serie == true) {
+        //    Swal.fire({
+        //        icon: 'error',
+        //        title: 'Oops...',
+        //        text: 'La cantidad de Series es menor a la cantidad digitada'
 
-            })
-            return false;
-        }
+        //    })
+        //    return false;
+        //}
 
 
         for (var i = 0; i < ProdCadena.length; i++) {

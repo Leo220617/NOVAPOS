@@ -800,6 +800,8 @@
 </form>
 
 
+
+
 <div class="modal fade bs-example-modal-lg" id="ModalObservarSeries" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -812,12 +814,20 @@
 
                 <fieldset style="border:0;">
                     <div class="row">
+                        <div class="col-md-8">
+                            <p>A continuación inserte los series seleccionados.</p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <p> <b>Restante:</b> <a id="ContadorDet">0</a></p>
+                        </div>
+
                     </div>
                     <!-- Table row -->
-                    <div class="row" id="rowLotes2">
+                    <div class="row" id="rowLotesDet">
                     </div>
 
-
+                    <a class="fa fa-plus-circle icono" style="cursor:pointer;" id="plusButtonDet" onclick="javascript: rellenaRowLotesDet()"> </a>
 
                     <!-- /.row -->
                 </fieldset>

@@ -40,6 +40,7 @@ var DetPromociones = [];
 var Margenes = [];
 var DetMargenes = [];
 var Aprobaciones = [];
+var ids = 0;
 
 function CerrarPopUpLotes() {
     try {
@@ -58,6 +59,7 @@ function generarSelect2() {
 
     }
 }
+
 function Recuperar() {
     try {
         Cantones = JSON.parse($("#Cantones").val());
@@ -308,6 +310,8 @@ function onClickModal() {
 
         }
         $("#rowLotes").html(sOptions);
+
+
 
         ContadorLotes();
 
@@ -585,6 +589,322 @@ function ValidarLinea(z) {
     }
 
 }
+
+
+/*-------------*/
+
+function onClickModalDet(i) {
+    try {
+        $("#plusButtonDet").show();
+        $("#ModalObservarSeries").modal("show");
+
+        var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+
+        var Producto = ProdClientes.find(a => a.id == PE.id && a.Serie == true);
+
+
+        var Bod = Bodega.find(a => a.id == Producto.idBodega);
+
+        var LotesArray = LotesCadena.filter(a => a.ItemCode == Producto.Codigo);
+
+
+
+
+        var sOptions = '';
+        $("#rowLotesDet").html('');
+        for (var i = 0; i < LotesArray.length; i++) {
+            sOptions += "<div class='col-3' hidden> <div class='form-group'> <h5>ItemCode</h5> <div class='controls'> <input type='text' readonly id='productoDet" + i + "' class='form-control' value='" + LotesArray[i].ItemCode + "'> </div></div> </div> ";
+
+            sOptions += "<div class='col-6'> <div class='form-group'> <h5>Lote</h5> <div class='controls'> <input type='text' readonly class='form-control' value='" + LotesArray[i].Serie + "' id='loteDet" + i + "'> </div></div> </div>";
+
+            sOptions += "<div class='col-4'> <div class='form-group'> <h5>Cantidad</h5> <div class='controls'> <input type='number' readonly  id='cantidadDet" + i + "' class='form-control' value='" + LotesArray[i].Cantidad + "'> </div></div> </div> ";
+
+            sOptions += "<div class='col-2'> <a style='margin-top: 35%; style='cursor: pointer;' ' onclick='javascript: EliminarLineaDet(" + LotesArray[i].id + ") ' class='fa fa-trash icono'> </a> </div>"
+
+        }
+        $("#rowLotesDet").html(sOptions);
+        ids = i;
+        ContadorLotesDet();
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: e
+
+        });
+    }
+
+}
+
+function rellenaRowLotesDet() {
+    try {
+        $("#plusButtonDet").hide();
+        var PE = ProdClientes.find(a => a.id == ProdCadena[ids].idProducto);
+
+        var Producto = ProdClientes.find(a => a.id == PE.id && a.Serie == true);
+        var LotesArray = LotesCadena.filter(a => a.ItemCode == Producto.Codigo);
+
+
+        var Bod = Bodega.find(a => a.id == Producto.idBodega);
+        ProdSeries = SeriesProductos.filter(a => a.CodProducto == Producto.Codigo && a.CodBodega == Bod.CodSAP);
+
+
+        var sOptions = '';
+        $("#rowLotesDet").html('');
+        $("#rowLotesDet").html('');
+        var z = 0;
+        for (var i = 0; i < LotesArray.length; i++) {
+            sOptions += "<div class='col-6'> <div class='form-group'> <h5>Serie</h5> <div class='controls'> <input type='text' readonly class='form-control' value='" + LotesArray[i].Serie + "' id='lote" + i + "'> </div></div> </div>";
+            sOptions += "<div class='col-3' hidden> <div class='form-group'> <h5>ItemCode</h5> <div class='controls'> <input type='text' readonly id='productoDet" + i + "' class='form-control' value='" + LotesArray[i].ItemCode + "'> </div></div> </div> ";
+
+
+
+            sOptions += "<div class='col-4'> <div class='form-group'> <h5>Cantidad</h5> <div class='controls'> <input type='number' readonly id='cantidadDet" + i + "' class='form-control' value='" + LotesArray[i].Cantidad + "'> </div></div> </div> ";
+            sOptions += "<div class='col-2'> <a style='margin-top: 35%; style='cursor: pointer;' ' onclick='javascript: EliminarLinea(" + LotesArray[i].id + ") ' class='fa fa-trash icono'> </a> </div>"
+
+            z++;
+        }
+
+        sOptions += "<div class='col-4'> <div class='form-group'> <h5>Serie</h5> <div class='controls'> <select class='form-control select2' id='loteDet" + z + "' onchange='javascript: onChangeLoteDet(" + z + ")'>  <option value='0' selected> Seleccione </option>";
+        for (var zi = 0; zi < ProdSeries.length; zi++) {
+            sOptions += " <option value= '" + ProdSeries[zi].Series + "' >" + ProdSeries[zi].Series + " | " + "Stock" + " " + ProdSeries[zi].Cantidad + "</option>";
+        }
+        sOptions += " </select>  </div></div> </div> ";
+        /*  sOptions += "<div class='col-3' hidden> <div class='form-group'> <h5>ItemCode</h5> <div class='controls'> <input type='text' readonly id='producto" + z + "' class='form-control' value='" + ids + "'  > </div></div> </div> ";*/
+
+
+        sOptions += " </select>  </div></div> </div> ";
+
+        sOptions += "<div class='col-4'> <div class='form-group'> <h5>Cantidad</h5> <div class='controls'> <input type='number'  id='cantidadDet" + z + "' onchange='javascript: onChangeCantidadDet(" + z + ")' class='form-control'  > </div>  </div> </div> ";
+        sOptions += "<div class='col-2'> <a style='margin-top: 35%; style='cursor: pointer;' ' onclick='javascript: GuardadoLineaDet(" + z + ") ' class='fa fa-check-square-o icono'> </a> </div>"
+        $("#rowLotesDet").html(sOptions);
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: e
+
+        });
+    }
+
+}
+
+
+function ContadorLotesDet() {
+    try {
+
+
+        var PE = ProdClientes.find(a => a.id == ProdCadena[ids].idProducto);
+
+        var Producto = ProdClientes.find(a => a.id == PE.id && a.Serie == true);
+        var LotesArray = LotesCadena.filter(a => a.ItemCode == Producto.Codigo);
+
+
+
+
+
+
+        var cantidad = parseFloat($("#" + i + "_Prod").val()).toFixed(2)
+        var totalC = 0;
+        var Contador = 0;
+        for (var i = 0; i < LotesArray.length; i++) {
+            totalC += parseInt(LotesArray[i].Cantidad);
+        }
+        Contador = parseInt(cantidad) - totalC;
+        $("#ContadorDet").text(Contador);
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
+
+        })
+    }
+}
+function onChangeCantidadDet(z) {
+    try {
+        var PE = ProdClientes.find(a => a.id == ProdCadena[ids].idProducto);
+
+        var Producto = ProdClientes.find(a => a.id == PE.id && a.Serie == true);
+
+
+        var Bod = Bodega.find(a => a.id == Producto.idBodega);
+
+
+        var Lote = ProdSeries.find(a => a.Series == $("#loteDet" + z).val() && a.CodProducto == Producto.Codigo && a.CodBodega == Bod.CodSAP);
+
+        var CantidadDigitada = parseFloat($("#cantidadDet" + z).val());
+        var CantidadLote = Lote.Cantidad;
+
+        if (CantidadDigitada > CantidadLote) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No puede ser mayor a la cantidad real del lote, el maximo a elegir por este lote es:  ' + Lote.Cantidad
+
+            });
+
+            $("#cantidadDet" + z).val(Lote.Cantidad);
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar cambiar la cantidad ' + e
+
+        })
+    }
+}
+
+function onChangeLoteDet(z) {
+    try {
+
+        var PE = ProdClientes.find(a => a.id == ProdCadena[ids].idProducto);
+
+        var Producto = ProdClientes.find(a => a.id == PE.id && a.Serie == true);
+
+        var Bod = Bodega.find(a => a.id == Producto.idBodega);
+
+
+        var Lote = ProdSeries.find(a => a.Series == $("#loteDet" + z).val() && a.CodProducto == Producto.Codigo && a.CodBodega == Bod.CodSAP);
+
+
+
+        $("#cantidadDet" + z).prop('max', Lote.Cantidad);
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar cambiar el lote ' + e
+
+        })
+    }
+}
+
+function GuardadoLineaDet(z) {
+    try {
+        var PE = ProdClientes.find(a => a.id == ProdCadena[ids].idProducto);
+
+        var Producto = ProdClientes.find(a => a.id == PE.id && a.Serie == true);
+
+
+
+
+        var Bod = Bodega.find(a => a.id == Producto.idBodega);
+
+
+        var Seriesx = SeriesProductos.find(a => a.CodProducto == Producto.Codigo && a.CodBodega == Bod.CodSAP && $("#loteDet" + z).val() == a.Series);
+
+        var lote = {
+            id: LotesCadena.length,
+            idEncabezado: 0,
+            Serie: $("#loteDet" + z).val(),
+            ItemCode: Producto.Codigo,
+            Cantidad: $("#cantidadDet" + z).val(),
+            idDetalle: 0,
+            Manufactura: Seriesx.Manufactura
+        }
+        if (ValidarLineaDet(z)) {
+            LotesCadena.push(lote);
+            ContadorLotesDet();
+
+
+
+            onClickModalDet(ids);
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: e
+
+        });
+    }
+
+
+
+}
+
+function EliminarLineaDet(z) {
+    try {
+        LotesCadena.splice(z, 1);
+        for (var i = 0; i < LotesCadena.length; i++) {
+            LotesCadena[i].id = i;
+        }
+        onClickModalDet(ids);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: e
+
+        });
+    }
+
+}
+
+
+function ValidarLineaDet(z) {
+    try {
+
+        var PE = ProdClientes.find(a => a.id == ProdCadena[ids].idProducto);
+
+        var Producto = ProdClientes.find(a => a.id == PE.id && a.Serie == true);
+
+
+
+        var LotesArray = LotesCadena.filter(a => a.ItemCode == Producto.Codigo);
+        var cantidad = $("#cantidadDet").val();
+
+        var cantidades = 0;
+
+        for (var i = 0; i < LotesArray.length; i++) {
+            cantidades += parseInt(LotesArray[i].Cantidad);
+        }
+
+        if ($("#lote" + z).val() == "") {
+            return false;
+        } else if ($("#cantidadDet" + z).val() == undefined || $("#cantidadDet" + z).val() <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Digite una cantidad valida'
+
+            });
+            return false;
+        } else if (parseInt($("#cantidadDet" + z).val()) + cantidades > cantidad) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'La cantidad digita es mayor a la cantidad restante'
+
+            });
+            return false;
+        }
+
+
+
+        else {
+            return true;
+        }
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: e
+
+        });
+        return false;
+    }
+
+}
+
+
 
 function AbrirModalSeries(i) {
     try {
@@ -1813,7 +2133,7 @@ function RellenaTabla() {
 
 
                 if (PE.Serie == true) {
-                    html += "<td class='text-center'> <a href='#test-form' class='popup-with-form fa fa-info-circle icono' onclick='javascript:AbrirModalSeries(" + i + ") '> </a> </td>";
+                    html += "<td class='text-center'> <a href='#test-formDet' class='popup-with-form fa fa-info-circle icono' onclick='javascript:onClickModalDet(" + i + ") '> </a> </td>";
                 }
 
                 html += "</tr>";

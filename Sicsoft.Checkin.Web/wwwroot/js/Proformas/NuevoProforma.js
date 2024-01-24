@@ -1226,13 +1226,13 @@ function onChangeProducto() {
             } else {
                 $("#inputNomPro").attr("disabled", true);
             }
-            if (Producto.Serie == true) {
-                $("#SerieSelect").removeAttr("hidden");
+            //if (Producto.Serie == true) {
+            //    $("#SerieSelect").removeAttr("hidden");
 
-                RellenaSeriesProductos();
-            } else {
-                $("#SerieSelect").attr("hidden", true);
-            }
+            //    RellenaSeriesProductos();
+            //} else {
+            //    $("#SerieSelect").attr("hidden", true);
+            //}
             ExoneracionxCliente();
             //EX => Exoneracion
             var Exonera = parseInt($("#exoneracion").val());
@@ -1659,7 +1659,7 @@ function RellenaTabla() {
             html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-            /*html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
             if ($("#RolGanancia").val() == "value") {
                 if (ProdCadena[i].Moneda != MonedaDoc) {
@@ -1883,16 +1883,7 @@ function AgregarProductoTabla() {
         for (var i = 0; i < LotesArray.length; i++) {
             cantidades += parseInt(LotesArray[i].Cantidad);
         }
-        //if (cantidades < cantidad && PE.Serie == true) {
-        //    Swal.fire({
-        //        icon: 'error',
-        //        title: 'Oops...',
-        //        text: 'La cantidad de Series es menor a la cantidad digitada'
-
-        //    })
-        //    return false;
-        //}
-
+    
 
         for (var i = 0; i < ProdCadena.length; i++) {
 

@@ -1209,13 +1209,7 @@ function onChangeProducto() {
             } else {
                 $("#inputNomPro").attr("disabled", true);
             }
-            if (Producto.Serie == true) {
-                $("#SerieSelect").removeAttr("hidden");
-
-                RellenaSeriesProductos();
-            } else {
-                $("#SerieSelect").attr("hidden", true);
-            }
+         
             ExoneracionxCliente();
             //EX => Exoneracion
             var Exonera = parseInt($("#exoneracion").val());
@@ -1640,7 +1634,7 @@ function RellenaTabla() {
             html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-            /*html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
             if ($("#RolGanancia").val() == "value") {
                 if (ProdCadena[i].Moneda != MonedaDoc) {
@@ -1686,9 +1680,7 @@ function RellenaTabla() {
             }
             html += "<td class='text-center'> <a class='fa fa-trash' onclick='javascript:EliminarProducto(" + i + ") '> </a> </td>";
 
-            if (PE.Serie == true) {
-                html += "<td class='text-center'> <a href='#test-form' class='popup-with-form fa fa-info-circle icono' onclick='javascript:AbrirModalSeries(" + i + ") '> </a> </td>";
-            }
+         
             html += "</tr>";
 
 

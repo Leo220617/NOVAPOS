@@ -232,6 +232,7 @@ function RecuperarInformacion() {
         }
         onChangeCliente();
         ValidarStocks();
+        ValidarSeries();
 
 
 
@@ -676,6 +677,40 @@ function ValidarStocks() {
 
 }
 
+
+function ValidarSeries() {
+    try {
+        for (var i = 0; i < Documento.Detalle.length; i++) {
+            var PE = Productos.find(a => a.id == Documento.Detalle[i].idProducto);
+       
+            if (PE.Serie == true) {
+                $.toast({
+                    heading: 'Precaución',
+                    text: 'Por favor asignarle Serie al producto' + ' ' + ProdCadena[i].Descripcion ,
+                    position: 'top-right',
+                    loaderBg: '#ff6849',
+                    icon: 'warning',
+                    hideAfter: 100000000000,
+                    stack: 6
+                });
+                ProdCadena[i].Cantidad = PE.Stock;
+
+            }
+        
+
+
+        }
+ 
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ha ocurrido un error al intentar recuperar informacion ' + e
+
+        })
+    }
+
+}
 function ValidarDuplicados() {
     try {
         for (var i = 0; i < ProdCadena.length; i++) {
@@ -1729,7 +1764,7 @@ function RellenaTabla() {
                 html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-                /*html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
                 if ($("#RolGanancia").val() == "value") {
                     if (ProdCadena[i].Moneda != MonedaDoc) {

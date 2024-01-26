@@ -612,14 +612,14 @@ function onClickModalDet(i) {
 
         var sOptions = '';
         $("#rowLotesDet").html('');
-        for (var i = 0; i < LotesArray.length; i++) {
-            sOptions += "<div class='col-3' hidden> <div class='form-group'> <h5>ItemCode</h5> <div class='controls'> <input type='text' readonly id='productoDet" + i + "' class='form-control' value='" + LotesArray[i].ItemCode + "'> </div></div> </div> ";
+        for (var z = 0; z < LotesArray.length; z++) {
+            sOptions += "<div class='col-3' hidden> <div class='form-group'> <h5>ItemCode</h5> <div class='controls'> <input type='text' readonly id='productoDet" + z + "' class='form-control' value='" + LotesArray[z].ItemCode + "'> </div></div> </div> ";
 
-            sOptions += "<div class='col-6'> <div class='form-group'> <h5>Lote</h5> <div class='controls'> <input type='text' readonly class='form-control' value='" + LotesArray[i].Serie + "' id='loteDet" + i + "'> </div></div> </div>";
+            sOptions += "<div class='col-6'> <div class='form-group'> <h5>Lote</h5> <div class='controls'> <input type='text' readonly class='form-control' value='" + LotesArray[z].Serie + "' id='loteDet" + z + "'> </div></div> </div>";
 
-            sOptions += "<div class='col-4'> <div class='form-group'> <h5>Cantidad</h5> <div class='controls'> <input type='number' readonly  id='cantidadDet" + i + "' class='form-control' value='" + LotesArray[i].Cantidad + "'> </div></div> </div> ";
+            sOptions += "<div class='col-4'> <div class='form-group'> <h5>Cantidad</h5> <div class='controls'> <input type='number' readonly  id='cantidadDet" + z + "' class='form-control' value='" + LotesArray[z].Cantidad + "'> </div></div> </div> ";
 
-            sOptions += "<div class='col-2'> <a style='margin-top: 35%; style='cursor: pointer;' ' onclick='javascript: EliminarLineaDet(" + LotesArray[i].id + ") ' class='fa fa-trash icono'> </a> </div>"
+            sOptions += "<div class='col-2'> <a style='margin-top: 35%; style='cursor: pointer;' ' onclick='javascript: EliminarLineaDet(" + LotesArray[z].id + ") ' class='fa fa-trash icono'> </a> </div>"
 
         }
         $("#rowLotesDet").html(sOptions);
@@ -707,7 +707,7 @@ function ContadorLotesDet() {
 
 
 
-        var cantidad = parseFloat($("#" + i + "_Prod").val()).toFixed(2)
+        var cantidad = parseFloat($("#" + ids + "_Prod").val()).toFixed(2)
         var totalC = 0;
         var Contador = 0;
         for (var i = 0; i < LotesArray.length; i++) {
@@ -859,7 +859,7 @@ function ValidarLineaDet(z) {
 
 
         var LotesArray = LotesCadena.filter(a => a.ItemCode == Producto.Codigo);
-        var cantidad = $("#cantidadDet").val();
+        var cantidad = parseFloat($("#" + ids + "_Prod").val()).toFixed(2);
 
         var cantidades = 0;
 
@@ -867,7 +867,7 @@ function ValidarLineaDet(z) {
             cantidades += parseInt(LotesArray[i].Cantidad);
         }
 
-        if ($("#lote" + z).val() == "") {
+        if ($("#loteDet" + z).val() == "") {
             return false;
         } else if ($("#cantidadDet" + z).val() == undefined || $("#cantidadDet" + z).val() <= 0) {
             Swal.fire({
@@ -2693,6 +2693,36 @@ function validarOferta(e) {
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
         var CondPago = $("#selectCondPago").val();
         var Aprobado = Aprobaciones.find(a => a.idCliente == idCliente);
+        for (var i = 0; i < ProdCadena.length; i++) {
+            var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto); 
+          
+
+            if (PE.Serie == true && e.Lotes.length == 0 || e.Lotes.length == null) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar guardas, lineas sin series completas '
+
+                })
+                return false;
+
+            }
+        }
+        for (var i = 0; i < ProdCadena.length; i++) {
+            var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+            var LotesArray = LotesCadena.filter(a => a.ItemCode == PE.Codigo);
+
+            if (PE.Serie == true && LotesArray.length  < ProdCadena[i].Cantidad) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar guardar, lineas sin series completas en la linea #' + (i + 1)
+
+                })
+                return false;
+
+            }
+        }
 
         if ($("#selectMoneda").val() != "CRC") {
             totalG = totalG * TipodeCambio.TipoCambio;

@@ -1013,7 +1013,7 @@ function ValidarSeries() {
                     hideAfter: 100000000000,
                     stack: 6
                 });
-                ProdCadena[i].Cantidad = PE.Stock;
+              
 
             }
         
@@ -1465,9 +1465,17 @@ function RellenaCondiciones(CPS) {
 
         var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
 
-        text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
-        if (FP == false && !Name && CondP.Dias > 0) {
-            text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
+        if ($("#RolTransito").val() == "value") {
+            text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
+            if (FP == false && !Name) {
+                text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
+            }
+
+        } else {
+            text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
+            if (FP == false && !Name && CondP.Dias > 0) {
+                text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
+            }
         }
 
         for (var i = 0; i < CPS.length; i++) {

@@ -1240,9 +1240,17 @@ function RellenaCondiciones(CPS) {
 
 
 
-        text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
-        if (FP == false && !Name && CondP.Dias > 0) {
-            text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
+        if ($("#RolTransito").val() == "value") {
+            text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
+            if (FP == false && !Name) {
+                text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
+            }
+
+        } else {
+            text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
+            if (FP == false && !Name && CondP.Dias > 0) {
+                text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
+            }
         }
 
         for (var i = 0; i < CPS.length; i++) {
@@ -1734,7 +1742,7 @@ function RellenaTabla() {
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-                /*html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
 
                 if ($("#RolGanancia").val() == "value") {

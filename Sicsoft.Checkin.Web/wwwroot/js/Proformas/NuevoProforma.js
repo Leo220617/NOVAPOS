@@ -1096,6 +1096,17 @@ function onChangeCliente() {
 
             }
         }
+        if (!contieneContado) {
+
+            $("#selectTD option[value='04']").remove();
+        } else {
+
+            if ($("#selectTD option[value='04']").length === 0) {
+                $("#selectTD").append('<option value="04">Tiquete Electrónico</option>');
+
+
+            }
+        }
 
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Cédula: " + Cliente.Cedula + " " + "Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
@@ -1663,9 +1674,14 @@ function RellenaTabla() {
             html += "<td class='text-center'> <input onchange='javascript: onChangePrecioProducto(" + i + ")' type='number' id='" + i + "_Prod3' class='form-control'   value= '" + parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2) + "' min='1'/> </td>";
 
             html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
+          
+            if ($("#ParamPrecioDescuento").val() == "true") {
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario - (ProdCadena[i].Descuento / ProdCadena[i].Cantidad)).toFixed(2)) + " </td>";
+            } else {
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
+            }
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+         /*   html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
             if ($("#RolGanancia").val() == "value") {
                 if (ProdCadena[i].Moneda != MonedaDoc) {

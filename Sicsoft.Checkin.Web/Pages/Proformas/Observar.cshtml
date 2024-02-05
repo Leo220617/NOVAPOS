@@ -436,9 +436,17 @@
                                         <th class="text-center">#</th>
                                         <th class="text-center">Producto</th>
                                         <th class="text-center">Cantidad</th>
-                                        <th class="text-center">Precio Unitario</th>
-                                        <th class="text-center">% Descuento</th>
-                                        <th class="text-center">Descuento</th>
+                                        @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                        {
+                                            <th class="text-center">Precio Final</th>
+
+                                        }
+                                        else
+                                        {
+                                            <th class="text-center">Precio Unitario</th>
+                                            <th class="text-center">% Descuento</th>
+                                            <th class="text-center">Descuento</th>
+                                        }
                                         <th class="text-center">Impuesto</th>
                                         <th class="text-center">% Exoneración</th>
 
@@ -474,9 +482,17 @@
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
 
 
-                                            <td class="text-center">@Math.Round(item.PrecioUnitario,2).ToString("C",formato)</td>
-                                            <td class="text-center">@Math.Round(@item.PorDescto)%</td>
-                                            <td class="text-center">@Math.Round(@item.Descuento,2).ToString("C",formato)</td>
+                                            @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                            {
+                                                <td class="text-center">@Math.Round((item.PrecioUnitario * item.Cantidad ) - @item.Descuento, 2).ToString("C", formato)</td>
+
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
+                                                <td class="text-center">@Math.Round(@item.PorDescto) %</td>
+                                                <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>
+                                            }
                                             <td class="text-center">@Math.Round(@item.TotalImpuesto,2).ToString("C",formato)</td>
                                             <td class="text-center">@(Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" : Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
                                             <td class="text-center">@Math.Round(@item.TotalLinea,2).ToString("C",formato)</td>
@@ -715,7 +731,16 @@
                                         <th class="text-center">#</th>
                                         <th class="text-center">Producto</th>
                                         <th class="text-center">Cantidad</th>
-                                        <th class="text-center">Precio Unitario</th>
+                                        @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                        {
+                                            <th class="text-center">Precio Final</th>
+
+                                        }
+                                        else
+                                        {
+                                            <th class="text-center">Precio Unitario</th>
+                                            
+                                        }
                                         @* <th class="text-center">% Descuento</th>*@
                                         @*   <th class="text-center">Descuento</th>*@
                                         <th class="text-center">Impuesto</th>
@@ -747,7 +772,16 @@
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
 
 
-                                            <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
+                                            @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                            {
+                                                <td class="text-center">@Math.Round((item.PrecioUnitario * item.Cantidad ) - @item.Descuento, 2).ToString("C", formato)</td>
+
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
+                                            
+                                            }
                                             @*       <td class="text-center">@Math.Round(@item.PorDescto) %</td>
                                         <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>*@
                                             <td class="text-center">@Math.Round(@item.TotalImpuesto, 2).ToString("C", formato)</td>
@@ -812,7 +846,7 @@
             </div>
 
         </div>
-    @*    <div class="col-md-6">
+  @*      <div class="col-md-6">
             <div style="   font-size: 17px;">
                 <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
                 <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128152</p>
@@ -976,7 +1010,16 @@
                                         <th class="text-center">#</th>
                                         <th class="text-center">Producto</th>
                                         <th class="text-center">Cantidad</th>
-                                        <th class="text-center">Precio Unitario</th>
+                                        <  @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                        {
+                                            <th class="text-center">Precio Final</th>
+
+                                        }
+                                        else
+                                        {
+                                            <th class="text-center">Precio Unitario</th>
+                                          
+                                        }
 
                                         <th class="text-center">Impuesto</th>
                                           <th class="text-center">% Exoneración</th>
@@ -1006,7 +1049,16 @@
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
 
 
-                                            <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
+                                            @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                            {
+                                                <td class="text-center">@Math.Round((item.PrecioUnitario * item.Cantidad ) - @item.Descuento, 2).ToString("C", formato)</td>
+
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
+
+                                            }
 
                                             <td class="text-center">@Math.Round(@item.TotalImpuesto, 2).ToString("C", formato)</td>
                                               <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
@@ -1060,7 +1112,7 @@
 
             </div>
         </div>
-        <div class="col-md-6">
+    @*    <div class="col-md-6">
             <div style="   font-size: 17px;">
                 <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
                 <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128152</p>
@@ -1082,7 +1134,7 @@
                 <p><b>BAC SAN JOSÉ</b>: CR71010200009487514827</p>
 
             </div>
-        </div>
+        </div>*@
     </div>
 </div>
 
@@ -1301,7 +1353,7 @@
 
             </div>
         </div>
-        <div class="col-md-6">
+ @*       <div class="col-md-6">
             <div style="   font-size: 17px;">
                 <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
                 <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128152</p>
@@ -1324,7 +1376,7 @@
 
 
             </div>
-        </div>
+        </div>*@
     </div>
 </div>
 
@@ -1468,7 +1520,16 @@
                                         <th class="text-center">#</th>
                                         <th class="text-center">Producto</th>
                                         <th class="text-center">Cantidad</th>
-                                        <th class="text-center">Precio Unitario</th>
+                                        @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                        {
+                                            <th class="text-center">Precio Final</th>
+
+                                        }
+                                        else
+                                        {
+                                            <th class="text-center">Precio Unitario</th>
+                                        
+                                        }
                                         @* <th class="text-center">% Descuento</th>*@
                                         @*   <th class="text-center">Descuento</th>*@
                                         <th class="text-center">Impuesto</th>
@@ -1503,7 +1564,7 @@
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
 
 
-                                            <td class="text-center">@Math.Round((item.PrecioUnitario) * PorcentajeDet, 2).ToString("C", formato)</td>
+                                            <td class="text-center">@Math.Round((item.PrecioUnitario * item.Cantidad) * PorcentajeDet, 2).ToString("C", formato)</td>
                                             @*       <td class="text-center">@Math.Round(@item.PorDescto) %</td>
                                         <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>*@
                                             <td class="text-center">@Math.Round((@item.TotalImpuesto) * PorcentajeDet, 2).ToString("C", formato)</td>
@@ -1570,7 +1631,7 @@
             </div>
 
         </div>
-        <div class="col-md-6">
+@*        <div class="col-md-6">
             <div style="   font-size: 17px;">
                 <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
                 <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128152</p>
@@ -1593,7 +1654,7 @@
 
 
             </div>
-        </div>
+        </div>*@
     </div>
 </div>
 
@@ -1736,7 +1797,16 @@
                                         <th class="text-center">Cabys</th>
                                        
                                         <th class="text-center">Cantidad</th>
-                                        <th class="text-center">Precio Unitario</th>
+                                        @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                        {
+                                            <th class="text-center">Precio Final</th>
+
+                                        }
+                                        else
+                                        {
+                                            <th class="text-center">Precio Unitario</th>
+                                       
+                                        }
                                         @* <th class="text-center">% Descuento</th>*@
                                         @*   <th class="text-center">Descuento</th>*@
                                         <th class="text-center">Impuesto</th>
@@ -1769,7 +1839,16 @@
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
 
 
-                                            <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
+                                            @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                            {
+                                                <td class="text-center">@Math.Round((item.PrecioUnitario * item.Cantidad ) - @item.Descuento, 2).ToString("C", formato)</td>
+
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
+
+                                            }
                                             @*       <td class="text-center">@Math.Round(@item.PorDescto) %</td>
                                         <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>*@
                                             <td class="text-center">@Math.Round(@item.TotalImpuesto, 2).ToString("C", formato)</td>
@@ -1834,7 +1913,7 @@
             </div>
 
         </div>
-            <div class="col-md-6">
+@*            <div class="col-md-6">
         <div style="   font-size: 17px;">
         <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
         <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128152</p>
@@ -1857,7 +1936,7 @@
 
 
         </div>
-        </div>
+        </div>*@
     </div>
 </div>
 

@@ -185,9 +185,16 @@
                                         <th class="text-center">#</th>
                                         <th class="text-center">Producto</th>
                                         <th class="text-center">Cantidad</th>
-                                        <th class="text-center">Precio Unitario</th>
-                                        <th class="text-center">% Descuento</th>
-                                        <th class="text-center">Descuento</th>
+                                        @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                        {
+                                            <th class="text-center">Precio con Descuento</th>
+
+                                        }
+                                        else
+                                        {
+                                            <th class="text-center">Precio Unitario</th>
+                                            <th class="text-center">% Descuento</th>
+                                        }
                                         <th class="text-center">Impuesto</th>
                                         <th class="text-center">% Exoneración</th>
 
@@ -217,9 +224,17 @@
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
 
 
-                                            <td class="text-center">@Math.Round(item.PrecioUnitario,2).ToString("C",formato)</td>
-                                            <td class="text-center">@Math.Round(@item.PorDescto)%</td>
-                                            <td class="text-center">@Math.Round(@item.Descuento,2).ToString("C",formato)</td>
+                                            @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                            {
+                                                <td class="text-center">@Math.Round(item.PrecioUnitario - @item.Descuento, 2).ToString("C", formato)</td>
+
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
+                                                <td class="text-center">@Math.Round(@item.PorDescto) %</td>
+                                                <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>
+                                            }
                                             <td class="text-center">@Math.Round(@item.TotalImpuesto,2).ToString("C",formato)</td>
                                             <td class="text-center">@( Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" :  Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
                                             <td class="text-center">@Math.Round(@item.TotalLinea,2).ToString("C",formato)</td>

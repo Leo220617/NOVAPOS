@@ -3259,49 +3259,7 @@ function AbrirModalSeries(i) {
     }
 
 }
-function ValidarStocks() {
-    try {
-        for (var i = 0; i < Documento.Detalle.length; i++) {
-            var PE = Productos.find(a => a.id == Documento.Detalle[i].idProducto);
-            var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
-            if ((PE.Stock - ProdCadena[i].Cantidad) < 0 && PE.Codigo != PS.Codigo && PE.Editable == false) {
-                $.toast({
-                    heading: 'Precaución',
-                    text: 'El producto' + ' ' + ProdCadena[i].Descripcion + ' ' + 'NO tiene' + ' ' + ProdCadena[i].Cantidad + '' + ' unidades en stock, el stock real es de' + ' ' + PE.Stock,
-                    position: 'top-right',
-                    loaderBg: '#ff6849',
-                    icon: 'warning',
-                    hideAfter: 100000000000,
-                    stack: 6
-                });
-                ProdCadena[i].Cantidad = PE.Stock;
 
-            }
-            if (PE.Editable == true) {
-                $.toast({
-                    heading: 'Precaución',
-                    text: 'Favor sustituir el producto' + ' ' + ProdCadena[i].Descripcion + ' ' + 'ubicado en la linea' + ' ' + i,
-                    position: 'top-right',
-                    loaderBg: '#ff6849',
-                    icon: 'warning',
-                    hideAfter: 100000000000,
-                    stack: 6
-                });
-            }
-
-
-        }
-        ValidarTotales();
-    } catch (e) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Ha ocurrido un error al intentar recuperar informacion ' + e
-
-        })
-    }
-
-}
 
 
 function ValidarSeries() {

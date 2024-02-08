@@ -809,18 +809,18 @@
 
 
 
-                                            <td class="text-right">@item2.TotalCompra.ToString("C",formato)</td>
+                                            <td class="text-right"> @Math.Round( Convert.ToDecimal(item2.TotalCompra + item2.Redondeo), 2).ToString("C",formato)</td>
 
 
 
                                             @{
                                                 if (@item2.Moneda == "CRC")
                                                 {
-                                                    TotalC += Convert.ToDouble(@item2.TotalCompra);
+                                                    TotalC += Convert.ToDouble(@item2.TotalCompra + item2.Redondeo);
                                                 }
                                                 else
                                                 {
-                                                    TotalD += Convert.ToDouble(@item2.TotalCompra);
+                                                    TotalD += Convert.ToDouble(@item2.TotalCompra + item2.Redondeo);
                                                 }
 
 
@@ -937,23 +937,23 @@
 
 
 
-                                            <td class="text-right">@item2.TotalCompra.ToString("C",formato)</td>
+
+                                            <td class="text-right"> @Math.Round( Convert.ToDecimal(item2.TotalCompra + item2.Redondeo), 2).ToString("C",formato)</td>
 
 
 
                                             @{
                                                 if (@item2.Moneda == "CRC")
                                                 {
-                                                    TotalNC += Convert.ToDouble(@item2.TotalCompra);
+                                                    TotalNC += Convert.ToDouble(@item2.TotalCompra + item2.Redondeo);
                                                 }
                                                 else
                                                 {
-                                                    TotalND += Convert.ToDouble(@item2.TotalCompra);
+                                                    TotalND += Convert.ToDouble(@item2.TotalCompra + item2.Redondeo);
                                                 }
 
 
                                             }
-
 
 
 
@@ -1881,18 +1881,19 @@
 
 
 
-                                                <td class="text-right">@item2.TotalCompra.ToString("C",formato)</td>
+
+                                                <td class="text-right"> @Math.Round( Convert.ToDecimal(item2.TotalCompra + item2.Redondeo), 2).ToString("C",formato)</td>
 
 
 
                                                 @{
                                                     if (@item2.Moneda == "CRC")
                                                     {
-                                                        TotalNC += Convert.ToDouble(@item2.TotalCompra);
+                                                        TotalNC += Convert.ToDouble(@item2.TotalCompra + item2.Redondeo);
                                                     }
                                                     else
                                                     {
-                                                        TotalND += Convert.ToDouble(@item2.TotalCompra);
+                                                        TotalND += Convert.ToDouble(@item2.TotalCompra + item2.Redondeo);
                                                     }
 
 

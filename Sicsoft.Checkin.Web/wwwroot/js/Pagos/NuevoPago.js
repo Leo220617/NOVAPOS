@@ -162,9 +162,9 @@ function RellenaTabla() {
         for (var i = 0; i < ProdCadena.length; i++) {
             html += "<tr>";
             html += "<td> <input type='checkbox' id='" + i + "_mdcheckbox' class='chk-col-green' onchange='javascript: onChangeRevisado(" + i + ")'>  <label for='" + i + "_mdcheckbox'></label> </td> ";
-            if ($("#RolSinInteres").val() == "value") {
-                html += "<td> <input type='checkbox' id='" + i + "_mdcheckboxI' class='chk-col-green' onchange='javascript: onChangeInteres(" + i + ")'>  <label for='" + i + "_mdcheckboxI'></label> </td> ";
-            }
+            //if ($("#RolSinInteres").val() == "value") {
+            //    html += "<td> <input type='checkbox' id='" + i + "_mdcheckboxI' class='chk-col-green' onchange='javascript: onChangeInteres(" + i + ")'>  <label for='" + i + "_mdcheckboxI'></label> </td> ";
+            //}
 
             html += "<td > " + ProdCadena[i].docNum + " </td>";
             html += "<td > " + ProdCadena[i].consecutivoHacienda + " </td>";
@@ -284,7 +284,16 @@ function onChangeMonto(i) {
         var TotalF = 0;
 
         var valorCheck = $("#" + i + "_mdcheckboxI").prop('checked');
+        var idCliente = $("#ClienteSeleccionado").val();
+        var valorInt = 0;
 
+        var Cliente = Clientes.find(a => a.id == idCliente);
+
+        if (Cliente.INT == true) {
+            valorInt = 1;
+        } else {
+            valorInt = 0;
+        }
 
         if (diferencia > 10) {
             interes = (ProdCadena[i].saldo * 0.0005) * (diferencia - 10);
@@ -292,15 +301,15 @@ function onChangeMonto(i) {
 
         TotalF = ProdCadena[i].saldo + interes;
 
-        if (valorCheck == true) {
+        if (valorInt == 1) {
             if ($("#" + i + "_Fac").val() > ProdCadena[i].saldo) {
                 $("#" + i + "_Fac").val(ProdCadena[i].saldo);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'El valor digitado es mayor al saldo faltante '
+                //Swal.fire({
+                //    icon: 'error',
+                //    title: 'Oops...',
+                //    text: 'El valor digitado es mayor al saldo faltante '
 
-                });
+                //});
             }
 
         } else {
@@ -401,8 +410,18 @@ function CalcularInteresyCapital(i) {
         var InteresLinea = 0;
         var CapitalLinea = 0;
         var valorCheck = $("#" + i + "_mdcheckboxI").prop('checked');
+        var valorInt = 0;
+        var idCliente = $("#ClienteSeleccionado").val();
+        var Cliente = Clientes.find(a => a.id == idCliente);
 
-        if (diferencia > 10 && valorCheck == false) {
+        if (Cliente.INT == true) {
+            valorInt = 1;
+        } else {
+            valorInt = 0;
+        }
+
+
+        if (diferencia > 10 && valorInt == 0) {
             interes = (ProdCadena[i].saldo * 0.0005) * (diferencia - 10);
             FacyInt = interes + ProdCadena[i].saldo;
             PorCompra = (MontoDigitado / FacyInt);

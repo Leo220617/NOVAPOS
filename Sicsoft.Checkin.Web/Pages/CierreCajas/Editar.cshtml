@@ -261,7 +261,9 @@
         <div class="col-12">
 
 
-
+            @{
+                var cond = Model.Condicion;
+            }
 
 
 
@@ -1117,6 +1119,132 @@
                             <div class="col-md-4 invoice-col">
 
                                 <address>
+                                    <strong class="text-blue font-size-24">Facturas Crédito </strong>
+
+
+                                </address>
+                            </div>
+
+                            <!-- /.col -->
+                        </div>
+                        <!-- /.row -->
+                        <!-- Table row -->
+                        <div class="row">
+                            <div class="col-md-12 table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr class="bg-pale-info">
+                                            <th class="text-center">Factura</th>
+                                            <th class="text-center">Cliente</th>
+                                            <th class="text-center">Condición de Pago</th>
+                                            <th class="text-center">Moneda</th>
+                                            <th class="text-center">Total</th>
+
+
+
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @{
+                                            var TotalC = 0.00;
+                                            var TotalD = 0.00;
+
+                                                                                                           
+                                        }
+                                        @foreach (var item2 in Model.Documento.Where(a => a.idCondPago != cond.id && a.Status == "0"))
+                                        {
+
+
+                                            <tr>
+                                                <td class="text-center">@item2.id</td>
+
+                                                <td> @(Model.Clientes.Where(a => a.id == item2.idCliente).FirstOrDefault() == null ? "Cliente Inexistente" : Model.Clientes.Where(a => a.id == item2.idCliente).FirstOrDefault().Codigo + " - " + Model.Clientes.Where(a => a.id == item2.idCliente).FirstOrDefault().Nombre)</td>
+
+
+                                                <td> @(Model.CondicionC.Where(a => a.id == item2.idCondPago).FirstOrDefault() == null ? "Condición Inexistente" : Model.CondicionC.Where(a => a.id == item2.idCondPago).FirstOrDefault().Nombre)</td>
+                                                <td class="text-center"> @item2.Moneda </td>
+
+
+
+
+
+                                                <td class="text-right"> @Math.Round( Convert.ToDecimal(item2.TotalCompra + item2.Redondeo), 2).ToString("C",formato)</td>
+
+
+
+                                                @{
+                                                    if (@item2.Moneda == "CRC")
+                                                    {
+                                                        TotalC += Convert.ToDouble(@item2.TotalCompra + item2.Redondeo);
+                                                    }
+                                                    else
+                                                    {
+                                                        TotalD += Convert.ToDouble(@item2.TotalCompra + item2.Redondeo);
+                                                    }
+
+
+                                                }
+
+
+
+
+                                            </tr>
+
+
+                                        }
+
+
+
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.col -->
+
+                            <div class="col-md-12  text-right">
+                                <div>
+                                    @{
+
+                                    }
+                                    <p>Total Colones  : <span> ₡ @Math.Round( Convert.ToDecimal(TotalC), 2).ToString("C",formato)</span> </p>
+                                    <p>Total Dólares  : <span> $ @Math.Round(Convert.ToDecimal(TotalD), 2).ToString("C",formato)</span></p>
+
+
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+                        <!-- /.row -->
+                        <!-- /.row -->
+
+                    </div>
+                </div>
+
+
+                <!-- Default box -->
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="box">
+
+                    <div class="box-body">
+                        <!-- title row -->
+                        <!-- info row -->
+                        <div class="row invoice-info">
+                            <div class="col-md-4 invoice-col">
+
+                                <address>
                                     <strong class="text-blue font-size-24">Notas de Crédito </strong>
 
 
@@ -1169,18 +1297,19 @@
 
 
 
-                                                <td class="text-right">@item2.TotalCompra.ToString("C",formato)</td>
+
+                                                <td class="text-right"> @Math.Round( Convert.ToDecimal(item2.TotalCompra + item2.Redondeo), 2).ToString("C",formato)</td>
 
 
 
                                                 @{
                                                     if (@item2.Moneda == "CRC")
                                                     {
-                                                        TotalNC += Convert.ToDouble(@item2.TotalCompra);
+                                                        TotalNC += Convert.ToDouble(@item2.TotalCompra + item2.Redondeo);
                                                     }
                                                     else
                                                     {
-                                                        TotalND += Convert.ToDouble(@item2.TotalCompra);
+                                                        TotalND += Convert.ToDouble(@item2.TotalCompra + item2.Redondeo);
                                                     }
 
 

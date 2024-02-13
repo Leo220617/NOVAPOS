@@ -77,7 +77,7 @@
             <input hidden id="urlAprobacion" value="@Url.Page("Nuevo", "AgregarAprobacion")" />
             <input hidden id="Lotes" value="@JsonConvert.SerializeObject( Model.Oferta.Lotes)" />
             <input hidden id="ParamPrecioDescuento" value="@JsonConvert.SerializeObject(Model.Parametro.FirstOrDefault().PrecioDescuento)" />
-
+            <input hidden id="RolTransito" value="@(!string.IsNullOrEmpty(Roles.Where(a => a == "60").FirstOrDefault()))" />
 
             <!-- Content Header (Page header) -->
             <div class="box">

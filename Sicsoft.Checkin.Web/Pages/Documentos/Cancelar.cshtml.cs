@@ -6,6 +6,8 @@ using NOVAAPP.Models;
 using Refit;
 using Sicsoft.Checkin.Web.Servicios;
 using System;
+using System.IO.Compression;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -180,13 +182,35 @@ namespace NOVAAPP.Pages.Documentos
             }
         }
 
-        public async Task<IActionResult> OnPostAgregarDocumento(DocumentosViewModel recibidos)
+        public async Task<IActionResult> OnPostAgregarDocumento()
         {
             string error = "";
-
+            DocumentosViewModel recibidos = new DocumentosViewModel();
 
             try
             {
+                var ms = new MemoryStream();
+                await Request.Body.CopyToAsync(ms);
+
+                byte[] compressedData = ms.ToArray();
+
+                // Descomprimir los datos utilizando GZip
+                using (var compressedStream = new MemoryStream(compressedData))
+                using (var decompressedStream = new MemoryStream())
+                {
+                    using (var decompressionStream = new GZipStream(compressedStream, CompressionMode.Decompress))
+                    {
+                        decompressionStream.CopyTo(decompressedStream);
+                    }
+
+                    // Convertir los datos descomprimidos a una cadena JSON
+                    var jsonString = System.Text.Encoding.UTF8.GetString(decompressedStream.ToArray());
+
+                    // Procesar la cadena JSON como desees
+                    // Por ejemplo, puedes deserializarla a un objeto C# utilizando Newtonsoft.Json
+                    recibidos = Newtonsoft.Json.JsonConvert.DeserializeObject<DocumentosViewModel>(jsonString);
+                }
+
                 recibidos.id = 0;
                 recibidos.idCaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault().ToString());
 

@@ -2202,14 +2202,20 @@ function Generar() {
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
+                    var jsonString = JSON.stringify(EncOferta);
+                    // Comprimir la cadena JSON utilizando gzip
+                    var compressedData = pako.gzip(jsonString);
 
+                    // Convertir los datos comprimidos a un ArrayBuffer (opcional, depende de tu caso de uso)
+                    var compressedArrayBuffer = compressedData.buffer;
 
                     $.ajax({
                         type: 'POST',
 
                         url: $("#urlGenerar").val(),
-                        dataType: 'json',
-                        data: { recibidos: EncOferta },
+                        contentType: 'application/json',
+                        data: compressedArrayBuffer,
+                        processData: false,
                         headers: {
                             RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                         },

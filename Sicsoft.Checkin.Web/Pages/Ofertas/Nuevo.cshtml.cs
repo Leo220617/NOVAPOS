@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -375,20 +377,44 @@ namespace NOVAAPP.Pages.Ofertas
                 return new JsonResult(resp2);
             }
         }
-        public async Task<IActionResult> OnPostAgregarOferta(OfertasViewModel recibidos)
+        public async Task<IActionResult> OnPostAgregarOferta()
         {
             string error = "";
 
-
+            OfertasViewModel recibidos = new OfertasViewModel();
             try
             {
+                var ms = new MemoryStream();
+                await Request.Body.CopyToAsync(ms);
+
+                byte[] compressedData = ms.ToArray();
+
+                // Descomprimir los datos utilizando GZip
+                using (var compressedStream = new MemoryStream(compressedData))
+                using (var decompressedStream = new MemoryStream())
+                {
+                    using (var decompressionStream = new GZipStream(compressedStream, CompressionMode.Decompress))
+                    {
+                        decompressionStream.CopyTo(decompressedStream);
+                    }
+
+                    // Convertir los datos descomprimidos a una cadena JSON
+                    var jsonString = System.Text.Encoding.UTF8.GetString(decompressedStream.ToArray());
+
+                    // Procesar la cadena JSON como desees
+                    // Por ejemplo, puedes deserializarla a un objeto C# utilizando Newtonsoft.Json
+                    recibidos = Newtonsoft.Json.JsonConvert.DeserializeObject<OfertasViewModel>(jsonString);
+                }
+
+
+
                 var Condiciones = await serviceCP.ObtenerLista("");
                 recibidos.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
                 recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
                 recibidos.Tipo = "02";
                 var Dias = Condiciones.Where(a => a.id == recibidos.idCondPago).FirstOrDefault() == null ? 0 : Condiciones.Where(a => a.id == recibidos.idCondPago).FirstOrDefault().Dias;
                 recibidos.FechaVencimiento = recibidos.Fecha.AddDays(Dias);
-                var resp = await service.Agregar(recibidos);
+               await service.Agregar(recibidos);
                 if (recibidos.BaseEntry > 0)
                 {
                     await service.Eliminar(recibidos.BaseEntry);
@@ -397,7 +423,7 @@ namespace NOVAAPP.Pages.Ofertas
                 var resp2 = new
                 {
                     success = true,
-                    Oferta = resp
+                   
                 };
                 return new JsonResult(resp2);
             }

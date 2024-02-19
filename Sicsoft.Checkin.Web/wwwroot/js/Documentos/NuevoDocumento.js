@@ -1757,7 +1757,7 @@ function RellenaTabla() {
                     html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
                 }
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
-              /*  html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
 
                 if ($("#RolGanancia").val() == "value") {
@@ -2197,14 +2197,21 @@ function Generar() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     button.disabled = true;
+                    var jsonString = JSON.stringify(EncDocumento);
+                    // Comprimir la cadena JSON utilizando gzip
+                    var compressedData = pako.gzip(jsonString);
 
+                    // Convertir los datos comprimidos a un ArrayBuffer (opcional, depende de tu caso de uso)
+                    var compressedArrayBuffer = compressedData.buffer;
 
                     $.ajax({
                         type: 'POST',
 
                         url: $("#urlGenerar").val(),
                         dataType: 'json',
-                        data: { recibidos: EncDocumento },
+                        contentType: 'application/json',
+                        data: compressedArrayBuffer,
+                        processData: false,
                         headers: {
                             RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                         },

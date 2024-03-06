@@ -29,6 +29,7 @@ namespace NOVAAPP.Pages.Documentos
         private readonly ICrudApi<TipoCambiosViewModel, int> tipoCambio;
         private readonly ICrudApi<ParametrosViewModel, int> parametro;
         private readonly ICrudApi<SucursalesViewModel, string> sucursales;
+        private readonly ICrudApi<BodegasViewModel, int> bodegas;
 
         [BindProperty]
         public ClientesViewModel[] Clientes { get; set; }
@@ -65,7 +66,11 @@ namespace NOVAAPP.Pages.Documentos
         [BindProperty]
         public string NombreCliente { get; set; }
 
-        public ObservarModel(ICrudApi<ParametrosViewModel, int> parametro, IConfiguration configuration, ICrudApi<DocumentosViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor,ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<SucursalesViewModel, string> sucursales)
+        [BindProperty]
+        public BodegasViewModel[] Bodegas { get; set; }
+
+
+        public ObservarModel(ICrudApi<ParametrosViewModel, int> parametro, IConfiguration configuration, ICrudApi<DocumentosViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor,ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<BodegasViewModel, int> bodegas)
         {
             this.service = service;
             this.serviceE = serviceE;
@@ -77,6 +82,7 @@ namespace NOVAAPP.Pages.Documentos
             this.parametro = parametro;
             this.sucursales = sucursales;
             this.configuration = configuration;
+            this.bodegas = bodegas;
         }
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -112,6 +118,7 @@ namespace NOVAAPP.Pages.Documentos
                 Productos = await serviceP.ObtenerLista(filtro2);
                 Exoneraciones = await exoneracion.ObtenerLista("");
                 NombreCliente = configuration["Cliente"].ToString();
+                Bodegas = await bodegas.ObtenerLista("");
                 return Page();
             }
             catch (Exception ex)

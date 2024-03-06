@@ -295,7 +295,7 @@ function onChangeMonto(i) {
             valorInt = 0;
         }
 
-        if (diferencia > 10) {
+        if (diferencia > 10 ) {
             interes = (ProdCadena[i].saldo * 0.0005) * (diferencia - 10);
         }
 

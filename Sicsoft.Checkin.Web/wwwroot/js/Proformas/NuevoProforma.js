@@ -1157,7 +1157,7 @@ function RellenaCondiciones(CPS) {
         var idClientes = $("#ClienteSeleccionado").val();
         var Cliente = Clientes.find(a => a.id == idClientes).Nombre;
         var Name = Cliente.includes("CONTADO");
-
+        var Clientex = Clientes.find(a => a.id == idClientes);
 
         var valorCondicion = Documento != null || Documento != undefined ? Documento.idCondPago : 0;
         var text = "";
@@ -1169,30 +1169,38 @@ function RellenaCondiciones(CPS) {
 
         var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
 
-        if ($("#RolTransito").val() == "value") {
+        if (Clientex.Transitorio && Clientex.idCondicionPago == Contado.id) {
             text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
             if (FP == false && !Name) {
                 text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
             }
-          
+
         } else {
             text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
-            if (FP == false && !Name && CondP.Dias > 0) {
-                text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
-            }
+          
         }
 
-        for (var i = 0; i < CPS.length; i++) {
-            if (CPS[i].id != Contado.id && FP == true) {
-                if (valorCondicion == CPS[i].id && FP == true) {
-                    text += "<option selected value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
-
-                } else {
-                    text += "<option value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
-
+        if (Clientex.CxC == 0) {
+            for (var i = 0; i < CPS.length; i++) {
+                if (CPS[i].id != Contado.id && FP == true) {
+                    // Verificar si la condición de pago no es "Transito"
+                    if (CPS[i].id !== Transito.id && FP == true) {
+                        if (valorCondicion == CPS[i].id && FP == true) {
+                            text += "<option selected value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+                        } else {
+                            text += "<option value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+                        }
+                    }
                 }
-
             }
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Advertencia',
+                html: 'Crédito Bloqueado por CxC'
+                   
+
+            })
         }
 
 
@@ -1674,7 +1682,7 @@ function RellenaTabla() {
             html += "<td class='text-center'> <input onchange='javascript: onChangePrecioProducto(" + i + ")' type='number' id='" + i + "_Prod3' class='form-control'   value= '" + parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2) + "' min='1'/> </td>";
 
             html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
-          
+
             if ($("#ParamPrecioDescuento").val() == "true") {
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PrecioUnitario - (ProdCadena[i].Descuento / ProdCadena[i].Cantidad)).toFixed(2)) + " </td>";
             } else {
@@ -1906,7 +1914,7 @@ function AgregarProductoTabla() {
         for (var i = 0; i < LotesArray.length; i++) {
             cantidades += parseInt(LotesArray[i].Cantidad);
         }
-    
+
 
         for (var i = 0; i < ProdCadena.length; i++) {
 
@@ -2000,7 +2008,7 @@ function AgregarProductoTabla() {
 
         }
 
-        if (Producto.PrecioUnitario  <= 0) {
+        if (Producto.PrecioUnitario <= 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -2070,7 +2078,7 @@ function AgregarProductoTabla() {
         }
         var Exon = ProdCadena.find(a => a.PorExoneracion > 0);
         var Desc = ProdCadena.find(a => a.PorDescto > 0);
-        if (ProdCadena.length > 0 && (Exon != undefined || Desc != undefined )) {
+        if (ProdCadena.length > 0 && (Exon != undefined || Desc != undefined)) {
 
             $('#ClienteSeleccionado').prop('disabled', true);
 
@@ -2729,7 +2737,7 @@ function BuscarCliente() {
         BuscarClienteRegistro();
         console.log($("#Nombre").val());
 
-        
+
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -2841,7 +2849,7 @@ function BuscarClienteHacienda() {
                 })
             });
 
-        
+
 
 
     } catch (e) {

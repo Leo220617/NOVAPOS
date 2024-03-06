@@ -1019,7 +1019,7 @@ function RellenaCondiciones(CPS) {
         var idClientes = $("#ClienteSeleccionado").val();
         var Cliente = Clientes.find(a => a.id == idClientes).Nombre;
         var Name = Cliente.includes("CONTADO");
-
+        var Clientex = Clientes.find(a => a.id == idClientes);
 
         var valorCondicion = Oferta != null || Oferta != undefined ? Oferta.idCondPago : 0;
         var text = "";
@@ -1030,7 +1030,8 @@ function RellenaCondiciones(CPS) {
         var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
 
 
-        if ($("#RolTransito").val() == "value") {
+
+        if (Clientex.Transitorio && Clientex.idCondicionPago == Contado.id) {
             text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
             if (FP == false && !Name) {
                 text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
@@ -1038,24 +1039,30 @@ function RellenaCondiciones(CPS) {
 
         } else {
             text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
-            if (FP == false && !Name && CondP.Dias > 0) {
-                text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
-            }
+
         }
-
-        for (var i = 0; i < CPS.length; i++) {
-            if (CPS[i].id != Contado.id && FP == true) {
-                if (valorCondicion == CPS[i].id && FP == true) {
-                    text += "<option selected value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
-
-                } else {
-                    text += "<option value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
-
+        if (Clientex.CxC == 0) {
+            for (var i = 0; i < CPS.length; i++) {
+                if (CPS[i].id != Contado.id && FP == true) {
+                    // Verificar si la condición de pago no es "Transito"
+                    if (CPS[i].id !== Transito.id && FP == true) {
+                        if (valorCondicion == CPS[i].id && FP == true) {
+                            text += "<option selected value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+                        } else {
+                            text += "<option value='" + CPS[i].id + "'> " + CPS[i].Nombre + " </option>";
+                        }
+                    }
                 }
-
             }
-        }
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Advertencia',
+                html: 'Crédito Bloqueado por CxC'
 
+
+            })
+        }
 
         $("#selectCondPago").html(text);
 

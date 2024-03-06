@@ -145,7 +145,7 @@ function ImprimirTiquete() {
         var texto = htmlContado;
         texto = texto.replace("@Fecha", Documento.Fecha.split("T")[0]);
         texto = texto.replace("@NumInterno", Documento.id);
-        texto = texto.replace("CO-Pital", "");
+        texto = texto.replace("@CodSuc", Documento.CodSuc);
         texto = texto.replace("@NumComprobante", Documento.ConsecutivoHacienda);
         texto = texto.replace("@NumFactura", Documento.id);
 
@@ -230,7 +230,7 @@ function ImprimirTiqueteNC() {
         var texto = htmlContadoNC;
         texto = texto.replace("@Fecha", Documento.Fecha.split("T")[0]);
         texto = texto.replace("@NumInterno", Documento.id);
-        texto = texto.replace("CO-Pital", "");
+        texto = texto.replace("@CodSuc", Documento.CodSuc);
         texto = texto.replace("@NumComprobante", Documento.ConsecutivoHacienda);
         texto = texto.replace("@NumFactura", Documento.id);
 
@@ -312,7 +312,7 @@ function ImprimirTiqueteC() {
         var texto = htmlCredito2;
         texto = texto.replace("@Fecha", Documento.Fecha.split("T")[0]);
         texto = texto.replace("@NumInterno", Documento.id);
-        texto = texto.replace("CO-Pital", "");
+        texto = texto.replace("@CodSuc", Documento.CodSuc);
         texto = texto.replace("@NumComprobante", Documento.ConsecutivoHacienda);
         texto = texto.replace("@NumFactura", Documento.id);
 
@@ -397,7 +397,7 @@ function ImprimirFactura() {
         var texto = htmlCredito;
         texto = texto.replace("@Fecha", Documento.Fecha.split("T")[0]);
         texto = texto.replace("@NumInterno", Documento.id);
-        texto = texto.replace("CO-Pital", "");
+        texto = texto.replace("@CodSuc", Documento.CodSuc);
         texto = texto.replace("@NumComprobante", Documento.ClaveHacienda);
         texto = texto.replace("@NumFactura", Documento.ConsecutivoHacienda);
 

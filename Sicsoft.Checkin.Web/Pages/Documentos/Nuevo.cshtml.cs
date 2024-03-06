@@ -422,7 +422,7 @@ namespace NOVAAPP.Pages.Documentos
                 recibidos.BaseEntry = recibidos.idOferta;
                 var Dias = Condiciones.Where(a => a.id == recibidos.idCondPago).FirstOrDefault() == null ? 0 : Condiciones.Where(a => a.id == recibidos.idCondPago).FirstOrDefault().Dias;
                 recibidos.FechaVencimiento = recibidos.Fecha.AddDays(Dias);
-             await service.Agregar(recibidos);
+                var resp = await service.Agregar(recibidos);
 
                 if (recibidos.idOferta > 0)
                 {
@@ -433,6 +433,7 @@ namespace NOVAAPP.Pages.Documentos
                 var resp2 = new
                 {
                     success = true,
+                    Documento = resp
                     
                 };
                 return new JsonResult(resp2);

@@ -1023,6 +1023,7 @@
                                             <th class="text-center">Cuenta</th>
                                             <th class="text-center">Referencia</th>
                                             <th class="text-center">Moneda</th>
+                                            <th class="text-center">Tipo</th>
                                             <th class="text-center">Total</th>
 
 
@@ -1052,7 +1053,75 @@
 
                                                     <td class="text-center">@item.NumReferencia</td>
 
-                                                    <td class="text-center"> @item.Moneda</td>
+                                                    <td class="text-center"> @item.Moneda </td>
+                                                    <td class="text-center"> Facturación </td>
+
+                                                    <td class="text-right">@item.Monto.ToString("C",formato)</td>
+
+
+                                                </tr>
+                                            }
+
+                                        }
+
+                                        @foreach (var item2 in Model.MetodoAbono.GroupBy(a => a.Metodo))
+                                        {
+
+                                            @foreach (var item in item2)
+                                            {
+                                                <tr>
+                                                    <td class="text-center">@item.Metodo</td>
+
+                                                    <td class="text-right">@item.idEncabezado</td>
+
+                                                    <td>@item.id</td>
+
+                                                    <td class="text-center"> @(Model.CuentasBancarias.Where(a => a.id == item.idCuentaBancaria).FirstOrDefault() == null ? "Cuenta Inexistente" : Model.CuentasBancarias.Where(a => a.id == item.idCuentaBancaria).FirstOrDefault().Banco)</td>
+
+                                                    <td class="text-center"> @(Model.CuentasBancarias.Where(a => a.id == item.idCuentaBancaria).FirstOrDefault() == null ? "Cuenta Inexistente" : Model.CuentasBancarias.Where(a => a.id == item.idCuentaBancaria).FirstOrDefault().Nombre)</td>
+
+                                                    <td class="text-center">@item.NumReferencia</td>
+
+                                                    <td class="text-center"> @item.Moneda </td>
+                                                    <td class="text-center"> Abono </td>
+
+
+                                                    <td class="text-right">@item.Monto.ToString("C",formato)</td>
+
+
+
+
+
+
+
+
+
+
+                                                </tr>
+                                            }
+
+                                        }
+
+                                        @foreach (var item2 in Model.MetodoCuenta.GroupBy(a => a.Metodo))
+                                        {
+
+                                            @foreach (var item in item2)
+                                            {
+                                                <tr>
+                                                    <td class="text-center">@item.Metodo</td>
+
+                                                    <td class="text-right">@item.idEncabezado</td>
+
+                                                    <td>@item.id</td>
+
+                                                    <td class="text-center"> @(Model.CuentasBancarias.Where(a => a.id == item.idCuentaBancaria).FirstOrDefault() == null ? "Cuenta Inexistente" : Model.CuentasBancarias.Where(a => a.id == item.idCuentaBancaria).FirstOrDefault().Banco)</td>
+
+                                                    <td class="text-center"> @(Model.CuentasBancarias.Where(a => a.id == item.idCuentaBancaria).FirstOrDefault() == null ? "Cuenta Inexistente" : Model.CuentasBancarias.Where(a => a.id == item.idCuentaBancaria).FirstOrDefault().Nombre)</td>
+
+                                                    <td class="text-center">@item.NumReferencia</td>
+
+                                                    <td class="text-center"> @item.Moneda </td>
+                                                    <td class="text-center"> Pagos a Cuenta </td>
 
 
                                                     <td class="text-right">@item.Monto.ToString("C",formato)</td>

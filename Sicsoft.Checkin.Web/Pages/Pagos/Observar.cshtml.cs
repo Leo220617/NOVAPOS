@@ -29,7 +29,7 @@ namespace NOVAAPP.Pages.Pagos
         private readonly ICrudApi<CondicionesPagosViewModel, int> serviceCP; //API
 
         private readonly ICrudApi<VendedoresViewModel, int> vendedor;
-
+        private readonly ICrudApi<CuentasBancariasViewModel, int> serviceCB;
 
 
 
@@ -71,8 +71,10 @@ namespace NOVAAPP.Pages.Pagos
 
 
 
+        [BindProperty]
+        public CuentasBancariasViewModel[] CB { get; set; }
 
-        public ObservarModel(ICrudApi<PagosViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<DocumentosCreditoViewModel, int> documentos) //CTOR 
+        public ObservarModel(ICrudApi<PagosViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<DocumentosCreditoViewModel, int> documentos, ICrudApi<CuentasBancariasViewModel, int> serviceCB) //CTOR 
         {
             this.service = service;
             this.clientes = clientes;
@@ -82,6 +84,7 @@ namespace NOVAAPP.Pages.Pagos
             this.tipoCambio = tipoCambio;
             this.serviceCP = serviceCP;
             this.vendedor = vendedor;
+            this.serviceCB = serviceCB;
 
         }
 
@@ -123,7 +126,9 @@ namespace NOVAAPP.Pages.Pagos
 
                     }
                 }
-               
+                ParametrosFiltros FiltroCB = new ParametrosFiltros();
+                FiltroCB.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                CB = await serviceCB.ObtenerLista(FiltroCB);
 
                 return Page();
             }

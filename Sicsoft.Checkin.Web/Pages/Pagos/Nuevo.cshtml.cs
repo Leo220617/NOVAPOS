@@ -29,6 +29,7 @@ namespace NOVAAPP.Pages.Pagos
         private readonly ICrudApi<CondicionesPagosViewModel, int> serviceCP; //API
 
         private readonly ICrudApi<VendedoresViewModel, int> vendedor;
+        private readonly ICrudApi<CuentasBancariasViewModel, int> serviceCB;
 
 
 
@@ -69,10 +70,12 @@ namespace NOVAAPP.Pages.Pagos
         [BindProperty]
         public VendedoresViewModel[] Vendedores { get; set; }
 
+        [BindProperty]
+        public CuentasBancariasViewModel[] CB { get; set; }
 
 
 
-        public NuevoModel(ICrudApi<PagosViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<DocumentosCreditoViewModel, int> documentos) //CTOR 
+        public NuevoModel(ICrudApi<PagosViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<DocumentosCreditoViewModel, int> documentos, ICrudApi<CuentasBancariasViewModel, int> serviceCB) //CTOR 
         {
             this.service = service;
             this.clientes = clientes;
@@ -82,6 +85,7 @@ namespace NOVAAPP.Pages.Pagos
             this.tipoCambio = tipoCambio;
             this.serviceCP = serviceCP;
             this.vendedor = vendedor;
+            this.serviceCB = serviceCB;
 
         }
 
@@ -112,7 +116,9 @@ namespace NOVAAPP.Pages.Pagos
                 filtro.FechaInicial = DateTime.Now.Date;
                 TP = await tipoCambio.ObtenerLista(filtro);
                 Vendedores = await vendedor.ObtenerLista("");
-
+                ParametrosFiltros FiltroCB = new ParametrosFiltros();
+                FiltroCB.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                CB = await serviceCB.ObtenerLista(FiltroCB);
 
                 return Page();
             }

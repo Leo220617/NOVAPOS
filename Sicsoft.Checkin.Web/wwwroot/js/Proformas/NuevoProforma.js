@@ -2432,6 +2432,8 @@ function onChangeDescuentoProducto(i) {
 
         var DescuentoX = ProdCadena[i].PrecioUnitario * (ProdCadena[i].PorDescto / 100);
         var PrecioFinal = ProdCadena[i].PrecioUnitario - parseFloat(DescuentoX.toFixed(2));
+        DescuentoX = parseFloat(DescuentoX.toFixed(2));
+        PrecioFinal = parseFloat(PrecioFinal.toFixed(2));
 
 
         if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento && Promo == undefined && ((ProdCadena[i].PrecioMin <= PrecioFinal && Moneda == "CRC") || (ProdCadena[i].PrecioMin / TipodeCambio.TipoCambio <= PrecioFinal && Moneda == "USD"))) {

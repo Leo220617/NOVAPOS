@@ -1540,6 +1540,14 @@ function validar(cliente) {
 
         } else if (cliente.idGrupo == "" || cliente.idGrupo == null || cliente.idGrupo == '0') {
             return false;
+        } else if (cliente.TipoCedula == "02" && cliente.Cedula.length < 10) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Error, la cédula juridica debe tener 10 caracteres'
+
+            })
+            return false;
         }
 
         else {

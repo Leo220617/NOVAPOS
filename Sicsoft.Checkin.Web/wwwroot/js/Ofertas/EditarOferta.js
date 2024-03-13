@@ -1461,6 +1461,14 @@ function validar(cliente) {
 
         } else if (cliente.idGrupo == "" || cliente.idGrupo == null) {
             return false;
+        } else if (cliente.TipoCedula == "02" && cliente.Cedula.length < 10) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Error, la cédula juridica debe tener 10 caracteres'
+
+            })
+            return false;
         }
 
         else {
@@ -2448,6 +2456,8 @@ function onChangeDescuentoProducto(i) {
         }
         var DescuentoX = ProdCadena[i].PrecioUnitario * (ProdCadena[i].PorDescto / 100);
         var PrecioFinal = ProdCadena[i].PrecioUnitario - DescuentoX;
+        DescuentoX = parseFloat(DescuentoX.toFixed(2));
+        PrecioFinal = parseFloat(PrecioFinal.toFixed(2));
 
         if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento && Promo == undefined && ((ProdCadena[i].PrecioMin <= PrecioFinal && Moneda == "CRC") || (ProdCadena[i].PrecioMin / TipodeCambio.TipoCambio <= PrecioFinal && Moneda == "USD"))) {
             ValidarTotales();

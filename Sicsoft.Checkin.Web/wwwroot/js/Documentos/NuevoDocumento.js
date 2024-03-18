@@ -1772,7 +1772,7 @@ function RellenaTabla() {
                 } else {
                     html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
                 }
-                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto / ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
 
@@ -3453,9 +3453,10 @@ function ImprimirTiquete(Documento) {
 
         for (var i = 0; i < Documento.detalle.length; i++) {
 
-            var Prod = Productos.find(a => a.id == Documento.detalle[i].idProducto)
+            var Prod = Productos.find(a => a.id == Documento.detalle[i].idProducto);
+            var Bod = Bodegas.find(a => a.id == Prod.idBodega);
 
-            tabla += "<tr>" + "<td colspan='3'>  " + Prod.Codigo + "-" + Prod.Nombre + "  </td></tr>";
+            tabla += "<tr>" + "<td colspan='3'>  " + Prod.Codigo + "-" + Prod.Nombre + " - BOD:" + Bod.CodSAP + "  </td></tr>";
 
 
             tabla += "<tr>";

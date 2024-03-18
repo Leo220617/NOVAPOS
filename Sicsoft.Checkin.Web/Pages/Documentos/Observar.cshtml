@@ -65,6 +65,7 @@
                             <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
                             <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
                             <input hidden id="Lotes" value="@JsonConvert.SerializeObject(Model.Documento.Lotes.Where(a => a.Tipo == "F"))" />
+                            <input hidden id="Bodegas" value="@JsonConvert.SerializeObject(Model.Bodegas)" />
 
 
 

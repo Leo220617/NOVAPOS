@@ -16,6 +16,7 @@ var CP = [];
 var Clientes = [];
 var Vendedor = [];
 var Productos = [];
+var Bodegas = [];
 var TipoCambio = [];
 var ids = '';
 var idDetalles = 0;
@@ -31,7 +32,7 @@ function Recuperar() {
         Vendedor = JSON.parse($("#Vendedor").val());
         Productos = JSON.parse($("#Productos").val());
         TipoCambio = JSON.parse($("#TipoCambio").val());
-
+        Bodegas = JSON.parse($("#Bodegas").val());
         var lot = JSON.parse($("#Lotes").val());
 
 
@@ -168,9 +169,10 @@ function ImprimirTiquete() {
 
         for (var i = 0; i < Documento.Detalle.length; i++) {
 
-            var Prod = Productos.find(a => a.id == Documento.Detalle[i].idProducto)
+            var Prod = Productos.find(a => a.id == Documento.Detalle[i].idProducto);
+            var Bod = Bodegas.find(a => a.id == Prod.idBodega);
 
-            tabla += "<tr>" + "<td colspan='3'>  " + Prod.Codigo + "-" + Prod.Nombre + "  </td></tr>";
+            tabla += "<tr>" + "<td colspan='3'>  " + Prod.Codigo + "-" + Prod.Nombre + " - BOD:" + Bod.CodSAP + "  </td></tr>";
 
 
             tabla += "<tr>";
@@ -254,8 +256,9 @@ function ImprimirTiqueteNC() {
         for (var i = 0; i < Documento.Detalle.length; i++) {
 
             var Prod = Productos.find(a => a.id == Documento.Detalle[i].idProducto)
+            var Bod = Bodegas.find(a => a.id == Prod.idBodega);
 
-            tabla += "<tr>" + "<td colspan='3'>  " + Prod.Codigo + "-" + Prod.Nombre + "  </td></tr>";
+            tabla += "<tr>" + "<td colspan='3'>  " + Prod.Codigo + "-" + Prod.Nombre + " - BOD:" + Bod.CodSAP + "  </td></tr>";
 
 
             tabla += "<tr>";
@@ -337,9 +340,10 @@ function ImprimirTiqueteC() {
 
         for (var i = 0; i < Documento.Detalle.length; i++) {
 
-            var Prod = Productos.find(a => a.id == Documento.Detalle[i].idProducto)
+            var Prod = Productos.find(a => a.id == Documento.Detalle[i].idProducto);
+            var Bod = Bodegas.find(a => a.id == Prod.idBodega);
 
-            tabla += "<tr>" + "<td colspan='3'>  " + Prod.Codigo + "-" + Prod.Nombre + "  </td></tr>";
+            tabla += "<tr>" + "<td colspan='3'>  " + Prod.Codigo + "-" + Prod.Nombre + " - BOD:" + Bod.CodSAP + "  </td></tr>";
 
 
             tabla += "<tr>";

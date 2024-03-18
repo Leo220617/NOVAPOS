@@ -1670,6 +1670,14 @@ function AgregarCliente() {
     }
 }
 ///
+function redondearAl5(numero, Moneda) {
+    if (Moneda != "USD") {
+        return Math.round(numero / 5) * 5;
+
+    } else {
+        return numero;
+    }
+}
 function RellenaTabla() {
     try {
         var html = "";
@@ -1696,7 +1704,7 @@ function RellenaTabla() {
             } else {
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
             }
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto / ProdCadena[i].Cantidad ).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
             if ($("#RolGanancia").val() == "value") {

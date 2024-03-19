@@ -220,6 +220,8 @@ namespace NOVAAPP.Pages.CierreCajas
                     ParametrosFiltros filtro2 = new ParametrosFiltros();
                     filtro2.Externo = true;
                     Clientes = await clientes.ObtenerLista(filtro2);
+                    MetodoAbono = await metodoabono.ObtenerLista(filtro);
+                    MetodoCuenta = await metodocuenta.ObtenerLista(filtro);
 
 
 

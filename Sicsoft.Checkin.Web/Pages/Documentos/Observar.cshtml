@@ -229,7 +229,7 @@
 
                                             @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
                                             {
-                                                <td class="text-center">@Math.Round(item.PrecioUnitario - @item.Descuento, 2).ToString("C", formato)</td>
+                                                <td class="text-center">@Math.Round(item.PrecioUnitario - (@item.Descuento/item.Cantidad), 2).ToString("C", formato)</td>
 
                                             }
                                             else

@@ -1,4 +1,5 @@
 ﻿@page
+@using Newtonsoft.Json;
 @model NOVAAPP.Pages.Productos.IndexModel
 @{
     ViewData["Title"] = "Productos";
@@ -12,44 +13,45 @@
 
 }
 
+@section scripts{
 
+    <script src="/js/Productos/Productos.js"></script>
 
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <h1>
-            Productos
-        </h1>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
-            <li class="breadcrumb-item active">Listado Productos</li>
-        </ol>
-    </section>
-    <!-- Main content -->
-    <section class="content">
-        <div class="row">
-            <div class="col-12">
+}
 
-                <div class="box">
-                    <div class="box-header with-border">
-                        <div class="row">
-                            <div class="col-sm-8"> <h4 class="box-title">Filtro</h4></div>
-
-
-                        </div>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Productos
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+        <li class="breadcrumb-item active">Listado Productos</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+            <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Objeto)" />
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-sm-8"> <h4 class="box-title">Filtro</h4></div>
 
 
                     </div>
-                    <div class="box-body">
-                        <form method="get">
-                            <div class="row">
-                             
 
+
+                </div>
+                <div class="box-body">
+                    <form method="get">
+                        <div class="row">
                             <div class="col-sm-3 pr-1">
                                 <div class="form-group">
-                                    <label>Categoria</label>
-                                    <select class="form-control select2  " asp-for="filtro.Codigo3">
-                                        <option value="0"> Seleccione Categoria</option>
-                                        @foreach (var item in Model.Categorias)
+                                    <label>Bodega</label>
+                                    <select class="form-control select2  " asp-for="filtro.Codigo1">
+                                        @foreach (var item in Model.Bodegas)
                                         {
                                             <option value="@item.id"> @item.CodSAP - @item.Nombre</option>
                                         }
@@ -61,7 +63,32 @@
 
                             </div>
 
+                            <div class="col-sm-3 pr-1">
+                                <div class="form-group">
+                                    <label>Lista de Precio</label>
+                                    <select class="form-control select2  " asp-for="filtro.Codigo2">
+                                        @foreach (var item in Model.Listas)
+                                        {
+                                            <option value="@item.id"> @item.CodSAP - @item.Nombre</option>
+                                        }
 
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 pr-1">
+                                <div class="form-group">
+                                    <label>Categoría</label>
+                                    <select class="form-control select2  " asp-for="filtro.Codigo3">
+                                        @foreach (var item in Model.Categorias)
+                                        {
+                                            <option value="@item.id"> @item.CodSAP - @item.Nombre</option>
+                                        }
+
+
+                                    </select>
+                                </div>
+                            </div>
 
 
                             <div class="col-sm-3 pl-1" style="text-align: center; padding-top: 1%;">
@@ -82,8 +109,9 @@
             <div class="box">
                 <div class="box-header with-border">
                     <div class="row">
-                        <div class="col-sm-8"> <h4 class="box-title">Productos</h4></div>
 
+                        <div class="col-sm-8"> <h4 class="box-title">Productos</h4></div>
+                      
 
                     </div>
 
@@ -95,13 +123,21 @@
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                  
-                                    <th>Código</th>
-                                    <th>Descripción</th>
-                                    <th>Stock</th>
-                                    <th>Bodega</th>
-                            
+                                    <th>ID</th>
+                                    <th>Acción</th>
+                                    <th>Producto</th>
+                                    <th>Impuesto</th>
 
+                                    <th>Bodega</th>
+                                    <th>Lista de Precio</th>
+                                    <th>Precio Unitario</th>
+
+
+                                    <th>Costo</th>
+                                    <th>Stock</th>
+                                    <th>MAG</th>
+                                    <th>Fecha Actualización</th>
+                                    <th>Estado</th>
 
                                 </tr>
                             </thead>
@@ -110,18 +146,57 @@
                                 {
                                     <tr>
                                         <td>
-                                            @item.Codigo
+                                            @item.id
                                         </td>
                                         <td>
-                                            @item.Nombre
+                                            <a id="print" class="fa fa-print icono" onclick="javascript: ImprimirEtiqueta(@item.id)"> </a>
+                                        </td>
+                                        <td>
+                                            @item.Codigo - @item.Nombre
+                                        </td>
+
+
+                                        <td>  @(Model.Impuestos.Where(a => a.id == item.idImpuesto).FirstOrDefault() == null ? "Impuesto Inexistente" : Model.Impuestos.Where(a => a.id == item.idImpuesto).FirstOrDefault().Codigo) </td>
+
+
+                                        <td>  @(Model.Bodegas.Where(a => a.id == item.idBodega).FirstOrDefault() == null ? "Bodega Inexistente" : Model.Bodegas.Where(a => a.id == item.idBodega).FirstOrDefault().Nombre) </td>
+                                        <td>  @(Model.Listas.Where(a => a.id == item.idListaPrecios).FirstOrDefault() == null ? "Lista de Precio Inexistente" : Model.Listas.Where(a => a.id == item.idListaPrecios).FirstOrDefault().Nombre) </td>
+                                        <td>         @item.PrecioUnitario </td>
+
+
+                                        <td>         @item.Costo </td>
+                                        <td>         @item.Stock </td>
+                                        <td>
+                                            @if (item.MAG)
+                                            {
+                                                <span class="badge badge-pill badge-success">SI</span>
+
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-pill badge-danger">NO</span>
+                                            }
+
+                                        </td>
+                                        <td>       @item.FechaActualizacion.ToString("dd/MM/yyyy")  </td>
+
+                                        <td>
+                                            @if (item.Activo)
+                                            {
+                                                <span class="badge badge-pill badge-success">Activo</span>
+
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-pill badge-danger">Inactivo</span>
+                                            }
+
                                         </td>
 
 
 
 
-                                        <td>         @item.Stock </td>
-                                      
-                                           <td>  @( Model.Bodegas.Where(a => a.id == item.idBodega).FirstOrDefault() == null ? "Bodega Inexistente" :  Model.Bodegas.Where(a => a.id == item.idBodega).FirstOrDefault().Nombre) </td> 
+
                                     </tr>
 
                                 }
@@ -130,12 +205,25 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                   
-                                    <th>Código</th>
-                                    <th>Descripción</th>
-                                    <th>Stock</th>
+                                    <th>ID</th>
+                                    <th>Acción</th>
+                                    <th>Producto</th>
+                                    <th>Impuesto</th>
+
+
+
                                     <th>Bodega</th>
-                                 
+                                    <th>Lista de Precio</th>
+                                    <th>Precio Unitario</th>
+
+
+                                    <th>Costo</th>
+                                    <th>Stock</th>
+                                    <th>MAG</th>
+                                    <th>Fecha Actualización</th>
+                                    <th>Estado</th>
+
+
 
                                 </tr>
                             </tfoot>
@@ -151,3 +239,45 @@
     <!-- /.row -->
 </section>
 <!-- /.content -->
+<div class="modal fade bs-example-modal-lg" id="ModalAgregarCliente" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Desactivar/Activar Productos</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+
+
+
+
+
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <h5>Ingrese el Código del Producto<span class="text-danger">*</span></h5>
+                            <div class="controls">
+                                <input type="text" id="CardCode" class="form-control" required data-validation-required-message="Este campo es requerido">
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Cancelar</button> &nbsp;
+                <button type="button" class="btn btn-primary waves-effect text-left" onclick="javascript: onClickModalByCardCode();">Guardar</button> &nbsp;
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

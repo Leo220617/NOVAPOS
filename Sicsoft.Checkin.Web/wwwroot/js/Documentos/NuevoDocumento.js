@@ -43,6 +43,7 @@ var DetPromociones = [];
 var Margenes = [];
 var DetMargenes = [];
 var Aprobaciones = [];
+var MiSucursal = [];
 
 function HideP() {
     try {
@@ -117,6 +118,7 @@ function Recuperar() {
         DetPromociones = JSON.parse($("#DetPromociones").val());
         Margenes = JSON.parse($("#Margenes").val());
         DetMargenes = JSON.parse($("#DetMargenes").val());
+        MiSucursal = JSON.parse($("#Sucursal").val());
 
         RellenaClientes();
         RellenaVendedores();
@@ -3431,7 +3433,7 @@ function ImprimirTiquete(Documento) {
         var texto = htmlContado;
         texto = texto.replace("@Fecha", Documento.fecha.split("T")[0] + " " + Documento.fecha.split("T")[1].substring(0, 8));
         texto = texto.replace("@NumInterno", Documento.id);
-        texto = texto.replace("@CodSuc", Documento.CodSuc);
+        texto = texto.replace("@CodSuc", MiSucursal.CodSuc);
         texto = texto.replace("@NumComprobante", Documento.consecutivoHacienda);
         texto = texto.replace("@NumFactura", Documento.id);
         texto = texto.replace("@Comentario", Documento.comentarios);
@@ -3454,7 +3456,7 @@ function ImprimirTiquete(Documento) {
         for (var i = 0; i < Documento.detalle.length; i++) {
 
             var Prod = Productos.find(a => a.id == Documento.detalle[i].idProducto);
-            var Bod = Bodegas.find(a => a.id == Prod.idBodega);
+            var Bod = Bodega.find(a => a.id == Prod.idBodega);
 
             tabla += "<tr>" + "<td colspan='3'>  " + Prod.Codigo + "-" + Prod.Nombre + " - BOD:" + Bod.CodSAP + "  </td></tr>";
 
@@ -3516,7 +3518,7 @@ function ImprimirTiqueteC(Documento) {
         var texto = htmlCredito2;
         texto = texto.replace("@Fecha", Documento.fecha.split("T")[0] + " " + Documento.fecha.split("T")[1].substring(0, 8));
         texto = texto.replace("@NumInterno", Documento.id);
-        texto = texto.replace("@CodSuc", Documento.CodSuc);
+        texto = texto.replace("@CodSuc", MiSucursal.CodSuc);
         texto = texto.replace("@NumComprobante", Documento.consecutivoHacienda);
         texto = texto.replace("@NumFactura", Documento.id);
         texto = texto.replace("@Comentario", Documento.comentarios);
@@ -3603,7 +3605,7 @@ function ImprimirFactura(Documento) {
         var texto = htmlCredito2;
         texto = texto.replace("@Fecha", Documento.fecha.split("T")[0]);
         texto = texto.replace("@NumInterno", Documento.id);
-        texto = texto.replace("@CodSuc", Documento.CodSuc);
+        texto = texto.replace("@CodSuc", MiSucursal.CodSuc);
         texto = texto.replace("@NumComprobante", Documento.claveHacienda);
         texto = texto.replace("@NumFactura", Documento.consecutivoHacienda);
 

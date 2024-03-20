@@ -1,4 +1,5 @@
 ﻿using Castle.MicroKernel.SubSystems.Conversion;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -49,6 +50,8 @@ namespace NOVAAPP.Models
         public bool Editable { get; set; }
 
         public bool Serie { get; set; }
+
+        public DateTime FechaActualizacion { get; set; }
 
     }
 }

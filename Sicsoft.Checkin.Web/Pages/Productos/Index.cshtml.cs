@@ -24,7 +24,7 @@ namespace NOVAAPP.Pages.Productos
         private readonly ICrudApi<BodegasViewModel, int> serviceBodegas;
         private readonly ICrudApi<ListaPreciosViewModel, int> serviceListas;
         private readonly ICrudApi<ImpuestosViewModel, int> serviceImpuestos;
-        private readonly ICrudApi<CategoriasViewModel, int> categorias;
+        private readonly ICrudApi<CategoriasViewModel, int> serviceCategorias;
 
 
         [BindProperty(SupportsGet = true)]
@@ -32,8 +32,6 @@ namespace NOVAAPP.Pages.Productos
 
         [BindProperty]
         public ProductosViewModel[] Objeto { get; set; }
-
-
 
         [BindProperty]
         public BodegasViewModel[] Bodegas { get; set; }
@@ -47,13 +45,14 @@ namespace NOVAAPP.Pages.Productos
         [BindProperty]
         public CategoriasViewModel[] Categorias { get; set; }
 
-        public IndexModel(ICrudApi<ProductosViewModel, string> service, ICrudApi<BodegasViewModel, int> serviceBodegas, ICrudApi<ListaPreciosViewModel, int> serviceListas, ICrudApi<ImpuestosViewModel, int> serviceImpuestos, ICrudApi<CategoriasViewModel, int> categorias)
+
+        public IndexModel(ICrudApi<ProductosViewModel, string> service, ICrudApi<BodegasViewModel, int> serviceBodegas, ICrudApi<ListaPreciosViewModel, int> serviceListas, ICrudApi<ImpuestosViewModel, int> serviceImpuestos, ICrudApi<CategoriasViewModel, int> serviceCategorias)
         {
             this.service = service;
             this.serviceBodegas = serviceBodegas;
             this.serviceListas = serviceListas;
             this.serviceImpuestos = serviceImpuestos;
-            this.categorias = categorias;
+            this.serviceCategorias = serviceCategorias;
         }
         public async Task<IActionResult> OnGetAsync()
         {
@@ -68,20 +67,16 @@ namespace NOVAAPP.Pages.Productos
                 Bodegas = await serviceBodegas.ObtenerLista("");
                 Listas = await serviceListas.ObtenerLista("");
                 Impuestos = await serviceImpuestos.ObtenerLista("");
-                Categorias = await categorias.ObtenerLista("");
+                Categorias = await serviceCategorias.ObtenerLista("");
 
-               
-            
-                if (filtro.Codigo3 == 0)
+                if (filtro.Codigo1 == 0 && filtro.Codigo2 == 0)
                 {
+                    filtro.Codigo1 = Bodegas.FirstOrDefault() == null ? 0 : Bodegas.FirstOrDefault().id;
+                    filtro.Codigo2 = Listas.FirstOrDefault() == null ? 0 : Listas.FirstOrDefault().id;
                     filtro.Codigo3 = Categorias.FirstOrDefault() == null ? 0 : Categorias.FirstOrDefault().id;
-                   
                 }
-                var Producto = await service.ObtenerLista(filtro);
 
-                Objeto = Producto.Where(a => a.Stock > 0).ToArray();
-                //Productos = await service.ObtenerLista("");
-
+                Objeto = await service.ObtenerLista(filtro);
 
 
                 return Page();
@@ -94,6 +89,19 @@ namespace NOVAAPP.Pages.Productos
                 return Page();
             }
         }
-       
+        public async Task<IActionResult> OnGetInsertarSAP()
+        {
+            try
+            {
+
+                await service.InsertarSAP();
+                return new JsonResult(true);
+            }
+            catch (ApiException ex)
+            {
+                return new JsonResult(false);
+            }
+        }
+   
     }
 }

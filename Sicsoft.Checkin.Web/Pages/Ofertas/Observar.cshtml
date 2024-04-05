@@ -393,7 +393,7 @@
 
 
                             <div>
-                                <p>Sub Total  : <span> @Math.Round(Model.Oferta.Subtotal, 2).ToString("C",formato)</span> </p>
+                                <p>Sub Total  : <span> @Math.Round(Model.Oferta.Subtotal - Model.Oferta.TotalDescuento, 2).ToString("C", formato)</span> </p>
                                 <p>Descuento  : <span> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>
                                 <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C",formato)</span></p>
                                 <p>Redondeo :  <span>  @Math.Round(Model.Oferta.Redondeo, 2).ToString("C",formato)</span></p>
@@ -658,7 +658,7 @@
 
 
                             <div>
-                                <p>Sub Total  : <span> @Math.Round(Model.Oferta.Subtotal, 2).ToString("C",formato)</span> </p>
+                                <p>Sub Total  : <span> @Math.Round(Model.Oferta.Subtotal - Model.Oferta.TotalDescuento, 2).ToString("C", formato)</span> </p>
                                 <p>Descuento  : <span> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>
                                 <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C",formato)</span></p>
                                 <p>Redondeo :  <span>  @Math.Round(Model.Oferta.Redondeo, 2).ToString("C",formato)</span></p>

@@ -1202,7 +1202,7 @@ function Solicitar() {
 function ExoneracionxCliente() {
     try {
         var idCliente = $("#ClienteSeleccionado").val();
-        ExoneracionesCliente = Exoneraciones.filter(a => a.idCliente == idCliente && a.Activo == true);
+        ExoneracionesCliente = Exoneraciones.find(a => a.idCliente == idCliente && a.Activo == true);
 
         RellenaExoneraciones();
     } catch (e) {

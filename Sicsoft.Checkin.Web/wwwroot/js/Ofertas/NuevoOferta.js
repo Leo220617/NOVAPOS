@@ -1649,9 +1649,11 @@ function Solicitar() {
 function ExoneracionxCliente() {
     try {
         var idCliente = $("#ClienteSeleccionado").val();
-        ExoneracionesCliente = Exoneraciones.find(a => a.idCliente == idCliente && a.Activo == true);
+        ExoneracionesCliente = Exoneraciones.filter(a => a.idCliente == idCliente && a.Activo == true);
 
-        RellenaExoneraciones();
+        if (ExoneracionesCliente != undefined) { 
+            RellenaExoneraciones();
+        }
     } catch (e) {
         Swal.fire({
             icon: 'error',

@@ -57,7 +57,7 @@
             <input hidden id="Grupos" value="@JsonConvert.SerializeObject(Model.Grupos)" />
             <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
             <input hidden id="Impuestos" value="@JsonConvert.SerializeObject(Model.Impuestos)" />
-            <input hidden id="Exoneraciones" value="@JsonConvert.SerializeObject(Model.Exoneraciones)" />
+            <input hidden id="Exoneraciones" value="@JsonConvert.SerializeObject(Model.Exoneraciones.Where(a => a.Activo == true))" />
             <input hidden id="Oferta" value="@JsonConvert.SerializeObject(Model.Oferta)" />
             <input hidden id="Vendedores" value="@JsonConvert.SerializeObject(Model.Vendedores)" />
             <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />

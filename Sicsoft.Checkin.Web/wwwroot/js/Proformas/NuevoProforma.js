@@ -1053,7 +1053,7 @@ function RellenaExoneraciones() {
 
         //    }
         //}
-        if (Producto != undefined) {
+        if (Producto != undefined ) {
             var ProductoExoneracion = ExoneracionesCliente.Detalle.filter(a => a.CodCabys == Producto.Cabys);
             if (ProductoExoneracion.length > 0) {
                 html += "<option value='" + ExoneracionesCliente.id + "' selected > " + ExoneracionesCliente.NumDoc + " </option>";

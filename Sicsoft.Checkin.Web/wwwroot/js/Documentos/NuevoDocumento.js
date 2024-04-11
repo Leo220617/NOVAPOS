@@ -917,16 +917,12 @@ function RellenaExoneraciones() {
 
         html += "<option value='0' > Seleccione Exoneracion </option>";
 
-        for (var i = 0; i < ExoneracionesCliente.length; i++) {
+        if (Producto != undefined) {
+            var ProductoExoneracion = ExoneracionesCliente.Detalle.filter(a => a.CodCabys == Producto.Cabys);
+            if (ProductoExoneracion.length > 0) {
+                html += "<option value='" + ExoneracionesCliente.id + "' selected > " + ExoneracionesCliente.NumDoc + " </option>";
 
-            if (Producto != undefined) {
-                var ProductoExoneracion = ExoneracionesCliente[i].Detalle.filter(a => a.CodCabys == Producto.Cabys);
-                if (ProductoExoneracion.length > 0) {
-                    html += "<option value='" + ExoneracionesCliente[i].id + "' selected > " + ExoneracionesCliente[i].NumDoc + " </option>";
-
-                }
             }
-
         }
 
 

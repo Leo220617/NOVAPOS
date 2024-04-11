@@ -1040,17 +1040,25 @@ function RellenaExoneraciones() {
         $("#exoneracion").html(html);
 
         html += "<option value='0' > Seleccione Exoneracion </option>";
+        //if (ExoneracionesCliente.Detalle != undefined) {
+        //    for (var i = 0; i < ExoneracionesCliente.Detalle.length; i++) {
 
-        for (var i = 0; i < ExoneracionesCliente.length; i++) {
+        //        if (Producto != undefined) {
+        //            var ProductoExoneracion = ExoneracionesCliente.Detalle.filter(a => a.CodCabys == Producto.Cabys);
+        //            if (ProductoExoneracion.length > 0) { 
+        //                html += "<option value='" + ExoneracionesCliente.id + "' selected > " + ExoneracionesCliente.NumDoc + " </option>";
 
-            if (Producto != undefined) {
-                var ProductoExoneracion = ExoneracionesCliente[i].Detalle.filter(a => a.CodCabys == Producto.Cabys);
-                if (ProductoExoneracion.length > 0) {
-                    html += "<option value='" + ExoneracionesCliente[i].id + "' selected > " + ExoneracionesCliente[i].NumDoc + " </option>";
+        //            }
+        //        }
 
-                }
+        //    }
+        //}
+        if (Producto != undefined) {
+            var ProductoExoneracion = ExoneracionesCliente.Detalle.filter(a => a.CodCabys == Producto.Cabys);
+            if (ProductoExoneracion.length > 0) {
+                html += "<option value='" + ExoneracionesCliente.id + "' selected > " + ExoneracionesCliente.NumDoc + " </option>";
+
             }
-
         }
 
 
@@ -1177,7 +1185,7 @@ function RellenaCondiciones(CPS) {
 
         } else {
             text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
-          
+
         }
 
         if (Clientex.CxC == 0) {
@@ -1198,7 +1206,7 @@ function RellenaCondiciones(CPS) {
                 icon: 'warning',
                 title: 'Advertencia',
                 html: 'Crédito Bloqueado por CxC'
-                   
+
 
             })
         }
@@ -1704,7 +1712,7 @@ function RellenaTabla() {
             } else {
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
             }
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto / ProdCadena[i].Cantidad ).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto / ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
             if ($("#RolGanancia").val() == "value") {

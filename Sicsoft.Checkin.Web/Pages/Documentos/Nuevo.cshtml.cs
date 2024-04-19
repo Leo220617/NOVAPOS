@@ -159,6 +159,7 @@ namespace NOVAAPP.Pages.Documentos
         {
             try
             {
+                var idClienteExoneracion = 0;
                 var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
                 if (string.IsNullOrEmpty(Roles.Where(a => a == "50").FirstOrDefault()))
                 {
@@ -173,6 +174,7 @@ namespace NOVAAPP.Pages.Documentos
                     Documento.idOferta = id;
                     Documento.CodSuc = Oferta.CodSuc;
                     Documento.idCliente = Oferta.idCliente;
+                    idClienteExoneracion = Oferta.idCliente;
                     Documento.idVendedor = Oferta.idVendedor;
                     Documento.idCondPago = Oferta.idCondPago;
                     Documento.idUsuarioCreador = Oferta.idUsuarioCreador;
@@ -262,7 +264,10 @@ namespace NOVAAPP.Pages.Documentos
                 Distritos = await serviceD.ObtenerLista("");
                 Barrios = await serviceB.ObtenerLista("");
                 PrecioLista = await precio.ObtenerLista("");
-                var Exonera = await exo.ObtenerLista("");
+                ParametrosFiltros filtroExo = new ParametrosFiltros();
+                filtroExo.Codigo3 = idClienteExoneracion;
+                filtroExo.Activo = true;
+                var Exonera = await exo.ObtenerLista(filtroExo);
                 Exoneraciones = Exonera.Where(a => a.Activo = true).ToArray();
                 Grupos = await grupo.ObtenerLista("");
                 filtro.FechaInicial = DateTime.Now.Date;

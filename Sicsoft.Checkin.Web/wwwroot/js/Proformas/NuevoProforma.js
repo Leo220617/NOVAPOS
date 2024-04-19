@@ -1040,26 +1040,20 @@ function RellenaExoneraciones() {
         $("#exoneracion").html(html);
 
         html += "<option value='0' > Seleccione Exoneracion </option>";
-        //if (ExoneracionesCliente.Detalle != undefined) {
-        //    for (var i = 0; i < ExoneracionesCliente.Detalle.length; i++) {
+        if (ExoneracionesCliente != undefined) {
+            for (var i = 0; i < ExoneracionesCliente.length; i++) {
 
-        //        if (Producto != undefined) {
-        //            var ProductoExoneracion = ExoneracionesCliente.Detalle.filter(a => a.CodCabys == Producto.Cabys);
-        //            if (ProductoExoneracion.length > 0) { 
-        //                html += "<option value='" + ExoneracionesCliente.id + "' selected > " + ExoneracionesCliente.NumDoc + " </option>";
+                if (Producto != undefined) {
+                    var ProductoExoneracion = ExoneracionesCliente[i].Detalle.filter(a => a.CodCabys == Producto.Cabys);
+                    if (ProductoExoneracion.length > 0) { 
+                        html += "<option value='" + ExoneracionesCliente[i].id + "' selected > " + ExoneracionesCliente[i].NumDoc + " </option>";
 
-        //            }
-        //        }
-
-        //    }
-        //}
-        if (Producto != undefined ) {
-            var ProductoExoneracion = ExoneracionesCliente != undefined ? ExoneracionesCliente.Detalle.filter(a => a.CodCabys == Producto.Cabys) : [];
-            if (ProductoExoneracion.length > 0) {
-                html += "<option value='" + ExoneracionesCliente.id + "' selected > " + ExoneracionesCliente.NumDoc + " </option>";
+                    }
+                }
 
             }
         }
+   
 
 
 
@@ -1227,7 +1221,7 @@ function RellenaCondiciones(CPS) {
 function ExoneracionxCliente() {
     try {
         var idCliente = $("#ClienteSeleccionado").val();
-        ExoneracionesCliente = Exoneraciones.find(a => a.idCliente == idCliente && a.Activo == true);
+        ExoneracionesCliente = Exoneraciones.filter(a => a.idCliente == idCliente && a.Activo == true);
 
         RellenaExoneraciones();
     } catch (e) {
@@ -2091,6 +2085,7 @@ function AgregarProductoTabla() {
 
                 $("#ProductoSeleccionado").val("0").trigger('change.select2');
                 $("#SerieSeleccionado").val("0").trigger('change.select2');
+                $("#exoneracion").val("0").trigger('change.select2');
             } else {
                 Swal.fire({
                     icon: 'error',

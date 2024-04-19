@@ -174,7 +174,10 @@ namespace NOVAAPP.Pages.Ofertas
                 Distritos = await serviceD.ObtenerLista("");
                 Barrios = await serviceB.ObtenerLista("");
                 PrecioLista = await precio.ObtenerLista("");
-                var Exonera = await exo.ObtenerLista("");
+                var filtroExo = new ParametrosFiltros();
+                filtroExo.Activo = true;
+
+                var Exonera = await exo.ObtenerLista(filtroExo);
                 Exoneraciones = Exonera.Where(a => a.Activo = true).ToArray();
                 Grupos = await grupo.ObtenerLista("");
                 filtro.FechaInicial = DateTime.Now.Date;

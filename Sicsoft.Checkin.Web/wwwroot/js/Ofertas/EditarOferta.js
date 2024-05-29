@@ -2096,6 +2096,17 @@ function AgregarProductoTabla() {
                 })
             }
         }
+        var Exon = ProdCadena.find(a => a.PorExoneracion > 0);
+        var Desc = ProdCadena.find(a => a.PorDescto > 0);
+        if (ProdCadena.length > 0 && (Exon != undefined || Desc != undefined)) {
+
+            $('#ClienteSeleccionado').prop('disabled', true);
+
+        } else {
+            $('#selectMoneda').prop('disabled', false);
+            $('#ClienteSeleccionado').prop('disabled', false);
+
+        }
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -2149,6 +2160,17 @@ function EliminarProducto(i) {
     for (var x = 0; x < Lotes2.length; x++) {
 
         LotesCadena.splice(LotesCadena.indexOf(LotesCadena.find(a => a.ItemCode == PE.Codigo)), 1);
+
+    }
+    var Exon = ProdCadena.find(a => a.PorExoneracion > 0);
+    var Desc = ProdCadena.find(a => a.PorDescto > 0);
+    if (ProdCadena.length > 0 && (Exon != undefined || Desc != undefined)) {
+
+        $('#ClienteSeleccionado').prop('disabled', true);
+
+    } else {
+        $('#selectMoneda').prop('disabled', false);
+        $('#ClienteSeleccionado').prop('disabled', false);
 
     }
     RellenaTabla();
@@ -2526,6 +2548,17 @@ function onChangeDescuentoProducto(i) {
                 ValidarTotales();
                 ValidarCosto();
             }
+        }
+        var Exon = ProdCadena.find(a => a.PorExoneracion > 0);
+        var Desc = ProdCadena.find(a => a.PorDescto > 0);
+        if (ProdCadena.length > 0 && (Exon != undefined || Desc != undefined)) {
+
+            $('#ClienteSeleccionado').prop('disabled', true);
+
+        } else {
+            $('#selectMoneda').prop('disabled', false);
+            $('#ClienteSeleccionado').prop('disabled', false);
+
         }
 
     } catch (e) {

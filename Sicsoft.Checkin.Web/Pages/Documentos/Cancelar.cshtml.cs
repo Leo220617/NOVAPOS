@@ -6,6 +6,8 @@ using NOVAAPP.Models;
 using Refit;
 using Sicsoft.Checkin.Web.Servicios;
 using System;
+using System.IO.Compression;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -27,6 +29,7 @@ namespace NOVAAPP.Pages.Documentos
 
         private readonly ICrudApi<TipoCambiosViewModel, int> tipoCambio;
         private readonly ICrudApi<SucursalesViewModel, string> sucursales;
+        private readonly ICrudApi<ParametrosViewModel, int> parametro;
 
 
         [BindProperty]
@@ -63,7 +66,10 @@ namespace NOVAAPP.Pages.Documentos
         [BindProperty]
         public SucursalesViewModel MiSucursal { get; set; }
 
-        public CancelarModel(ICrudApi<DocumentosViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<SucursalesViewModel, string> sucursales) //CTOR 
+        [BindProperty]
+        public ParametrosViewModel[] Parametro { get; set; }
+
+        public CancelarModel(ICrudApi<ParametrosViewModel, int> parametro, ICrudApi<DocumentosViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<SucursalesViewModel, string> sucursales) //CTOR 
         {
             this.service = service;
             this.serviceU = serviceU;
@@ -77,6 +83,7 @@ namespace NOVAAPP.Pages.Documentos
             this.grupo = grupo;
             this.tipoCambio = tipoCambio;
             this.sucursales = sucursales;
+            this.parametro = parametro;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
@@ -96,6 +103,7 @@ namespace NOVAAPP.Pages.Documentos
                 var NCAnteriores = await service.ObtenerLista(filtroNC);
 
                 Documento = await service.ObtenerPorId(id);
+                Parametro = await parametro.ObtenerLista("");
                 Documento.BaseEntry = id;
                 Documento.Comentarios = "Cancelacion de la factura # " + id;
                 Impuestos = await serviceU.ObtenerLista("");
@@ -174,13 +182,35 @@ namespace NOVAAPP.Pages.Documentos
             }
         }
 
-        public async Task<IActionResult> OnPostAgregarDocumento(DocumentosViewModel recibidos)
+        public async Task<IActionResult> OnPostAgregarDocumento()
         {
             string error = "";
-
+            DocumentosViewModel recibidos = new DocumentosViewModel();
 
             try
             {
+                var ms = new MemoryStream();
+                await Request.Body.CopyToAsync(ms);
+
+                byte[] compressedData = ms.ToArray();
+
+                // Descomprimir los datos utilizando GZip
+                using (var compressedStream = new MemoryStream(compressedData))
+                using (var decompressedStream = new MemoryStream())
+                {
+                    using (var decompressionStream = new GZipStream(compressedStream, CompressionMode.Decompress))
+                    {
+                        decompressionStream.CopyTo(decompressedStream);
+                    }
+
+                    // Convertir los datos descomprimidos a una cadena JSON
+                    var jsonString = System.Text.Encoding.UTF8.GetString(decompressedStream.ToArray());
+
+                    // Procesar la cadena JSON como desees
+                    // Por ejemplo, puedes deserializarla a un objeto C# utilizando Newtonsoft.Json
+                    recibidos = Newtonsoft.Json.JsonConvert.DeserializeObject<DocumentosViewModel>(jsonString);
+                }
+
                 recibidos.id = 0;
                 recibidos.idCaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault().ToString());
 

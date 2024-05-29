@@ -71,6 +71,23 @@
                 }
 
             }
+
+            @{
+                if (!string.IsNullOrEmpty(Roles.Where(a => a == "58").FirstOrDefault()))
+                {
+                    <li class="">
+
+                        <a asp-page="/PreCierres/Index">
+                            <i class="mdi mdi-fax"></i> <span>Pre Cierres</span>
+
+                        </a>
+
+                    </li>
+
+                }
+
+            }
+
             @{
                 if (!string.IsNullOrEmpty(Roles.Where(a => a == "35").FirstOrDefault()))
                 {

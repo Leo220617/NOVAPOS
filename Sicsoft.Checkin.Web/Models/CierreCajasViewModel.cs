@@ -110,5 +110,9 @@ namespace NOVAAPP.Models
 
 
         public decimal TransferenciasDolaresC { get; set; }
+
+        public decimal NotasCreditoColones { get; set; }
+
+        public decimal NotasCreditoFC { get; set; }
     }
 }

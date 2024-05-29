@@ -16,5 +16,7 @@
         public string Cabys { get; set; }
         public int idExoneracion { get; set; }
 
+     
+
     }
 }

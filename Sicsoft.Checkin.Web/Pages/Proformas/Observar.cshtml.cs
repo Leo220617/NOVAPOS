@@ -26,6 +26,8 @@ namespace NOVAAPP.Pages.Proformas
         private readonly ICrudApi<CondicionesPagosViewModel, int> condiconesPago;
         private readonly ICrudApi<VendedoresViewModel, int> vendedor;
         private readonly ICrudApi<SucursalesViewModel, string> sucursales;
+        private readonly ICrudApi<ParametrosViewModel, int> parametro;
+        private readonly ICrudApi<BodegasViewModel, int> bodegas;
 
         [BindProperty]
         public ClientesViewModel[] Clientes { get; set; }
@@ -38,6 +40,10 @@ namespace NOVAAPP.Pages.Proformas
 
         [BindProperty]
         public ExoneracionesViewModel[] Exoneraciones { get; set; }
+
+
+        [BindProperty]
+        public BodegasViewModel[] Bodegas { get; set; }
 
         [BindProperty]
         public CondicionesPagosViewModel CondicionesPago { get; set; }
@@ -53,7 +59,10 @@ namespace NOVAAPP.Pages.Proformas
         [BindProperty]
         public string NombreCliente { get; set; }
 
-        public ObservarModel(IConfiguration configuration, ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<SucursalesViewModel, string> sucursales)
+        [BindProperty]
+        public ParametrosViewModel[] Parametro { get; set; }
+
+        public ObservarModel(ICrudApi<ParametrosViewModel, int> parametro, IConfiguration configuration, ICrudApi<OfertasViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<BodegasViewModel, int> bodegas)
         {
             this.service = service;
             this.serviceE = serviceE;
@@ -63,6 +72,8 @@ namespace NOVAAPP.Pages.Proformas
             this.vendedor = vendedor;
             this.sucursales = sucursales;
             this.configuration = configuration;
+            this.parametro = parametro;
+            this.bodegas = bodegas;
         }
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -75,7 +86,9 @@ namespace NOVAAPP.Pages.Proformas
                 }
                 var CondPago = await condiconesPago.ObtenerLista("");
                 var Vendedores = await vendedor.ObtenerLista("");
+                Bodegas = await bodegas.ObtenerLista("");
                 Oferta = await service.ObtenerPorId(id);
+                Parametro = await parametro.ObtenerLista("");
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;
                 filtro.Activo = true;
@@ -87,6 +100,7 @@ namespace NOVAAPP.Pages.Proformas
                 var Suc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 Sucursal = await sucursales.ObtenerLista("");
                 MiSucursal = Sucursal.Where(a => a.CodSuc.ToUpper().Contains(Suc)).FirstOrDefault();
+               
                 NombreCliente = configuration["Cliente"].ToString();
                 return Page();
             }

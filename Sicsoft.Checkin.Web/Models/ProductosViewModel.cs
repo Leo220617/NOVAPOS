@@ -1,4 +1,5 @@
 ﻿using Castle.MicroKernel.SubSystems.Conversion;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,6 +17,7 @@ namespace NOVAAPP.Models
         public int idImpuesto { get; set; }
 
         public int idListaPrecios { get; set; }
+        public int idCategoria { get; set; }
 
         
         public string Nombre { get; set; }
@@ -46,6 +48,10 @@ namespace NOVAAPP.Models
 
         public bool MAG { get; set; }
         public bool Editable { get; set; }
+
+        public bool Serie { get; set; }
+
+        public DateTime FechaActualizacion { get; set; }
 
     }
 }

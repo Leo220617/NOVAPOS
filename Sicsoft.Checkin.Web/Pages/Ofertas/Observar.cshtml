@@ -77,6 +77,76 @@
             }
         }
 
+        $(document).ready(function () {
+            jQuery(document).ready(function ($) {
+                $(document).ready(function () {
+
+                });
+            });
+
+            Recuperar();
+
+        });
+        var ids = '';
+        var idDetalles = 0;
+        var LotesCadena = [];
+        var EstadosLotes = [];
+
+        function onClickModal(id, idDetalle) {
+            ids = id;
+            idDetalles = idDetalle;
+            var LotesArray = LotesCadena.filter(a => a.ItemCode == ids);
+            $("#spanProd").text(ids);
+            var sOptions = '';
+
+            $("#tbody").html('');
+            for (var i = 0; i < LotesArray.length; i++) {
+                sOptions += '<tr>';
+                sOptions += '<td >' + i + '</td>';
+                sOptions += '<td class="text-center">' + LotesArray[i].Serie + '</td>';
+
+
+                sOptions += '<td class="text-center">' + LotesArray[i].Cantidad + '</td>';
+
+
+
+
+                sOptions += '</tr>'
+
+            }
+            $("#tbody").html(sOptions);
+
+        }
+        function Recuperar() {
+            try {
+                var lot = JSON.parse($("#Lotes").val());
+
+
+
+
+                for (var i = 0; i < lot.length; i++) {
+                    var lote = {
+                        id: i,
+                        idEncabezado: 0,
+                        Serie: lot[i].Serie,
+                        ItemCode: lot[i].ItemCode,
+                        Cantidad: lot[i].Cantidad,
+                        idDetalle: 0
+
+
+                    }
+                    LotesCadena.push(lote);
+                }
+
+            } catch (e) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: e
+
+                });
+            }
+        }
 
 
     </script>
@@ -93,13 +163,14 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
         <li class="breadcrumb-item active">Observar Orden de Venta</li>
+
     </ol>
 </section>
 
 <section class="content ">
     <div class="row">
         <div class="col-12">
-
+            <input hidden id="Lotes" value="@JsonConvert.SerializeObject(Model.Oferta.Lotes.Where(a => a.Tipo == "O"))" />
             <div class="box">
                 <div class="box-header with-border">
                     <div class="row">
@@ -234,7 +305,16 @@
                                         <th class="text-center">#</th>
                                         <th class="text-center">Producto</th>
                                         <th class="text-center">Cantidad</th>
-                                        <th class="text-center">Precio Unitario</th>
+                                        @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                        {
+                                            <th class="text-center">Precio con Descuento</th>
+
+                                        }
+                                        else
+                                        {
+                                            <th class="text-center">Precio Unitario</th>
+
+                                        }
                                         <th class="text-center">% Descuento</th>
                                         <th class="text-center">Descuento</th>
                                         <th class="text-center">Impuesto</th>
@@ -246,7 +326,10 @@
                                         {
                                             <th class="text-center">% Ganancia</th>
                                         }
-
+                                        @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
+                                        {
+                                            <th class="text-center">Serie</th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -257,22 +340,47 @@
                                             <td>@item.NumLinea</td>
 
 
-                                            <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + item.NomPro)   </td>
+                                            <td>
+                                                @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + item.NomPro + " - BOD: " +
+                                                    (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP))
+                                            </td>
 
 
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
 
 
-                                            <td class="text-center">@Math.Round(item.PrecioUnitario,2).ToString("C",formato)</td>
-                                            <td class="text-center">@Math.Round(@item.PorDescto)%</td>
-                                            <td class="text-center">@Math.Round(@item.Descuento,2).ToString("C",formato)</td>
-                                            <td class="text-center">@Math.Round(@item.TotalImpuesto,2).ToString("C",formato)</td>
+                                            @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                            {
+                                                <td class="text-center">@Math.Round((item.PrecioUnitario  ) - (@item.Descuento/item.Cantidad), 2).ToString("C", formato)</td>
+
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
+
+                                            }
+                                            <td class="text-center">@Math.Round(@item.PorDescto) %</td>
+                                            <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>
+                                            <td class="text-center">@Math.Round(@item.TotalImpuesto/ @item.Cantidad,2).ToString("C",formato)</td>
                                             <td class="text-center">@(Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" : Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
-                                            <td class="text-center">@Math.Round(@item.TotalLinea,2).ToString("C",formato)</td>
+                                            <td class="text-center">@Math.Round(@item.TotalLinea - @item.TotalImpuesto,2).ToString("C",formato)</td>
                                             @if (!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))
                                             {
                                                 <td class="text-center">@Math.Round(((((@item.TotalLinea - @item.TotalImpuesto) - ( (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0: Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Costo) * item.Cantidad)) / (@item.TotalLinea - @item.TotalImpuesto)) * 100) ,2).ToString("C",formato)%</td>
                                             }
+                                            <td align="center" style="padding-top:15px;">
+
+                                                @{
+                                                    var Codigo = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo;
+                                                    var Serie = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? false : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Serie;
+
+                                                }
+                                                @if (Serie == true)
+                                                {
+                                                    <a href="#test-form" onclick="javascript: onClickModal('@Codigo', '@item.id');" class=" popup-with-form fa fa-info-circle icono"> </a>
+                                                }
+
+                                            </td>
                                         </tr>
                                     }
 
@@ -285,13 +393,13 @@
 
 
                             <div>
-                                <p>Sub Total  : <span> @Math.Round(Model.Oferta.Subtotal, 2).ToString("C",formato)</span> </p>
+                                <p>Sub Total  : <span> @Math.Round(Model.Oferta.Subtotal - Model.Oferta.TotalDescuento, 2).ToString("C", formato)</span> </p>
                                 <p>Descuento  : <span> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>
                                 <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C",formato)</span></p>
-
+                                <p>Redondeo :  <span>  @Math.Round(Model.Oferta.Redondeo, 2).ToString("C",formato)</span></p>
                             </div>
                             <div class="total-payment">
-                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra, 2).ToString("C",formato)</span></h3>
+                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra + Model.Oferta.Redondeo , 2).ToString("C",formato)</span></h3>
                             </div>
 
                         </div>
@@ -465,13 +573,28 @@
                                         <th class="text-center">#</th>
                                         <th class="text-center">Producto</th>
                                         <th class="text-center">Cantidad</th>
-                                        <th class="text-center">Precio Unitario</th>
-                                        <th class="text-center">% Descuento</th>
-                                        <th class="text-center">Descuento</th>
+                                        @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                        {
+                                            <th class="text-center">Precio Final</th>
+
+                                        }
+                                        else
+                                        {
+                                            <th class="text-center">Precio Unitario</th>
+                                            <th class="text-center">% Descuento</th>
+                                            <th class="text-center">Descuento</th>
+                                        }
+
                                         <th class="text-center">Impuesto</th>
                                         <th class="text-center">% Exoneración</th>
 
                                         <th class="text-center">Total</th>
+
+
+                                        @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
+                                        {
+                                            <th class="text-center">Serie</th>
+                                        }
 
                                     </tr>
                                 </thead>
@@ -483,19 +606,46 @@
                                             <td>@item.NumLinea</td>
 
 
-                                            <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + item.NomPro)   </td>
+                                            <td>
+                                                @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + item.NomPro + " - BOD: " +
+                                                    (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP))
+                                            </td>
 
 
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
+                                            @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                            {
+                                                <td class="text-center">@Math.Round((item.PrecioUnitario )- (@item.Descuento/item.Cantidad), 2).ToString("C", formato)</td>
 
-                                            <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
-                                            <td class="text-center">@Math.Round(@item.PorDescto) %</td>
-                                            <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>
-                                            <td class="text-center">@Math.Round(@item.TotalImpuesto, 2).ToString("C", formato)</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
+                                                <td class="text-center">@Math.Round(@item.PorDescto) %</td>
+                                                <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>
+                                            }
+
+                                            <td class="text-center">@Math.Round(@item.TotalImpuesto / @item.Cantidad, 2).ToString("C", formato)</td>
                                             <td class="text-center">@(Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" : Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
 
-                                            <td class="text-center">@Math.Round(@item.TotalLinea, 2).ToString("C", formato)</td>
+                                            <td class="text-center">@Math.Round(@item.TotalLinea - @item.TotalImpuesto, 2).ToString("C", formato)</td>
 
+
+                                            <td align="center" style="padding-top:15px;">
+
+                                                @{
+                                                    var Codigo = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo;
+                                                    var Serie = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? false : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Serie;
+
+                                                }
+                                                @if (Model.Parametro.FirstOrDefault().NumeroSerie == true)
+                                                {
+                                                    @if (Serie == true)
+                                                    {
+                                                        <a href="#test-form" onclick="javascript: onClickModal('@Codigo', '@item.id');" class=" popup-with-form fa fa-info-circle icono"> </a>
+                                                    }
+                                                }
+                                            </td>
                                         </tr>
                                     }
 
@@ -508,13 +658,14 @@
 
 
                             <div>
-                                <p>Sub Total  : <span> @Math.Round(Model.Oferta.Subtotal, 2).ToString("C",formato)</span> </p>
+                                <p>Sub Total  : <span> @Math.Round(Model.Oferta.Subtotal - Model.Oferta.TotalDescuento, 2).ToString("C", formato)</span> </p>
                                 <p>Descuento  : <span> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>
                                 <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C",formato)</span></p>
+                                <p>Redondeo :  <span>  @Math.Round(Model.Oferta.Redondeo, 2).ToString("C",formato)</span></p>
 
                             </div>
                             <div class="total-payment">
-                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra, 2).ToString("C",formato)</span></h3>
+                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra + Model.Oferta.Redondeo, 2).ToString("C",formato)</span></h3>
                             </div>
 
                         </div>
@@ -545,7 +696,7 @@
         <div class="col-md-6">
             <div style="   font-size: 17px;">
                 <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
-                <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128153</p>
+                <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128152</p>
                 <p><b>BANCO NACIONAL:</b>  CR55015109210010004595</p>
                 <p><b>BAC SAN JOSÉ:</b>  CR64010200009326955703</p>
                 <p><b>BANCO POPULAR:</b>  CR70016111006152606645</p>
@@ -568,3 +719,30 @@
         </div>
     </div>
 </div>
+<form id="test-form" class="mfp-hide white-popup-block">
+    <h1>Series</h1>
+    <fieldset style="border:0;">
+        <p>A continuación se presentan las series utilizados en el producto con el código: <span id="spanProd"> </span> </p>
+        <!-- Table row -->
+        <div class="row">
+            <div class="col-12 table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="bg-pale-info">
+                            <th class="text-center">#</th>
+                            <th class="text-center">Serie</th>
+
+                            <th class="text-center">Cantidad</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </fieldset>
+</form>

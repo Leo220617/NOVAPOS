@@ -17,6 +17,7 @@
         public int idExoneracion { get; set; }
 
         public string NomPro { get; set; }
+     
 
     }
 }

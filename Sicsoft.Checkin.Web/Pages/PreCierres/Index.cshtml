@@ -1,0 +1,223 @@
+﻿@page
+@using System.Globalization
+@using System.Security.Claims;
+@model NOVAAPP.Pages.PreCierres.IndexModel
+@{
+    ViewData["Title"] = "PreCierres";
+    NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
+    formato.CurrencySymbol = "";
+    formato.CurrencyGroupSeparator = ",";
+    formato.NumberDecimalSeparator = ".";
+}
+@section styles{
+
+
+}
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
+@section scripts{
+
+    <script>
+        try {
+            $(document).ready(function() {
+                jQuery(document).ready(function($) {
+                    $(document).ready(function() {
+                        $('.mi-selector').select2();
+                    });
+                });
+                $(".js-example-responsive").select2({
+                    width: 'resolve',// need to override the changed default
+                    height: 'resolve'
+                });
+
+
+
+
+
+            });
+        } catch (e) {
+            console.log(e);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+            })
+        }
+
+    
+
+
+    </script>
+
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Pre Cierres
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+        <li class="breadcrumb-item active">Listado Pre Cierres</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+
+
+            <div class="box">
+                <div class="box-header with-border">
+                 
+                    <div class="row">
+                        <div class="col-sm-8"> <h4 class="box-title">Filtro</h4></div>
+                        @if (!string.IsNullOrEmpty(Roles.Where(a => a == "59").FirstOrDefault()))
+                        {
+                            <div class="col-sm-4"> <a asp-page="Nuevo" asp-route-id="0" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Pre Cierre</a></div>
+                        }
+
+                    </div>
+
+
+                </div>
+                <div class="box-body">
+                    <form method="get">
+                        <div class="row">
+                            <div class="col-sm-4 pr-1">
+                                <div class="form-group">
+                                    <label>Fecha Inicial</label>
+                                    <input class="form-control " id="FecInicial" type="date" asp-for="filtro.FechaInicial">
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-sm-4 pl-1">
+                                <div class="form-group">
+                                    <label>Fecha Final</label>
+                                    <input class="form-control" id="FecFinal" type="date" asp-for="filtro.FechaFinal">
+                                </div>
+                            </div>
+                         
+
+                         
+                           
+
+
+                            <div class="col-sm-2 pl-1" style="text-align: center; padding-top: 1%;">
+                                <button title="Buscar" type="submit" class="btn btn-rounded btn-outline-primary"> <i class="fa fa-search"></i></button>
+                            </div>
+
+
+
+
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box">
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Acción</th>
+                                    <th>Caja</th>
+                                    
+                                    <th>Usuario</th>
+                                    <th>Fecha</th>
+                                    <th>Hora de Pre Cierre</th>
+                                    <th>Total Vendido Colones</th>
+                                    <th>Total Vendido Dolares</th>
+                                    <th>Total Vendido</th>
+                                  
+                                 
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Cierre)
+                                {
+                                    <tr>
+                                        <td>
+                                            @item.id
+                                        </td>
+                                        <td align="center" style="padding-top:15px;">
+                                            <a asp-page="./Observar" asp-route-id="@item.id" class="fa fa-info-circle icono"> </a>
+                                            &nbsp;
+
+
+
+                                        </td>
+                                        <td>  @(Model.Cajas.Where(a => a.id == item.idCaja).FirstOrDefault() == null ? "Caja Inexistente" : Model.Cajas.Where(a => a.id == item.idCaja).FirstOrDefault().Nombre) </td>
+                                     
+
+                                        <td>  @(Model.Users.Where(a => a.id == item.idUsuario).FirstOrDefault() == null ? "Usuario Inexistente" : Model.Users.Where(a => a.id == item.idUsuario).FirstOrDefault().Nombre) </td>
+                                        <td>
+                                            @item.FechaCaja.ToString("dd/MM/yyyy")
+                                        </td>
+                                        <td>
+                                            @item.HoraCierre.ToString("HH:MM tt")
+                                        </td>
+                                       
+
+                                        <td>
+                                            ₡@Math.Round(@item.TotalVendidoColones, 2).ToString("C",formato)
+                                        </td>
+
+                                        <td>
+                                            $@Math.Round(@item.TotalVendidoFC, 2).ToString("C",formato)
+                                        </td>
+                                        <td>
+                                            ₡@Math.Round(item.TotalizadoMonedas, 2).ToString("C",formato)
+                                        </td>
+                                       
+
+                                      
+
+
+
+
+
+                                    </tr>
+
+                                }
+
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Acción</th>
+                                    <th>Caja</th>
+                                   
+                                    <th>Usuario</th>
+                                    <th>Fecha</th>
+                                    <th>Hora de Pre Cierre</th>
+                                    <th>Total Vendido ₡</th>
+                                    <th>Total Vendido $</th>
+                                    <th>Total Vendido</th>
+                                   
+                                   
+
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->

@@ -281,10 +281,10 @@ function Generar() {
 function validarDeposito(e) {
     try {
         var Moneda = $("#selectMoneda").val();
-      
+        var Saldo = parseInt(e.Saldo);
 
         if (Moneda != "CRC") {
-            if (e.Saldo > ((Cierres.TotalVendidoFC + Cierres.TotalAperturaFC) - SaldoAnterior) ) {
+            if (Saldo > Math.ceil(((Cierres.TotalVendidoFC + Cierres.TotalAperturaFC) - SaldoAnterior)) ) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -295,7 +295,7 @@ function validarDeposito(e) {
             }
         }
         else {
-            if (e.Saldo > ((Cierres.TotalVendidoColones + Cierres.TotalAperturaColones) - SaldoAnterior)) {
+            if (Saldo > ((Cierres.TotalVendidoColones + Cierres.TotalAperturaColones) - SaldoAnterior)) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',

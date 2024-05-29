@@ -328,6 +328,7 @@
                                     <th>Generado Por</th>
 
                                     <th>Estado</th>
+                                    <th>Comentario</th>
                                  @*   <th>Procesado SAP</th>*@
                                    
 
@@ -393,7 +394,7 @@
                                             @Math.Round(@item.TotalImpuestos, 2).ToString("C",formato)
                                         </td>
                                         <td>
-                                            @Math.Round(@item.TotalCompra, 2).ToString("C",formato)
+                                            @Math.Round(@item.TotalCompra + item.Redondeo, 2).ToString("C",formato)
                                         </td>
 
 
@@ -414,6 +415,10 @@
                                             {
                                                 <span class="badge badge-pill badge-danger">Cerrado</span>
                                             }
+                                        </td>
+
+                                        <td>
+                                            @item.Comentarios
                                         </td>
                                    @*      <td>
                                             @if (item.ProcesadaSAP)
@@ -459,6 +464,7 @@
 
                                     <th>Generado Por</th>
                                     <th>Estado</th>
+                                    <th>Comentario</th>
                                    @* <th>Procesado SAP</th>*@
                                    
 

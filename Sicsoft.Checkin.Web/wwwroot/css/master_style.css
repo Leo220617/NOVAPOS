@@ -13362,12 +13362,19 @@ table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTa
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
     background-color: #7aab23;
     color: #fff;
+    /*EJEMPLO*/
 }
+
+
 .select2-results__option {
     padding: 6px 12px;
     user-select: none;
     -webkit-user-select: none;
+   
 }
+
+
+   
 .select2-container .select2-selection--single .select2-selection__rendered {
     padding-left: 0;
     height: auto;
@@ -13416,7 +13423,7 @@ table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTa
     background-color: #7aab23;
     border-color: #367fa9;
     padding: 1px 10px;
-    color: #fff;
+    color: #fff; /*QUEDE ACA*/
 }
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
     margin-right: 5px;
@@ -14848,6 +14855,7 @@ a.text-danger:hover, a.text-danger:focus {
     color: #6c757d;
     background-color: #f8f9fa;
 }
+
 .bring-front {
   z-index: 1;
 }

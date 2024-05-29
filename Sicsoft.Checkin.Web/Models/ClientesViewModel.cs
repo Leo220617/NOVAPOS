@@ -59,6 +59,11 @@ namespace NOVAAPP.Models
         public bool MAG { get; set; }
         public bool INT { get; set; }
         public decimal LimiteCredito { get; set; }
+        public decimal Descuento { get; set; }
+
+        public bool CxC { get; set; }
+
+        public bool Transitorio { get; set; }
 
     }
 }

@@ -17,5 +17,7 @@ namespace NOVAAPP.Models
         public string DocEntry { get; set; }
         public int idCaja { get; set; }
         public int idUsuarioCreador { get; set; }
+        public int idCuentaBancaria { get; set; }
+        public MetodosPagosCuentasViewModel[] MetodosPagosCuentas { get; set; }
     }
 }

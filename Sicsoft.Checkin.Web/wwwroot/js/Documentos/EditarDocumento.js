@@ -1,5 +1,34 @@
 ﻿
 $(document).ready(function () {
+    function matchCustom(params, data) {
+        if ($.trim(params.term) === '') {
+            return data;
+        }
+
+        // Split the search term by the wildcard character '*'
+        var terms = params.term.split('*').filter(function (term) {
+            return term.length > 0;
+        });
+
+        // Check if all parts of the search term are present in the data text
+        var match = true;
+        for (var i = 0; i < terms.length; i++) {
+            if (data.text.toUpperCase().indexOf(terms[i].toUpperCase()) === -1) {
+                match = false;
+                break;
+            }
+        }
+
+        if (match) {
+            return data;
+        }
+
+        return null;
+    }
+
+    $("#ProductoSeleccionado").select2({
+        matcher: matchCustom
+    });
     jQuery(document).ready(function ($) {
         Recuperar();
     });

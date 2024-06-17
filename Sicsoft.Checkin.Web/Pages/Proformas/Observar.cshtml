@@ -823,7 +823,7 @@
 
                             </div>
                             <div class="total-payment">
-                                <p><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra + Model.Oferta.Redondeo, 2).ToString("C", formato)</span></p>
+                                <p style="font-size:40px"><b>Total : <span>  @Math.Round(Model.Oferta.TotalCompra + Model.Oferta.Redondeo, 2).ToString("C", formato)</span></b> </p>
                             </div>
 
                         </div>
@@ -909,7 +909,7 @@
                         <div class="col-md-6">
                             <img id="base64image" style="width: 85%;"
                                  src="data:image/jpeg;base64, @Model.MiSucursal.Imagen.ToString()" />
-                          
+
                         </div>
 
                         <div class="col-md-6">
@@ -957,23 +957,23 @@
                                         <div class="col-3">
                                             <h5>
                                                 <b>Tipo de Documento:</b>  @switch (Model.Oferta.TipoDocumento)
-                                            {
-                                                case "01":
-                                                    {
+                        {
+                            case "01":
+                                {
                                                             <p>Factura Electrónica</p>
-                                                        break;
-                                                    }
-                                                case "03":
-                                                    {
+                                    break;
+                                }
+                            case "03":
+                                {
                                                             <p>Nota de Crédito</p>
-                                                        break;
-                                                    }
-                                                case "04":
-                                                    {
+                                    break;
+                                }
+                            case "04":
+                                {
                                                             <p>Tiquete Electrónico</p>
-                                                        break;
-                                                    }
-                                            }
+                                    break;
+                                }
+                        }
                                             </h5>
 
                                         </div>
@@ -1026,15 +1026,15 @@
                                         <th class="text-center">Producto</th>
                                         <th class="text-center">Cantidad</th>
                                         <  @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
-                                    {
+                        {
                                             <th class="text-center">Precio Final</th>
 
-                                    }
-                                    else
-                                    {
+                        }
+                        else
+                        {
                                             <th class="text-center">Precio Unitario</th>
 
-                                    }
+                        }
 
                                         <th class="text-center">Impuesto</th>
                                         <th class="text-center">% Exoneración</th>
@@ -1045,42 +1045,42 @@
                                 </thead>
                                 <tbody>
 
-                                @foreach (var item in Model.Oferta.Detalle)
-                                {
+                        @foreach (var item in Model.Oferta.Detalle)
+                        {
                                         <tr>
                                             <td>@item.NumLinea</td>
 
 
 
-                                        @if (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Stock <= 0)
-                                        {
+                                @if (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Stock <= 0)
+                                {
                                                 <td>
-                                                @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : "*" + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
-                                                    (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP))
+                                        @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : "*" + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
+                                            (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP))
                                                 </td>
-                                        }
-                                        else
-                                        {
+                                }
+                                else
+                                {
                                                 <td>
-                                                @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
-                                                    (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP)
-                                                    )
+                                        @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
+                                            (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP)
+                                            )
                                                 </td>
-                                        }
+                                }
 
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
 
 
-                                        @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
-                                        {
+                                @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                {
                                                 <td class="text-center">@Math.Round((item.PrecioUnitario) - (@item.Descuento / item.Cantidad), 2).ToString("C", formato)</td>
 
-                                        }
-                                        else
-                                        {
+                                }
+                                else
+                                {
                                                 <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
 
-                                        }
+                                }
 
                                             <td class="text-center">@Math.Round(@item.TotalImpuesto / @item.Cantidad, 2).ToString("C", formato)</td>
                                             <td class="text-center">@(Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" : Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
@@ -1088,7 +1088,7 @@
                                             <td class="text-center">@Math.Round(@item.TotalLinea - @item.TotalImpuesto, 2).ToString("C", formato)</td>
 
                                         </tr>
-                                }
+                        }
 
 
                                 </tbody>
@@ -1106,7 +1106,7 @@
 
                             </div>
                             <div class="total-payment">
-                                <p><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra + Model.Oferta.Redondeo, 2).ToString("C", formato)</span></p>
+                                <p style="font-size:40px"><b>Total : <span>  @Math.Round(Model.Oferta.TotalCompra + Model.Oferta.Redondeo, 2).ToString("C", formato)</span></b> </p>
                             </div>
 
                         </div>
@@ -1229,23 +1229,23 @@
                                         <div class="col-3">
                                             <h5>
                                                 <b>Tipo de Documento:</b>  @switch (Model.Oferta.TipoDocumento)
-                                                {
-                                                    case "01":
-                                                        {
+                        {
+                            case "01":
+                                {
                                                             <p>Factura Electrónica</p>
-                                                            break;
-                                                        }
-                                                    case "03":
-                                                        {
+                                    break;
+                                }
+                            case "03":
+                                {
                                                             <p>Nota de Crédito</p>
-                                                            break;
-                                                        }
-                                                    case "04":
-                                                        {
+                                    break;
+                                }
+                            case "04":
+                                {
                                                             <p>Tiquete Electrónico</p>
-                                                            break;
-                                                        }
-                                                }
+                                    break;
+                                }
+                        }
                                             </h5>
 
                                         </div>
@@ -1306,27 +1306,27 @@
                                 </thead>
                                 <tbody>
 
-                                    @foreach (var item in Model.Oferta.Detalle)
-                                    {
+                        @foreach (var item in Model.Oferta.Detalle)
+                        {
                                         <tr>
                                             <td>@item.NumLinea</td>
 
 
-                                            @if (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Stock <= 0)
-                                            {
+                                @if (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Stock <= 0)
+                                {
                                                 <td>
-                                                    @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : "*" + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
-                                                        (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP))
+                                        @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : "*" + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
+                                            (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP))
                                                 </td>
-                                            }
-                                            else
-                                            {
+                                }
+                                else
+                                {
                                                 <td>
-                                                    @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
-                                                        (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP)
-                                                        )
+                                        @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
+                                            (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP)
+                                            )
                                                 </td>
-                                            }
+                                }
 
 
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
@@ -1335,7 +1335,7 @@
 
 
                                         </tr>
-                                    }
+                        }
 
 
                                 </tbody>
@@ -1353,7 +1353,7 @@
 
                             </div>
                             <div class="total-payment">
-                                <p><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra + Model.Oferta.Redondeo, 2).ToString("C", formato)</span></p>
+                                <p style="font-size:40px"><b>Total : <span>  @Math.Round(Model.Oferta.TotalCompra + Model.Oferta.Redondeo, 2).ToString("C", formato)</span></b> </p>
                             </div>
 
                         </div>
@@ -1480,23 +1480,23 @@
                                         <div class="col-3">
                                             <h5>
                                                 <b>Tipo de Documento:</b>  @switch (Model.Oferta.TipoDocumento)
-                                                {
-                                                    case "01":
-                                                        {
+                        {
+                            case "01":
+                                {
                                                             <p>Factura Electrónica</p>
-                                                            break;
-                                                        }
-                                                    case "03":
-                                                        {
+                                    break;
+                                }
+                            case "03":
+                                {
                                                             <p>Nota de Crédito</p>
-                                                            break;
-                                                        }
-                                                    case "04":
-                                                        {
+                                    break;
+                                }
+                            case "04":
+                                {
                                                             <p>Tiquete Electrónico</p>
-                                                            break;
-                                                        }
-                                                }
+                                    break;
+                                }
+                        }
                                             </h5>
 
                                         </div>
@@ -1548,18 +1548,18 @@
                                         <th class="text-center">#</th>
                                         <th class="text-center">Producto</th>
                                         <th class="text-center">Cantidad</th>
-                                        @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
-                                        {
+                        @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                        {
                                             <th class="text-center">Precio Final</th>
 
-                                        }
-                                        else
-                                        {
+                        }
+                        else
+                        {
                                             <th class="text-center">Precio Unitario</th>
 
-                                        }
-                                        @* <th class="text-center">% Descuento</th>*@
-                                        @*   <th class="text-center">Descuento</th>*@
+                        }
+                        @* <th class="text-center">% Descuento</th>*@
+                        @*   <th class="text-center">Descuento</th>*@
                                         <th class="text-center">Impuesto</th>
                                         <th class="text-center">% Exoneración</th>
 
@@ -1569,37 +1569,37 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @{
-                                        var PorcentajeDet = 1.10m;
-                                    }
-                                    @foreach (var item in Model.Oferta.Detalle)
-                                    {
+                        @{
+                            var PorcentajeDet = 1.10m;
+                        }
+                        @foreach (var item in Model.Oferta.Detalle)
+                        {
 
                                         <tr>
                                             <td>@item.NumLinea</td>
 
 
-                                            @if (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Stock <= 0)
-                                            {
+                                @if (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Stock <= 0)
+                                {
                                                 <td>
-                                                    @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : "*" + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
-                                                        (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP))
+                                        @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : "*" + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
+                                            (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP))
                                                 </td>
-                                            }
-                                            else
-                                            {
+                                }
+                                else
+                                {
                                                 <td>
-                                                    @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
-                                                        (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP)
-                                                        )
+                                        @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
+                                            (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP)
+                                            )
                                                 </td>
-                                            }
+                                }
 
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
 
 
                                             <td class="text-center">@Math.Round((item.PrecioUnitario) * PorcentajeDet, 2).ToString("C", formato)</td>
-                                            @*       <td class="text-center">@Math.Round(@item.PorDescto) %</td>
+                                @*       <td class="text-center">@Math.Round(@item.PorDescto) %</td>
                                         <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>*@
                                             <td class="text-center">@Math.Round((@item.TotalImpuesto) * PorcentajeDet, 2).ToString("C", formato)</td>
                                             <td class="text-center">@(Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" : Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
@@ -1608,7 +1608,7 @@
 
 
                                         </tr>
-                                    }
+                        }
 
 
                                 </tbody>
@@ -1619,17 +1619,18 @@
 
 
                             <div>
-                                @{
-                                    var PorcentajeX = 1.10m;
-                                }
+                        @{
+                            var PorcentajeX = 1.10m;
+                        }
                                 <p>Sub Total  :  <span id="Subtotal"> @Math.Round((Model.Oferta.Subtotal - Model.Oferta.TotalDescuento) * PorcentajeX, 2).ToString("C", formato)</span> </p>
-                                @*<p>Descuento  :  <span id="Descuento"> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>*@
+                        @*<p>Descuento  :  <span id="Descuento"> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>*@
                                 <p>Impuesto :  <span>  @Math.Round((Model.Oferta.TotalImpuestos) * PorcentajeX, 2).ToString("C", formato)</span></p>
                                 <p>Redondeo :  <span>  @Math.Round((Model.Oferta.Redondeo) * PorcentajeX, 2).ToString("C", formato)</span></p>
 
                             </div>
                             <div class="total-payment">
-                                <p><b>Total :</b>  <span>  @Math.Round((Model.Oferta.TotalCompra + Model.Oferta.Redondeo) * PorcentajeX, 2).ToString("C", formato)</span></p>
+                                <p style="font-size:40px"><b>Total : <span>  @Math.Round((Model.Oferta.TotalCompra + Model.Oferta.Redondeo) * PorcentajeX, 2).ToString("C", formato)</span></b> </p>
+                                =
                             </div>
 
                         </div>
@@ -1761,23 +1762,23 @@
                                         <div class="col-3">
                                             <h5>
                                                 <b>Tipo de Documento:</b>  @switch (Model.Oferta.TipoDocumento)
-                                                {
-                                                    case "01":
-                                                        {
+                        {
+                            case "01":
+                                {
                                                             <p>Factura Electrónica</p>
-                                                            break;
-                                                        }
-                                                    case "03":
-                                                        {
+                                    break;
+                                }
+                            case "03":
+                                {
                                                             <p>Nota de Crédito</p>
-                                                            break;
-                                                        }
-                                                    case "04":
-                                                        {
+                                    break;
+                                }
+                            case "04":
+                                {
                                                             <p>Tiquete Electrónico</p>
-                                                            break;
-                                                        }
-                                                }
+                                    break;
+                                }
+                        }
                                             </h5>
 
                                         </div>
@@ -1831,18 +1832,18 @@
                                         <th class="text-center">Cabys</th>
 
                                         <th class="text-center">Cantidad</th>
-                                        @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
-                                        {
+                        @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                        {
                                             <th class="text-center">Precio Final</th>
 
-                                        }
-                                        else
-                                        {
+                        }
+                        else
+                        {
                                             <th class="text-center">Precio Unitario</th>
 
-                                        }
-                                        @* <th class="text-center">% Descuento</th>*@
-                                        @*   <th class="text-center">Descuento</th>*@
+                        }
+                        @* <th class="text-center">% Descuento</th>*@
+                        @*   <th class="text-center">Descuento</th>*@
                                         <th class="text-center">Impuesto</th>
                                         <th class="text-center">% Exoneración</th>
 
@@ -1853,44 +1854,44 @@
                                 </thead>
                                 <tbody>
 
-                                    @foreach (var item in Model.Oferta.Detalle)
-                                    {
+                        @foreach (var item in Model.Oferta.Detalle)
+                        {
                                         <tr>
                                             <td>@item.NumLinea</td>
 
 
-                                            @if (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Stock <= 0)
-                                            {
+                                @if (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Stock <= 0)
+                                {
                                                 <td>
-                                                    @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : "*" + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
-                                                        (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP))
+                                        @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : "*" + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
+                                            (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP))
                                                 </td>
-                                            }
-                                            else
-                                            {
+                                }
+                                else
+                                {
                                                 <td>
-                                                    @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
-                                                        (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP)
-                                                        )
+                                        @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + @item.NomPro + " - BOD: " +
+                                            (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP)
+                                            )
                                                 </td>
-                                            }
+                                }
                                             <td>  @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Cabys Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Cabys)   </td>
 
 
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
 
 
-                                            @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
-                                            {
+                                @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
+                                {
                                                 <td class="text-center">@Math.Round((item.PrecioUnitario) - (@item.Descuento / item.Cantidad), 2).ToString("C", formato)</td>
 
-                                            }
-                                            else
-                                            {
+                                }
+                                else
+                                {
                                                 <td class="text-center">@Math.Round(item.PrecioUnitario, 2).ToString("C", formato)</td>
 
-                                            }
-                                            @*       <td class="text-center">@Math.Round(@item.PorDescto) %</td>
+                                }
+                                @*       <td class="text-center">@Math.Round(@item.PorDescto) %</td>
                                         <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>*@
                                             <td class="text-center">@Math.Round(@item.TotalImpuesto / @item.Cantidad, 2).ToString("C", formato)</td>
                                             <td class="text-center">@(Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" : Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
@@ -1899,7 +1900,7 @@
 
 
                                         </tr>
-                                    }
+                        }
 
 
                                 </tbody>
@@ -1912,13 +1913,13 @@
                             <div>
 
                                 <p>Sub Total  : <span> @Math.Round(Model.Oferta.Subtotal - Model.Oferta.TotalDescuento, 2).ToString("C", formato)</span> </p>
-                                @*<p>Descuento  :  <span id="Descuento"> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>*@
+                        @*<p>Descuento  :  <span id="Descuento"> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>*@
                                 <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C", formato)</span></p>
                                 <p>Redondeo :  <span>  @Math.Round(Model.Oferta.Redondeo, 2).ToString("C", formato)</span></p>
 
                             </div>
                             <div class="total-payment">
-                                <p><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra + Model.Oferta.Redondeo, 2).ToString("C", formato)</span></p>
+                                <p style="font-size:40px"><b>Total : <span>  @Math.Round(Model.Oferta.TotalCompra + Model.Oferta.Redondeo, 2).ToString("C", formato)</span></b> </p>
                             </div>
 
                         </div>

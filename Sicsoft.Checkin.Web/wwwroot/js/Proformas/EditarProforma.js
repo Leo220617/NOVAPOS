@@ -2250,7 +2250,7 @@ function Generar() {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: 'Ha ocurrido un error al intentar guardar ' + json.oferta
+                                    text: 'Ha ocurrido un error al intentar guardar ' + json.Oferta
 
                                 })
                             }
@@ -2729,6 +2729,7 @@ function BuscarCliente() {
 }
 function BuscarClienteRegistro() {
     try {
+        var Cedula = $("#Cedula").val();
 
         fetch('https://apis.gometa.org/cedulas/' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8')
             .then(response => {
@@ -2742,10 +2743,15 @@ function BuscarClienteRegistro() {
                 console.log(data);
 
                 if (data.nombre != undefined) {
-
-                    $("#Nombre").val(data.nombre.toString());
                     $("#selectTP").val(data.tipoIdentificacion.toString());
-                    $("#Nombre").attr("readonly", "readonly");
+
+                    if ($("#selectTP").val() != "02" || ($("#selectTP").val() == "02" && Cedula.length >= 10)) {
+                        $("#Nombre").val(data.nombre.toString());
+
+                        $("#Nombre").attr("readonly", "readonly");
+                    }
+
+
 
 
                     console.log($("#Nombre").val());
@@ -2787,6 +2793,7 @@ function BuscarClienteRegistro() {
 }
 function BuscarClienteHacienda() {
     try {
+        var Cedula = $("#Cedula").val();
         fetch('https://api.hacienda.go.cr/fe/ae?identificacion=' + $("#Cedula").val() + '&fbclid=IwAR02XHHfB7dQycQ1XGVVo8bhyuRZ_jkNgWCZBW5GscL7S18lnG3jQfgeaS8')
             .then(response => {
                 if (!response.ok) {
@@ -2799,16 +2806,19 @@ function BuscarClienteHacienda() {
                 console.log(data);
 
                 if (data.nombre != undefined) {
-
-                    $("#Nombre").val(data.nombre.toString());
                     $("#selectTP").val(data.tipoIdentificacion.toString());
-                    $("#Nombre").attr("readonly", "readonly");
+
+                    if ($("#selectTP").val() != "02" || ($("#selectTP").val() == "02" && Cedula.length >= 10)) {
+                        $("#Nombre").val(data.nombre.toString());
+
+                        $("#Nombre").attr("readonly", "readonly");
+                    }
 
 
 
                 }
 
-                if ($("#Nombre").val().toString() == "" || $("#Nombre").val().toString() == undefined || $("#Nombre").val().toString() == '' || $("#Nombre").val().toString() == null) {
+                if (($("#Nombre").val().toString() == "" || $("#Nombre").val().toString() == undefined || $("#Nombre").val().toString() == '' || $("#Nombre").val().toString() == null)) {
                     console.log($("#Nombre").val());
                     Swal.fire({
                         icon: 'error',
@@ -2817,6 +2827,16 @@ function BuscarClienteHacienda() {
 
                     })
                 }
+                if (($("#selectTP").val() == "02" && Cedula.length < 10)) {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Error, la cédula juridica debe tener 10 caracteres'
+
+                    })
+                }
+
             })
             .catch(error => {
                 // Maneja errores
@@ -2841,6 +2861,7 @@ function BuscarClienteHacienda() {
         })
     }
 }
+
 
     ///////Impresion
 

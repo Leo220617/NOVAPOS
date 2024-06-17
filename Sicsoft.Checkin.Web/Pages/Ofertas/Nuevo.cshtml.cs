@@ -430,7 +430,8 @@ namespace NOVAAPP.Pages.Ofertas
                 var resp2 = new
                 {
                     success = true,
-                   
+                    Oferta = ""
+
                 };
                 return new JsonResult(resp2);
             }

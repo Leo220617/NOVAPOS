@@ -344,7 +344,7 @@ namespace NOVAAPP.Pages.Proformas
                 var resp2 = new
                 {
                     success = true,
- 
+                    Oferta = ""
                 };
                 return new JsonResult(resp2);
             }

@@ -1,0 +1,240 @@
+﻿@page
+@model NOVAPOS.Pages.Arqueos.NuevoModel
+@{
+    ViewData["Title"] = "Arqueos";
+    NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
+    formato.CurrencySymbol = "";
+    formato.CurrencyGroupSeparator = ",";
+    formato.NumberDecimalSeparator = ".";
+}
+@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@using Sicsoft.Checkin.Web.Models;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
+@section styles {
+    <style>
+        .tableFixHead th {
+            position: sticky;
+            top: 0;
+            background: white;
+        }
+    </style>
+
+}
+@section scripts {
+
+
+    <script src="/js/Arqueos/NuevoArqueo.js"></script>
+
+
+}
+
+
+@using Newtonsoft.Json;
+@using System.Globalization
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Toma Física
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+        <li class="breadcrumb-item active">Toma Física</li>
+    </ol>
+</section>
+
+<section class="content ">
+    <div class="row">
+        <div class="col-12">
+
+            <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
+            <input hidden id="Categorias" value="@JsonConvert.SerializeObject(Model.Categorias)" />
+            <input hidden id="Bodegas" value="@JsonConvert.SerializeObject(Model.Bodegas)" />
+
+            <input hidden id="urlGenerar" value="@Url.Page("Nuevo", "AgregarArqueo")" />
+
+
+
+
+            <!-- Content Header (Page header) -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-8">
+                            <h6 class="box-subtitle">Arqueos</h6>
+
+
+                        </div>
+                        <div class="col-4">
+                            <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <!-- title row -->
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="page-header mt-0">
+                                <h2 class="d-inline"><span class="font-size-24">Arqueos</span></h2>
+                                <div class="text-left">
+                                    <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
+                                    <input hidden id="Fecha" type="datetime" value="@DateTime.Now" />
+
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- /.col -->
+                    </div>
+                    <!-- info row -->
+
+                    <div class="row invoice-info">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Bodega</label>
+                                <select id="BodegaSeleccionado" class="form-control select2" onchange="javascript: onChangeBodega()">
+                                    <option value="0"> Seleccione Bodega</option>
+
+
+
+                                </select>
+                            </div>
+                        </div>
+                   
+
+              
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Categoria</label>
+                                <select id="CategoriaSeleccionado" class="form-control select2" onchange="javascript: onChangeCategoria()">
+                                    <option value="0"> Seleccione Categoria</option>
+
+
+
+                                </select>
+                            </div>
+                        </div>
+           
+                    
+
+                        <div class="col-12">
+                            @*<button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>*@
+                            <button type="button" id="botonG" class="btn btn-success pull-right" onclick="    javascript: Generar()">
+                                <i class="fa fa-credit-card"></i> Generar
+                            </button>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+                <!-- /.col -->
+                <!-- /.row -->
+
+            </div>
+
+        </div>
+
+
+
+
+
+        <div class="box">
+            <div class="box-body">
+                <!-- Table row -->
+                <div class="row">
+                    <div class="col-md-12  ">
+                        <div class="x_panel">
+                            <div class="x_content">
+
+
+
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <h3>Productos</h3>
+                                    </div>
+
+
+                                </div>
+                                <div class="row invoice-info">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="busqueda">Buscador:</label>
+                                            <input type="text" class="form-control" id="busqueda" placeholder="Ingrese la descripción" oninput="filtrarTabla()">
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-12 table-responsive tableFixHead" style=" overflow-y:scroll; z-index: 5; height: 500px;">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="bg-info">Descripción</th>
+                                            <th class="bg-info">Bodega</th>
+                                            <th class="bg-info">Stock</th>
+                                            <th class="bg-info">Contado</th>
+                                            <th class="bg-info">Cantidad Contado</th>
+                                            <th class="bg-info">Diferencia</th>
+
+
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody">
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+                <!-- /.row -->
+
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+    </div>
+
+</section>
+
+
+
+
+

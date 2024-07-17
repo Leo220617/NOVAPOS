@@ -169,6 +169,22 @@
 
             }
 
+            @{
+                if (!string.IsNullOrEmpty(Roles.Where(a => a == "71").FirstOrDefault()))
+                {
+                    <li class="">
+
+                        <a asp-page="/Arqueos/Index">
+                            <i class="mdi mdi-bank"></i> <span>Arqueos</span>
+
+                        </a>
+
+                    </li>
+
+                }
+
+            }
+
 
 
         </ul>

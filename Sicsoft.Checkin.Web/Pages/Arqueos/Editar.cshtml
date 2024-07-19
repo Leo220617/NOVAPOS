@@ -1,5 +1,5 @@
-﻿@page
-@model NOVAPOS.Pages.Arqueos.NuevoModel
+﻿@page "{id}"
+@model NOVAPOS.Pages.Arqueos.EditarModel
 @{
     ViewData["Title"] = "Arqueos";
     NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
@@ -36,7 +36,7 @@
 @section scripts {
 
 
-    <script src="/js/Arqueos/NuevoArqueo.js"></script>
+    <script src="/js/Arqueos/EditarArqueo.js"></script>
 
 
 }
@@ -58,12 +58,13 @@
 <section class="content ">
     <div class="row">
         <div class="col-12">
-
+            <input hidden asp-for="Arqueo.id" id="id" />
+            <input hidden id="Arqueo" value="@JsonConvert.SerializeObject(Model.Arqueo)" />
             <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
             <input hidden id="Categorias" value="@JsonConvert.SerializeObject(Model.Categorias)" />
             <input hidden id="Bodegas" value="@JsonConvert.SerializeObject(Model.Bodegas)" />
 
-            <input hidden id="urlGenerar" value="@Url.Page("Nuevo", "AgregarArqueo")" />
+            <input hidden id="urlGenerar" value="@Url.Page("Editar", "AgregarArqueo")" />
 
 
 
@@ -118,9 +119,9 @@
                                 </select>
                             </div>
                         </div>
-                   
 
-              
+
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Categoria</label>
@@ -132,9 +133,10 @@
                                 </select>
                             </div>
                         </div>
-           
-                    
 
+
+                        <div class="col-8">
+                        </div>
                         <div class="col-2">
                             @*<button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>*@
                             <button type="button" id="botonG" class="btn btn-success pull-right" onclick="    javascript: Generar()">
@@ -198,7 +200,7 @@
                                         </select>
                                     </div>
                                     <div class="col-sm-2 pl-1" style="text-align: right;">
-                              <br />
+                                        <br />
                                         <a id="agregar" onclick="javascript: AgregarProductoTabla();" class="btn btn-primary" style="color: white !important;">+ Agregar </a>
                                     </div>
 

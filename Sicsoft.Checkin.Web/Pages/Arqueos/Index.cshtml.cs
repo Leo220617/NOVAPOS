@@ -22,7 +22,7 @@ namespace NOVAPOS.Pages.Arqueos
         private readonly ICrudApi<RolesViewModel, int> roles;
         private readonly ICrudApi<UsuariosSucursalesViewModel, int> usuc;
         private readonly ICrudApi<BodegasViewModel, int> bodegas;
-
+   
 
 
 
@@ -41,6 +41,11 @@ namespace NOVAPOS.Pages.Arqueos
         public BodegasViewModel[] Bodegas { get; set; }
 
 
+        [BindProperty]
+        public SucursalesViewModel[] Sucursal { get; set; }
+
+        [BindProperty]
+        public SucursalesViewModel MiSucursal { get; set; }
 
 
 

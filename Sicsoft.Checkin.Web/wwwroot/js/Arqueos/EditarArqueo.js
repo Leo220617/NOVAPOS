@@ -52,7 +52,8 @@ var Fechabool = false;
 var ProdClientes2 = [];
 var ProdSinStock = [];
 var htmlS = "";
-var inicio = false;
+var inicio = true;
+var Arqueos = [];
 
 function Recuperar() {
     try {
@@ -61,10 +62,15 @@ function Recuperar() {
         Bodegas = JSON.parse($("#Bodegas").val());
         Productos = JSON.parse($("#Productos").val());
         Categorias = JSON.parse($("#Categorias").val());
-
-        RellenaBodegas()
-        RellenaCategorias()
-
+        Arqueos = JSON.parse($("#Arqueo").val());
+        RellenaBodegas();
+        RellenaCategorias();
+        RecuperarInformacion();
+      
+        onChangeCategoria();
+       
+        //RellenaTabla();
+     
 
 
 
@@ -78,6 +84,46 @@ function Recuperar() {
         })
     }
 
+}
+
+function RecuperarInformacion() {
+    try {
+
+        $("#BodegaSeleccionado").val(Arqueos.idBodega);
+        $("#CategoriaSeleccionado").val(Arqueos.idCategoria);
+
+        var FechaX = new Date(Arqueos.FechaCreacion);
+
+        var Fecha = $.datepicker.formatDate('yy-mm-dd', FechaX);
+
+        $("#Fecha").val(Fecha);
+
+        for (var i = 0; i < Arqueos.Detalle.length; i++) {
+
+
+
+            var Producto =
+            {
+
+
+                id: Arqueos.Detalle[i].id,
+                idProducto: Arqueos.Detalle[i].idProducto,
+                idEncabezado: Arqueos.Detalle[i].idEncabezado,
+                Stock: Arqueos.Detalle[i].Stock,
+                Total: parseFloat(Arqueos.Detalle[i].Total.toFixed(2)),
+                Diferencia: parseFloat(Arqueos.Detalle[i].Diferencia.toFixed(2)),
+                Contado: Arqueos.Detalle[i].Contado
+
+
+            };
+            ProdCadena.push(Producto);
+
+            $("#BodegaSeleccionado").prop("disabled", true);
+            $("#CategoriaSeleccionado").prop("disabled", true);
+        }
+    } catch (e) {
+
+    }
 }
 
 function RellenaCategorias() {
@@ -295,7 +341,23 @@ function RellenaTabla() {
 
         $("#tbody").html(html);
         if (inicio) {
+
+            for (var x = 0; x < ProdCadena.length; x++) {
+                var id = ProdCadena[x].idProducto;
+                var Existe = ProdClientes.find(a => a.id == id);
+             
+                if (!Existe) {
+                    var PE = ProdClientes2.find(a => a.id == id);
+                    ProdClientes.push(PE);
+                    inicio = true;
+                    RellenaTabla();
+                    $("#ProductoSeleccionado").val("0").trigger('change.select2');
+
+                } 
+                
+            }
             RecuperarProdCadena();
+         
         }
 
     } catch (e) {
@@ -322,7 +384,7 @@ function RecuperarProdCadena() {
                 var x = ProdCadena.findIndex(a => a.idProducto == ProdClientes2[z].id);
             }
 
-
+     
             $("#" + z + "_Cantidad").val(ProdCadena[x].Total);
             $("#" + z + "_Diferencia").text(ProdCadena[x].Diferencia);
 
@@ -379,7 +441,7 @@ function onChangeCantidad(i) {
         if (Existe == undefined) {
 
             var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
-            var TotalDiferencia = Cantidad - PE.Stock;
+                var TotalDiferencia = Cantidad - PE.Stock;
             var Producto =
             {
 
@@ -416,7 +478,7 @@ function onChangeCantidad(i) {
             ProdCadena.push(Producto);
         } else {
             var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
-            var TotalDiferencia = Cantidad - PE.Stock;
+                var TotalDiferencia = Cantidad - PE.Stock;
 
             ProdCadena[x].idProducto = PE.id;
             ProdCadena[x].Stock = PE.Stock;
@@ -478,7 +540,7 @@ function onChangeRevisado(i) {
         if (Existe == undefined) {
 
             var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
-            var TotalDiferencia = Cantidad - PE.Stock;
+                var TotalDiferencia = Cantidad - PE.Stock;
             var Producto =
             {
 
@@ -515,7 +577,7 @@ function onChangeRevisado(i) {
             ProdCadena.push(Producto);
         } else {
             var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
-            var TotalDiferencia = Cantidad - PE.Stock;
+                var TotalDiferencia = Cantidad - PE.Stock;
 
             ProdCadena[x].idProducto = PE.id;
             ProdCadena[x].Stock = PE.Stock;
@@ -614,7 +676,7 @@ function Generar() {
 
         var EncArqueos = {
 
-            id: 0,
+            id: $("#id").val(),
             idCategoria: $("#CategoriaSeleccionado").val(),
             idBodega: $("#BodegaSeleccionado").val(),
             CodSuc: "",
@@ -680,7 +742,7 @@ function Generar() {
                                         //Despues de insertar, ocupariamos el id del cliente en la bd 
                                         //para entonces setearlo en el array de clientes
 
-                                        window.location.href = window.location.href.split("/Nuevo")[0];
+                                        window.location.href = window.location.href.split("/Editar")[0];
 
 
                                     }
@@ -742,7 +804,7 @@ function GeneraryEnviar() {
 
         var EncArqueos = {
 
-            id: 0,
+            id: $("#id").val(),
             idCategoria: $("#CategoriaSeleccionado").val(),
             idBodega: $("#BodegaSeleccionado").val(),
             CodSuc: "",
@@ -757,7 +819,7 @@ function GeneraryEnviar() {
 
         if (validarArqueo(EncArqueos)) {
             Swal.fire({
-                title: '¿Desea enviar a revisión  la Toma Física?',
+                title: '¿Desea enviar a revisión la Toma Física?',
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: `Aceptar`,
@@ -808,7 +870,7 @@ function GeneraryEnviar() {
                                         //Despues de insertar, ocupariamos el id del cliente en la bd 
                                         //para entonces setearlo en el array de clientes
 
-                                        window.location.href = window.location.href.split("/Nuevo")[0];
+                                        window.location.href = window.location.href.split("/Editar")[0];
 
 
                                     }
@@ -863,7 +925,6 @@ function GeneraryEnviar() {
 
 
 }
-
 function validarArqueo(e) {
     try {
 

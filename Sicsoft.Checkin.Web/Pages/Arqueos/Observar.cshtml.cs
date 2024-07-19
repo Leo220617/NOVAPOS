@@ -16,12 +16,13 @@ using System.Threading.Tasks;
 
 namespace NOVAPOS.Pages.Arqueos
 {
-    public class NuevoModel : PageModel
+    public class ObservarModel : PageModel
     {
         private readonly ICrudApi<ArqueosViewModel, int> service;
         private readonly ICrudApi<CategoriasViewModel, int> categorias;
         private readonly ICrudApi<BodegasViewModel, int> bodegas;
         private readonly ICrudApi<ProductosViewModel, string> productos;
+        private readonly ICrudApi<UsuariosViewModel, int> usuarios;
 
 
 
@@ -41,22 +42,27 @@ namespace NOVAPOS.Pages.Arqueos
         public ProductosViewModel[] Productos { get; set; }
 
 
+        [BindProperty]
+        public UsuariosViewModel[] Usuarios { get; set; }
+
+
 
 
 
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
 
-        public NuevoModel(ICrudApi<ArqueosViewModel, int> service, ICrudApi<CategoriasViewModel, int> categorias, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<ProductosViewModel, string> productos)
+        public ObservarModel(ICrudApi<ArqueosViewModel, int> service, ICrudApi<CategoriasViewModel, int> categorias, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<ProductosViewModel, string> productos, ICrudApi<UsuariosViewModel, int> usuarios)
         {
             this.service = service;
             this.categorias = categorias;
             this.bodegas = bodegas;
             this.productos = productos;
+            this.usuarios = usuarios;
 
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             try
             {
@@ -65,7 +71,7 @@ namespace NOVAPOS.Pages.Arqueos
                 {
                     return RedirectToPage("/NoPermiso");
                 }
-            
+
                 Categorias = await categorias.ObtenerLista("");
 
                 ParametrosFiltros filtro2 = new ParametrosFiltros();
@@ -78,8 +84,9 @@ namespace NOVAPOS.Pages.Arqueos
                 filtro.CardName = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
                 filtro.CardCode = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 Productos = await productos.ObtenerLista(filtro);
+                Arqueo = await service.ObtenerPorId(id);
+                Usuarios = await usuarios.ObtenerLista("");
 
-           
 
 
 
@@ -129,15 +136,14 @@ namespace NOVAPOS.Pages.Arqueos
                     recibidos = Newtonsoft.Json.JsonConvert.DeserializeObject<ArqueosViewModel>(jsonString);
                 }
 
+                recibidos.Status = "C";
 
 
-      
-                recibidos.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
-                recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
-            
-        
-                await service.Agregar(recibidos);
-           
+               
+
+
+                await service.Editar(recibidos);
+
                 var resp2 = new
                 {
                     success = true,

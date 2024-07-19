@@ -1,0 +1,229 @@
+﻿@page
+@using System.Globalization
+@using Newtonsoft.Json
+@model NOVAPOS.Pages.BitacoraMargenes.IndexModel
+@{
+    ViewData["Title"] = "BitacoraMargenes";
+    NumberFormatInfo formato = new CultureInfo("es-CR").NumberFormat;
+    formato.CurrencySymbol = "";
+    formato.CurrencyGroupSeparator = ",";
+    formato.NumberDecimalSeparator = ".";
+
+}
+
+
+
+@section styles {
+
+
+}
+
+@section scripts {
+
+    <script src="/js/BitacoraMargenes/BitacoraMargenes.js"></script>
+
+}
+
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Bitacora Margenes
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+        <li class="breadcrumb-item active">Listado Bitacora Margenes</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+            <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-sm-8"> <h4 class="box-title">Bitacora Margenes</h4></div>
+
+
+
+                    </div>
+
+
+                </div>
+                <div class="box-body">
+                    <form method="get">
+                        <div class="row">
+                            <div class="col-sm-3 pr-1">
+                                <div class="form-group">
+                                    <label>Fecha Inicial</label>
+                                    <input class="form-control " id="FecInicial" type="date" asp-for="filtro.FechaInicial">
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-sm-3 pl-1">
+                                <div class="form-group">
+                                    <label>Fecha Final</label>
+                                    <input class="form-control" id="FecFinal" type="date" asp-for="filtro.FechaFinal">
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="cyber">Lista de Precio:</label>
+                                    <select class="form-control select2" id="Lista" asp-for="filtro.Codigo2" required>
+                                        <option value="0"> Seleccione</option>
+
+
+                                        <option value="@Model.MiListaPrecio.id">@Model.MiListaPrecio.CodSAP - @Model.MiListaPrecio.Nombre</option>
+                                       
+
+                                    </select>
+
+
+
+
+
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="cyber">Categoria:</label>
+                                    <select class="form-control select2" id="Lista" asp-for="filtro.Codigo3" required>
+                                        <option value="0"> Seleccione</option>
+
+                                        @foreach (var item in Model.Categoria)
+                                        {
+                                            <option value="@item.id">@item.id - @item.Nombre</option>
+                                        }
+
+
+                                    </select>
+
+
+
+
+
+
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+
+                            <div class="col-sm-12 pl-1" style="text-align: right; padding-top: 2%;">
+                                <button title="Buscar" type="submit" class="btn btn-rounded btn-outline-primary"> <i class="fa fa-search"></i></button>
+                            </div>
+
+
+
+
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-sm-8"> <h4 class="box-title">Bitacora Margenes</h4></div>
+
+
+
+                    </div>
+
+
+                </div>
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID </th>
+                                    <th>Acción </th>
+                                    <th>Código </th>
+                                    <th>Lista de Precio </th>
+                                    <th>Categoria </th>
+                                    <th>Precio Anterior </th>
+                                    <th>Precio Nuevo </th>
+                                    <th>Fecha </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                            
+                                @foreach (var item in Model.Objeto)
+                                {
+                                   
+                                    <tr>
+
+                                        <td>@item.id</td>
+                                        <td> <a id="print" class="fa fa-print icono" onclick="javascript: ImprimirEtiqueta(@(Model.Productos.Where(a => a.Codigo == item.ItemCode && a.idListaPrecios == item.idListaPrecio && a.idCategoria == item.idCategoria).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.Codigo == item.ItemCode && a.idListaPrecios == item.idListaPrecio && a.idCategoria == item.idCategoria).FirstOrDefault().id))"> </a></td>
+                                        <td>@item.ItemCode - @(Model.Productos.Where(a => a.Codigo == item.ItemCode && a.idListaPrecios == item.idListaPrecio && a.idCategoria == item.idCategoria).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.Codigo == item.ItemCode && a.idListaPrecios == item.idListaPrecio && a.idCategoria == item.idCategoria).FirstOrDefault().Nombre)</td>
+                                        <td>  @(Model.ListaPrecio.Where(a => a.id == item.idListaPrecio).FirstOrDefault() == null ? "Lista Precio Inexistente" : Model.ListaPrecio.Where(a => a.id == item.idListaPrecio).FirstOrDefault().CodSAP + "-" + Model.ListaPrecio.Where(a => a.id == item.idListaPrecio).FirstOrDefault().Nombre) </td>
+                                        <td>  @(Model.Categoria.Where(a => a.id == item.idCategoria).FirstOrDefault() == null ? "Categoria Inexistente" : Model.Categoria.Where(a => a.id == item.idCategoria).FirstOrDefault().CodSAP + "-" + Model.Categoria.Where(a => a.id == item.idCategoria).FirstOrDefault().Nombre) </td>
+
+
+
+                                        <td>
+                                            @Math.Round(@item.PrecioAnterior, 2).ToString("C", formato)
+                                        </td>
+                                        <td>
+                                            @Math.Round(@item.PrecioNuevo, 2).ToString("C", formato)
+                                        </td>
+                                        <td>
+                                            @item.Fecha.ToString("dd/MM/yyyy")
+                                        </td>
+
+
+
+
+                                    </tr>
+
+                                }
+
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>ID </th>
+                                    <th>Código </th>
+                                    <th>Lista de Precio </th>
+                                    <th>Categoria </th>
+                                    <th>Precio Anterior </th>
+                                    <th>Precio Nuevo </th>
+                                    <th>Fecha </th>
+
+
+
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <!-- /.box-body -->
+                </div>
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->

@@ -52,7 +52,8 @@ var Fechabool = false;
 var ProdClientes2 = [];
 var ProdSinStock = [];
 var htmlS = "";
-var inicio = false;
+var inicio = true;
+var Arqueos = [];
 
 function Recuperar() {
     try {
@@ -61,9 +62,14 @@ function Recuperar() {
         Bodegas = JSON.parse($("#Bodegas").val());
         Productos = JSON.parse($("#Productos").val());
         Categorias = JSON.parse($("#Categorias").val());
+        Arqueos = JSON.parse($("#Arqueo").val());
+        RellenaBodegas();
+        RellenaCategorias();
+        RecuperarInformacion();
 
-        RellenaBodegas()
-        RellenaCategorias()
+        onChangeCategoria();
+
+        //RellenaTabla();
 
 
 
@@ -78,6 +84,46 @@ function Recuperar() {
         })
     }
 
+}
+
+function RecuperarInformacion() {
+    try {
+
+        $("#BodegaSeleccionado").val(Arqueos.idBodega);
+        $("#CategoriaSeleccionado").val(Arqueos.idCategoria);
+
+        var FechaX = new Date(Arqueos.FechaCreacion);
+
+        var Fecha = $.datepicker.formatDate('yy-mm-dd', FechaX);
+
+        $("#Fecha").val(Fecha);
+
+        for (var i = 0; i < Arqueos.Detalle.length; i++) {
+
+
+
+            var Producto =
+            {
+
+
+                id: Arqueos.Detalle[i].id,
+                idProducto: Arqueos.Detalle[i].idProducto,
+                idEncabezado: Arqueos.Detalle[i].idEncabezado,
+                Stock: Arqueos.Detalle[i].Stock,
+                Total: parseFloat(Arqueos.Detalle[i].Total.toFixed(2)),
+                Diferencia: parseFloat(Arqueos.Detalle[i].Diferencia.toFixed(2)),
+                Contado: Arqueos.Detalle[i].Contado
+
+
+            };
+            ProdCadena.push(Producto);
+
+            $("#BodegaSeleccionado").prop("disabled", true);
+            $("#CategoriaSeleccionado").prop("disabled", true);
+        }
+    } catch (e) {
+
+    }
 }
 
 function RellenaCategorias() {
@@ -259,29 +305,47 @@ function RellenaTabla() {
 
         var idBodega = $("#BodegaSeleccionado").val();
         var Bodega = Bodegas.find(a => a.id == idBodega);
+        
 
         $("#tbody").html(html);
 
 
-        for (var i = 0; i < ProdClientes.length; i++) {
+        for (var i = 0; i < ProdCadena.length; i++) {
 
+            var id = ProdCadena[i].idProducto;
+            var Existe = ProdClientes.find(a => a.id == id);
+
+            if (!Existe) {
+                var PE = ProdClientes2.find(a => a.id == id);
+             
+
+            } else {
+                var PE = ProdClientes.find(a => a.id == id);
+            }
+        
             html += "<tr>";
 
 
-            html += "<td > " + ProdClientes[i].Codigo + "-" + ProdClientes[i].Nombre + " </td>";
+            html += "<td > " + PE.Codigo + "-" + PE.Nombre + " </td>";
 
 
             html += "<td > " + Bodega.CodSAP + " </td>";
 
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " </td>";
+            html += "<td class='text-right'> " + formatoDecimal(parseFloat(PE.Stock).toFixed(2)) + " </td>";
 
 
 
 
             html += "<td class='text-center'>  <input type='checkbox' id='" + i + "_mdcheckbox' class='chk-col-green' onchange='javascript: onChangeRevisado(" + i + ")'>  <label for='" + i + "_mdcheckbox'></label> </td> ";
 
-            html += "<td class='text-center'> <input onchange='javascript: onChangeCantidad(" + i + ")' type='number' id='" + i + "_Cantidad' class='form-control'   value= '0' min='1'/>  </td>";
-            html += "<td class='text-center' id='" + i + "_Diferencia'> 0 </td>";
+            html += "<td > " + ProdCadena[i].Total + " </td>";
+            if (ProdCadena[i].Diferencia == 0) {
+
+                html += "<td class='text-center' style='background-color: #EFFFE9' id='" + i + "_Diferencia'> " + ProdCadena[i].Diferencia + "</td>";
+            } else {
+                html += "<td class='text-center' style='background-color: #FFE9E9' id='" + i + "_Diferencia'> " + ProdCadena[i].Diferencia + "</td>";
+            }
+          
 
 
 
@@ -295,7 +359,23 @@ function RellenaTabla() {
 
         $("#tbody").html(html);
         if (inicio) {
+
+            for (var x = 0; x < ProdCadena.length; x++) {
+                var id = ProdCadena[x].idProducto;
+                var Existe = ProdClientes.find(a => a.id == id);
+
+                if (!Existe) {
+                    var PE = ProdClientes2.find(a => a.id == id);
+                    ProdClientes.push(PE);
+                    inicio = true;
+                    RellenaTabla();
+                    $("#ProductoSeleccionado").val("0").trigger('change.select2');
+
+                }
+
+            }
             RecuperarProdCadena();
+
         }
 
     } catch (e) {
@@ -362,104 +442,7 @@ function RecuperarProdCadena() {
         });
     }
 }
-function onChangeCantidad(i) {
-    try {
 
-
-        var idCategoria = $("#CategoriaSeleccionado").val();
-        var idBodega = $("#BodegaSeleccionado").val();
-
-        var valorCheck = $("#" + i + "_mdcheckbox").prop('checked');
-
-
-        var Existe = ProdCadena.find(a => a.idProducto == ProdClientes[i].id);
-        var x = ProdCadena.findIndex(a => a.idProducto == ProdClientes[i].id);
-
-        var PE = ProdClientes[i];
-        if (Existe == undefined) {
-
-            var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
-            var TotalDiferencia = Cantidad - PE.Stock;
-            var Producto =
-            {
-
-
-
-                id: 0,
-                idProducto: PE.id,
-                idEncabezado: 0,
-                Stock: PE.Stock,
-                Total: Cantidad,
-                Diferencia: TotalDiferencia,
-                Contado: $("#" + i + "_mdcheckbox").prop('checked')
-
-
-            };
-
-            if (valorCheck == true) {
-                $("#" + i + "_Cantidad").prop('disabled', true);
-                var input = $("#" + i + "_Diferencia");
-
-                $("#" + i + "_Diferencia").text(TotalDiferencia);
-
-
-                if (TotalDiferencia == 0) {
-                    input.css('background-color', '#EFFFE9')
-                } else {
-                    input.css('background-color', '#FFE9E9')
-                }
-            } else {
-                $("#" + i + "_Diferencia").text(0);
-                $("#" + i + "_Cantidad").prop('disabled', false);
-            }
-
-            ProdCadena.push(Producto);
-        } else {
-            var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
-            var TotalDiferencia = Cantidad - PE.Stock;
-
-            ProdCadena[x].idProducto = PE.id;
-            ProdCadena[x].Stock = PE.Stock;
-            ProdCadena[x].Total = Cantidad;
-            ProdCadena[x].Diferencia = TotalDiferencia;
-
-
-
-
-            if (valorCheck == true) {
-                $("#" + i + "_Cantidad").prop('disabled', true);
-                var input = $("#" + i + "_Diferencia");
-
-                $("#" + i + "_Diferencia").text(TotalDiferencia);
-
-
-                if (TotalDiferencia == 0) {
-                    input.css('background-color', '#EFFFE9')
-                } else {
-                    input.css('background-color', '#FFE9E9')
-                }
-            } else {
-                $("#" + i + "_Diferencia").text(0);
-                $("#" + i + "_Cantidad").prop('disabled', false);
-            }
-
-
-        }
-
-        $("#BodegaSeleccionado").prop("disabled", true);
-        $("#CategoriaSeleccionado").prop("disabled", true);
-
-
-    } catch (e) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: e
-
-        });
-    }
-
-}
 
 function onChangeRevisado(i) {
     try {
@@ -560,53 +543,7 @@ function onChangeRevisado(i) {
 
 }
 
-function AgregarProductoTabla() {
-    try {
 
-
-        var id = $("#ProductoSeleccionado").val();
-        var PE = ProdClientes2.find(a => a.id == id);
-
-        var Existe = ProdClientes.find(a => a.id == PE.id);
-
-        if (!Existe) {
-            ProdClientes.push(PE);
-            inicio = true;
-            RellenaTabla();
-            $("#ProductoSeleccionado").val("0").trigger('change.select2');
-
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'El producto ya fue añadido'
-
-            })
-        }
-
-
-
-
-
-
-
-    } catch (e) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Error: ' + e
-
-        })
-    }
-
-
-
-
-
-
-
-
-}
 
 function Generar() {
 
@@ -614,7 +551,7 @@ function Generar() {
 
         var EncArqueos = {
 
-            id: 0,
+            id: $("#id").val(),
             idCategoria: $("#CategoriaSeleccionado").val(),
             idBodega: $("#BodegaSeleccionado").val(),
             CodSuc: "",
@@ -680,7 +617,7 @@ function Generar() {
                                         //Despues de insertar, ocupariamos el id del cliente en la bd 
                                         //para entonces setearlo en el array de clientes
 
-                                        window.location.href = window.location.href.split("/Nuevo")[0];
+                                        window.location.href = window.location.href.split("/Editar")[0];
 
 
                                     }
@@ -742,7 +679,7 @@ function GeneraryEnviar() {
 
         var EncArqueos = {
 
-            id: 0,
+            id: $("#id").val(),
             idCategoria: $("#CategoriaSeleccionado").val(),
             idBodega: $("#BodegaSeleccionado").val(),
             CodSuc: "",
@@ -757,7 +694,7 @@ function GeneraryEnviar() {
 
         if (validarArqueo(EncArqueos)) {
             Swal.fire({
-                title: '¿Desea enviar a revisión  la Toma Física?',
+                title: '¿Desea enviar a revisión la Toma Física?',
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: `Aceptar`,
@@ -808,7 +745,7 @@ function GeneraryEnviar() {
                                         //Despues de insertar, ocupariamos el id del cliente en la bd 
                                         //para entonces setearlo en el array de clientes
 
-                                        window.location.href = window.location.href.split("/Nuevo")[0];
+                                        window.location.href = window.location.href.split("/Editar")[0];
 
 
                                     }
@@ -863,7 +800,6 @@ function GeneraryEnviar() {
 
 
 }
-
 function validarArqueo(e) {
     try {
 
@@ -901,7 +837,15 @@ function validarArqueo(e) {
             })
             return false;
         }
+        else if (e.Status == "E" && (e.Detalle.find(a => a.Contado == false) == true)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Ha ocurrido un error al intentar agregar, por favor cuente al menos un producto'
 
+            })
+            return false;
+        }
 
 
 

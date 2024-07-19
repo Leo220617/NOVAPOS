@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace NOVAPOS.Pages.Arqueos
 {
-    public class NuevoModel : PageModel
+    public class EditarModel : PageModel
     {
         private readonly ICrudApi<ArqueosViewModel, int> service;
         private readonly ICrudApi<CategoriasViewModel, int> categorias;
@@ -47,7 +47,7 @@ namespace NOVAPOS.Pages.Arqueos
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
 
-        public NuevoModel(ICrudApi<ArqueosViewModel, int> service, ICrudApi<CategoriasViewModel, int> categorias, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<ProductosViewModel, string> productos)
+        public EditarModel(ICrudApi<ArqueosViewModel, int> service, ICrudApi<CategoriasViewModel, int> categorias, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<ProductosViewModel, string> productos)
         {
             this.service = service;
             this.categorias = categorias;
@@ -56,7 +56,7 @@ namespace NOVAPOS.Pages.Arqueos
 
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace NOVAPOS.Pages.Arqueos
                 {
                     return RedirectToPage("/NoPermiso");
                 }
-            
+
                 Categorias = await categorias.ObtenerLista("");
 
                 ParametrosFiltros filtro2 = new ParametrosFiltros();
@@ -78,8 +78,8 @@ namespace NOVAPOS.Pages.Arqueos
                 filtro.CardName = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
                 filtro.CardCode = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 Productos = await productos.ObtenerLista(filtro);
+                Arqueo = await service.ObtenerPorId(id);
 
-           
 
 
 
@@ -131,13 +131,13 @@ namespace NOVAPOS.Pages.Arqueos
 
 
 
-      
+
                 recibidos.CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
                 recibidos.idUsuarioCreador = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault().ToString());
-            
-        
-                await service.Agregar(recibidos);
-           
+
+
+                await service.Editar(recibidos);
+
                 var resp2 = new
                 {
                     success = true,

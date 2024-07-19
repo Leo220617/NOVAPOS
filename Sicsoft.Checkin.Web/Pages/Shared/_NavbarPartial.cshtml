@@ -184,6 +184,21 @@
                 }
 
             }
+            @{
+                if (!string.IsNullOrEmpty(Roles.Where(a => a == "73").FirstOrDefault()))
+                {
+
+                    <li class="">
+
+                        <a asp-page="/BitacoraMargenes/Index">
+                            <i class="mdi mdi-book-open-page-variant"></i> <span>Bitacora Margenes</span>
+
+                        </a>
+
+                    </li>
+                }
+
+            }
 
 
 

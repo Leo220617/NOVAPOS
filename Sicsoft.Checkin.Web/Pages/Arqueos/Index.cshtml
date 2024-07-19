@@ -124,7 +124,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        Arqueos
+        Toma Física 
     </h1>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
@@ -139,11 +139,11 @@
             <div class="box">
                 <div class="box-header with-border">
                     <div class="row">
-                        <div class="col-sm-8"> <h4 class="box-title">Órdenes de Venta</h4></div>
+                        <div class="col-sm-8"> <h4 class="box-title">Toma Física</h4></div>
 
                         @if (!string.IsNullOrEmpty(Roles.Where(a => a == "72").FirstOrDefault()))
                         {
-                            <div class="col-sm-4"> <a asp-page="Nuevo" asp-route-id="0" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Arqueo</a></div>
+                            <div class="col-sm-4"> <a asp-page="Nuevo" asp-route-id="0" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Toma Física</a></div>
                         }
                     </div>
 
@@ -168,20 +168,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label for="cyber">Estado:</label>
-                                    <select class="form-control" id="Estado" asp-for="filtro.ItemCode" required>
-                                        <option value="0">Abierta</option>
-                                        <option value="1">Cerrada</option>
-
-
-
-
-
-                                    </select>
-                                </div>
-                            </div>
+                        
 
                             <div class="col-md-2">
                                 <div class="form-group">
@@ -253,7 +240,35 @@
                             </div>*@
 
 
+                            <div class="col-sm-9 pr-1">
+                                <input type="checkbox" id="md_checkbox_1" class="chk-col-red" asp-for="filtro.pendientes" onclick="this.form.submit()" />
+                                <label for="md_checkbox_1">Preliminar</label>
+                                &nbsp;
+                                &nbsp;
 
+                                <input type="checkbox" id="md_checkbox_2" class="chk-col-red" asp-for="filtro.espera" onclick="this.form.submit()" />
+                                <label for="md_checkbox_2">Espera Revisión</label>
+
+                                &nbsp;
+                                &nbsp;
+
+                                <input type="checkbox" id="md_checkbox_3" class="chk-col-red" asp-for="filtro.contabilizado" onclick="this.form.submit()" />
+                                <label for="md_checkbox_3">Contabilizado</label>
+
+
+
+
+
+                         
+
+
+
+
+
+
+
+
+                            </div>
 
 
 
@@ -275,7 +290,7 @@
             <div class="box">
                 <div class="box-header with-border">
                     <div class="row">
-                        <div class="col-sm-8"> <h4 class="box-title">Órdenes de Venta</h4></div>
+                        <div class="col-sm-8"> <h4 class="box-title">Toma Física</h4></div>
                         <div class="col-sm-4">  </div>
 
                     </div>
@@ -313,7 +328,7 @@
                                             @item.id
                                         </td>
                                         <td align="center" style="padding-top:15px;">
-                                            @if (item.Status == "0" && !string.IsNullOrEmpty(Roles.Where(a => a == "29").FirstOrDefault()))
+                                            @if (item.Status == "P" && !string.IsNullOrEmpty(Roles.Where(a => a == "29").FirstOrDefault()))
                                             {
                                                 <a asp-page="./Editar" asp-route-id="@item.id" class="fa fa-edit icono"> </a>
 
@@ -332,7 +347,7 @@
                                         </td>
 
                                         <td>
-                                            @(Model.Bodegas.Where(a => a.id == item.idBodega).FirstOrDefault() == null ? "Bodega Inexistente" : Model.Bodegas.Where(a => a.id == item.idBodega).FirstOrDefault().Nombre)
+                                            @(Model.Bodegas.Where(a => a.id == item.idBodega).FirstOrDefault() == null ? "Bodega Inexistente" : Model.Bodegas.Where(a => a.id == item.idBodega).FirstOrDefault().CodSAP + " - " + Model.Bodegas.Where(a => a.id == item.idBodega).FirstOrDefault().Nombre)
 
                                         </td>
                                         <td>
@@ -350,18 +365,38 @@
 
 
 
-                                        <td>
-                                            @if (item.Status == "0")
+                                  
+
+
+                                        @{
+                                            switch (item.Status)
                                             {
-                                                <span class="badge badge-pill badge-success">Abierto</span>
+                                                case "P":
+                                                    {
+                                                        <td align="center" style="padding-top:15px;"><span class="badge badge-danger">Preliminar</span></td>
+                                                        break;
+                                                    }
+                                            
+                                                case "E":
+                                                    {
+                                                        <td align="center" style="padding-top:15px;"><span style="background-color: #ffc107;" class="badge badge-success">Espera Aprobación</span></td>
+                                                        break;
+                                                    }
+                                            
+                                                case "C":
+                                                    {
+                                                        <td align="center" style="padding-top:15px;"><span class="badge badge-success">Contabilizado</span></td>
+                                                        break;
+                                                    }
 
                                             }
-                                            else
-                                            {
-                                                <span class="badge badge-pill badge-danger">Cerrado</span>
-                                            }
-                                        </td>
 
+
+                                        }
+
+
+                                        
+                                        
 
                                         @*      <td>
                                     @if (item.ProcesadaSAP)

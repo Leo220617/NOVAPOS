@@ -22,6 +22,7 @@ namespace NOVAPOS.Pages.Arqueos
         private readonly ICrudApi<CategoriasViewModel, int> categorias;
         private readonly ICrudApi<BodegasViewModel, int> bodegas;
         private readonly ICrudApi<ProductosViewModel, string> productos;
+        private readonly ICrudApi<SucursalesViewModel, string> sucursales;
 
 
 
@@ -40,19 +41,24 @@ namespace NOVAPOS.Pages.Arqueos
         [BindProperty]
         public ProductosViewModel[] Productos { get; set; }
 
+        [BindProperty]
+        public SucursalesViewModel MiSucursal { get; set; }
 
+        [BindProperty]
+        public SucursalesViewModel[] Sucursal { get; set; }
 
 
 
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
 
-        public EditarModel(ICrudApi<ArqueosViewModel, int> service, ICrudApi<CategoriasViewModel, int> categorias, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<ProductosViewModel, string> productos)
+        public EditarModel(ICrudApi<ArqueosViewModel, int> service, ICrudApi<CategoriasViewModel, int> categorias, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<ProductosViewModel, string> productos, ICrudApi<SucursalesViewModel, string> sucursales)
         {
             this.service = service;
             this.categorias = categorias;
             this.bodegas = bodegas;
             this.productos = productos;
+            this.sucursales = sucursales;
 
         }
 
@@ -78,6 +84,12 @@ namespace NOVAPOS.Pages.Arqueos
                 filtro.CardName = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
                 filtro.CardCode = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 Productos = await productos.ObtenerLista(filtro);
+
+
+                var Suc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                Sucursal = await sucursales.ObtenerLista("");
+                MiSucursal = Sucursal.Where(a => a.CodSuc.ToUpper().Contains(Suc)).FirstOrDefault();
+
                 Arqueo = await service.ObtenerPorId(id);
 
 

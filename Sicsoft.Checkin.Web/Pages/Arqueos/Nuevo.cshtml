@@ -62,6 +62,7 @@
             <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
             <input hidden id="Categorias" value="@JsonConvert.SerializeObject(Model.Categorias)" />
             <input hidden id="Bodegas" value="@JsonConvert.SerializeObject(Model.Bodegas)" />
+            <input hidden id="MiSucursal" value="@JsonConvert.SerializeObject(Model.MiSucursal)" />
 
             <input hidden id="urlGenerar" value="@Url.Page("Nuevo", "AgregarArqueo")" />
 
@@ -107,10 +108,10 @@
                     <!-- info row -->
 
                     <div class="row invoice-info">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label>Bodega</label>
-                                <select id="BodegaSeleccionado" class="form-control select2" onchange="javascript: onChangeBodega()">
+                                <label>Sucursal</label>
+                                <select id="SucursalSeleccionado" class="form-control select2" onchange="javascript: onChangeSucursal()" disabled>
                                     <option value="0"> Seleccione Bodega</option>
 
 
@@ -121,7 +122,7 @@
                    
 
               
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label>Categoria</label>
                                 <select id="CategoriaSeleccionado" class="form-control select2" onchange="javascript: onChangeCategoria()">
@@ -132,7 +133,14 @@
                                 </select>
                             </div>
                         </div>
-           
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Palabra Clave</label>
+                                <input type="text" class="form-control" id="busqueda2" placeholder="Ingrese la descripción" oninput="filtrarTabla()">
+                            </div>
+                        </div>
+
+                       
                     
 
                         <div class="col-2">
@@ -142,7 +150,7 @@
                             </button>
 
                         </div>
-                        <div class="col-2">
+                        <div class="col-2" hidden>
 
                             <button type="button" id="botonG" class="btn btn-info pull-right" onclick="    javascript: GeneraryEnviar()">
                                 <i class="fa fa-credit-card"></i> Enviar a Revisión
@@ -187,17 +195,17 @@
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="busqueda">Buscador:</label>
-                                            <input type="text" class="form-control" id="busqueda" placeholder="Ingrese la descripción" oninput="filtrarTabla()">
+                                            <input disabled type="text" class="form-control" id="busqueda" placeholder="Ingrese la descripción" oninput="filtrarTabla()">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="ProductoSeleccionado">Productos sin stock:</label>
-                                        <select id="ProductoSeleccionado" class="form-control select2">
+                                        <select disabled id="ProductoSeleccionado" class="form-control select2">
                                             <option value="0"> Seleccione Productos</option>
 
                                         </select>
                                     </div>
-                                    <div class="col-sm-2 pl-1" style="text-align: right;">
+                                    <div class="col-sm-2 pl-1" style="text-align: right;" hidden>
                               <br />
                                         <a id="agregar" onclick="javascript: AgregarProductoTabla();" class="btn btn-primary" style="color: white !important;">+ Agregar </a>
                                     </div>
@@ -220,7 +228,10 @@
                                             <th class="bg-info">Bodega</th>
                                             <th class="bg-info">Stock</th>
                                             <th class="bg-info">Contado</th>
-                                            <th class="bg-info">Cantidad Contado</th>
+                                            <th class="bg-info">Cantidad1</th>
+                                            <th class="bg-info">Cantidad2</th>
+                                            <th class="bg-info">Cantidad3</th>
+                                            <th class="bg-info">Total Contado</th>
                                             <th class="bg-info">Diferencia</th>
 
 

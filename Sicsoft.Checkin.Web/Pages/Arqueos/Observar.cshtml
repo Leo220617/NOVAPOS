@@ -153,6 +153,122 @@
 
 
         }
+
+        function GenerarR() {
+
+            try {
+
+                var EncArqueos = {
+
+                    id: $("#id").val(),
+                    Status: "R"
+                }
+
+
+                Swal.fire({
+                    title: '¿Desea rechazar la Toma Física?',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: `Aceptar`,
+                    denyButtonText: `Cancelar`,
+                    customClass: {
+                        confirmButton: 'swalBtnColor',
+                        denyButton: 'swalDeny'
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var jsonString = JSON.stringify(EncArqueos);
+                        // Comprimir la cadena JSON utilizando gzip
+                        var compressedData = pako.gzip(jsonString);
+
+                        // Convertir los datos comprimidos a un ArrayBuffer (opcional, depende de tu caso de uso)
+                        var compressedArrayBuffer = compressedData.buffer;
+
+                        $.ajax({
+                            type: 'POST',
+
+                            url: '@Url.Page("Observar", "AgregarArqueo")',
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            data: compressedArrayBuffer,
+                            processData: false,
+                            headers: {
+                                RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (json) {
+
+
+                                console.log("resultado " + json.arqueo);
+                                if (json.success == true) {
+                                    $("#divProcesando").modal("hide");
+                                    Swal.fire({
+                                        title: "Ha sido generado con éxito",
+
+                                        icon: 'success',
+                                        showCancelButton: false,
+
+                                        confirmButtonText: 'OK',
+                                        customClass: {
+                                            confirmButton: 'swalBtnColor',
+
+                                        },
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            //Despues de insertar, ocupariamos el id del cliente en la bd
+                                            //para entonces setearlo en el array de clientes
+
+                                            window.location.href = window.location.href.split("/Observar")[0];
+
+
+                                        }
+                                    })
+
+                                } else {
+
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Ha ocurrido un error al intentar guardar ' + json.arqueo
+
+                                    })
+                                }
+                            },
+
+                            beforeSend: function () {
+                                $("#divProcesando").modal("show");
+
+                            },
+                            complete: function () {
+                                $("#divProcesando").modal("hide");
+
+                            },
+                            error: function (error) {
+                                $("#divProcesando").modal("hide");
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Ha ocurrido un error al intentar guardar ' + error
+
+                                })
+                            }
+                        });
+                    }
+                })
+
+
+            } catch (e) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar agregar ' + e
+
+                })
+            }
+
+
+
+        }
     </script>
 
 
@@ -247,10 +363,7 @@
 
                     <div class="row invoice-info">
                       
-                        <div class="col-4">
-                            <h5> <b>Bodega: </b>    @(Model.Bodegas.Where(a => a.id == Model.Arqueo.idBodega).FirstOrDefault() == null ? "Bodega Inexistente" : Model.Bodegas.Where(a => a.id == Model.Arqueo.idBodega).FirstOrDefault().CodSAP + " - " + Model.Bodegas.Where(a => a.id == Model.Arqueo.idBodega).FirstOrDefault().Nombre)</h5>
-
-                        </div>
+                      
 
 
 
@@ -260,8 +373,14 @@
 
                           @if (!string.IsNullOrEmpty(Roles.Where(a => a == "74").FirstOrDefault()) && Model.Arqueo.Status == "C")
                         {
+                            <div class="col-2">
 
-                            <div class="col-10">
+                                <button type="button" id="botonG" class="btn btn-danger pull-right" onclick="    javascript: GenerarR()">
+                                    <i class="fa fa-credit-card"></i> Rechazar
+                                </button>
+
+                            </div>
+                            <div class="col-2">
                                 @*<button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>*@
                                 <button type="button" id="botonG" class="btn btn-success pull-right" onclick="    javascript: Generar()">
                                     <i class="fa fa-credit-card"></i> Contabilizar

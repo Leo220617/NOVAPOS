@@ -136,7 +136,7 @@ namespace NOVAPOS.Pages.Arqueos
                     recibidos = Newtonsoft.Json.JsonConvert.DeserializeObject<ArqueosViewModel>(jsonString);
                 }
 
-                recibidos.Status = "C";
+           
 
 
                

@@ -53,6 +53,7 @@ var ProdClientes2 = [];
 var ProdSinStock = [];
 var htmlS = "";
 var inicio = false;
+var MiSucursal = [];
 
 function Recuperar() {
     try {
@@ -61,8 +62,9 @@ function Recuperar() {
         Bodegas = JSON.parse($("#Bodegas").val());
         Productos = JSON.parse($("#Productos").val());
         Categorias = JSON.parse($("#Categorias").val());
+        MiSucursal = JSON.parse($("#MiSucursal").val());
 
-        RellenaBodegas()
+        RellenaSucursales()
         RellenaCategorias()
 
 
@@ -105,19 +107,17 @@ function RellenaCategorias() {
 }
 
 
-function RellenaBodegas() {
+function RellenaSucursales() {
     try {
         var html = "";
-        $("#BodegaSeleccionado").html(html);
-        html += "<option value='0' > Seleccione Bodega </option>";
+        $("#SucursalSeleccionado").html(html);
 
-        for (var i = 0; i < Bodegas.length; i++) {
-            html += "<option value='" + Bodegas[i].id + "' > " + Bodegas[i].CodSAP + " - " + Bodegas[i].Nombre + " </option>";
-        }
+        html += "<option value='" + MiSucursal.CodSuc + "' > " + MiSucursal.CodSuc + " - " + MiSucursal.Nombre + " </option>";
 
 
 
-        $("#BodegaSeleccionado").html(html);
+
+        $("#SucursalSeleccionado").html(html);
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -133,20 +133,20 @@ function onChangeCategoria() {
     try {
         var idCategoria = $("#CategoriaSeleccionado").val();
 
-        var idBodega = $("#BodegaSeleccionado").val();
+        var idBodega = $("#SucursalSeleccionado").val();
 
         var Categoria = Categorias.find(a => a.id == idCategoria);
-        var Moneda = $("#MonedaSeleccionado").val();
+      
 
 
         if (idCategoria != 0 && idBodega != 0) {
-            ProdClientes = Productos.filter(a => a.idCategoria == idCategoria && a.idBodega == idBodega && a.Stock > 0);
-            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.idBodega == idBodega && a.Stock == 0);
+            ProdClientes = Productos.filter(a => a.idCategoria == idCategoria && a.Stock > 0);
+            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0);
             RellenaProductos();
             RellenaProductosSinStock();
         } else {
-            ProdClientes = Productos.filter(a => a.idCategoria == 0 && a.idBodega == 0 && a.Stock > 0);
-            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.idBodega == idBodega && a.Stock == 0);
+            ProdClientes = Productos.filter(a => a.idCategoria == 0 && a.Stock > 0);
+            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0);
             RellenaProductos();
             RellenaProductosSinStock();
         }
@@ -167,21 +167,21 @@ function onChangeBodega() {
     try {
         var idCategoria = $("#CategoriaSeleccionado").val();
 
-        var idBodega = $("#BodegaSeleccionado").val();
+        var idBodega = $("#SucursalSeleccionado").val();
 
 
 
 
 
         if (idCategoria != 0 && idBodega != 0) {
-            ProdClientes = Productos.filter(a => a.idCategoria == idCategoria && a.idBodega == idBodega && a.Stock > 0);
-            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.idBodega == idBodega && a.Stock == 0);
+            ProdClientes = Productos.filter(a => a.idCategoria == idCategoria && a.Stock > 0);
+            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0);
 
             RellenaProductos();
             RellenaProductosSinStock();
         } else {
-            ProdClientes = Productos.filter(a => a.idCategoria == 0 && a.idBodega == 0 && a.Stock > 0);
-            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.idBodega == idBodega && a.Stock == 0);
+            ProdClientes = Productos.filter(a => a.idCategoria == 0 && a.Stock > 0);
+            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0);
             RellenaProductos();
             RellenaProductosSinStock();
         }
@@ -236,7 +236,7 @@ function RellenaProductos() {
     try {
         var idCategoria = $("#CategoriaSeleccionado").val();
 
-        var idBodega = $("#BodegaSeleccionado").val();
+        var idBodega = $("#SucursalSeleccionado").val();
 
 
         if (idCategoria != 0 && idBodega != 0) {
@@ -257,13 +257,16 @@ function RellenaTabla() {
     try {
         var html = "";
 
-        var idBodega = $("#BodegaSeleccionado").val();
-        var Bodega = Bodegas.find(a => a.id == idBodega);
+
 
         $("#tbody").html(html);
 
 
         for (var i = 0; i < ProdClientes.length; i++) {
+
+
+            var idBodega = ProdClientes[i].idBodega;
+            var Bodega = Bodegas.find(a => a.id == idBodega);
 
             html += "<tr>";
 
@@ -278,9 +281,11 @@ function RellenaTabla() {
 
 
 
-            html += "<td class='text-center'>  <input type='checkbox' id='" + i + "_mdcheckbox' class='chk-col-green' onchange='javascript: onChangeRevisado(" + i + ")'>  <label for='" + i + "_mdcheckbox'></label> </td> ";
-
-            html += "<td class='text-center'> <input onchange='javascript: onChangeCantidad(" + i + ")' type='number' id='" + i + "_Cantidad' class='form-control'   value= '0' min='1'/>  </td>";
+            html += "<td class='text-center'>  <input disabled type='checkbox' id='" + i + "_mdcheckbox' class='chk-col-green' onchange='javascript: onChangeRevisado(" + i + ")'>  <label for='" + i + "_mdcheckbox'></label> </td> ";
+            html += "<td class='text-center'> <input disabled onchange='javascript: onChangeCantidad(" + i + ")' type='number' id='" + i + "_Cantidad1' class='form-control'   value= '0' min='1'/>  </td>";
+            html += "<td class='text-center'> <input disabled onchange='javascript: onChangeCantidad(" + i + ")' type='number' id='" + i + "_Cantidad2' class='form-control'   value= '0' min='1'/>  </td>";
+            html += "<td class='text-center'> <input disabled onchange='javascript: onChangeCantidad(" + i + ")' type='number' id='" + i + "_Cantidad3' class='form-control'   value= '0' min='1'/>  </td>";
+            html += "<td class='text-center' id='" + i + "_Cantidad'> 0 </td>";
             html += "<td class='text-center' id='" + i + "_Diferencia'> 0 </td>";
 
 
@@ -367,7 +372,7 @@ function onChangeCantidad(i) {
 
 
         var idCategoria = $("#CategoriaSeleccionado").val();
-        var idBodega = $("#BodegaSeleccionado").val();
+        var idBodega = $("#SucursalSeleccionado").val();
 
         var valorCheck = $("#" + i + "_mdcheckbox").prop('checked');
 
@@ -446,7 +451,7 @@ function onChangeCantidad(i) {
 
         }
 
-        $("#BodegaSeleccionado").prop("disabled", true);
+        $("#SucursalSeleccionado").prop("disabled", true);
         $("#CategoriaSeleccionado").prop("disabled", true);
 
 
@@ -466,7 +471,7 @@ function onChangeRevisado(i) {
 
 
         var idCategoria = $("#CategoriaSeleccionado").val();
-        var idBodega = $("#BodegaSeleccionado").val();
+        var idBodega = $("#SucursalSeleccionado").val();
 
         var valorCheck = $("#" + i + "_mdcheckbox").prop('checked');
 
@@ -546,7 +551,7 @@ function onChangeRevisado(i) {
 
         }
 
-        $("#BodegaSeleccionado").prop("disabled", true);
+        $("#SucursalSeleccionado").prop("disabled", true);
         $("#CategoriaSeleccionado").prop("disabled", true);
 
     } catch (e) {
@@ -616,8 +621,8 @@ function Generar() {
 
             id: 0,
             idCategoria: $("#CategoriaSeleccionado").val(),
-            idBodega: $("#BodegaSeleccionado").val(),
-            CodSuc: "",
+            PalabraClave: $("#busqueda2").val(),
+            CodSuc: $("#SucursalSeleccionado").val(),
             idUsuarioCreador: 0,
             FechaCreacion: $("#Fecha").val(),
             Validado: false,
@@ -744,8 +749,8 @@ function GeneraryEnviar() {
 
             id: 0,
             idCategoria: $("#CategoriaSeleccionado").val(),
-            idBodega: $("#BodegaSeleccionado").val(),
-            CodSuc: "",
+            PalabraClave: $("#busqueda2").val(),
+            CodSuc: $("#SucursalSeleccionado").val(),
             idUsuarioCreador: 0,
             FechaCreacion: $("#Fecha").val(),
             Validado: false,
@@ -869,16 +874,7 @@ function validarArqueo(e) {
 
 
 
-        if (e.idBodega == "" || e.idBodega == null || e.idBodega == 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Ha ocurrido un error al intentar agregar, falta la Bodega'
-
-            })
-            return false;
-        }
-        else if (e.idCategoria == "" || e.idCategoria == null || e.idCategoria == 0) {
+         if (e.idCategoria == "" || e.idCategoria == null || e.idCategoria == 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -892,16 +888,8 @@ function validarArqueo(e) {
 
 
 
-        else if (e.Detalle.lengh == 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Ha ocurrido un error al intentar agregar, por favor cuente al menos un producto'
 
-            })
-            return false;
-        }
-
+     
 
 
 
@@ -924,15 +912,18 @@ function validarArqueo(e) {
 }
 
 
-function filtrarTabla() {
-    var busqueda = $("#busqueda").val().toLowerCase();
+
+
+function filtrarTabla() { //aRRIBA
+    var busqueda = $("#busqueda2").val().toLowerCase();
+    var busqueda2 = $("#busqueda").val().toLowerCase();
     var filas = $("#tbody tr");
     var indicesVisibles = [];
 
     filas.each(function (index) {
         var descripcion = $(this).find("td:eq(0)").text().toLowerCase();
 
-        if (descripcion.includes(busqueda)) {
+        if (descripcion.includes(busqueda) && descripcion.includes(busqueda2)) {
             $(this).show();
             indicesVisibles.push(index);
         } else {
@@ -942,8 +933,6 @@ function filtrarTabla() {
 
     return indicesVisibles;
 }
-
-
 
 
 

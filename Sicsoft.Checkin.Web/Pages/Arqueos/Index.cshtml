@@ -212,27 +212,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label for="cyber">Bodega:</label>
-                                    <select class="form-control select2" id="Condicion" asp-for="filtro.Codigo3" required>
-                                        <option value="0"> Seleccione</option>
-
-                                        @foreach (var item in Model.Bodegas)
-                                        {
-                                            <option value="@item.id">@item.id - @item.Nombre</option>
-                                        }
-
-
-                                    </select>
-
-
-
-
-
-
-                                </div>
-                            </div>
+                    
 
                             @* <div class="col-2 " style="text-align: center; padding-top: 2%;">
                             <input type="checkbox" id="md_checkbox_1" class="chk-col-red" asp-for="filtro.Procesado" onclick="this.form.submit()" />
@@ -256,6 +236,11 @@
                                 <label for="md_checkbox_3">Contabilizado</label>
 
 
+                                &nbsp;
+                                &nbsp;
+
+                                <input type="checkbox" id="md_checkbox_4" class="chk-col-red" asp-for="filtro.rechazados" onclick="this.form.submit()" />
+                                <label for="md_checkbox_4">Rechazado</label>
 
 
 
@@ -307,7 +292,7 @@
                                     <th>ID</th>
                                     <th>Acción</th>
                                     <th>Categoría</th>
-                                    <th>Bodega</th>
+                                    <th>Palabra Clave</th>
                                     <th>Fecha Creado</th>
                                     <th>Generado Por</th>
                                     <th>Fecha Actualización</th>
@@ -347,8 +332,7 @@
                                         </td>
 
                                         <td>
-                                            @(Model.Bodegas.Where(a => a.id == item.idBodega).FirstOrDefault() == null ? "Bodega Inexistente" : Model.Bodegas.Where(a => a.id == item.idBodega).FirstOrDefault().CodSAP + " - " + Model.Bodegas.Where(a => a.id == item.idBodega).FirstOrDefault().Nombre)
-
+                                            @item.PalabraClave
                                         </td>
                                         <td>
                                             @item.FechaCreacion.ToString("dd/MM/yyyy")
@@ -386,6 +370,12 @@
                                                 case "C":
                                                     {
                                                         <td align="center" style="padding-top:15px;"><span class="badge badge-success">Contabilizado</span></td>
+                                                        break;
+                                                    }
+
+                                                case "R":
+                                                    {
+                                                        <td align="center" style="padding-top:15px;"><span class="badge badge-danger">Rechazado</span></td>
                                                         break;
                                                     }
 
@@ -427,7 +417,7 @@
                                     <th>ID</th>
                                     <th>Acción</th>
                                     <th>Categoría</th>
-                                    <th>Bodega</th>
+                                    <th>Palabra Clave</th>
                                     <th>Fecha Creado</th>
                                     <th>Generado Por</th>
                                     <th>Fecha Actualización</th>

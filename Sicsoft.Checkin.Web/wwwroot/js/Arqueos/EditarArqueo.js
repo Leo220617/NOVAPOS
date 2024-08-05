@@ -54,6 +54,7 @@ var ProdSinStock = [];
 var htmlS = "";
 var inicio = true;
 var Arqueos = [];
+var MiSucursal = [];
 
 function Recuperar() {
     try {
@@ -63,7 +64,9 @@ function Recuperar() {
         Productos = JSON.parse($("#Productos").val());
         Categorias = JSON.parse($("#Categorias").val());
         Arqueos = JSON.parse($("#Arqueo").val());
-        RellenaBodegas();
+        MiSucursal = JSON.parse($("#MiSucursal").val());
+
+        RellenaSucursales();
         RellenaCategorias();
         RecuperarInformacion();
       
@@ -86,11 +89,34 @@ function Recuperar() {
 
 }
 
+function RellenaSucursales() {
+    try {
+        var html = "";
+        $("#SucursalSeleccionado").html(html);
+
+        html += "<option value='" + MiSucursal.CodSuc + "' > " + MiSucursal.CodSuc + " - " + MiSucursal.Nombre + " </option>";
+
+
+
+
+        $("#SucursalSeleccionado").html(html);
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+
+}
 function RecuperarInformacion() {
     try {
 
         $("#BodegaSeleccionado").val(Arqueos.idBodega);
         $("#CategoriaSeleccionado").val(Arqueos.idCategoria);
+        $("#busqueda2").val(Arqueos.PalabraClave);
+       
 
         var FechaX = new Date(Arqueos.FechaCreacion);
 
@@ -179,20 +205,20 @@ function onChangeCategoria() {
     try {
         var idCategoria = $("#CategoriaSeleccionado").val();
 
-        var idBodega = $("#BodegaSeleccionado").val();
+        var idBodega = $("#SucursalSeleccionado").val();
 
         var Categoria = Categorias.find(a => a.id == idCategoria);
-        var Moneda = $("#MonedaSeleccionado").val();
+        var filtro = $("#busqueda2").val();
 
 
         if (idCategoria != 0 && idBodega != 0) {
-            ProdClientes = Productos.filter(a => a.idCategoria == idCategoria && a.idBodega == idBodega && a.Stock > 0);
-            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.idBodega == idBodega && a.Stock == 0);
+            ProdClientes = Productos.filter(a => a.idCategoria == idCategoria && a.Stock > 0);
+            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0 && a.Nombre.includes(filtro));
             RellenaProductos();
             RellenaProductosSinStock();
         } else {
-            ProdClientes = Productos.filter(a => a.idCategoria == 0 && a.idBodega == 0 && a.Stock > 0);
-            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.idBodega == idBodega && a.Stock == 0);
+            ProdClientes = Productos.filter(a => a.idCategoria == 0  && a.Stock > 0);
+            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0 && a.Nombre.includes(filtro));
             RellenaProductos();
             RellenaProductosSinStock();
         }
@@ -213,21 +239,21 @@ function onChangeBodega() {
     try {
         var idCategoria = $("#CategoriaSeleccionado").val();
 
-        var idBodega = $("#BodegaSeleccionado").val();
+        var idBodega = $("#SucursalSeleccionado").val();
 
 
 
 
 
         if (idCategoria != 0 && idBodega != 0) {
-            ProdClientes = Productos.filter(a => a.idCategoria == idCategoria && a.idBodega == idBodega && a.Stock > 0);
-            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.idBodega == idBodega && a.Stock == 0);
+            ProdClientes = Productos.filter(a => a.idCategoria == idCategoria && a.Stock > 0);
+            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0);
 
             RellenaProductos();
             RellenaProductosSinStock();
         } else {
             ProdClientes = Productos.filter(a => a.idCategoria == 0 && a.idBodega == 0 && a.Stock > 0);
-            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.idBodega == idBodega && a.Stock == 0);
+            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0);
             RellenaProductos();
             RellenaProductosSinStock();
         }
@@ -245,7 +271,6 @@ function onChangeBodega() {
 function RellenaProductosSinStock() {
     try {
         var html = "";
-
         $("#ProductoSeleccionado").html(html);
 
         html += "<option value='0' > Seleccione Producto </option>";
@@ -282,11 +307,12 @@ function RellenaProductos() {
     try {
         var idCategoria = $("#CategoriaSeleccionado").val();
 
-        var idBodega = $("#BodegaSeleccionado").val();
+        var idBodega = $("#SucursalSeleccionado").val();
 
 
         if (idCategoria != 0 && idBodega != 0) {
             RellenaTabla();
+            filtrarTabla();
         }
 
 
@@ -303,13 +329,16 @@ function RellenaTabla() {
     try {
         var html = "";
 
-        var idBodega = $("#BodegaSeleccionado").val();
-        var Bodega = Bodegas.find(a => a.id == idBodega);
+      
 
         $("#tbody").html(html);
 
 
         for (var i = 0; i < ProdClientes.length; i++) {
+
+
+            var idBodega = ProdClientes[i].idBodega;
+            var Bodega = Bodegas.find(a => a.id == idBodega);
 
             html += "<tr>";
 
@@ -326,7 +355,10 @@ function RellenaTabla() {
 
             html += "<td class='text-center'>  <input type='checkbox' id='" + i + "_mdcheckbox' class='chk-col-green' onchange='javascript: onChangeRevisado(" + i + ")'>  <label for='" + i + "_mdcheckbox'></label> </td> ";
 
-            html += "<td class='text-center'> <input onchange='javascript: onChangeCantidad(" + i + ")' type='number' id='" + i + "_Cantidad' class='form-control'   value= '0' min='1'/>  </td>";
+            html += "<td class='text-center'> <input onchange='javascript: onChangeCantidad(" + i + ")' type='number' id='" + i + "_Cantidad1' class='form-control'   value= '0' min='1'/>  </td>";
+            html += "<td class='text-center'> <input onchange='javascript: onChangeCantidad(" + i + ")' type='number' id='" + i + "_Cantidad2' class='form-control'   value= '0' min='1'/>  </td>";
+            html += "<td class='text-center'> <input onchange='javascript: onChangeCantidad(" + i + ")' type='number' id='" + i + "_Cantidad3' class='form-control'   value= '0' min='1'/>  </td>";
+            html += "<td class='text-center' id='" + i + "_Cantidad'> 0 </td>";
             html += "<td class='text-center' id='" + i + "_Diferencia'> 0 </td>";
 
 
@@ -985,15 +1017,16 @@ function validarArqueo(e) {
 }
 
 
-function filtrarTabla() {
-    var busqueda = $("#busqueda").val().toLowerCase();
+function filtrarTabla() { //aRRIBA
+    var busqueda = $("#busqueda2").val().toLowerCase();
+    var busqueda2 = $("#busqueda").val().toLowerCase();
     var filas = $("#tbody tr");
     var indicesVisibles = [];
 
     filas.each(function (index) {
         var descripcion = $(this).find("td:eq(0)").text().toLowerCase();
 
-        if (descripcion.includes(busqueda)) {
+        if (descripcion.includes(busqueda) && descripcion.includes(busqueda2)) {
             $(this).show();
             indicesVisibles.push(index);
         } else {

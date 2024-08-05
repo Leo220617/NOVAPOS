@@ -34,6 +34,7 @@ namespace InversionGloblalWeb.Models
         public bool pendientes { get; set; }
         public bool espera { get; set; }
         public bool contabilizado { get; set; }
+        public bool rechazados { get; set; }
 
     }
 }

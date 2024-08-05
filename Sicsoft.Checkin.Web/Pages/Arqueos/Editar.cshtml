@@ -63,7 +63,7 @@
             <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
             <input hidden id="Categorias" value="@JsonConvert.SerializeObject(Model.Categorias)" />
             <input hidden id="Bodegas" value="@JsonConvert.SerializeObject(Model.Bodegas)" />
-
+            <input hidden id="MiSucursal" value="@JsonConvert.SerializeObject(Model.MiSucursal)" />
             <input hidden id="urlGenerar" value="@Url.Page("Editar", "AgregarArqueo")" />
 
 
@@ -108,10 +108,10 @@
                     <!-- info row -->
 
                     <div class="row invoice-info">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label>Bodega</label>
-                                <select id="BodegaSeleccionado" class="form-control select2" onchange="javascript: onChangeBodega()">
+                                <label>Sucursal</label>
+                                <select id="SucursalSeleccionado" class="form-control select2" onchange="javascript: onChangeSucursal()" disabled>
                                     <option value="0"> Seleccione Bodega</option>
 
 
@@ -121,11 +121,10 @@
                         </div>
 
 
-
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label>Categoria</label>
-                                <select id="CategoriaSeleccionado" class="form-control select2" onchange="javascript: onChangeCategoria()">
+                                <select disabled id="CategoriaSeleccionado" class="form-control select2" onchange="javascript: onChangeCategoria()">
                                     <option value="0"> Seleccione Categoria</option>
 
 
@@ -134,9 +133,13 @@
                             </div>
                         </div>
 
-
-                        <div class="col-8">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Palabra Clave</label>
+                                <input disabled  type="text" class="form-control" id="busqueda2" placeholder="Ingrese la descripción" oninput="filtrarTabla()">
+                            </div>
                         </div>
+                       
                         <div class="col-2">
                             @*<button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>*@
                             <button type="button" id="botonG" class="btn btn-success pull-right" onclick="    javascript: Generar()">
@@ -222,7 +225,10 @@
                                             <th class="bg-info">Bodega</th>
                                             <th class="bg-info">Stock</th>
                                             <th class="bg-info">Contado</th>
-                                            <th class="bg-info">Cantidad Contado</th>
+                                            <th class="bg-info">Cantidad1</th>
+                                            <th class="bg-info">Cantidad2</th>
+                                            <th class="bg-info">Cantidad3</th>
+                                            <th class="bg-info">Total Contado</th>
                                             <th class="bg-info">Diferencia</th>
 
 

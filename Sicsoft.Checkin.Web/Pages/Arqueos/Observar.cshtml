@@ -297,7 +297,7 @@
             <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
             <input hidden id="Categorias" value="@JsonConvert.SerializeObject(Model.Categorias)" />
             <input hidden id="Bodegas" value="@JsonConvert.SerializeObject(Model.Bodegas)" />
-
+            <input hidden id="MiSucursal" value="@JsonConvert.SerializeObject(Model.MiSucursal)" />
             <input hidden id="urlGenerar" value="@Url.Page("Observar", "AgregarArqueo")" />
 
 
@@ -362,13 +362,20 @@
                     <!-- info row -->
 
                     <div class="row invoice-info">
-                      
-                      
 
 
 
                         <div class="col-md-4">
+                            <h5> <b>Sucursal: </b>@Model.MiSucursal.CodSuc - @Model.MiSucursal.Nombre  </h5>
+                        </div>
+
+                        <div class="col-md-4">
                             <h5> <b>Categoría: </b>    @(Model.Categorias.Where(a => a.id == Model.Arqueo.idCategoria).FirstOrDefault() == null ? "Categoria Inexistente" : Model.Categorias.Where(a => a.id == Model.Arqueo.idCategoria).FirstOrDefault().CodSAP + " - " + Model.Categorias.Where(a => a.id == Model.Arqueo.idCategoria).FirstOrDefault().Nombre)</h5>
+                        </div>
+                      
+
+                        <div class="col-md-4">
+                            <h5> <b>Palabra Clave: </b>@Model.Arqueo.PalabraClave  </h5>
                         </div>
 
                           @if (!string.IsNullOrEmpty(Roles.Where(a => a == "74").FirstOrDefault()) && Model.Arqueo.Status == "C")

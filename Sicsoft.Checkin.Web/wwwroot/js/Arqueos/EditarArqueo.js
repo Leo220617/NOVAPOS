@@ -69,11 +69,11 @@ function Recuperar() {
         RellenaSucursales();
         RellenaCategorias();
         RecuperarInformacion();
-      
+
         onChangeCategoria();
-       
+
         //RellenaTabla();
-     
+
 
 
 
@@ -116,7 +116,7 @@ function RecuperarInformacion() {
         $("#BodegaSeleccionado").val(Arqueos.idBodega);
         $("#CategoriaSeleccionado").val(Arqueos.idCategoria);
         $("#busqueda2").val(Arqueos.PalabraClave);
-       
+
 
         var FechaX = new Date(Arqueos.FechaCreacion);
 
@@ -217,7 +217,7 @@ function onChangeCategoria() {
             RellenaProductos();
             RellenaProductosSinStock();
         } else {
-            ProdClientes = Productos.filter(a => a.idCategoria == 0  && a.Stock > 0);
+            ProdClientes = Productos.filter(a => a.idCategoria == 0 && a.Stock > 0);
             ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0 && a.Nombre.includes(filtro));
             RellenaProductos();
             RellenaProductosSinStock();
@@ -329,7 +329,7 @@ function RellenaTabla() {
     try {
         var html = "";
 
-      
+
 
         $("#tbody").html(html);
 
@@ -377,7 +377,7 @@ function RellenaTabla() {
             for (var x = 0; x < ProdCadena.length; x++) {
                 var id = ProdCadena[x].idProducto;
                 var Existe = ProdClientes.find(a => a.id == id);
-             
+
                 if (!Existe) {
                     var PE = ProdClientes2.find(a => a.id == id);
                     ProdClientes.push(PE);
@@ -385,11 +385,11 @@ function RellenaTabla() {
                     RellenaTabla();
                     $("#ProductoSeleccionado").val("0").trigger('change.select2');
 
-                } 
-                
+                }
+
             }
             RecuperarProdCadena();
-         
+
         }
 
     } catch (e) {
@@ -416,7 +416,7 @@ function RecuperarProdCadena() {
                 var x = ProdCadena.findIndex(a => a.idProducto == ProdClientes2[z].id);
             }
 
-     
+
             $("#" + z + "_Cantidad").val(ProdCadena[x].Total);
             $("#" + z + "_Diferencia").text(ProdCadena[x].Diferencia);
 
@@ -472,8 +472,11 @@ function onChangeCantidad(i) {
         var PE = ProdClientes[i];
         if (Existe == undefined) {
 
-            var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
-                var TotalDiferencia = Cantidad - PE.Stock;
+            var Cantidad1 = parseFloat($("#" + i + "_Cantidad1").val());
+            var Cantidad2 = parseFloat($("#" + i + "_Cantidad2").val());
+            var Cantidad3 = parseFloat($("#" + i + "_Cantidad3").val());
+            var TotalCantidad = Cantidad1 + Cantidad2 + Cantidad3;
+            var TotalDiferencia = TotalCantidad - PE.Stock;
             var Producto =
             {
 
@@ -483,7 +486,7 @@ function onChangeCantidad(i) {
                 idProducto: PE.id,
                 idEncabezado: 0,
                 Stock: PE.Stock,
-                Total: Cantidad,
+                Total: TotalCantidad,
                 Diferencia: TotalDiferencia,
                 Contado: $("#" + i + "_mdcheckbox").prop('checked')
 
@@ -491,7 +494,9 @@ function onChangeCantidad(i) {
             };
 
             if (valorCheck == true) {
-                $("#" + i + "_Cantidad").prop('disabled', true);
+                $("#" + i + "_Cantidad1").prop('disabled', true);
+                $("#" + i + "_Cantidad2").prop('disabled', true);
+                $("#" + i + "_Cantidad3").prop('disabled', true);
                 var input = $("#" + i + "_Diferencia");
 
                 $("#" + i + "_Diferencia").text(TotalDiferencia);
@@ -504,27 +509,34 @@ function onChangeCantidad(i) {
                 }
             } else {
                 $("#" + i + "_Diferencia").text(0);
+                $("#" + i + "_Cantidad").text(0);
                 $("#" + i + "_Cantidad").prop('disabled', false);
             }
 
             ProdCadena.push(Producto);
         } else {
-            var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
-                var TotalDiferencia = Cantidad - PE.Stock;
+            var Cantidad1 = parseFloat($("#" + i + "_Cantidad1").val());
+            var Cantidad2 = parseFloat($("#" + i + "_Cantidad2").val());
+            var Cantidad3 = parseFloat($("#" + i + "_Cantidad3").val());
+            var TotalCantidad = Cantidad1 + Cantidad2 + Cantidad3;
+            var TotalDiferencia = TotalCantidad - PE.Stock;
 
             ProdCadena[x].idProducto = PE.id;
             ProdCadena[x].Stock = PE.Stock;
-            ProdCadena[x].Total = Cantidad;
+            ProdCadena[x].Total = TotalCantidad;
             ProdCadena[x].Diferencia = TotalDiferencia;
 
 
 
 
             if (valorCheck == true) {
-                $("#" + i + "_Cantidad").prop('disabled', true);
+                $("#" + i + "_Cantidad1").prop('disabled', true);
+                $("#" + i + "_Cantidad2").prop('disabled', true);
+                $("#" + i + "_Cantidad3").prop('disabled', true);
                 var input = $("#" + i + "_Diferencia");
 
                 $("#" + i + "_Diferencia").text(TotalDiferencia);
+                $("#" + i + "_Cantidad").text(TotalCantidad);
 
 
                 if (TotalDiferencia == 0) {
@@ -534,7 +546,10 @@ function onChangeCantidad(i) {
                 }
             } else {
                 $("#" + i + "_Diferencia").text(0);
-                $("#" + i + "_Cantidad").prop('disabled', false);
+                $("#" + i + "_Cantidad").text(0);
+                $("#" + i + "_Cantidad1").prop('disabled', false);
+                $("#" + i + "_Cantidad2").prop('disabled', false);
+                $("#" + i + "_Cantidad3").prop('disabled', false);
             }
 
 
@@ -571,8 +586,11 @@ function onChangeRevisado(i) {
         var PE = ProdClientes[i];
         if (Existe == undefined) {
 
-            var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
-                var TotalDiferencia = Cantidad - PE.Stock;
+            var Cantidad1 = parseFloat($("#" + i + "_Cantidad1").val());
+            var Cantidad2 = parseFloat($("#" + i + "_Cantidad2").val());
+            var Cantidad3 = parseFloat($("#" + i + "_Cantidad3").val());
+            var TotalCantidad = Cantidad1 + Cantidad2 + Cantidad3;
+            var TotalDiferencia = TotalCantidad - PE.Stock;
             var Producto =
             {
 
@@ -582,7 +600,7 @@ function onChangeRevisado(i) {
                 idProducto: PE.id,
                 idEncabezado: 0,
                 Stock: PE.Stock,
-                Total: Cantidad,
+                Total: TotalCantidad,
                 Diferencia: TotalDiferencia,
                 Contado: valorCheck
 
@@ -590,10 +608,13 @@ function onChangeRevisado(i) {
             };
 
             if (valorCheck == true) {
-                $("#" + i + "_Cantidad").prop('disabled', true);
+                $("#" + i + "_Cantidad1").prop('disabled', true);
+                $("#" + i + "_Cantidad2").prop('disabled', true);
+                $("#" + i + "_Cantidad3").prop('disabled', true);
                 var input = $("#" + i + "_Diferencia");
 
                 $("#" + i + "_Diferencia").text(TotalDiferencia);
+                $("#" + i + "_Cantidad").text(TotalCantidad);
 
 
                 if (TotalDiferencia == 0) {
@@ -603,17 +624,21 @@ function onChangeRevisado(i) {
                 }
             } else {
                 $("#" + i + "_Diferencia").text(0);
+                $("#" + i + "_Cantidad").text(0);
                 $("#" + i + "_Cantidad").prop('disabled', false);
             }
 
             ProdCadena.push(Producto);
         } else {
-            var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
-                var TotalDiferencia = Cantidad - PE.Stock;
+            var Cantidad1 = parseFloat($("#" + i + "_Cantidad1").val());
+            var Cantidad2 = parseFloat($("#" + i + "_Cantidad2").val());
+            var Cantidad3 = parseFloat($("#" + i + "_Cantidad3").val());
+            var TotalCantidad = Cantidad1 + Cantidad2 + Cantidad3;
+            var TotalDiferencia = TotalCantidad - PE.Stock;
 
             ProdCadena[x].idProducto = PE.id;
             ProdCadena[x].Stock = PE.Stock;
-            ProdCadena[x].Total = Cantidad;
+            ProdCadena[x].Total = TotalCantidad;
             ProdCadena[x].Diferencia = TotalDiferencia;
             ProdCadena[x].Contado = valorCheck;
 
@@ -621,9 +646,12 @@ function onChangeRevisado(i) {
 
 
             if (valorCheck == true) {
-                $("#" + i + "_Cantidad").prop('disabled', true);
+                $("#" + i + "_Cantidad1").prop('disabled', true);
+                $("#" + i + "_Cantidad2").prop('disabled', true);
+                $("#" + i + "_Cantidad3").prop('disabled', true);
                 var input = $("#" + i + "_Diferencia");
 
+                $("#" + i + "_Cantidad").text(TotalCantidad);
                 $("#" + i + "_Diferencia").text(TotalDiferencia);
 
 
@@ -634,7 +662,10 @@ function onChangeRevisado(i) {
                 }
             } else {
                 $("#" + i + "_Diferencia").text(0);
-                $("#" + i + "_Cantidad").prop('disabled', false);
+                $("#" + i + "_Cantidad").text(0);
+                $("#" + i + "_Cantidad1").prop('disabled', false);
+                $("#" + i + "_Cantidad2").prop('disabled', false);
+                $("#" + i + "_Cantidad3").prop('disabled', false);
             }
 
 
@@ -710,8 +741,8 @@ function Generar() {
 
             id: $("#id").val(),
             idCategoria: $("#CategoriaSeleccionado").val(),
-            idBodega: $("#BodegaSeleccionado").val(),
-            CodSuc: "",
+            CodSuc: $("#SucursalSeleccionado").val(), 
+            PalabraClave: $("#busqueda2").val(),
             idUsuarioCreador: 0,
             FechaCreacion: $("#Fecha").val(),
             Validado: false,
@@ -837,9 +868,9 @@ function GeneraryEnviar() {
         var EncArqueos = {
 
             id: $("#id").val(),
-            idCategoria: $("#CategoriaSeleccionado").val(),
-            idBodega: $("#BodegaSeleccionado").val(),
-            CodSuc: "",
+            idCategoria: $("#CategoriaSeleccionado").val(),       
+            CodSuc: $("#SucursalSeleccionado").val(), 
+            PalabraClave: $("#busqueda2").val(),
             idUsuarioCreador: 0,
             FechaCreacion: $("#Fecha").val(),
             Validado: false,
@@ -961,17 +992,7 @@ function validarArqueo(e) {
     try {
 
 
-
-        if (e.idBodega == "" || e.idBodega == null || e.idBodega == 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Ha ocurrido un error al intentar agregar, falta la Bodega'
-
-            })
-            return false;
-        }
-        else if (e.idCategoria == "" || e.idCategoria == null || e.idCategoria == 0) {
+         if (e.idCategoria == "" || e.idCategoria == null || e.idCategoria == 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -995,7 +1016,7 @@ function validarArqueo(e) {
             return false;
         }
 
-
+ 
 
 
 

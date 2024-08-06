@@ -23,6 +23,7 @@ namespace NOVAPOS.Pages.Arqueos
         private readonly ICrudApi<BodegasViewModel, int> bodegas;
         private readonly ICrudApi<ProductosViewModel, string> productos;
         private readonly ICrudApi<SucursalesViewModel, string> sucursales;
+        private readonly ICrudApi<PalabrasClavesViewModel, int> palabra;
 
 
 
@@ -47,16 +48,21 @@ namespace NOVAPOS.Pages.Arqueos
         [BindProperty]
         public SucursalesViewModel[] Sucursal { get; set; }
 
+
+        [BindProperty]
+        public PalabrasClavesViewModel[] Palabras { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
 
-        public NuevoModel(ICrudApi<ArqueosViewModel, int> service, ICrudApi<CategoriasViewModel, int> categorias, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<ProductosViewModel, string> productos, ICrudApi<SucursalesViewModel, string> sucursales)
+        public NuevoModel(ICrudApi<ArqueosViewModel, int> service, ICrudApi<CategoriasViewModel, int> categorias, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<ProductosViewModel, string> productos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<PalabrasClavesViewModel, int> palabra)
         {
             this.service = service;
             this.categorias = categorias;
             this.bodegas = bodegas;
             this.productos = productos;
             this.sucursales = sucursales;
+            this.palabra = palabra;
 
         }
 
@@ -86,6 +92,7 @@ namespace NOVAPOS.Pages.Arqueos
                 var Suc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 Sucursal = await sucursales.ObtenerLista("");
                 MiSucursal = Sucursal.Where(a => a.CodSuc.ToUpper().Contains(Suc)).FirstOrDefault();
+                Palabras = await palabra.ObtenerLista("");
 
 
 

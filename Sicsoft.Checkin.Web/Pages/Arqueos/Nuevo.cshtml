@@ -119,9 +119,9 @@
                                 </select>
                             </div>
                         </div>
-                   
 
-              
+
+
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Categoria</label>
@@ -133,15 +133,21 @@
                                 </select>
                             </div>
                         </div>
+                  
+
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Palabra Clave</label>
-                                <input type="text" class="form-control" id="busqueda2" placeholder="Ingrese la descripción" oninput="filtrarTabla()">
+                                <input type="text" class="form-control" id="busqueda2" placeholder="Ingrese la descripción" list="palabrasList" oninput="filtrarTabla()">
+                                <datalist id="palabrasList">
+                                    @foreach (var palabra in Model.Palabras)
+                                    {
+                                        <option value="@palabra.Nombre"></option>
+                                    }
+                                </datalist>
                             </div>
                         </div>
 
-                       
-                    
 
                         <div class="col-2">
                             @*<button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>*@
@@ -206,7 +212,7 @@
                                         </select>
                                     </div>
                                     <div class="col-sm-2 pl-1" style="text-align: right;" hidden>
-                              <br />
+                                        <br />
                                         <a id="agregar" onclick="javascript: AgregarProductoTabla();" class="btn btn-primary" style="color: white !important;">+ Agregar </a>
                                     </div>
 

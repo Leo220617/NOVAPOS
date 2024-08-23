@@ -69,7 +69,7 @@ var DetPromociones = [];
 var Margenes = [];
 var DetMargenes = [];
 var Aprobaciones = [];
-
+var Categorias = [];
 function CerrarPopUpLotes() {
     try {
         $('#listoCerrar').magnificPopup('close');
@@ -109,6 +109,8 @@ function Recuperar() {
         DetPromociones = JSON.parse($("#DetPromociones").val());
         Margenes = JSON.parse($("#Margenes").val());
         DetMargenes = JSON.parse($("#DetMargenes").val());
+        Categorias = JSON.parse($("#Categorias").val());
+
 
         RellenaClientes();
         RellenaVendedores();
@@ -1257,11 +1259,13 @@ function onChangeProducto() {
 
         var idCliente = $("#ClienteSeleccionado").val();
         var Cliente = Clientes.find(a => a.id == idCliente);
-
+     
 
         if (Producto != undefined) {
+            var Categoria = Categorias.find(a => a.id == Producto.idCategoria);
             $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
             $("#inputCabys").val(Producto.Cabys);
+            $("#inputCategoria").val(Categoria.id + " - " + Categoria.Nombre);
             $("#inputNomPro").val(Producto.Nombre);
             if (Producto.Editable == true) {
                 $("#inputNomPro").attr("disabled", false);
@@ -1304,6 +1308,7 @@ function onChangeProducto() {
 
             $("#inputPrecio").val(0);
             $("#inputCabys").val("");
+            $("#inputCategoria").val("");
             $("#inputNomPro").val("");
             $("#impuesto").val(0);
             $("#MonedaProducto").val("");

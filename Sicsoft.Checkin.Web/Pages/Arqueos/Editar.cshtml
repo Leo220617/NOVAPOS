@@ -136,10 +136,10 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Palabra Clave</label>
-                                <input disabled  type="text" class="form-control" id="busqueda2" placeholder="Ingrese la descripción" oninput="filtrarTabla()">
+                                <input disabled type="text" class="form-control" id="busqueda2" placeholder="Ingrese la descripción" oninput="filtrarTabla()">
                             </div>
                         </div>
-                       
+
                         <div class="col-2">
                             @*<button id="print" class="btn btn-warning" type="button"> <span><i class="fa fa-print"></i> Imprimir</span> </button>*@
                             <button type="button" id="botonG" class="btn btn-success pull-right" onclick="    javascript: Generar()">
@@ -163,100 +163,134 @@
                 <!-- /.col -->
                 <!-- /.row -->
 
+
+
             </div>
 
-        </div>
 
 
 
 
-
-        <div class="box">
-            <div class="box-body">
-                <!-- Table row -->
-                <div class="row">
-                    <div class="col-md-12  ">
-                        <div class="x_panel">
-                            <div class="x_content">
-
+            <div class="box">
+                <div class="box-body">
+                    <!-- Table row -->
+                    <div class="row">
+                        <div class="col-md-12  ">
+                            <div class="x_panel">
+                                <div class="x_content">
 
 
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <h3>Productos</h3>
-                                    </div>
 
-
-                                </div>
-                                <div class="row invoice-info">
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="busqueda">Buscador:</label>
-                                            <input type="text" class="form-control" id="busqueda" placeholder="Ingrese la descripción" oninput="filtrarTabla()">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <h3>Productos</h3>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="ProductoSeleccionado">Productos sin stock:</label>
-                                        <select id="ProductoSeleccionado" class="form-control select2">
-                                            <option value="0"> Seleccione Productos</option>
 
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-2 pl-1" style="text-align: right;">
-                                        <br />
-                                        <a id="agregar" onclick="javascript: AgregarProductoTabla();" class="btn btn-primary" style="color: white !important;">+ Agregar </a>
-                                    </div>
 
+                                    </div>
+                                    <div class="row invoice-info">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="busqueda">Buscador:</label>
+                                                <input type="text" class="form-control" id="busqueda" placeholder="Ingrese la descripción" oninput="filtrarTabla()">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="ProductoSeleccionado">Productos sin stock:</label>
+                                            <select id="ProductoSeleccionado" class="form-control select2">
+                                                <option value="0"> Seleccione Productos</option>
+
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2 pl-1" style="text-align: right;">
+                                            <br />
+                                            <a id="agregar" onclick="javascript: AgregarProductoTabla();" class="btn btn-primary" style="color: white !important;">+ Agregar </a>
+                                        </div>
+
+
+
+                                    </div>
 
 
                                 </div>
-
-
                             </div>
                         </div>
-                    </div>
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-12 table-responsive tableFixHead" style=" overflow-y:scroll; z-index: 5; height: 500px;">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th class="bg-info">Descripción</th>
-                                            <th class="bg-info">Bodega</th>
-                                            <th class="bg-info">Stock</th>
-                                            <th class="bg-info">Contado</th>
-                                            <th class="bg-info">Cantidad1</th>
-                                            <th class="bg-info">Cantidad2</th>
-                                            <th class="bg-info">Cantidad3</th>
-                                            <th class="bg-info">Total Contado</th>
-                                            <th class="bg-info">Diferencia</th>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-12 table-responsive tableFixHead" style=" overflow-y:scroll; z-index: 5; height: 500px;">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="bg-info">Descripción</th>
+                                                <th class="bg-info">Bodega</th>
+                                                <th class="bg-info">Stock</th>
+                                                <th class="bg-info">Contado</th>
+                                                <th class="bg-info">Cantidad1</th>
+                                                <th class="bg-info">Cantidad2</th>
+                                                <th class="bg-info">Cantidad3</th>
+                                                <th class="bg-info">Total Contado</th>
+                                                <th class="bg-info">Diferencia</th>
+                                                <th class="bg-info">Costo</th>
+                                                <th class="bg-info">Costo Diferencia</th>
 
 
 
 
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbody">
-                                    </tbody>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody">
+                                        </tbody>
 
-                                </table>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- /.col -->
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <!-- /.row -->
+
                 </div>
-                <!-- /.row -->
-                <!-- /.row -->
-
             </div>
+
+
+
+            <div class="box">
+                <div class="box-body">
+                    <!-- Table row -->
+                    <div class="row">
+                        <!-- accepted payments column -->
+                        <div class="col-12 col-sm-6">
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-12 col-sm-6 text-right">
+
+
+
+
+                            <div class="total-payment">
+                                <h3><b>Costo :</b>  <span id="totCot">0 </span></h3>
+                            </div>
+
+
+                            <div class="total-payment">
+                                <h3><b>Costo Diferencia :</b>  <span id="totDif">0</span></h3>
+                            </div>
+
+
+
+
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <!-- /.row -->
+
+                </div>
+            </div>
+
         </div>
-
-
-
-
-
-    </div>
     </div>
 
 </section>

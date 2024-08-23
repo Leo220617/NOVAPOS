@@ -23,6 +23,7 @@
 
 @{
     var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+    var idUsuario = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
 }
 @section scripts {
 
@@ -293,6 +294,8 @@
                                     <th>Acción</th>
                                     <th>Categoría</th>
                                     <th>Palabra Clave</th>
+                                    <th>Costo</th>
+                                    <th>Costo Diferencia</th>
                                     <th>Fecha Creado</th>
                                     <th>Generado Por</th>
                                     <th>Fecha Actualización</th>
@@ -313,7 +316,7 @@
                                             @item.id
                                         </td>
                                         <td align="center" style="padding-top:15px;">
-                                            @if (item.Status == "P" && !string.IsNullOrEmpty(Roles.Where(a => a == "29").FirstOrDefault()))
+                                            @if (item.Status == "P" && !string.IsNullOrEmpty(Roles.Where(a => a == "29").FirstOrDefault()) && item.idUsuarioCreador == idUsuario)
                                             {
                                                 <a asp-page="./Editar" asp-route-id="@item.id" class="fa fa-edit icono"> </a>
 
@@ -333,6 +336,12 @@
 
                                         <td>
                                             @item.PalabraClave
+                                        </td>
+                                        <td>
+                                            @item.TotalCosto
+                                        </td>
+                                        <td>
+                                            @item.TotalCostoDiferencia
                                         </td>
                                         <td>
                                             @item.FechaCreacion.ToString("dd/MM/yyyy")
@@ -418,6 +427,8 @@
                                     <th>Acción</th>
                                     <th>Categoría</th>
                                     <th>Palabra Clave</th>
+                                    <th>Costo</th>
+                                    <th>Costo Diferencia</th>
                                     <th>Fecha Creado</th>
                                     <th>Generado Por</th>
                                     <th>Fecha Actualización</th>

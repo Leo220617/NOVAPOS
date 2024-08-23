@@ -49,6 +49,7 @@
     <div class="row">
         <div class="col-12">
             <input hidden id="Cantones" value="@JsonConvert.SerializeObject(Model.Cantones)" />
+            <input hidden id="Categorias" value="@JsonConvert.SerializeObject(Model.Categorias)" />
             <input hidden id="Distritos" value="@JsonConvert.SerializeObject(Model.Distritos)" />
             <input hidden id="Barrios" value="@JsonConvert.SerializeObject(Model.Barrios)" />
             <input hidden id="Clientes" value="@JsonConvert.SerializeObject(Model.Clientes)" />
@@ -319,10 +320,20 @@
 
                                         </div>
 
-                                        <div class="col-md-6">
+                                        <div class="col-md-2">
                                             <div class="form-group">
                                                 <label>Cabys</label>
                                                 <input id="inputCabys" disabled type="text" maxlength="13" class="form-control" placeholder="Cabys">
+
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Categoría</label>
+                                                <input id="inputCategoria" disabled type="text"  class="form-control" placeholder="Categoria">
 
 
                                             </div>

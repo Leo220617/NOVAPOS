@@ -73,7 +73,7 @@ var Margenes = [];
 var DetMargenes = [];
 var Aprobaciones = [];
 var MiSucursal = [];
-
+var Categorias = [];
 function HideP() {
     try {
         $("#boxP").hide();
@@ -148,6 +148,7 @@ function Recuperar() {
         Margenes = JSON.parse($("#Margenes").val());
         DetMargenes = JSON.parse($("#DetMargenes").val());
         MiSucursal = JSON.parse($("#Sucursal").val());
+        Categorias = JSON.parse($("#Categorias").val());
 
         RellenaClientes();
         RellenaVendedores();
@@ -1358,11 +1359,13 @@ function onChangeProducto() {
 
         var idCliente = $("#ClienteSeleccionado").val();
         var Cliente = Clientes.find(a => a.id == idCliente);
-
+    
 
         if (Producto != undefined) {
+            var Categoria = Categorias.find(a => a.id == Producto.idCategoria);
             $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
             $("#inputCabys").val(Producto.Cabys);
+            $("#inputCategoria").val(Categoria.id + " - " + Categoria.Nombre);
             if (Producto.Serie == true) {
                 $("#SerieSelect").removeAttr("hidden");
 
@@ -1405,6 +1408,7 @@ function onChangeProducto() {
 
             $("#inputPrecio").val(0);
             $("#inputCabys").val("");
+            $("#inputCategoria").val("");
             $("#impuesto").val(0);
             $("#MonedaProducto").val("");
             $("#descuento").val(0);

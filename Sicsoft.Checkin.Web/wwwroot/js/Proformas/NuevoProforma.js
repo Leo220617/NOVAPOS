@@ -70,6 +70,7 @@ var Margenes = [];
 var DetMargenes = [];
 var Aprobaciones = [];
 var DocumentosC = [];
+var Categorias = [];
 
 function CerrarPopUpLotes() {
     try {
@@ -88,6 +89,7 @@ function Recuperar() {
         Grupos = JSON.parse($("#Grupos").val());
         Vendedores = JSON.parse($("#Vendedores").val());
         Productos = JSON.parse($("#Productos").val());
+        Categorias = JSON.parse($("#Categorias").val());
         Impuestos = JSON.parse($("#Impuestos").val());
         Exoneraciones = JSON.parse($("#Exoneraciones").val());
         TipoCambio = JSON.parse($("#TipoCambio").val());
@@ -1008,7 +1010,7 @@ function RellenaProductos() {
         for (var i = 0; i < ProdClientes.length; i++) {
 
             var Promo = DetPromociones.find(a => a.ItemCode == ProdClientes[i].Codigo && a.idListaPrecio == ProdClientes[i].idListaPrecios && a.idCategoria == ProdClientes[i].idCategoria);
-
+ 
 
 
             var Bodegas = Bodega.find(a => a.id == ProdClientes[i].idBodega) == undefined ? undefined : Bodega.find(a => a.id == ProdClientes[i].idBodega);
@@ -1025,7 +1027,7 @@ function RellenaProductos() {
                 //});
 
             } else {
-                html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " </option>";
+                html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP +" </option>";
             }
 
 
@@ -1271,11 +1273,14 @@ function onChangeProducto() {
 
         var idCliente = $("#ClienteSeleccionado").val();
         var Cliente = Clientes.find(a => a.id == idCliente);
+      
 
 
         if (Producto != undefined) {
+            var Categoria = Categorias.find(a => a.id == Producto.idCategoria);
             $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
             $("#inputCabys").val(Producto.Cabys);
+            $("#inputCategoria").val(Categoria.id + " - " + Categoria.Nombre);
             $("#inputNomPro").val(Producto.Nombre);
             if (Producto.Editable == true) {
                 $("#inputNomPro").attr("disabled", false);
@@ -1324,6 +1329,7 @@ function onChangeProducto() {
 
             $("#inputPrecio").val(0);
             $("#inputCabys").val("");
+            $("#inputCategoria").val("");
             $("#inputNomPro").val("");
             $("#impuesto").val(0);
             $("#MonedaProducto").val("");

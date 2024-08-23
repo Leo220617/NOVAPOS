@@ -44,102 +44,102 @@
 
                 var EncArqueos = {
 
-                    id: $("#id").val(), 
+                    id: $("#id").val(),
                     Status: "C"
                 }
 
-        
-                    Swal.fire({
-                        title: '¿Desea contabilizar la Toma Física?',
-                        showDenyButton: true,
-                        showCancelButton: false,
-                        confirmButtonText: `Aceptar`,
-                        denyButtonText: `Cancelar`,
-                        customClass: {
-                            confirmButton: 'swalBtnColor',
-                            denyButton: 'swalDeny'
-                        },
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            var jsonString = JSON.stringify(EncArqueos);
-                            // Comprimir la cadena JSON utilizando gzip
-                            var compressedData = pako.gzip(jsonString);
 
-                            // Convertir los datos comprimidos a un ArrayBuffer (opcional, depende de tu caso de uso)
-                            var compressedArrayBuffer = compressedData.buffer;
+                Swal.fire({
+                    title: '¿Desea contabilizar la Toma Física?',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: `Aceptar`,
+                    denyButtonText: `Cancelar`,
+                    customClass: {
+                        confirmButton: 'swalBtnColor',
+                        denyButton: 'swalDeny'
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var jsonString = JSON.stringify(EncArqueos);
+                        // Comprimir la cadena JSON utilizando gzip
+                        var compressedData = pako.gzip(jsonString);
 
-                            $.ajax({
-                                type: 'POST',
+                        // Convertir los datos comprimidos a un ArrayBuffer (opcional, depende de tu caso de uso)
+                        var compressedArrayBuffer = compressedData.buffer;
 
-                                url: '@Url.Page("Observar", "AgregarArqueo")',
-                                dataType: 'json',
-                                contentType: 'application/json',
-                                data: compressedArrayBuffer,
-                                processData: false,
-                                headers: {
-                                    RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
-                                },
-                                success: function (json) {
+                        $.ajax({
+                            type: 'POST',
 
-
-                                    console.log("resultado " + json.arqueo);
-                                    if (json.success == true) {
-                                        $("#divProcesando").modal("hide");
-                                        Swal.fire({
-                                            title: "Ha sido generado con éxito",
-
-                                            icon: 'success',
-                                            showCancelButton: false,
-
-                                            confirmButtonText: 'OK',
-                                            customClass: {
-                                                confirmButton: 'swalBtnColor',
-
-                                            },
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                //Despues de insertar, ocupariamos el id del cliente en la bd
-                                                //para entonces setearlo en el array de clientes
-
-                                                window.location.href = window.location.href.split("/Observar")[0];
+                            url: '@Url.Page("Observar", "AgregarArqueo")',
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            data: compressedArrayBuffer,
+                            processData: false,
+                            headers: {
+                                RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (json) {
 
 
-                                            }
-                                        })
-
-                                    } else {
-
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Oops...',
-                                            text: 'Ha ocurrido un error al intentar guardar ' + json.arqueo
-
-                                        })
-                                    }
-                                },
-
-                                beforeSend: function () {
-                                    $("#divProcesando").modal("show");
-
-                                },
-                                complete: function () {
+                                console.log("resultado " + json.arqueo);
+                                if (json.success == true) {
                                     $("#divProcesando").modal("hide");
+                                    Swal.fire({
+                                        title: "Ha sido generado con éxito",
 
-                                },
-                                error: function (error) {
-                                    $("#divProcesando").modal("hide");
+                                        icon: 'success',
+                                        showCancelButton: false,
+
+                                        confirmButtonText: 'OK',
+                                        customClass: {
+                                            confirmButton: 'swalBtnColor',
+
+                                        },
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            //Despues de insertar, ocupariamos el id del cliente en la bd
+                                            //para entonces setearlo en el array de clientes
+
+                                            window.location.href = window.location.href.split("/Observar")[0];
+
+
+                                        }
+                                    })
+
+                                } else {
 
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Oops...',
-                                        text: 'Ha ocurrido un error al intentar guardar ' + error
+                                        text: 'Ha ocurrido un error al intentar guardar ' + json.arqueo
 
                                     })
                                 }
-                            });
-                        }
-                    })
-                
+                            },
+
+                            beforeSend: function () {
+                                $("#divProcesando").modal("show");
+
+                            },
+                            complete: function () {
+                                $("#divProcesando").modal("hide");
+
+                            },
+                            error: function (error) {
+                                $("#divProcesando").modal("hide");
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Ha ocurrido un error al intentar guardar ' + error
+
+                                })
+                            }
+                        });
+                    }
+                })
+
 
             } catch (e) {
                 Swal.fire({
@@ -372,13 +372,13 @@
                         <div class="col-md-4">
                             <h5> <b>Categoría: </b>    @(Model.Categorias.Where(a => a.id == Model.Arqueo.idCategoria).FirstOrDefault() == null ? "Categoria Inexistente" : Model.Categorias.Where(a => a.id == Model.Arqueo.idCategoria).FirstOrDefault().CodSAP + " - " + Model.Categorias.Where(a => a.id == Model.Arqueo.idCategoria).FirstOrDefault().Nombre)</h5>
                         </div>
-                      
+
 
                         <div class="col-md-4">
                             <h5> <b>Palabra Clave: </b>@Model.Arqueo.PalabraClave  </h5>
                         </div>
 
-                          @if (!string.IsNullOrEmpty(Roles.Where(a => a == "74").FirstOrDefault()) && Model.Arqueo.Status == "C")
+                        @if (!string.IsNullOrEmpty(Roles.Where(a => a == "74").FirstOrDefault()) && Model.Arqueo.Status == "C")
                         {
                             <div class="col-2">
 
@@ -404,136 +404,192 @@
                 <!-- /.col -->
                 <!-- /.row -->
 
+
+
             </div>
 
-        </div>
 
 
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-sm-8"> <h4 class="box-title">Productos</h4></div>
+                        <div class="col-sm-4">  </div>
 
-        <div class="box">
-            <div class="box-header with-border">
-                <div class="row">
-                    <div class="col-sm-8"> <h4 class="box-title">Productos</h4></div>
-                    <div class="col-sm-4">  </div>
+                    </div>
+
 
                 </div>
-
-
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-                <div class="table-responsive">
-                    <table id="example1" class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-
-                                <th class="bg-info">Descripción</th>
-                                <th class="bg-info">Bodega</th>
-                                <th class="bg-info">Stock</th>
-                                <th class="bg-info">Contado</th>
-                                <th class="bg-info">Cantidad Contado</th>
-                                <th class="bg-info">Diferencia</th>
-
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                     
-
-                            @foreach (var item in Model.Arqueo.Detalle)
-                            {
-                                var Producto = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault();
-                               
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
                                 <tr>
 
+                                    <th class="bg-info">Descripción</th>
+                                    <th class="bg-info">Bodega</th>
+                                    <th class="bg-info">Stock</th>
+                                    <th class="bg-info">Contado</th>
+                                    <th class="bg-info">Cantidad Contado</th>
+                                    <th class="bg-info">Diferencia</th>
 
-                                    <td>
-                                        @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Nombre)
-                                    </td>
-
-
-
-                                    <td>
-                                        @(Model.Bodegas.Where(a => a.id == Producto.idBodega).FirstOrDefault() == null ? "Bodega Inexistente" : Model.Bodegas.Where(a => a.id == Producto.idBodega).FirstOrDefault().CodSAP)
-
-                                    </td>
-                                    <td>
-                                        @item.Stock
-                                    </td>
-                                    @if(item.Contado == true)
-                                    {
-                                        
-                                        <td align="center" style="padding-top:15px;"><span class="badge badge-success">Contado</span></td>
-                                        
-                                    }
-                                    else
-                                    {
-                                       
-                                        <td align="center" style="padding-top:15px;"><span class="badge badge-danger">Sin contar</span></td>
-                                      
-                                    }
-                                   
-                                    <td>
-                                        @item.Total
-                                    </td>
-                                  
-                                    @if(item.Diferencia == 0)
-                                    {
-                                        <td style="background-color: #EFFFE9">
-                                            @item.Diferencia
-                                        </td>
-                                    }else if(item.Diferencia < 0  || item.Diferencia > 0){
-                                        <td style="background-color: #FFE9E9">
-                                            @item.Diferencia
-                                        </td>
-                                    }
-                                  
-                                 
-                                  
-
-
-
-
-
-
-                                        
-
-
-
+                                    <th class="bg-info">Costo</th>
+                                    <th class="bg-info">Costo Diferencia</th>
 
 
 
                                 </tr>
-
-                            }
-
-
-                        </tbody>
-                        <tfoot>
-                            <tr>
-
-                                <th class="bg-info">Descripción</th>
-                                <th class="bg-info">Bodega</th>
-                                <th class="bg-info">Stock</th>
-                                <th class="bg-info">Contado</th>
-                                <th class="bg-info">Cantidad Contado</th>
-                                <th class="bg-info">Diferencia</th>
+                            </thead>
+                            <tbody>
 
 
-                            </tr>
-                        </tfoot>
-                    </table>
+                                @foreach (var item in Model.Arqueo.Detalle)
+                                {
+                                    var Producto = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault();
+
+                                    <tr>
+
+
+                                        <td>
+                                            @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Nombre)
+                                        </td>
+
+
+
+                                        <td>
+                                            @(Model.Bodegas.Where(a => a.id == Producto.idBodega).FirstOrDefault() == null ? "Bodega Inexistente" : Model.Bodegas.Where(a => a.id == Producto.idBodega).FirstOrDefault().CodSAP)
+
+                                        </td>
+                                        <td>
+                                            @item.Stock
+                                        </td>
+                                        @if (item.Contado == true)
+                                        {
+
+                                            <td align="center" style="padding-top:15px;"><span class="badge badge-success">Contado</span></td>
+
+                                        }
+                                        else
+                                        {
+
+                                            <td align="center" style="padding-top:15px;"><span class="badge badge-danger">Sin contar</span></td>
+
+                                        }
+
+                                        <td>
+                                            @item.Total
+                                        </td>
+
+                                        @if (item.Diferencia == 0)
+                                        {
+                                            <td style="background-color: #EFFFE9">
+                                                @item.Diferencia
+                                            </td>
+                                        }
+                                        else if (item.Diferencia < 0 || item.Diferencia > 0)
+                                        {
+                                            <td style="background-color: #FFE9E9">
+                                                @item.Diferencia
+                                            </td>
+                                        }
+
+                                        <td>
+                                            @item.Costo
+                                        </td>
+                                        @if (item.CostoDiferencia == 0)
+                                        {
+                                            <td style="background-color: #EFFFE9">
+                                                @item.CostoDiferencia
+                                            </td>
+                                        }
+                                        else if (item.CostoDiferencia < 0 || item.CostoDiferencia > 0)
+                                        {
+                                            <td style="background-color: #FFE9E9">
+                                                @item.CostoDiferencia
+                                            </td>
+                                        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    </tr>
+
+                                }
+
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+
+                                    <th class="bg-info">Descripción</th>
+                                    <th class="bg-info">Bodega</th>
+                                    <th class="bg-info">Stock</th>
+                                    <th class="bg-info">Contado</th>
+                                    <th class="bg-info">Cantidad Contado</th>
+                                    <th class="bg-info">Diferencia</th>
+                                    <th class="bg-info">Costo</th>
+                                    <th class="bg-info">Costo Diferencia</th>
+
+
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+
+
+            <div class="box">
+                <div class="box-body">
+                    <!-- Table row -->
+                    <div class="row">
+                        <!-- accepted payments column -->
+                        <div class="col-12 col-sm-6">
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-12 col-sm-6 text-right">
+
+
+
+
+                            <div class="total-payment">
+                                <h3><b>Costo :</b>  <span id="totCot">@Math.Round(Model.Arqueo.TotalCosto, 2).ToString("C", formato)</span></h3>
+                            </div>
+
+
+                            <div class="total-payment">
+                                <h3><b>Costo Diferencia :</b>  <span id="totDif">@Math.Round(Model.Arqueo.TotalCostoDiferencia, 2).ToString("C", formato)</span></h3>
+                            </div>
+
+
+
+
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <!-- /.row -->
+
                 </div>
             </div>
-            <!-- /.box-body -->
+
+
+
         </div>
-
-
-
-       
-
-
-
 
 
     </div>

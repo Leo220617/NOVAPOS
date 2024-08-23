@@ -95,6 +95,7 @@ namespace NOVAPOS.Pages.Arqueos
                     filtro.Codigo2 = 0;
                     filtro.Codigo3 = 0;
                     filtro.ItemCode = "0";
+                    filtro.pendientes = true;
                     filtro.CardName = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
 
 

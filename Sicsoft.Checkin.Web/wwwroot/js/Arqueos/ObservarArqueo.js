@@ -305,7 +305,14 @@ function RellenaTabla() {
 
         var idBodega = $("#BodegaSeleccionado").val();
         var Bodega = Bodegas.find(a => a.id == idBodega);
-        
+        ProdClientes.sort(function (a, b) {
+            var nombreA = a.Nombre.toLowerCase();
+            var nombreB = b.Nombre.toLowerCase();
+
+            if (nombreA < nombreB) return -1;
+            if (nombreA > nombreB) return 1;
+            return 0;
+        });
 
         $("#tbody").html(html);
 

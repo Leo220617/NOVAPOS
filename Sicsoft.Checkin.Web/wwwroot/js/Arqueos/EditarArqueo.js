@@ -72,7 +72,7 @@ function Recuperar() {
 
         onChangeCategoria();
 
-        //RellenaTabla();
+        RellenaTabla();
 
 
 
@@ -141,12 +141,14 @@ function RecuperarInformacion() {
                 Diferencia: parseFloat(Arqueos.Detalle[i].Diferencia.toFixed(2)),
                 Costo: parseFloat(Arqueos.Detalle[i].Costo.toFixed(2)),
                 CostoDiferencia: parseFloat(Arqueos.Detalle[i].CostoDiferencia.toFixed(2)),
-                Contado: Arqueos.Detalle[i].Contado
-
+                Contado: Arqueos.Detalle[i].Contado, 
+                Cantidad1: parseFloat(Arqueos.Detalle[i].Cantidad1.toFixed(2)),
+                Cantidad2: parseFloat(Arqueos.Detalle[i].Cantidad2.toFixed(2)),
+                Cantidad3: parseFloat(Arqueos.Detalle[i].Cantidad3.toFixed(2))
 
             };
             ProdCadena.push(Producto);
-
+       
             $("#BodegaSeleccionado").prop("disabled", true);
             $("#CategoriaSeleccionado").prop("disabled", true);
         }
@@ -429,7 +431,9 @@ function RecuperarProdCadena() {
                 var x = ProdCadena.findIndex(a => a.idProducto == ProdClientes2[z].id);
             }
 
-
+            $("#" + z + "_Cantidad1").val(ProdCadena[x].Cantidad1);
+            $("#" + z + "_Cantidad2").val(ProdCadena[x].Cantidad2);
+            $("#" + z + "_Cantidad3").val(ProdCadena[x].Cantidad3);
             $("#" + z + "_Cantidad").val(ProdCadena[x].Total);
             $("#" + z + "_Diferencia").text(ProdCadena[x].Diferencia);
             $("#" + z + "_Costo").text(ProdCadena[x].Costo);
@@ -502,6 +506,7 @@ function onChangeCantidad(i) {
         var PE = ProdClientes[i];
         if (Existe == undefined) {
 
+
             var Cantidad1 = parseFloat($("#" + i + "_Cantidad1").val());
             var Cantidad2 = parseFloat($("#" + i + "_Cantidad2").val());
             var Cantidad3 = parseFloat($("#" + i + "_Cantidad3").val());
@@ -523,7 +528,10 @@ function onChangeCantidad(i) {
                 Diferencia: TotalDiferencia,
                 Costo: Costox,
                 CostoDiferencia: CostoDiferenciax,
-                Contado: $("#" + i + "_mdcheckbox").prop('checked')
+                Contado: $("#" + i + "_mdcheckbox").prop('checked'),
+                Cantidad1: Cantidad1,
+                Cantidad2: Cantidad2,
+                Cantidad3: Cantidad3
 
 
             };
@@ -573,7 +581,9 @@ function onChangeCantidad(i) {
             ProdCadena[x].Contado = valorCheck;
             ProdCadena[x].Costo = Costox;
             ProdCadena[x].CostoDiferencia = CostoDiferenciax; 
-
+            ProdCadena[x].Cantidad1 = Cantidad1; 
+            ProdCadena[x].Cantidad2 = Cantidad2; 
+            ProdCadena[x].Cantidad3 = Cantidad3; 
 
 
             if (valorCheck == true) {
@@ -660,7 +670,10 @@ function onChangeRevisado(i) {
                 Diferencia: TotalDiferencia,
                 Contado: valorCheck,
                 Costo: Costox,
-                CostoDiferencia: CostoDiferenciax
+                CostoDiferencia: CostoDiferenciax,
+                Cantidad1: Cantidad1,
+                Cantidad2: Cantidad2,
+                Cantidad3: Cantidad3
 
 
             };

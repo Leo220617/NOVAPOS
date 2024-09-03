@@ -391,6 +391,9 @@ function onChangeCantidad(i) {
         if (Existe == undefined) {
 
             var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
+            var Cantidad1 = parseFloat($("#" + i + "_Cantidad1").val());
+            var Cantidad2 = parseFloat($("#" + i + "_Cantidad2").val());
+            var Cantidad3 = parseFloat($("#" + i + "_Cantidad3").val());
             var TotalDiferencia = Cantidad - PE.Stock;
             var Producto =
             {
@@ -403,7 +406,10 @@ function onChangeCantidad(i) {
                 Stock: PE.Stock,
                 Total: Cantidad,
                 Diferencia: TotalDiferencia,
-                Contado: $("#" + i + "_mdcheckbox").prop('checked')
+                Contado: $("#" + i + "_mdcheckbox").prop('checked'),
+                Cantidad1: Cantidad1,
+                Cantidad2: Cantidad2,
+                Cantidad3: Cantidad3
 
 
             };
@@ -490,6 +496,9 @@ function onChangeRevisado(i) {
         if (Existe == undefined) {
 
             var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
+            var Cantidad1 = parseFloat($("#" + i + "_Cantidad1").val());
+            var Cantidad2 = parseFloat($("#" + i + "_Cantidad2").val());
+            var Cantidad3 = parseFloat($("#" + i + "_Cantidad3").val());
             var TotalDiferencia = Cantidad - PE.Stock;
             var Producto =
             {
@@ -502,7 +511,11 @@ function onChangeRevisado(i) {
                 Stock: PE.Stock,
                 Total: Cantidad,
                 Diferencia: TotalDiferencia,
-                Contado: valorCheck
+                Contado: valorCheck,
+                Cantidad1: Cantidad1,
+                Cantidad2: Cantidad2,
+                Cantidad3: Cantidad3
+                
 
 
             };

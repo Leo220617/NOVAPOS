@@ -31,41 +31,34 @@
 
 
     <script>
+        var btn = document.getElementById('Guardar');
         $(document).ready(function () {
-            jQuery(document).ready(function ($) {
-                Totalizado();
-            });
-
-
-
-            $(document).ready(function () {
-                var Anterior = "@Model.Anterior";
-                if (Anterior == "SI") {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Advertencia...',
-                        text: 'Esta caja tiene un cierre del día anterior pendiente, por ello es redireccionado a esta página para que se realice'
-                    })
-                }
-            });
-
-
+            Totalizado();
+         
+            btn.disabled = false;
+            var Anterior = "@Model.Anterior";
+            if (Anterior === "SI") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Advertencia...',
+                    text: 'Esta caja tiene un cierre del día anterior pendiente, por ello es redireccionado a esta página para que se realice'
+                });
+            }
         });
 
         function onChangeTotales() {
             try {
-                var EfectivoColones = parseFloat($("#EfectivoColonesC").val());
-                var TarjetasColones = parseFloat($("#TarjetaColonesC").val());
-                var ChequesColones = parseFloat($("#ChequesColonesC").val());
-                var OtrosColones = parseFloat($("#OtrosMediosColonesC").val());
-                var TransferenciasColones = parseFloat($("#TransferenciasColonesC").val());
+                var EfectivoColones = parseFloat($("#EfectivoColonesC").val()) || 0;
+                var TarjetasColones = parseFloat($("#TarjetaColonesC").val()) || 0;
+                var ChequesColones = parseFloat($("#ChequesColonesC").val()) || 0;
+                var OtrosColones = parseFloat($("#OtrosMediosColonesC").val()) || 0;
+                var TransferenciasColones = parseFloat($("#TransferenciasColonesC").val()) || 0;
 
-                var EfectivoDolares = parseFloat($("#EfectivoDolaresC").val());
-                var TarjetasDolares = parseFloat($("#TarjetaDolaresC").val());
-                var ChequesDolares = parseFloat($("#ChequesDolaresC").val());
-                var OtrosDolares = parseFloat($("#OtrosMediosFCC").val());
-                var TransferenciasDolares = parseFloat($("#TransferenciasDolaresC").val());
-
+                var EfectivoDolares = parseFloat($("#EfectivoDolaresC").val()) || 0;
+                var TarjetasDolares = parseFloat($("#TarjetaDolaresC").val()) || 0;
+                var ChequesDolares = parseFloat($("#ChequesDolaresC").val()) || 0;
+                var OtrosDolares = parseFloat($("#OtrosMediosFCC").val()) || 0;
+                var TransferenciasDolares = parseFloat($("#TransferenciasDolaresC").val()) || 0;
 
                 var TotalizadoColones = EfectivoColones + TarjetasColones + ChequesColones + OtrosColones + TransferenciasColones;
                 var TotalizadoDolares = EfectivoDolares + TarjetasDolares + ChequesDolares + OtrosDolares + TransferenciasDolares;
@@ -74,136 +67,90 @@
                 $("#Dolares").val(TotalizadoDolares);
 
                 Totalizado();
-
             } catch (e) {
-                alert(e);
-
-            }
-
-
-        }
-
-        function sleep(milliseconds) {
-            var start = new Date().getTime();
-            for (var i = 0; i < 1e7; i++) {
-                if ((new Date().getTime() - start) > milliseconds) {
-                    break;
-                }
+                console.error(e);
             }
         }
+
         function Totalizado() {
             try {
                 var TipoCambio = JSON.parse($("#TipoCambio").val());
-                var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+                var TipodeCambio = TipoCambio.find(a => a.Moneda === "USD").TipoCambio || 1;
 
-                var Colones = parseFloat($("#Colones").val());
-                var Dolares = (parseFloat($("#Dolares").val()) * TipodeCambio.TipoCambio);
-                var Totalizado = parseFloat((Colones + Dolares).toFixed(2));
+                var Colones = parseFloat($("#Colones").val()) || 0;
+                var Dolares = parseFloat($("#Dolares").val()) * TipodeCambio || 0;
+                var Totalizado = (Colones + Dolares).toFixed(2);
+
                 $("#TotalizadoMonedas").val(Totalizado);
 
+                var TColones = parseFloat($("#TColones").val()) || 0;
+                var TDolares = parseFloat($("#TDolares").val()) || 0;
 
-                var TColones = parseFloat($("#TColones").val());
-                var TDolares = parseFloat($("#TDolares").val());
-
-                var FaltanteC = (TColones - Colones).toFixed(2);
-                var FaltanteD = (TDolares - parseFloat($("#Dolares").val())).toFixed(2);
-
-
-                $("#FColones").val(FaltanteC);
-                $("#FDolares").val(FaltanteD);
-
-
+                $("#FColones").val((TColones - Colones).toFixed(2));
+                $("#FDolares").val((TDolares - parseFloat($("#Dolares").val())).toFixed(2));
             } catch (e) {
-                alert(e);
+                console.error(e);
             }
         }
 
         function Imprimir() {
             try {
-                var margins = {
-                    top: 10,
-                    bottom: 10,
-                    left: 10,
-                    width: 595
-                };
-
-
-                html = $("#html2").html();
-                html2pdf(html, {
+                var html = $("#html2").html();
+                html2pdf().from(html).set({
                     margin: 1,
-                    padding: 0,
                     filename: 'Cierre.pdf',
                     image: { type: 'jpeg', quality: 1 },
                     html2canvas: { scale: 2, logging: true },
-                    jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
-                    class: Imprimir
-                });
+                    jsPDF: { unit: 'in', format: 'A2', orientation: 'portrait' }
+                }).save();
+    
             } catch (e) {
-                alert(e);
-
+                console.error(e);
             }
         }
 
         function Generar() {
             try {
-                //var TotalizadoD = parseFloat($("#TotalizadoD").val());
-                //var TotalizadoMonedas = parseFloat($("#TotalizadoMonedas").val());
-                //var Valor = TotalizadoMonedas - TotalizadoD;
-                //if (Valor > 0) {
-                //    Swal.fire({
-                //        icon: 'error',
-                //        title: 'Oops...',
-                //        text: 'Error, el Totalizado del Cierre no puede ser menor al Totalizado de los Depósitos, la diferencia es de ₡' + Valor
-
-                //    })
-                //    return false;
-                //} else {
-
-
-                    Rellenar();
-
-
-
-                    Swal.fire({
-                        title: 'Se descargara un reporte en pdf',
-                        text: "",
-                        icon: 'warning',
-                        showCancelButton: false,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ok'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $("#formTipos").submit();
-                        }
-                    })
-                //}
-
+                btn.disabled = true;
+                $("#divProcesando").modal("show");
+                Rellenar();
+                $("#divProcesando").modal("hide");
+                Swal.fire({
+                    title: 'Se descargará un reporte en PDF',
+                    icon: 'warning',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $("#formTipos").submit();
+                     
+                    }
+                });
             } catch (e) {
-                alert(e);
+                console.error(e);
             }
         }
 
         function Rellenar() {
             try {
                 var TipoCambio = JSON.parse($("#TipoCambio").val());
-                var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+                var TipodeCambio = TipoCambio.find(a => a.Moneda === "USD").TipoCambio || 1;
 
-                var EfectivoColones = parseFloat($("#EfectivoColonesC").val());
-                var TarjetaColones = parseFloat($("#TarjetaColonesC").val());
-                var EfectivoDolares = parseFloat($("#EfectivoDolaresC").val());
-                var TarjetaDolares = parseFloat($("#TarjetaDolaresC").val());
-                var ChequesColones = parseFloat($("#ChequesColonesC").val());
-                var ChequesDolares = parseFloat($("#ChequesDolaresC").val());
-                var OtrosMediosColones = parseFloat($("#OtrosMediosColonesC").val());
-                var OtrosMediosFC = parseFloat($("#OtrosMediosFCC").val());
-                var TransferenciasColones = parseFloat($("#TransferenciasColonesC").val());
-                var TransferenciasDolares = parseFloat($("#TransferenciasDolaresC").val());
-                var Colones = parseFloat($("#Colones").val());
-                var Dolares = parseFloat($("#Dolares").val());
-                var Totalizado = parseFloat((Colones + (Dolares * TipodeCambio.TipoCambio)).toFixed(2));
-                var FaltanteCol = parseFloat($("#FColones").val());
-                var FaltanteDol = parseFloat($("#FDolares").val());
+                var EfectivoColones = parseFloat($("#EfectivoColonesC").val()) || 0;
+                var TarjetaColones = parseFloat($("#TarjetaColonesC").val()) || 0;
+                var EfectivoDolares = parseFloat($("#EfectivoDolaresC").val()) || 0;
+                var TarjetaDolares = parseFloat($("#TarjetaDolaresC").val()) || 0;
+                var ChequesColones = parseFloat($("#ChequesColonesC").val()) || 0;
+                var ChequesDolares = parseFloat($("#ChequesDolaresC").val()) || 0;
+                var OtrosMediosColones = parseFloat($("#OtrosMediosColonesC").val()) || 0;
+                var OtrosMediosFC = parseFloat($("#OtrosMediosFCC").val()) || 0;
+                var TransferenciasColones = parseFloat($("#TransferenciasColonesC").val()) || 0;
+                var TransferenciasDolares = parseFloat($("#TransferenciasDolaresC").val()) || 0;
+                var Colones = parseFloat($("#Colones").val()) || 0;
+                var Dolares = parseFloat($("#Dolares").val()) || 0;
+                var Totalizado = (Colones + (Dolares * TipodeCambio)).toFixed(2);
+                var FaltanteCol = parseFloat($("#FColones").val()) || 0;
+                var FaltanteDol = parseFloat($("#FDolares").val()) || 0;
 
                 $("#EfecColC").text("₡" + formatoDecimal(EfectivoColones.toFixed(2)));
                 $("#TarjColC").text("₡" + formatoDecimal(TarjetaColones.toFixed(2)));
@@ -217,25 +164,21 @@
                 $("#TranDolC").text("$" + formatoDecimal(TransferenciasDolares.toFixed(2)));
                 $("#TotalRegisCol").text("₡" + formatoDecimal(Colones.toFixed(2)));
                 $("#TotalRegisDol").text("$" + formatoDecimal(Dolares.toFixed(2)));
-                $("#Total").text("₡" + formatoDecimal(Totalizado.toFixed(2)));
+                $("#Total").text("₡" + formatoDecimal(Totalizado));
                 $("#FColonesC").text("₡" + formatoDecimal(FaltanteCol.toFixed(2)));
                 $("#FDolaresC").text("$" + formatoDecimal(FaltanteDol.toFixed(2)));
 
-
-
                 Imprimir();
-
-            }
-            catch (e) {
-                console.log(e);
+            } catch (e) {
+                console.error(e);
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Error ' + e
-
-                })
+                });
             }
         }
+
 
     </script>
 
@@ -537,7 +480,7 @@
 
 
                         <div class="text-xs-right">
-                            <button type="button" onclick="javascript: Generar()" class="btn btn-info" title="Guardar Cambios">Generar Cierre</button>
+                            <button id="Guardar" type="button" onclick="javascript: Generar()" class="btn btn-info" title="Guardar Cambios">Generar Cierre</button>
                         </div>
                     </form>
                 </div>

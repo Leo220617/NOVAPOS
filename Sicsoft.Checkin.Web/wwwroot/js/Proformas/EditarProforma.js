@@ -1451,7 +1451,19 @@ function AbrirModalAgregarCliente() {
     }
 
 }
+function esCorreoValido(email) {
+    try {
+        return email.includes("@") && email.includes(".");
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
 
+        })
+    }
+
+}
 function validar(cliente) {
     try {
         if (cliente.idListaPrecios == "" || cliente.idListaPrecios == null) {
@@ -1463,7 +1475,7 @@ function validar(cliente) {
             return false;
 
 
-        } else if (cliente.Email == "" || cliente.Email == null) {
+        } else if (cliente.Email == "" || cliente.Email == null || !esCorreoValido(cliente.Email)) {
             return false;
 
         } else if (cliente.Telefono == "" || cliente.Telefono == null) {
@@ -1475,7 +1487,7 @@ function validar(cliente) {
         } else if (cliente.CorreoPublicitario == "" || cliente.CorreoPublicitario == null) {
             return false;
 
-        } else if (cliente.idGrupo == "" || cliente.idGrupo == null) {
+        } else if (cliente.idGrupo == "" || cliente.idGrupo == null || cliente.idGrupo == 0) {
             return false;
         }
         else if (cliente.TipoCedula == "02" && cliente.Cedula.length < 10) {
@@ -1711,7 +1723,7 @@ function RellenaTabla() {
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
             }
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto / ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+/*            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";*/
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
             if ($("#RolGanancia").val() == "value") {
                 if (ProdCadena[i].Moneda != MonedaDoc) {

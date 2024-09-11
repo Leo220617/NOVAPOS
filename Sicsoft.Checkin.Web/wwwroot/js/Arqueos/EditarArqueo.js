@@ -73,7 +73,7 @@ function Recuperar() {
         onChangeCategoria();
 
         RellenaTabla();
-
+        filtrarTabla();
 
 
 

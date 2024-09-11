@@ -289,10 +289,12 @@ function ValidarTotales() {
             ProdCadena[i].TotalImpuesto = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * (calculoIMP / 100);
             //EX => Exoneracion
             if (EX != undefined) {
-                var ValorExonerado = (EX.PorExon / 100);
-                var TarifaExonerado = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * ValorExonerado;
-                ProdCadena[i].TotalImpuesto -= TarifaExonerado;
-                ProdCadena[i].PorExoneracion = EX.PorExon;
+                if ((13 - EX.PorExon) < calculoIMP) {
+                    var ValorExonerado = (EX.PorExon / 100);
+                    var TarifaExonerado = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * ValorExonerado;
+                    ProdCadena[i].TotalImpuesto -= TarifaExonerado;
+                    ProdCadena[i].PorExoneracion = EX.PorExon;
+                }
             }
             //Termina Exoneracion
             ProdCadena[i].TotalLinea = (ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento + ProdCadena[i].TotalImpuesto;

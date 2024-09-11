@@ -1010,7 +1010,7 @@ function RellenaProductos() {
         for (var i = 0; i < ProdClientes.length; i++) {
 
             var Promo = DetPromociones.find(a => a.ItemCode == ProdClientes[i].Codigo && a.idListaPrecio == ProdClientes[i].idListaPrecios && a.idCategoria == ProdClientes[i].idCategoria);
- 
+
 
 
             var Bodegas = Bodega.find(a => a.id == ProdClientes[i].idBodega) == undefined ? undefined : Bodega.find(a => a.id == ProdClientes[i].idBodega);
@@ -1027,7 +1027,7 @@ function RellenaProductos() {
                 //});
 
             } else {
-                html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP +" </option>";
+                html += "<option value='" + ProdClientes[i].id + "' > " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " </option>";
             }
 
 
@@ -1273,7 +1273,7 @@ function onChangeProducto() {
 
         var idCliente = $("#ClienteSeleccionado").val();
         var Cliente = Clientes.find(a => a.id == idCliente);
-      
+
 
 
         if (Producto != undefined) {
@@ -2096,10 +2096,13 @@ function AgregarProductoTabla() {
                 //EX => Exoneracion
                 var EX = Exoneraciones.find(a => a.id == Producto.idExoneracion);
                 if (EX != undefined) {
-                    var ValorExonerado = (EX.PorExon / 100);
-                    var TarifaExonerado = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * ValorExonerado;
-                    Producto.TotalImpuesto -= TarifaExonerado;
-                    Producto.PorExoneracion = EX.PorExon;
+                    if ((13 - EX.PorExon) < calculoIMP) {
+
+                        var ValorExonerado = (EX.PorExon / 100);
+                        var TarifaExonerado = ((Producto.Cantidad * Producto.PrecioUnitario) - Producto.Descuento) * ValorExonerado;
+                        Producto.TotalImpuesto -= TarifaExonerado;
+                        Producto.PorExoneracion = EX.PorExon;
+                    }
                 }
                 //Termina Exoneracion
 
@@ -2756,10 +2759,12 @@ function ValidarTotales() {
             ProdCadena[i].TotalImpuesto = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * (calculoIMP / 100);
             //EX => Exoneracion
             if (EX != undefined) {
-                var ValorExonerado = (EX.PorExon / 100);
-                var TarifaExonerado = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * ValorExonerado;
-                ProdCadena[i].TotalImpuesto -= TarifaExonerado;
-                ProdCadena[i].PorExoneracion = EX.PorExon;
+                if ((13 - EX.PorExon) < calculoIMP) {
+                    var ValorExonerado = (EX.PorExon / 100);
+                    var TarifaExonerado = ((ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento) * ValorExonerado;
+                    ProdCadena[i].TotalImpuesto -= TarifaExonerado;
+                    ProdCadena[i].PorExoneracion = EX.PorExon;
+                }
             }
             //Termina Exoneracion
             ProdCadena[i].TotalLinea = (ProdCadena[i].Cantidad * ProdCadena[i].PrecioUnitario) - ProdCadena[i].Descuento + ProdCadena[i].TotalImpuesto;
@@ -2833,11 +2838,11 @@ function BuscarClienteRegistro() {
                 if (data.nombre != undefined) {
                     $("#selectTP").val(data.tipoIdentificacion.toString());
 
-                    if ($("#selectTP").val() != "02" || ($("#selectTP").val() == "02" && Cedula.length >= 10) ) {
+                    if ($("#selectTP").val() != "02" || ($("#selectTP").val() == "02" && Cedula.length >= 10)) {
                         $("#Nombre").val(data.nombre.toString());
 
                         $("#Nombre").attr("readonly", "readonly");
-                    } 
+                    }
 
 
 
@@ -2900,12 +2905,12 @@ function BuscarClienteHacienda() {
                         $("#Nombre").val(data.nombre.toString());
 
                         $("#Nombre").attr("readonly", "readonly");
-                    } 
+                    }
 
 
 
                 }
-             
+
                 if (($("#Nombre").val().toString() == "" || $("#Nombre").val().toString() == undefined || $("#Nombre").val().toString() == '' || $("#Nombre").val().toString() == null)) {
                     console.log($("#Nombre").val());
                     Swal.fire({
@@ -2924,7 +2929,7 @@ function BuscarClienteHacienda() {
 
                     })
                 }
-             
+
             })
             .catch(error => {
                 // Maneja errores

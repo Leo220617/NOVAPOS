@@ -240,6 +240,17 @@ function RecuperarInformacion() {
             }
             LotesCadena.push(lote);
         }
+        var Exon = ProdCadena.find(a => a.PorExoneracion > 0);
+        var Desc = ProdCadena.find(a => a.PorDescto > 0);
+        if (ProdCadena.length > 0 && (Exon != undefined || Desc != undefined)) {
+
+            $('#ClienteSeleccionado').prop('disabled', true);
+
+        } else {
+  
+            $('#ClienteSeleccionado').prop('disabled', false);
+
+        }
         RellenaTabla();
         onChangeCliente();
         ValidarStocks();

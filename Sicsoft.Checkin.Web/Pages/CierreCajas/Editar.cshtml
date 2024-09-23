@@ -33,7 +33,9 @@
     <script>
         var btn = document.getElementById('Guardar');
         $(document).ready(function () {
+            Ocultar();
             Totalizado();
+           
          
             btn.disabled = false;
             var Anterior = "@Model.Anterior";
@@ -176,6 +178,26 @@
                     title: 'Oops...',
                     text: 'Error ' + e
                 });
+            }
+        }
+
+        function Ocultar(){
+            try {
+                var Pais = "@Model.Parametros.FirstOrDefault().Pais";
+                if(Pais == "P"){
+                    $("EfectivoColonesC").hide();
+                    $("TarjetaColonesC").hide();
+                    $("ChequesColonesC").hide();
+                    $("OtrosMediosColonesC").hide();
+                    $("TransferenciasColonesC").hide();
+                    $("TColones").hide();
+                    $("Colones").hide();
+                    $("FColones").hide();
+                    
+
+                }
+            }catch(e){
+
             }
         }
 

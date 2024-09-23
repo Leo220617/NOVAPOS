@@ -1160,20 +1160,40 @@ function validarArqueo(e) {
 }
 
 
-function filtrarTabla() { //aRRIBA
+function filtrarTabla() {
     var busqueda = $("#busqueda2").val().toLowerCase();
     var busqueda2 = $("#busqueda").val().toLowerCase();
     var filas = $("#tbody tr");
     var indicesVisibles = [];
 
     filas.each(function (index) {
-        var descripcion = $(this).find("td:eq(0)").text().toLowerCase();
+        var descripcion = $(this).find("td:eq(0)").text().toLowerCase().trim();
+        var primeraPalabra = descripcion.split(/\s+/)[0]; // Extrae la primera palabra
 
-        if (descripcion.includes(busqueda) && descripcion.includes(busqueda2)) {
-            $(this).show();
-            indicesVisibles.push(index);
-        } else {
-            $(this).hide();
+        if (busqueda && !busqueda2) {
+            // Si hay busqueda en "busqueda2" y no en "busqueda", filtra por la primera palabra
+            if (primeraPalabra.includes(busqueda)) {
+                $(this).show();
+                indicesVisibles.push(index);
+            } else {
+                $(this).hide();
+            }
+        } else if (!busqueda && busqueda2) {
+            // Si hay busqueda en "busqueda2", filtra toda la descripción
+            if (descripcion.includes(busqueda2)) {
+                $(this).show();
+                indicesVisibles.push(index);
+            } else {
+                $(this).hide();
+            }
+        } else if (busqueda && busqueda2) {
+            // Si hay búsqueda en ambos, usa ambos criterios
+            if (primeraPalabra.includes(busqueda) && descripcion.includes(busqueda2)) {
+                $(this).show();
+                indicesVisibles.push(index);
+            } else {
+                $(this).hide();
+            }
         }
     });
 

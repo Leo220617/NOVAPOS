@@ -1984,6 +1984,7 @@ function LimpiarDatosCliente() {
         $("#selectP").val("1").trigger('change.select2');
         $("#Sennas").val("");
         $("#CorreoPublicitario").val("");
+        $("#DV").val("");
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -2020,7 +2021,8 @@ function AgregarCliente() {
             LimiteCredito: 0,
             Activo: true,
             ProcesadoSAP: false,
-            idCondicionPago: 0
+            idCondicionPago: 0,
+            DV: $("#DV").val()
         };
 
         if (validar(Cliente)) {
@@ -2095,7 +2097,8 @@ function AgregarCliente() {
                                             LimiteCredito: json.cliente.limiteCredito,
                                             Activo: true,
                                             ProcesadoSAP: false,
-                                            idCondicionPago: 0
+                                            idCondicionPago: 0,
+                                            DV: json.cliente.dV
                                         };
 
                                         Clientes.push(ClienteInsertar);

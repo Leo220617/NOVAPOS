@@ -1548,6 +1548,7 @@ function LimpiarDatosCliente() {
         $("#selectP").val("1").trigger('change.select2');
         $("#Sennas").val("");
         $("#CorreoPublicitario").val("");
+        $("#DV").val("");
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -1661,7 +1662,7 @@ function AgregarCliente() {
                                             Activo: true,
                                             ProcesadoSAP: false,
                                             idCondicionPago: 0,
-                                            DV: json.cliente.dV,
+                                            DV: json.cliente.dV
                                         };
 
                                         Clientes.push(ClienteInsertar);

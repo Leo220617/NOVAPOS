@@ -70,6 +70,7 @@ var Margenes = [];
 var DetMargenes = [];
 var Aprobaciones = [];
 var Categorias = [];
+var Pais = "";
 function CerrarPopUpLotes() {
     try {
         $('#listoCerrar').magnificPopup('close');
@@ -110,7 +111,7 @@ function Recuperar() {
         Margenes = JSON.parse($("#Margenes").val());
         DetMargenes = JSON.parse($("#DetMargenes").val());
         Categorias = JSON.parse($("#Categorias").val());
-
+        Pais = JSON.parse($("#Pais").val());
 
         RellenaClientes();
         RellenaVendedores();

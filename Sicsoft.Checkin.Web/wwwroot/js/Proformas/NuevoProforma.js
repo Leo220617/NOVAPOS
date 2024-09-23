@@ -71,6 +71,7 @@ var DetMargenes = [];
 var Aprobaciones = [];
 var DocumentosC = [];
 var Categorias = [];
+var Pais = "";
 
 function CerrarPopUpLotes() {
     try {
@@ -104,6 +105,7 @@ function Recuperar() {
         DetPromociones = JSON.parse($("#DetPromociones").val());
         Margenes = JSON.parse($("#Margenes").val());
         DetMargenes = JSON.parse($("#DetMargenes").val());
+        Pais = JSON.parse($("#Pais").val());
 
         RellenaClientes();
         RellenaVendedores();
@@ -1582,7 +1584,8 @@ function AgregarCliente() {
             LimiteCredito: 0,
             Activo: true,
             ProcesadoSAP: false,
-            idCondicionPago: 0
+            idCondicionPago: 0, 
+            DV: $("#DV").val()
         };
 
         if (validar(Cliente)) {
@@ -1657,7 +1660,8 @@ function AgregarCliente() {
                                             Descuento: json.cliente.limiteCredito,
                                             Activo: true,
                                             ProcesadoSAP: false,
-                                            idCondicionPago: 0
+                                            idCondicionPago: 0,
+                                            DV: json.cliente.dV,
                                         };
 
                                         Clientes.push(ClienteInsertar);

@@ -77,7 +77,7 @@
             <input hidden id="urlAprobacion" value="@Url.Page("Editar", "AgregarAprobacion")" />
             <input hidden id="RolGanancia" value="@(!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))" />
             <input hidden id="ParamPrecioDescuento" value="@JsonConvert.SerializeObject(Model.Parametro.FirstOrDefault().PrecioDescuento)" />
-           
+            <input hidden id="Pais" value="@JsonConvert.SerializeObject(Model.Parametro.FirstOrDefault().Pais)" />
 
 
             <!-- Content Header (Page header) -->
@@ -163,7 +163,16 @@
 
                                 <br><br>
                                 <span id="spanDireccion"> </span> <br>
-                                <strong id="strongInfo">  Cédula: &nbsp;&nbsp;&nbsp;&nbsp; Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
+                                @if (Model.Parametros.FirstOrDefault().Pais == "P")
+                                {
+                                    <strong id="strongInfo">  RUC: &nbsp;&nbsp;&nbsp;&nbsp; Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
+
+                                }
+                                else
+                                {
+                                    <strong id="strongInfo">  Cédula: &nbsp;&nbsp;&nbsp;&nbsp; Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
+
+                                }
 
                                 <br><br>
                                 <strong id="strongInfo2">Saldo:   &nbsp;&nbsp;&nbsp;&nbsp; Limite Crédito:  &nbsp;&nbsp;&nbsp;&nbsp;  Grupo:</strong>
@@ -492,31 +501,69 @@
             <div class="modal-body">
 
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <div class="form-group">
-                            <label for="cyber">Tipo de Cédula:</label>
+                            @if (Model.Parametros.FirstOrDefault().Pais == "P")
+                            {
+                                <label for="cyber">Tipo de RUC:</label>
+                            }
+                            else
+                            {
+                                <label for="cyber">Tipo de Cédula:</label>
+                            }
+
                             <select id="selectTP" class="form-control" onchange="javascript: maskCedula();" required>
-                                <option value="01">Nacional</option>
-                                <option value="02">Jurídica</option>
-                                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "55").FirstOrDefault()))
+                                @if (Model.Parametros.FirstOrDefault().Pais == "P")
                                 {
-                                    <option value="03">DIMEX</option>
-                                    <option value="04">NITE</option>
+                                    <option value="01">Natural</option>
+                                    <option value="02">Jurídica</option>
+                                    <option value="03">Extranjero</option>
+
                                 }
+                                else
+                                {
+                                    <option value="01">Nacional</option>
+                                    <option value="02">Jurídica</option>
+                                    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "55").FirstOrDefault()))
+                                    {
+                                        <option value="03">DIMEX</option>
+                                        <option value="04">NITE</option>
+                                    }
 
-
+                                }
                             </select>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <h5>Cédula<span class="text-danger">*</span></h5>
+                            @if (Model.Parametros.FirstOrDefault().Pais == "P")
+                            {
+                                <h5>RUC<span class="text-danger">* (Sin guiones, sin espacios y con 0's)</span></h5>
+                            }
+                            else
+                            {
+                                <h5>Cédula<span class="text-danger">* (Sin guiones, sin espacios y con 0's)</span></h5>
+                            }
+
                             <div class="controls">
                                 <input type="text" id="Cedula" class="form-control" required data-validation-required-message="Este campo es requerido" maxlength="12" onchange="javascript: BuscarCliente()" onblur="javascript: validarCedula()">
                             </div>
 
                         </div>
                     </div>
+                        @if (Model.Parametros.FirstOrDefault().Pais == "P")
+                    {
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <h5>D.V<span class="text-danger">*</span></h5>
+                                <div class="controls">
+                                    <input type="text" id="DV"  class="form-control" required data-validation-required-message="Este campo es requerido">
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
                     <div class="col-md-4">
                         <div class="form-group">
                             <h5>Nombre<span class="text-danger">*</span></h5>
@@ -575,15 +622,33 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="nom">Provincia:</label>
-                            <select id="selectP" class="form-control" onchange="javascript: ModificaSelects(1)" required>
+                            <select id="selectP" class="form-control"  onchange="javascript: ModificaSelects(1)" required>
+                                @if (Model.Parametros.FirstOrDefault().Pais == "P")
+                                {
+                                    <option value="1" selected>Bocas del Toro</option>
+                                    <option value="2">Coclé</option>
+                                    <option value="3">Colón</option>
+                                    <option value="4">Chiriquí</option>
+                                    <option value="5">Darién</option>
+                                    <option value="6">Herrera</option>
+                                    <option value="7">Los Santos</option>
+                                    <option value="8">Panamá</option>
+                                    <option value="9">Panamá Oeste</option>
+                                    <option value="10">Veraguas</option>
+                                    <option value="11">Emberá-Wounaan</option>
+                                    <option value="12">Ngäbe-Buglé</option>
+                                }
+                                else
+                                {
+                                    <option value="1" selected>San José</option>
+                                    <option value="2">Alajuela</option>
+                                    <option value="3">Cartago</option>
+                                    <option value="4">Heredia</option>
+                                    <option value="5">Guanacaste</option>
+                                    <option value="6">Puntarenas</option>
+                                    <option value="7">Limón</option>
+                                }
 
-                                <option value="1" selected>San José</option>
-                                <option value="2">Alajuela</option>
-                                <option value="3">Cartago</option>
-                                <option value="4">Heredia</option>
-                                <option value="5">Guanacaste</option>
-                                <option value="6">Puntarenas</option>
-                                <option value="7">Limón</option>
 
 
 
@@ -596,7 +661,16 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="nom">Cantón:</label>
+                            @if (Model.Parametros.FirstOrDefault().Pais == "P")
+                            {
+                                <label for="nom">Distrito:</label>
+                            }
+                            else
+                            {
+                                <label for="nom">Cantón:</label>
+                            }
+
+
                             <select id="selectC" class="form-control" onchange="javascript: ModificaSelects(2)" required>
                                 @foreach (var item in Model.Cantones)
                                 {
@@ -613,7 +687,14 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="nom">Distrito:</label>
+                            @if (Model.Parametros.FirstOrDefault().Pais == "P")
+                            {
+                                <label for="nom">Corregimiento:</label>
+                            }
+                            else
+                            {
+                                <label for="nom">Distrito:</label>
+                            }
                             <select id="selectD" class="form-control" onchange="javascript: ModificaSelects(3)" required>
                                 @foreach (var item in Model.Distritos)
                                 {
@@ -627,21 +708,29 @@
                         </div>
 
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="nom">Barrio:</label>
-                            <select id="selectB" class="form-control" required>
-                                @foreach (var item in Model.Barrios)
-                                {
-                                    <option value="@item.CodBarrio">@item.NomBarrio</option>
+                    @if (Model.Parametros.FirstOrDefault().Pais == "P")
+                    {
 
-                                }
+                    }
+                    else
+                    {
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="nom">Barrio:</label>
+                                <select id="selectB" class="form-control" required>
+                                    @foreach (var item in Model.Barrios)
+                                    {
+                                        <option value="@item.CodBarrio">@item.NomBarrio</option>
+
+                                    }
 
 
-                            </select>
+                                </select>
+                            </div>
+
                         </div>
+                    }
 
-                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">

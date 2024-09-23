@@ -58,5 +58,7 @@
         public string SQLSeriesProductos { get; set; }
 
         public bool PrecioDescuento { get; set; }
+
+        public string Pais { get; set; }
     }
 }

@@ -74,6 +74,7 @@ var DetMargenes = [];
 var Aprobaciones = [];
 var MiSucursal = [];
 var Categorias = [];
+var Pais = "";
 function HideP() {
     try {
         $("#boxP").hide();
@@ -149,6 +150,7 @@ function Recuperar() {
         DetMargenes = JSON.parse($("#DetMargenes").val());
         MiSucursal = JSON.parse($("#Sucursal").val());
         Categorias = JSON.parse($("#Categorias").val());
+        Pais = JSON.parse($("#Pais").val());
 
         RellenaClientes();
         RellenaVendedores();

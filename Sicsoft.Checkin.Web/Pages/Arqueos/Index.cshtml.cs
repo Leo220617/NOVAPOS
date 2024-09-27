@@ -73,7 +73,7 @@ namespace NOVAPOS.Pages.Arqueos
                     return RedirectToPage("/NoPermiso");
                 }
                 DateTime time = new DateTime();
-                filtro.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
+                
                 if (time == filtro.FechaInicial)
                 {
 
@@ -101,6 +101,7 @@ namespace NOVAPOS.Pages.Arqueos
 
                 }
 
+                filtro.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
 
                 Listas = await service.ObtenerLista(filtro);
                 Categorias = await categorias.ObtenerLista("");

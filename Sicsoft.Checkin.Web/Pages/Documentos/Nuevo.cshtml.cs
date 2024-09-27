@@ -285,7 +285,10 @@ namespace NOVAAPP.Pages.Documentos
                 Bodega = await bodegas.ObtenerLista("");
                 Sucursal = await sucursales.ObtenerLista("");
                 MiSucursal = Sucursal.Where(a => a.CodSuc.ToUpper().Contains(Suc)).FirstOrDefault();
-                SeriesProductos = await series.ObtenerListaEspecial("");
+                ParametrosFiltros filtroSeries = new ParametrosFiltros();
+                filtroSeries.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                SeriesProductos = await series.ObtenerListaEspecial(filtroSeries);
+
 
                 ParametrosFiltros filtro2 = new ParametrosFiltros();
                 filtro2.Activo = true;

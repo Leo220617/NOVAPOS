@@ -159,8 +159,8 @@
                         </div>
 
 
-
-
+                          @if (Model.Pais == "C" || Model.Pais == "")
+                            {
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Tipo de Cambio</label>
@@ -169,6 +169,7 @@
 
                             </div>
                         </div>
+                            }
 
 
                         <div class="col-md-2">
@@ -200,6 +201,8 @@
                       
                         <!-- title row -->
                         <div class="row">
+                              @if (Model.Pais == "C" || Model.Pais == "")
+                            {
                             <div class="col-md-6">
 
                                 <div class="form-group">
@@ -209,6 +212,7 @@
 
                                 </div>
                             </div>
+                            }
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Apertura Dólares</label>
@@ -240,6 +244,8 @@
                         </div>
                         <!-- title row -->
                         <div class="row">
+                            @if (Model.Pais == "C" || Model.Pais == "")
+                            {
                             <div class="col-md-3">
 
                                 <div class="form-group">
@@ -258,6 +264,7 @@
 
                                 </div>
                             </div>
+                            }
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Efectivo Dólares</label>
@@ -281,6 +288,8 @@
 
                         <!-- title row -->
                         <div class="row">
+                            @if (Model.Pais == "C" || Model.Pais == "")
+                            {
                             <div class="col-md-3">
 
                                 <div class="form-group">
@@ -299,6 +308,7 @@
 
                                 </div>
                             </div>
+                            }
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Cheques Dólares</label>
@@ -320,6 +330,8 @@
                         </div>
                         <!-- title row -->
                         <div class="row">
+                            @if (Model.Pais == "C" || Model.Pais == "")
+                            {
                             <div class="col-md-3">
 
                                 <div class="form-group">
@@ -329,7 +341,7 @@
 
                                 </div>
                             </div>
-
+                            }
                             <div class="col-md-3">
 
                                 <div class="form-group">
@@ -339,6 +351,7 @@
 
                                 </div>
                             </div>
+
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Transferencias Dólares</label>
@@ -363,6 +376,8 @@
                         </div>
 
                         <div class="row">
+                            @if (Model.Pais == "C" || Model.Pais == "")
+                            {
                             <div class="col-md-6">
 
                                 <div class="form-group">
@@ -372,6 +387,7 @@
 
                                 </div>
                             </div>
+                            }
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Total Dólares</label>
@@ -404,6 +420,8 @@
                             <!-- /.col -->
                         </div>
                         <div class="row">
+                            @if (Model.Pais == "C" || Model.Pais == "")
+                            {
                             <div class="col-md-3">
 
                                 <div class="form-group">
@@ -421,6 +439,7 @@
 
                                 </div>
                             </div>
+                            }
                             <div class="col-md-3">
 
                                 <div class="form-group">
@@ -444,6 +463,8 @@
                         </div>
 
                         <div class="row">
+                            @if (Model.Pais == "C" || Model.Pais == "")
+                            {
                             <div class="col-md-3">
 
                                 <div class="form-group">
@@ -462,6 +483,7 @@
 
                                 </div>
                             </div>
+                            }
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Cheques Dólares Cajero</label>
@@ -483,6 +505,8 @@
                         </div>
                         <!-- title row -->
                         <div class="row">
+                            @if (Model.Pais == "C" || Model.Pais == "")
+                            {
                             <div class="col-6">
 
                                 <div class="form-group">
@@ -492,6 +516,7 @@
 
                                 </div>
                             </div>
+                            }
                             <div class="col-6">
                                 <div class="form-group">
                                     <label>Transferencias Dólares Cajero</label>
@@ -527,6 +552,8 @@
                             <!-- /.col -->
                         </div>
                         <div class="row">
+                            @if (Model.Pais == "C" || Model.Pais == "")
+                            {
                             <div class="col-md-4">
 
                                 <div class="form-group">
@@ -536,6 +563,7 @@
 
                                 </div>
                             </div>
+                            }
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Total Registrado Dólares</label>
@@ -557,6 +585,8 @@
 
 
                         <div class="row">
+                            @if (Model.Pais == "C" || Model.Pais == "")
+                            {
                             <div class="col-md-6">
 
                                 <div class="form-group">
@@ -566,6 +596,7 @@
 
                                 </div>
                             </div>
+                            }
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Diferencia Dólares</label>
@@ -755,7 +786,10 @@
                                 @{
                                     var cond = Model.Condicion;
                                 }
+                                @if (Model.Pais == "C" || Model.Pais == "")
+                                {
                                 <p>Total Colones  : <span> ₡ @Math.Round( Model.TotalColones, 2).ToString("C",formato)</span> </p>
+                                }
                                 <p>Total Dólares  : <span> $ @Math.Round(Model.TotalFC, 2).ToString("C",formato)</span></p>
 
 
@@ -886,7 +920,10 @@
                                 @{
 
                                 }
+                                @if (Model.Pais == "C" || Model.Pais == "")
+                                {
                                 <p>Total Colones  : <span> ₡ @Math.Round( Convert.ToDecimal(TotalC), 2).ToString("C",formato)</span> </p>
+                                }
                                 <p>Total Dólares  : <span> $ @Math.Round(Convert.ToDecimal(TotalD), 2).ToString("C",formato)</span></p>
 
 
@@ -1014,7 +1051,10 @@
                                 @{
 
                                 }
+                                @if (Model.Pais == "C" || Model.Pais == "")
+                                {
                                 <p>Total Colones  : <span> ₡ @Math.Round( Convert.ToDecimal(TotalNC), 2).ToString("C",formato)</span> </p>
+                                }
                                 <p>Total Dólares  : <span> $ @Math.Round(Convert.ToDecimal(TotalND), 2).ToString("C",formato)</span></p>
 
 
@@ -1140,7 +1180,10 @@
                                 @{
 
                                 }
+                                @if (Model.Pais == "C" || Model.Pais == "")
+                                {
                                 <p>Total Colones  : <span> ₡ @Math.Round( Convert.ToDecimal(TotalPC), 2).ToString("C",formato)</span> </p>
+                                }
                                 <p>Total Dólares  : <span> $ @Math.Round(Convert.ToDecimal(TotalPD), 2).ToString("C",formato)</span></p>
 
 
@@ -1263,7 +1306,10 @@
                                 @{
 
                                 }
+                                @if (Model.Pais == "C" || Model.Pais == "")
+                                {
                                 <p>Total Colones  : <span> ₡ @Math.Round( Convert.ToDecimal(TotalDC), 2).ToString("C",formato)</span> </p>
+                                }
                                 <p>Total Dólares  : <span> $ @Math.Round(Convert.ToDecimal(TotalDD), 2).ToString("C",formato)</span></p>
 
 
@@ -1348,7 +1394,8 @@
                 <input hidden asp-for="Cierres.idUsuario" />
                 <!-- title row -->
                 <div class="row">
-
+                    @if (Model.Pais == "C" || Model.Pais == "")
+                    {
                     <div class="col-6">
 
                         <div class="form-group">
@@ -1358,6 +1405,7 @@
 
                         </div>
                     </div>
+                    }
                     <div class="col-6">
                         <div class="form-group">
                             <label>Apertura Dólares</label>
@@ -1391,6 +1439,8 @@
                 <!-- title row -->
 
                 <div class="row">
+                    @if (Model.Pais == "C" || Model.Pais == "")
+                    {
                     <div class="col-3">
 
                         <div class="form-group">
@@ -1400,6 +1450,7 @@
 
                         </div>
                     </div>
+                    }
                     <div class="col-3">
                         <div class="form-group">
                             <label>Efectivo Dólares</label>
@@ -1408,6 +1459,8 @@
 
                         </div>
                     </div>
+                    @if (Model.Pais == "C" || Model.Pais == "")
+                    {
                     <div class="col-3">
 
                         <div class="form-group">
@@ -1417,6 +1470,7 @@
 
                         </div>
                     </div>
+                    }
                     <div class="col-3">
                         <div class="form-group">
                             <label>Tarjetas Dólares</label>
@@ -1431,6 +1485,8 @@
 
                 <!-- title row -->
                 <div class="row">
+                    @if (Model.Pais == "C" || Model.Pais == "")
+                    {
                     <div class="col-3">
 
                         <div class="form-group">
@@ -1440,6 +1496,7 @@
 
                         </div>
                     </div>
+                    }
                     <div class="col-3">
                         <div class="form-group">
                             <label>Cheques Dólares</label>
@@ -1448,6 +1505,8 @@
 
                         </div>
                     </div>
+                    @if (Model.Pais == "C" || Model.Pais == "")
+                    {
                     <div class="col-3">
 
                         <div class="form-group">
@@ -1457,6 +1516,7 @@
 
                         </div>
                     </div>
+                    }
                     <div class="col-3">
                         <div class="form-group">
                             <label>Otros Dólares</label>
@@ -1468,6 +1528,8 @@
                     <!-- /.col -->
                 </div>
                 <div class="row">
+                    @if (Model.Pais == "C" || Model.Pais == "")
+                    {
                     <div class="col-md-3">
 
                         <div class="form-group">
@@ -1477,6 +1539,7 @@
 
                         </div>
                     </div>
+                    }
 
                     <div class="col-md-3">
 
@@ -1509,6 +1572,8 @@
 
                 </div>
                 <div class="row">
+                    @if (Model.Pais == "C" || Model.Pais == "")
+                    {
                     <div class="col-6">
 
                         <div class="form-group">
@@ -1518,6 +1583,7 @@
 
                         </div>
                     </div>
+                    }
                     <div class="col-6">
                         <div class="form-group">
                             <label>Total Dólares</label>
@@ -1551,6 +1617,8 @@
                     <!-- /.col -->
                 </div>
                 <div class="row">
+                    @if (Model.Pais == "C" || Model.Pais == "")
+                    {
                     <div class="col-3">
 
                         <div class="form-group">
@@ -1568,6 +1636,7 @@
 
                         </div>
                     </div>
+                    }
                     <div class="col-3">
 
                         <div class="form-group">
@@ -1590,6 +1659,8 @@
                     <!-- /.col -->
                 </div>
                 <div class="row">
+                    @if (Model.Pais == "C" || Model.Pais == "")
+                    {
                     <div class="col-3">
 
                         <div class="form-group">
@@ -1608,6 +1679,7 @@
 
                         </div>
                     </div>
+                    }
                     <div class="col-3">
                         <div class="form-group">
                             <label>Cheques Dólares Cajero</label>
@@ -1629,6 +1701,8 @@
                 </div>
                 <!-- title row -->
                 <div class="row">
+                    @if (Model.Pais == "C" || Model.Pais == "")
+                    {
                     <div class="col-6">
 
                         <div class="form-group">
@@ -1638,6 +1712,7 @@
 
                         </div>
                     </div>
+                    }
                     <div class="col-6">
                         <div class="form-group">
                             <label>Transferencias Dólares Cajero</label>
@@ -1670,6 +1745,8 @@
                     <!-- /.col -->
                 </div>
                 <div class="row">
+                    @if (Model.Pais == "C" || Model.Pais == "")
+                    {
                     <div class="col-4">
 
                         <div class="form-group">
@@ -1679,6 +1756,7 @@
 
                         </div>
                     </div>
+                    }
                     <div class="col-4">
                         <div class="form-group">
                             <label>Total Registrado Dólares</label>
@@ -1702,6 +1780,8 @@
 
 
                 <div class="row">
+                    @if (Model.Pais == "C" || Model.Pais == "")
+                    {
                     <div class="col-6">
 
                         <div class="form-group">
@@ -1711,6 +1791,7 @@
 
                         </div>
                     </div>
+                    }
                     <div class="col-6">
                         <div class="form-group">
                             <label>Faltantes Dólares</label>
@@ -1897,8 +1978,10 @@
 
 
                                 <div>
-
+                                    @if (Model.Pais == "C" || Model.Pais == "")
+                                    {
                                     <p>Total Colones  : <span> ₡ @Math.Round( Model.TotalColones, 2).ToString("C",formato)</span> </p>
+                                    }
                                     <p>Total Dólares  : <span> $ @Math.Round(Model.TotalFC, 2).ToString("C",formato)</span></p>
 
 
@@ -2028,7 +2111,10 @@
                                     @{
 
                                     }
+                                    @if (Model.Pais == "C" || Model.Pais == "")
+                                    {
                                     <p>Total Colones  : <span> ₡ @Math.Round( Convert.ToDecimal(TotalNC), 2).ToString("C",formato)</span> </p>
+                                    }
                                     <p>Total Dólares  : <span> $ @Math.Round(Convert.ToDecimal(TotalND), 2).ToString("C",formato)</span></p>
 
 
@@ -2154,7 +2240,10 @@
                                     @{
 
                                     }
+                                    @if (Model.Pais == "C" || Model.Pais == "")
+                                    {
                                     <p>Total Colones  : <span> ₡ @Math.Round( Convert.ToDecimal(TotalPC), 2).ToString("C",formato)</span> </p>
+                                    }
                                     <p>Total Dólares  : <span> $ @Math.Round(Convert.ToDecimal(TotalPD), 2).ToString("C",formato)</span></p>
 
 
@@ -2277,7 +2366,10 @@
                                     @{
 
                                     }
+                                    @if (Model.Pais == "C" || Model.Pais == "")
+                                    {
                                     <p>Total Colones  : <span> ₡ @Math.Round( Convert.ToDecimal(TotalDC), 2).ToString("C",formato)</span> </p>
+                                    }
                                     <p>Total Dólares  : <span> $ @Math.Round(Convert.ToDecimal(TotalDD), 2).ToString("C",formato)</span></p>
 
 

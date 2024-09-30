@@ -121,7 +121,11 @@
                                 <div class="form-group">
                                     <h5>Moneda<span class="text-danger">*</span></h5>
                                     <select class="form-control select2" id="selectMoneda" asp-for="Cuenta.Moneda" onchange="javascript: onChangeMoneda()">
-                                        <option value="CRC" selected>CRC</option>
+                                        @if (Model.Parametro.FirstOrDefault().Pais == "C" || Model.Parametro.FirstOrDefault().Pais == "")
+                                        {
+                                            <option value="CRC" selected>CRC</option>
+
+                                        }
                                         <option value="USD">USD</option>
 
                                     </select>

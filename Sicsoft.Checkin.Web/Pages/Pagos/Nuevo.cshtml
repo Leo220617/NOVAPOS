@@ -127,7 +127,11 @@
                                 <div class="form-group">
                                     <label>Moneda</label>
                                     <select class="form-control" id="selectMoneda" onchange="javascript: onChangeMoneda()">
+                                    @if (Model.Parametro.FirstOrDefault().Pais == "C" || Model.Parametro.FirstOrDefault().Pais == "")
+                                    {
                                         <option value="CRC" selected>CRC</option>
+
+                                    }
                                         <option value="USD">USD</option>
 
                                     </select>

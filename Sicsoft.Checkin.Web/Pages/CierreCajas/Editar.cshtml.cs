@@ -46,6 +46,10 @@ namespace NOVAAPP.Pages.CierreCajas
 
         [BindProperty]
         public string Caja { get; set; }
+
+
+        [BindProperty]
+        public string Pais { get; set; }
         [BindProperty]
         public TipoCambiosViewModel[] TC { get; set; }
 
@@ -183,7 +187,7 @@ namespace NOVAAPP.Pages.CierreCajas
                     Clientes = await clientes.ObtenerLista(filtro3);
 
                     Parametros = await param.ObtenerLista("");
-
+                    Pais = Parametros.FirstOrDefault().Pais == null ? "" : Parametros.FirstOrDefault().Pais;
 
 
 
@@ -227,10 +231,11 @@ namespace NOVAAPP.Pages.CierreCajas
                     Clientes = await clientes.ObtenerLista(filtro2);
                     MetodoAbono = await metodoabono.ObtenerLista(filtro);
                     MetodoCuenta = await metodocuenta.ObtenerLista(filtro);
+                 
+
+
                     Parametros = await param.ObtenerLista("");
-
-
-
+                    Pais = Parametros.FirstOrDefault().Pais == null ? "" : Parametros.FirstOrDefault().Pais;
 
 
                     var TotalColonesPagos = Pagos.Where(a => a.Moneda == "CRC").Sum(a => a.Monto) == null ? 0 : Pagos.Where(a => a.Moneda == "CRC").Sum(a => a.Monto);

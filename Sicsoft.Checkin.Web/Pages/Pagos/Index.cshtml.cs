@@ -20,7 +20,7 @@ namespace NOVAAPP.Pages.Pagos
         private readonly ICrudApi<RolesViewModel, int> roles;
         private readonly ICrudApi<UsuariosSucursalesViewModel, int> usuc;
         private readonly ICrudApi<SucursalesViewModel, string> sucursales;
-
+        private readonly ICrudApi<ParametrosViewModel, int> param;
 
         [BindProperty]
         public PagosViewModel[] Listas { get; set; }
@@ -38,7 +38,10 @@ namespace NOVAAPP.Pages.Pagos
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
 
-        public IndexModel(ICrudApi<PagosViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<UsuariosViewModel, int> serviceU, ICrudApi<RolesViewModel, int> roles, ICrudApi<UsuariosSucursalesViewModel, int> usuc, ICrudApi<SucursalesViewModel, string> sucursales)
+        [BindProperty]
+        public ParametrosViewModel[] Parametros { get; set; }
+
+        public IndexModel(ICrudApi<PagosViewModel, int> service, ICrudApi<ParametrosViewModel, int> param, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<UsuariosViewModel, int> serviceU, ICrudApi<RolesViewModel, int> roles, ICrudApi<UsuariosSucursalesViewModel, int> usuc, ICrudApi<SucursalesViewModel, string> sucursales)
         {
             this.service = service;
             this.clientes = clientes;
@@ -46,7 +49,7 @@ namespace NOVAAPP.Pages.Pagos
             this.roles = roles;
             this.usuc = usuc;
             this.sucursales = sucursales;
-
+            this.param = param;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -117,7 +120,7 @@ namespace NOVAAPP.Pages.Pagos
                 filtro2.Externo = true;
 
                 Clientes = await clientes.ObtenerLista(filtro2);
-
+                Parametros = await param.ObtenerLista("");
                 return Page();
             }
             catch (ApiException ex)

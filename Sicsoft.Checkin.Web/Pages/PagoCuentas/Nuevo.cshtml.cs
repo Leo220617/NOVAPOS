@@ -18,6 +18,8 @@ namespace NOVAAPP.Pages.PagoCuentas
         private readonly ICrudApi<ClientesViewModel, string> clientes;
         private readonly ICrudApi<CuentasBancariasViewModel, int> serviceCB;
         private readonly ICrudApi<TipoCambiosViewModel, int> tipoCambio;
+        private readonly ICrudApi<ParametrosViewModel, int> param;
+
 
         [BindProperty]
         public PagoCuentasViewModel Cuenta { get; set; }
@@ -30,12 +32,17 @@ namespace NOVAAPP.Pages.PagoCuentas
 
         [BindProperty]
         public TipoCambiosViewModel[] TP { get; set; }
-        public NuevoModel(ICrudApi<PagoCuentasViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<CuentasBancariasViewModel, int> serviceCB, ICrudApi<TipoCambiosViewModel, int> tipoCambio) //CTOR 
+
+        [BindProperty]
+        public ParametrosViewModel[] Parametro { get; set; }
+
+        public NuevoModel(ICrudApi<PagoCuentasViewModel, int> service, ICrudApi<ParametrosViewModel, int> param, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<CuentasBancariasViewModel, int> serviceCB, ICrudApi<TipoCambiosViewModel, int> tipoCambio) //CTOR 
         {
             this.service = service;
             this.clientes = clientes;
             this.serviceCB = serviceCB;
             this.tipoCambio = tipoCambio;
+            this.param = param;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -58,6 +65,7 @@ namespace NOVAAPP.Pages.PagoCuentas
                 ParametrosFiltros filtro2 = new ParametrosFiltros();
                 filtro2.FechaInicial = DateTime.Now.Date;
                 TP = await tipoCambio.ObtenerLista(filtro2);
+                Parametro = await param.ObtenerLista("");
                 return Page();
             }
             catch (Exception ex)

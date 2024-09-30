@@ -30,6 +30,7 @@ namespace NOVAAPP.Pages.Pagos
 
         private readonly ICrudApi<VendedoresViewModel, int> vendedor;
         private readonly ICrudApi<CuentasBancariasViewModel, int> serviceCB;
+        private readonly ICrudApi<ParametrosViewModel, int> param;
 
 
 
@@ -73,9 +74,11 @@ namespace NOVAAPP.Pages.Pagos
         [BindProperty]
         public CuentasBancariasViewModel[] CB { get; set; }
 
+        [BindProperty]
+        public ParametrosViewModel[] Parametro { get; set; }
 
 
-        public NuevoModel(ICrudApi<PagosViewModel, int> service, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<DocumentosCreditoViewModel, int> documentos, ICrudApi<CuentasBancariasViewModel, int> serviceCB) //CTOR 
+        public NuevoModel(ICrudApi<PagosViewModel, int> service, ICrudApi<ParametrosViewModel, int> param, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<DocumentosCreditoViewModel, int> documentos, ICrudApi<CuentasBancariasViewModel, int> serviceCB) //CTOR 
         {
             this.service = service;
             this.clientes = clientes;
@@ -86,6 +89,7 @@ namespace NOVAAPP.Pages.Pagos
             this.serviceCP = serviceCP;
             this.vendedor = vendedor;
             this.serviceCB = serviceCB;
+            this.param = param;
 
         }
 
@@ -120,7 +124,7 @@ namespace NOVAAPP.Pages.Pagos
                 ParametrosFiltros FiltroCB = new ParametrosFiltros();
                 FiltroCB.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 CB = await serviceCB.ObtenerLista(FiltroCB);
-
+                Parametro = await param.ObtenerLista("");
                 return Page();
             }
             catch (Exception ex)

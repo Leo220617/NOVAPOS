@@ -32,6 +32,7 @@ namespace NOVAAPP.Pages.PreCierres
         private readonly ICrudApi<CierreCajasViewModel, int> serviceC;
         private readonly ICrudApi<MetodosPagosAbonosViewModel, int> metodoabono;
         private readonly ICrudApi<MetodosPagosCuentasViewModel, int> metodocuenta;
+        private readonly ICrudApi<ParametrosViewModel, int> param;
 
         [BindProperty]
         public PreCierresViewModel PreCierres { get; set; }
@@ -98,7 +99,14 @@ namespace NOVAAPP.Pages.PreCierres
         [BindProperty]
         public DepositosViewModel[] Depositos { get; set; }
 
-        public NuevoModel(ICrudApi<CierreCajasViewModel, int> serviceC, ICrudApi<PreCierresViewModel, int> service, ICrudApi<UsuariosViewModel, int> users, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CajasViewModel, int> cajo, ICrudApi<DocumentosViewModel, int> documento, ICrudApi<MetodosPagosViewModel, int> pagos, ICrudApi<CuentasBancariasViewModel, int> cuenta, ICrudApi<CondicionesPagosViewModel, int> cond, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<PagoCuentasViewModel, int> pagocuentas, ICrudApi<DepositosViewModel, int> depositos, ICrudApi<MetodosPagosAbonosViewModel, int> metodoabono, ICrudApi<MetodosPagosCuentasViewModel, int> metodocuenta)
+        [BindProperty]
+        public ParametrosViewModel[] Parametros { get; set; }
+
+
+        [BindProperty]
+        public string Pais { get; set; }
+      
+        public NuevoModel(ICrudApi<CierreCajasViewModel, int> serviceC, ICrudApi<PreCierresViewModel, int> service, ICrudApi<UsuariosViewModel, int> users, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CajasViewModel, int> cajo, ICrudApi<DocumentosViewModel, int> documento, ICrudApi<MetodosPagosViewModel, int> pagos, ICrudApi<CuentasBancariasViewModel, int> cuenta, ICrudApi<CondicionesPagosViewModel, int> cond, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<PagoCuentasViewModel, int> pagocuentas, ICrudApi<DepositosViewModel, int> depositos, ICrudApi<MetodosPagosAbonosViewModel, int> metodoabono, ICrudApi<MetodosPagosCuentasViewModel, int> metodocuenta, ICrudApi<ParametrosViewModel, int> param)
         {
             this.service = service;
             this.users = users;
@@ -115,6 +123,7 @@ namespace NOVAAPP.Pages.PreCierres
             this.serviceC = serviceC;
             this.metodoabono = metodoabono;
             this.metodocuenta = metodocuenta;
+            this.param = param;
         }
         public async Task<IActionResult> OnGetAsync(DateTime DiaAnterior)
         {
@@ -152,6 +161,8 @@ namespace NOVAAPP.Pages.PreCierres
                 Pagos = await pagos.ObtenerLista(filtro);
                 MetodoAbono = await metodoabono.ObtenerLista(filtro);
                 MetodoCuenta = await metodocuenta.ObtenerLista(filtro);
+                Parametros = await param.ObtenerLista("");
+                Pais = Parametros.FirstOrDefault().Pais == null ? "" : Parametros.FirstOrDefault().Pais;
                 TC = await tipoCambio.ObtenerLista(filtro);
                     CuentasBancarias = await cuenta.ObtenerLista("");
 
@@ -175,8 +186,15 @@ namespace NOVAAPP.Pages.PreCierres
                 TotalColones = TotalColonesPagos + TotalColonesPagosAbonos + TotalColonesPagosCuenta;
                 TotalFC = TotalPagosFC + TotalPagosAbonosFC + TotalPagosCuentasFC;
 
-                Totalizado = TotalColones + (TotalFC * TC.Where(a => a.Moneda == "USD").FirstOrDefault().TipoCambio);
-                    return Page();
+                if (Parametros.FirstOrDefault().Pais == "P")
+                {
+                    Totalizado = TotalFC;
+                }
+                else
+                {
+                    Totalizado = TotalColones + (TotalFC * TC.Where(a => a.Moneda == "USD").FirstOrDefault().TipoCambio);
+                }
+                return Page();
                 
 
             }

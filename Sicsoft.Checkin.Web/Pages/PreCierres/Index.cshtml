@@ -133,7 +133,15 @@
                                     <th>Usuario</th>
                                     <th>Fecha</th>
                                     <th>Hora de Pre Cierre</th>
+                                    @if (Model.Parametros.FirstOrDefault().Pais == "P")
+                                    {
+
+                                    }
+                                    else
+                                    {
                                     <th>Total Vendido Colones</th>
+                                        
+                                    }
                                     <th>Total Vendido Dolares</th>
                                     <th>Total Vendido</th>
                                   
@@ -166,18 +174,35 @@
                                         <td>
                                             @item.HoraCierre.ToString("HH:MM tt")
                                         </td>
-                                       
 
+                                        @if (Model.Parametros.FirstOrDefault().Pais == "P")
+                                        {
+
+                                        }
+                                        else
+                                        {
+                                            
                                         <td>
                                             ₡@Math.Round(@item.TotalVendidoColones, 2).ToString("C",formato)
                                         </td>
+                                        }
 
                                         <td>
                                             $@Math.Round(@item.TotalVendidoFC, 2).ToString("C",formato)
                                         </td>
+                                        @if (Model.Parametros.FirstOrDefault().Pais == "P")
+                                        {
+                                            <td>
+                                                $@Math.Round(item.TotalizadoMonedas, 2).ToString("C", formato)
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            
                                         <td>
                                             ₡@Math.Round(item.TotalizadoMonedas, 2).ToString("C",formato)
                                         </td>
+                                        }
                                        
 
                                       
@@ -201,7 +226,15 @@
                                     <th>Usuario</th>
                                     <th>Fecha</th>
                                     <th>Hora de Pre Cierre</th>
-                                    <th>Total Vendido ₡</th>
+                                    @if (Model.Parametros.FirstOrDefault().Pais == "P")
+                                    {
+
+                                    }
+                                    else
+                                    {
+                                        <th>Total Vendido ₡</th>
+
+                                    }
                                     <th>Total Vendido $</th>
                                     <th>Total Vendido</th>
                                    

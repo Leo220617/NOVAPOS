@@ -19,6 +19,7 @@ namespace NOVAAPP.Pages.Depositos
         private readonly ICrudApi<CuentasSAPViewModel, int> cuentas;
         private readonly ICrudApi<CuentasBancariasViewModel, int> serviceCB;
         private readonly ICrudApi<CierreCajasViewModel, int> cierres;
+        private readonly ICrudApi<ParametrosViewModel, int> param;
 
 
         [BindProperty]
@@ -41,13 +42,17 @@ namespace NOVAAPP.Pages.Depositos
         [BindProperty]
         public CierreCajasViewModel Cierres { get; set; }
 
-        public NuevoModel(ICrudApi<DepositosViewModel, int> service, ICrudApi<UsuariosViewModel, int> usuario, ICrudApi<CuentasSAPViewModel, int> cuentas, ICrudApi<CuentasBancariasViewModel, int> serviceCB, ICrudApi<CierreCajasViewModel, int> cierres)
+
+        [BindProperty]
+        public ParametrosViewModel[] Parametros { get; set; }
+        public NuevoModel(ICrudApi<DepositosViewModel, int> service, ICrudApi<UsuariosViewModel, int> usuario, ICrudApi<CuentasSAPViewModel, int> cuentas, ICrudApi<CuentasBancariasViewModel, int> serviceCB, ICrudApi<CierreCajasViewModel, int> cierres, ICrudApi<ParametrosViewModel, int> param)
         {
             this.service = service;
             this.usuario = usuario;
             this.cuentas = cuentas;
             this.serviceCB = serviceCB;
             this.cierres = cierres;
+            this.param = param;
         }
 
 
@@ -85,7 +90,7 @@ namespace NOVAAPP.Pages.Depositos
                 Lista = await service.ObtenerLista(filtro);
                 Cuentas = await cuentas.ObtenerListaEspecial("");
 
-
+                Parametros = await param.ObtenerLista("");
                 return Page();
             }
             catch (Exception ex)

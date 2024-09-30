@@ -19,6 +19,7 @@ namespace NOVAAPP.Pages.PreCierres
         private readonly ICrudApi<UsuariosViewModel, int> users;
         private readonly ICrudApi<CajasViewModel, int> cajas;
         private readonly ICrudApi<RolesViewModel, int> roles;
+        private readonly ICrudApi<ParametrosViewModel, int> param;
 
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
@@ -32,13 +33,17 @@ namespace NOVAAPP.Pages.PreCierres
         [BindProperty]
         public CajasViewModel[] Cajas { get; set; }
 
+        [BindProperty]
+        public ParametrosViewModel[] Parametros { get; set; }
 
-        public IndexModel(ICrudApi<PreCierresViewModel, int> service, ICrudApi<UsuariosViewModel, int> users, ICrudApi<CajasViewModel, int> cajas, ICrudApi<RolesViewModel, int> roles)
+
+        public IndexModel(ICrudApi<PreCierresViewModel,  int> service, ICrudApi<ParametrosViewModel, int> param, ICrudApi<UsuariosViewModel, int> users, ICrudApi<CajasViewModel, int> cajas, ICrudApi<RolesViewModel, int> roles)
         {
             this.service = service;
             this.users = users;
             this.cajas = cajas;
             this.roles = roles;
+            this.param = param;
         }
         public async Task<IActionResult> OnGetAsync()
         {
@@ -88,7 +93,7 @@ namespace NOVAAPP.Pages.PreCierres
                 // Users = Users.Where(a => a.idRol == RolCajero.idRol).ToArray();
 
                 Users = Users.Where(a => a.novapos == true).ToArray();
-
+                Parametros = await param.ObtenerLista("");
 
                 return Page();
             }

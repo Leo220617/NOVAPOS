@@ -54,6 +54,7 @@ namespace NOVAAPP.Pages.PreCierres
                 {
                     return RedirectToPage("/NoPermiso");
                 }
+                Parametros = await param.ObtenerLista("");
                 DateTime time = new DateTime();
                 if (time == filtro.FechaInicial)
                 {
@@ -84,7 +85,15 @@ namespace NOVAAPP.Pages.PreCierres
                 filtro.Activo = false;
               
                 Cierre = await service.ObtenerLista(filtro);
+
+                if(Parametros.FirstOrDefault().Pais == "C")
+                {
                 Cierre = Cierre.Where(a => a.TotalVendidoColones > 0 || a.TotalAperturaColones > 0).ToArray();
+                }
+                if (Parametros.FirstOrDefault().Pais == "P")
+                {
+                    Cierre = Cierre.Where(a => a.TotalVendidoFC > 0 || a.TotalAperturaFC > 0).ToArray();
+                } 
                 Users = await users.ObtenerLista("");
                 Cajas = await cajas.ObtenerLista("");
                 var RolesC = await roles.ObtenerLista("");
@@ -93,7 +102,7 @@ namespace NOVAAPP.Pages.PreCierres
                 // Users = Users.Where(a => a.idRol == RolCajero.idRol).ToArray();
 
                 Users = Users.Where(a => a.novapos == true).ToArray();
-                Parametros = await param.ObtenerLista("");
+               
 
                 return Page();
             }

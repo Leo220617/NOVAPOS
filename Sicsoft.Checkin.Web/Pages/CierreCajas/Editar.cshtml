@@ -206,7 +206,7 @@
                 $("#OtroDolC").text("$" + formatoDecimal(OtrosMediosFC.toFixed(2)));
                 $("#TranDolC").text("$" + formatoDecimal(TransferenciasDolares.toFixed(2)));
                 $("#TotalRegisDol").text("$" + formatoDecimal(Dolares.toFixed(2)));
-                $("#Total").text("₡" + formatoDecimal(Totalizado));
+                $("#Total").text((Pais == "C" ? "₡" : "$") + formatoDecimal(Totalizado));
                 $("#FDolaresC").text("$" + formatoDecimal(FaltanteDol.toFixed(2)));
 
                 Imprimir();
@@ -640,7 +640,7 @@
 
         <div class="box-body">
 
-            <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TC)" />s
+            <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TC)" />
             <input hidden id="TotalizadoD" value="@JsonConvert.SerializeObject(Model.TotalizadoD)" />
 
             <!-- title row -->
@@ -1248,7 +1248,7 @@
 
                                 </div>
                                 <div class="total-payment">
-                                    <h3><b>Totalizado :</b>  <span> ₡ @((@Math.Round(Model.Totalizado, 2).ToString("C", formato))) </span></h3>
+                                    <h3><b>Totalizado :</b>  <span> @(Model.Pais == "C" ? '₡' : '$') @((@Math.Round(Model.Totalizado, 2).ToString("C", formato))) </span></h3>
                                 </div>
 
 

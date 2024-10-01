@@ -9,6 +9,7 @@ using Refit;
 using Sicsoft.Checkin.Web.Servicios;
 using Sicsoft.CostaRica.Checkin.Web.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -141,6 +142,8 @@ namespace NOVAAPP.Pages.CierreCajas
                 }
                 Cajos = await cajo.ObtenerLista("");
                 var time = new DateTime();
+                Parametros = await param.ObtenerLista("");
+                Pais = Parametros.FirstOrDefault().Pais == null ? "" : Parametros.FirstOrDefault().Pais;
                 if (DiaAnterior != time)
                 {
                     Anterior = "SI";
@@ -178,6 +181,16 @@ namespace NOVAAPP.Pages.CierreCajas
                     MetodoAbono = await metodoabono.ObtenerLista(filtro);
                     MetodoCuenta = await metodocuenta.ObtenerLista(filtro);
                     TC = await tipoCambio.ObtenerLista(filtro);
+
+                    if(Pais == "P" && TC.Length == 0)
+                    {
+                        TC = new TipoCambiosViewModel[1];
+                        var TipoCambiosViewModel = new TipoCambiosViewModel();
+                        TipoCambiosViewModel.TipoCambio = 0;
+                        TipoCambiosViewModel.Moneda = "USD";
+                        TC[0] = TipoCambiosViewModel;
+                    }
+
                     CuentasBancarias = await cuenta.ObtenerLista("");
 
                     var Condiciones = await cond.ObtenerLista("");
@@ -186,8 +199,7 @@ namespace NOVAAPP.Pages.CierreCajas
                     filtro3.Externo = true;
                     Clientes = await clientes.ObtenerLista(filtro3);
 
-                    Parametros = await param.ObtenerLista("");
-                    Pais = Parametros.FirstOrDefault().Pais == null ? "" : Parametros.FirstOrDefault().Pais;
+                     
 
 
 
@@ -219,6 +231,7 @@ namespace NOVAAPP.Pages.CierreCajas
                     filtro.Codigo2 = Cierres.idUsuario;
                     Pagos = await pagos.ObtenerLista(filtro);
                     TC = await tipoCambio.ObtenerLista(filtro);
+                     
                     CuentasBancarias = await cuenta.ObtenerLista("");
 
                     var Condiciones = await cond.ObtenerLista("");
@@ -231,11 +244,18 @@ namespace NOVAAPP.Pages.CierreCajas
                     Clientes = await clientes.ObtenerLista(filtro2);
                     MetodoAbono = await metodoabono.ObtenerLista(filtro);
                     MetodoCuenta = await metodocuenta.ObtenerLista(filtro);
-                 
 
 
-                    Parametros = await param.ObtenerLista("");
-                    Pais = Parametros.FirstOrDefault().Pais == null ? "" : Parametros.FirstOrDefault().Pais;
+
+                    if (Pais == "P" && TC.Length == 0)
+                    {
+                        TC = new TipoCambiosViewModel[1];
+                        var TipoCambiosViewModel = new TipoCambiosViewModel();
+                        TipoCambiosViewModel.TipoCambio = 0;
+                        TipoCambiosViewModel.Moneda = "USD";
+
+                        TC[0] = TipoCambiosViewModel;
+                    }
 
 
                     var TotalColonesPagos = Pagos.Where(a => a.Moneda == "CRC").Sum(a => a.Monto) == null ? 0 : Pagos.Where(a => a.Moneda == "CRC").Sum(a => a.Monto);

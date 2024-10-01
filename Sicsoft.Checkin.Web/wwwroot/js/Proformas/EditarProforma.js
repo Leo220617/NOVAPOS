@@ -2750,7 +2750,13 @@ function ValidarTotales() {
 function BuscarCliente() {
     try {
         $("#Nombre").val("");
-        BuscarClienteRegistro();
+        if (Pais == "C") {
+            BuscarClienteRegistro();
+        }
+        if (Pais == "P") {
+
+        }
+ 
         console.log($("#Nombre").val());
 
 

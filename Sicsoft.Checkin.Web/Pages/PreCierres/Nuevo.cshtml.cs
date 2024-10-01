@@ -105,7 +105,7 @@ namespace NOVAAPP.Pages.PreCierres
 
         [BindProperty]
         public string Pais { get; set; }
-      
+
         public NuevoModel(ICrudApi<CierreCajasViewModel, int> serviceC, ICrudApi<PreCierresViewModel, int> service, ICrudApi<UsuariosViewModel, int> users, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<CajasViewModel, int> cajo, ICrudApi<DocumentosViewModel, int> documento, ICrudApi<MetodosPagosViewModel, int> pagos, ICrudApi<CuentasBancariasViewModel, int> cuenta, ICrudApi<CondicionesPagosViewModel, int> cond, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<PagoCuentasViewModel, int> pagocuentas, ICrudApi<DepositosViewModel, int> depositos, ICrudApi<MetodosPagosAbonosViewModel, int> metodoabono, ICrudApi<MetodosPagosCuentasViewModel, int> metodocuenta, ICrudApi<ParametrosViewModel, int> param)
         {
             this.service = service;
@@ -136,25 +136,25 @@ namespace NOVAAPP.Pages.PreCierres
                 }
                 Cajos = await cajo.ObtenerLista("");
                 var time = new DateTime();
-             
 
-                    var idcaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault());
-                    var Fecha = DateTime.Now.Date;
-                    var idCajero = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
-                    Cierres = await serviceC.ObtenerCierre(idcaja, Fecha, idCajero);
-                    Users = await users.ObtenerPorId(idCajero);
-                    Caja = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Caja").Select(s1 => s1.Value).FirstOrDefault();
-                   
-                    ParametrosFiltros filtro = new ParametrosFiltros();
-                    filtro.FechaInicial = DateTime.Now.Date;
-                    filtro.FechaInicial = DateTime.Now.Date;
+
+                var idcaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault());
+                var Fecha = DateTime.Now.Date;
+                var idCajero = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
+                Cierres = await serviceC.ObtenerCierre(idcaja, Fecha, idCajero);
+                Users = await users.ObtenerPorId(idCajero);
+                Caja = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Caja").Select(s1 => s1.Value).FirstOrDefault();
+
+                ParametrosFiltros filtro = new ParametrosFiltros();
+                filtro.FechaInicial = DateTime.Now.Date;
+                filtro.FechaInicial = DateTime.Now.Date;
                 filtro.FechaFinal = DateTime.Now.Date;
                 TC = await tipoCambio.ObtenerLista(filtro);
                 filtro.Codigo3 = idcaja;
 
                 Documento = await documento.ObtenerLista(filtro);
-                    PagoCuentas = await pagocuentas.ObtenerLista(filtro);
-                    Depositos = await depositos.ObtenerLista(filtro);
+                PagoCuentas = await pagocuentas.ObtenerLista(filtro);
+                Depositos = await depositos.ObtenerLista(filtro);
 
                 filtro.Codigo1 = idcaja;
                 filtro.Codigo2 = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
@@ -164,16 +164,16 @@ namespace NOVAAPP.Pages.PreCierres
                 Parametros = await param.ObtenerLista("");
                 Pais = Parametros.FirstOrDefault().Pais == null ? "" : Parametros.FirstOrDefault().Pais;
                 TC = await tipoCambio.ObtenerLista(filtro);
-                    CuentasBancarias = await cuenta.ObtenerLista("");
+                CuentasBancarias = await cuenta.ObtenerLista("");
 
-                    var Condiciones = await cond.ObtenerLista("");
-                    Condicion = Condiciones.Where(a => a.Dias == 0).FirstOrDefault();
-                    CondicionC = await cond.ObtenerLista("");
+                var Condiciones = await cond.ObtenerLista("");
+                Condicion = Condiciones.Where(a => a.Dias == 0).FirstOrDefault();
+                CondicionC = await cond.ObtenerLista("");
 
 
-                    ParametrosFiltros filtro2 = new ParametrosFiltros();
-                    filtro2.Externo = true;
-                    Clientes = await clientes.ObtenerLista(filtro2);
+                ParametrosFiltros filtro2 = new ParametrosFiltros();
+                filtro2.Externo = true;
+                Clientes = await clientes.ObtenerLista(filtro2);
 
                 var TotalColonesPagos = Pagos.Where(a => a.Moneda == "CRC").Sum(a => a.Monto) == null ? 0 : Pagos.Where(a => a.Moneda == "CRC").Sum(a => a.Monto);
                 var TotalColonesPagosAbonos = MetodoAbono.Where(a => a.Moneda == "CRC").Sum(a => a.Monto) == null ? 0 : MetodoAbono.Where(a => a.Moneda == "CRC").Sum(a => a.Monto);
@@ -195,7 +195,7 @@ namespace NOVAAPP.Pages.PreCierres
                     Totalizado = TotalColones + (TotalFC * TC.Where(a => a.Moneda == "USD").FirstOrDefault().TipoCambio);
                 }
                 return Page();
-                
+
 
             }
             catch (Exception ex)
@@ -210,12 +210,12 @@ namespace NOVAAPP.Pages.PreCierres
         {
             try
             {
-               
+
                 PreCierres.idUsuario = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
                 PreCierres.FechaCaja = DateTime.Now.Date;
                 PreCierres.idCaja = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "idCaja").Select(s1 => s1.Value).FirstOrDefault());
                 await service.Agregar(PreCierres);
-               
+
 
                 return Redirect("./Index");
             }

@@ -883,6 +883,8 @@ function RellenaClientes() {
 function RellenaProductos() {
     try {
         var html = "";
+        var idClientes = $("#ClienteSeleccionado").val();
+
 
         $("#ProductoSeleccionado").html(html);
 
@@ -890,7 +892,10 @@ function RellenaProductos() {
 
         ProdClientes.sort(function (a, b) {
             // Compara si a y b tienen promoción, y coloca los que tienen promoción primero
+            // var PromoenCliente = DetPromociones.find(promo => promo.ItemCode === a.Codigo && promo.idListaPrecio === a.idListaPrecios && promo.idCategoria === a.idCategoria && promo.Cliente == true && promo.ClientesPromociones.filter(detCliente => detCliente.idCliente == idClientes).length > 0 );
+
             var promoA = DetPromociones.find(promo => promo.ItemCode === a.Codigo && promo.idListaPrecio === a.idListaPrecios && promo.idCategoria === a.idCategoria);
+
             var promoB = DetPromociones.find(promo => promo.ItemCode === b.Codigo && promo.idListaPrecio === b.idListaPrecios && promo.idCategoria === b.idCategoria);
 
             if (promoA && !promoB) {
@@ -904,13 +909,16 @@ function RellenaProductos() {
 
         for (var i = 0; i < ProdClientes.length; i++) {
 
-            var Promo = DetPromociones.find(a => a.ItemCode == ProdClientes[i].Codigo && a.idListaPrecio == ProdClientes[i].idListaPrecios && a.idCategoria == ProdClientes[i].idCategoria);
-
-
+            var Promo = DetPromociones.find(a => a.ItemCode == ProdClientes[i].Codigo && a.idListaPrecio == ProdClientes[i].idListaPrecios && a.idCategoria == ProdClientes[i].idCategoria && a.Cliente == false);
+            var PromoExclusiva = DetPromociones.find(a => a.ItemCode == ProdClientes[i].Codigo && a.idListaPrecio == ProdClientes[i].idListaPrecios && a.idCategoria == ProdClientes[i].idCategoria && a.Cliente == true && a.ClientesPromociones.filter(detCliente => detCliente.idCliente == idClientes).length > 0);
 
             var Bodegas = Bodega.find(a => a.id == ProdClientes[i].idBodega) == undefined ? undefined : Bodega.find(a => a.id == ProdClientes[i].idBodega);
 
-            if (Promo != undefined) {
+            if (PromoExclusiva != undefined) {
+                html += "<option class='Promo' value='" + ProdClientes[i].id + "' > " + "**PROMO EXCLUSIVA CLIENTE** " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(PromoExclusiva.PrecioFinal).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " -  Precio Anterior: " + formatoDecimal(parseFloat(PromoExclusiva.PrecioAnterior).toFixed(2)) + " </option>";
+
+            }
+            else if (Promo != undefined) {
 
                 html += "<option class='Promo' value='" + ProdClientes[i].id + "' > " + "**PROMO** " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " -  Precio Anterior: " + formatoDecimal(parseFloat(Promo.PrecioAnterior).toFixed(2)) + " </option>";
                 //var options = document.querySelectorAll('.select2-results__option');
@@ -1367,7 +1375,9 @@ function onChangeProducto() {
 
         if (Producto != undefined) {
             var Categoria = Categorias.find(a => a.id == Producto.idCategoria);
-            $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
+            var PromoExclusiva = DetPromociones.find(a => a.ItemCode == Producto.Codigo && a.idListaPrecio == Producto.idListaPrecios && a.idCategoria == Producto.idCategoria && a.Cliente == true && a.ClientesPromociones.filter(detCliente => detCliente.idCliente == idCliente).length > 0);
+
+            $("#inputPrecio").val(parseFloat((PromoExclusiva != undefined ? PromoExclusiva.PrecioFinal : Producto.PrecioUnitario)));
             $("#inputCabys").val(Producto.Cabys);
             $("#inputCategoria").val(Categoria.id + " - " + Categoria.Nombre);
             if (Producto.Serie == true) {

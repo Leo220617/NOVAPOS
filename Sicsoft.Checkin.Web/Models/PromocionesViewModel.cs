@@ -24,5 +24,7 @@ namespace NOVAPOS.Models
         public DateTime FechaVen { get; set; }
 
         public DateTime Fecha { get; set; }
+        public bool Cliente { get; set; }
+        public ClientesPromocionesViewModel[] ClientesPromociones { get; set; }
     }
 }

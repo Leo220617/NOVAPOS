@@ -1234,6 +1234,8 @@ function RellenaClientes() {
 function RellenaProductos() {
     try {
         var html = "";
+        var idClientes = $("#ClienteSeleccionado").val();
+
 
         $("#ProductoSeleccionado").html(html);
 
@@ -1241,7 +1243,10 @@ function RellenaProductos() {
 
         ProdClientes.sort(function (a, b) {
             // Compara si a y b tienen promoción, y coloca los que tienen promoción primero
+            // var PromoenCliente = DetPromociones.find(promo => promo.ItemCode === a.Codigo && promo.idListaPrecio === a.idListaPrecios && promo.idCategoria === a.idCategoria && promo.Cliente == true && promo.ClientesPromociones.filter(detCliente => detCliente.idCliente == idClientes).length > 0 );
+
             var promoA = DetPromociones.find(promo => promo.ItemCode === a.Codigo && promo.idListaPrecio === a.idListaPrecios && promo.idCategoria === a.idCategoria);
+
             var promoB = DetPromociones.find(promo => promo.ItemCode === b.Codigo && promo.idListaPrecio === b.idListaPrecios && promo.idCategoria === b.idCategoria);
 
             if (promoA && !promoB) {
@@ -1255,13 +1260,16 @@ function RellenaProductos() {
 
         for (var i = 0; i < ProdClientes.length; i++) {
 
-            var Promo = DetPromociones.find(a => a.ItemCode == ProdClientes[i].Codigo && a.idListaPrecio == ProdClientes[i].idListaPrecios && a.idCategoria == ProdClientes[i].idCategoria);
-
-
+            var Promo = DetPromociones.find(a => a.ItemCode == ProdClientes[i].Codigo && a.idListaPrecio == ProdClientes[i].idListaPrecios && a.idCategoria == ProdClientes[i].idCategoria && a.Cliente == false);
+            var PromoExclusiva = DetPromociones.find(a => a.ItemCode == ProdClientes[i].Codigo && a.idListaPrecio == ProdClientes[i].idListaPrecios && a.idCategoria == ProdClientes[i].idCategoria && a.Cliente == true && a.ClientesPromociones.filter(detCliente => detCliente.idCliente == idClientes).length > 0);
 
             var Bodegas = Bodega.find(a => a.id == ProdClientes[i].idBodega) == undefined ? undefined : Bodega.find(a => a.id == ProdClientes[i].idBodega);
 
-            if (Promo != undefined) {
+            if (PromoExclusiva != undefined) {
+                html += "<option class='Promo' value='" + ProdClientes[i].id + "' > " + "**PROMO EXCLUSIVA CLIENTE** " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(PromoExclusiva.PrecioFinal).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " -  Precio Anterior: " + formatoDecimal(parseFloat(PromoExclusiva.PrecioAnterior).toFixed(2)) + " </option>";
+
+            }
+            else if (Promo != undefined) {
 
                 html += "<option class='Promo' value='" + ProdClientes[i].id + "' > " + "**PROMO** " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " -  Precio Anterior: " + formatoDecimal(parseFloat(Promo.PrecioAnterior).toFixed(2)) + " </option>";
                 //var options = document.querySelectorAll('.select2-results__option');
@@ -1721,7 +1729,9 @@ function onChangeProducto() {
 
         if (Producto != undefined) {
             var Categoria = Categorias.find(a => a.id == Producto.idCategoria);
-            $("#inputPrecio").val(parseFloat(Producto.PrecioUnitario));
+            var PromoExclusiva = DetPromociones.find(a => a.ItemCode == Producto.Codigo && a.idListaPrecio == Producto.idListaPrecios && a.idCategoria == Producto.idCategoria && a.Cliente == true && a.ClientesPromociones.filter(detCliente => detCliente.idCliente == idCliente).length > 0);
+
+            $("#inputPrecio").val(parseFloat((PromoExclusiva != undefined ? PromoExclusiva.PrecioFinal : Producto.PrecioUnitario)));
             $("#inputCabys").val(Producto.Cabys);
             $("#inputCategoria").val(Categoria.id + " - " + Categoria.Nombre);
             $("#inputNomPro").val(Producto.Nombre);
@@ -2456,7 +2466,12 @@ function AgregarProductoTabla() {
 
         }
 
-        if (PE.PrecioUnitario > Producto.PrecioUnitario) {
+
+        var PromoExclusiva = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Cliente == true && a.ClientesPromociones.filter(detCliente => detCliente.idCliente == idClientes).length > 0);
+
+
+
+        if (PE.PrecioUnitario > Producto.PrecioUnitario && PE.Editable == false && PromoExclusiva == undefined) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -2528,7 +2543,7 @@ function AgregarProductoTabla() {
             })
 
         }
-        else if  (Producto.PrecioUnitario > 0 && ((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && ((Producto.PrecioMin <= PrecioFinal && Promo == undefined) || (Promo != undefined)) && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) && PE.PrecioUnitario <= Producto.PrecioUnitario || PE.Codigo == PS.Codigo ) {
+        else if (Producto.PrecioUnitario > 0 && ((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && ((Producto.PrecioMin <= PrecioFinal && Promo == undefined) || (Promo != undefined)) && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0) && (PE.PrecioUnitario <= Producto.PrecioUnitario || PE.Codigo == PS.Codigo) || PromoExclusiva != undefined ) {
 
             if (Producto.Cabys.length >= 13) {
 
@@ -3124,14 +3139,15 @@ function onChangePrecioProducto(i) {
         var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
         var Moneda = $("#selectMoneda").val();
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
-
+        var idClientes = $("#ClienteSeleccionado").val();
         ProdCadena[i].PrecioUnitario = parseFloat($("#" + i + "_Prod3").val()).toFixed(2);
-
+        var PromoExclusiva = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Cliente == true && a.ClientesPromociones.filter(detCliente => detCliente.idCliente == idClientes).length > 0);
         if (((ProdCadena[i].PrecioUnitario >= PE.PrecioUnitario && Moneda == "CRC") || (ProdCadena[i].PrecioUnitario >= (PE.PrecioUnitario / TipodeCambio.TipoCambio) && Moneda == "USD")) || (PE.Editable == true && ProdCadena[i].PrecioUnitario > 0)) {
             ValidarTotales();
             ValidarCosto();
         }
-        else if (PE.PrecioUnitario > ProdCadena[i].PrecioUnitario && PE.Editable == false && Moneda == "CRC") {
+
+        else if (PE.PrecioUnitario > ProdCadena[i].PrecioUnitario && PE.Editable == false && Moneda == "CRC" && PromoExclusiva == undefined) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -3142,7 +3158,7 @@ function onChangePrecioProducto(i) {
             ValidarTotales();
             ValidarCosto();
 
-        } else if ((PE.PrecioUnitario / TipodeCambio.TipoCambio) > ProdCadena[i].PrecioUnitario && PE.Editable == false && Moneda == "USD") {
+        } else if ((PE.PrecioUnitario / TipodeCambio.TipoCambio) > ProdCadena[i].PrecioUnitario && PE.Editable == false && Moneda == "USD" && PromoExclusiva == undefined) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -3166,6 +3182,35 @@ function onChangePrecioProducto(i) {
 
         }
 
+        if (PromoExclusiva != undefined) {
+
+
+            if (PromoExclusiva.PrecioFinal > ProdCadena[i].PrecioUnitario && PE.Editable == false && Moneda == "CRC") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Precio invalido, el precio tiene que ser mayor o igual a ' + ' ' + PromoExclusiva.PrecioFinal
+
+                })
+                ProdCadena[i].PrecioUnitario = PromoExclusiva.PrecioFinal;
+                ValidarTotales();
+                ValidarCosto();
+
+            } else if ((PromoExclusiva.PrecioFinal / TipodeCambio.TipoCambio) > ProdCadena[i].PrecioUnitario && PE.Editable == false && Moneda == "USD") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Precio invalido, el precio tiene que ser mayor o igual a ' + ' ' + (PromoExclusiva.PrecioFinal / TipodeCambio.TipoCambio)
+
+                })
+                ProdCadena[i].PrecioUnitario = PromoExclusiva.PrecioFinal / TipodeCambio.TipoCambio;
+                ValidarTotales();
+                ValidarCosto();
+
+            }
+
+
+        }
 
 
 

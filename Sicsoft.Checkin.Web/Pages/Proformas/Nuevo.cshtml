@@ -73,6 +73,7 @@
             <input hidden id="DetPromociones" value="@JsonConvert.SerializeObject(Model.DetPromociones)" />
             <input hidden id="Margenes" value="@JsonConvert.SerializeObject(Model.Margenes)" />
             <input hidden id="DetMargenes" value="@JsonConvert.SerializeObject(Model.DetMargenes)" />
+     
             <input hidden id="SeriesProductos" value="@JsonConvert.SerializeObject(Model.SeriesProductos.SeriesProductos)" />
             <input hidden id="RolGanancia" value="@(!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))" />
         

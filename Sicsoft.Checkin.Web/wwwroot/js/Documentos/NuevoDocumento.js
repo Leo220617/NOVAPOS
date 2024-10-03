@@ -2051,72 +2051,39 @@ function AgregarProductoTabla() {
         }
 
         if ((PE.Stock - Producto.Cantidad) < 0 && PE.Codigo != PS.Codigo) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Producto sin stock valido'
-
-            })
+            
+            throw new Error('Producto sin stock valido');
         } if (Producto.Cantidad <= 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Cantidad Invalida'
-
-            })
+             
             Producto.Cantidad = 1;
+            throw new Error('Cantidad Invalida');
         }
         if (Producto.PorDescto < 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Descuento Invalido'
-
-            })
-
+             
+            throw new Error('Descuento Invalido');
         }
         if (Promo != undefined && Producto.PorDescto > 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'No se puede aplicar más descuentos, el Producto ' + Producto.Descripcion + ' ya tiene una Promoción'
-
-            })
-
+           
+            throw new Error('No se puede aplicar más descuentos, el Producto ' + Producto.Descripcion + ' ya tiene una Promoción');
         }
         var DescuentoMaximo = ((Producto.PrecioUnitario - Producto.PrecioMin) / Producto.PrecioUnitario) * 100;
         var DescuentoX = Producto.PrecioUnitario * (Producto.PorDescto / 100);
         var PrecioFinal = Producto.PrecioUnitario - DescuentoX;
 
         if (Producto.PrecioMin > PrecioFinal && Promo == undefined) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'No se puede aplicar el descuento debido a que es menor al Precio Minimo, el Producto ' + Producto.Descripcion + ' lo maximo que se le puede aplicar de Descuento es de ' + parseFloat(DescuentoMaximo).toFixed(2) + '%'
-
-            })
-
+            
+            throw new Error('No se puede aplicar el descuento debido a que es menor al Precio Minimo, el Producto ' + Producto.Descripcion + ' lo maximo que se le puede aplicar de Descuento es de ' + parseFloat(DescuentoMaximo).toFixed(2) + '%');
         }
         if (Producto.PorDescto > Descuento) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Usted no puede aplicar este descuento, el descuento máximo asignado a su usuario es de' + ' ' + parseFloat(Descuento).toFixed(2) + '%'
-
-            })
-
+             
+            throw new Error('Usted no puede aplicar este descuento, el descuento máximo asignado a su usuario es de' + ' ' + parseFloat(Descuento).toFixed(2) + '%');
         }
         if (Producto.PrecioUnitario <= 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'No se puede agregar un producto con Precio 0'
-
-            })
-
+             
+            throw new Error('No se puede agregar un producto con Precio 0');
         }
-        else if ( Producto.PrecioUnitario > 0 && ((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && ((Producto.PrecioMin <= PrecioFinal && Promo == undefined) || (Promo != undefined)) && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0)  || Producto.Codigo == PS.Codigo) {
-            if (Producto.Cabys.length >= 13) {
+       // else if ( Producto.PrecioUnitario > 0 && ((Promo != undefined && Producto.PorDescto == 0) || (Promo == undefined)) && ((Producto.PrecioMin <= PrecioFinal && Promo == undefined) || (Promo != undefined)) && ((PE.Serie == true && Producto.NumSerie != "0") || (PE.Serie == false)) && Duplicado == false && Producto.Cantidad > 0 && Producto.PorDescto >= 0 && Producto.PorDescto <= Descuento && ((PE.Stock - Producto.Cantidad) >= 0)  || Producto.Codigo == PS.Codigo) {
+            if (Producto.Cabys.length >= 13 || Pais == "P") {
 
 
                 var ImpuestoTarifa = $("#impuesto").val();
@@ -2167,14 +2134,10 @@ function AgregarProductoTabla() {
                 $("#SerieSeleccionado").val("0").trigger('change.select2');
                 $("#exoneracion").val("0").trigger('change.select2');
             } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Producto sin Cabys valido'
-
-                })
+                
+                throw new Error('Producto sin Cabys valido');
             }
-        }
+        
 
     } catch (e) {
         Swal.fire({

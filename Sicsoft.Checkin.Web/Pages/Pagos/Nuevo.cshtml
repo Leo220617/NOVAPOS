@@ -23,11 +23,11 @@
 @{
     var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
 }
-@section styles{
+@section styles {
 
 
 }
-    @section scripts{
+@section scripts {
 
 
     <script src="/js/Pagos/NuevoPago.js"></script>
@@ -38,188 +38,188 @@
 
     @using Newtonsoft.Json;
     @using System.Globalization
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <h1>
-            Abonos
-        </h1>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
-            <li class="breadcrumb-item active">Generar Pago</li>
-        </ol>
-    </section>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Abonos
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+        <li class="breadcrumb-item active">Generar Pago</li>
+    </ol>
+</section>
 
-    <section class="content ">
-        <div class="row">
-            <div class="col-12">
+<section class="content ">
+    <div class="row">
+        <div class="col-12">
 
-                <input hidden id="Clientes" value="@JsonConvert.SerializeObject(Model.Clientes)" />
-                <input hidden id="Vendedores" value="@JsonConvert.SerializeObject(Model.Vendedores)" />
-                <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
+            <input hidden id="Clientes" value="@JsonConvert.SerializeObject(Model.Clientes)" />
+            <input hidden id="Vendedores" value="@JsonConvert.SerializeObject(Model.Vendedores)" />
+            <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Productos)" />
 
-                <input hidden id="Sucursales" value="@JsonConvert.SerializeObject(Model.Sucursales)" />
-                <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
-                <input hidden id="Documento" value="@JsonConvert.SerializeObject(Model.Pago)" />
-                <input hidden id="CP" value="@JsonConvert.SerializeObject(Model.CP)" />
-                <input hidden id="urlModalEdicion" value="@Url.Page("Nuevo", "BuscarFM")" />
+            <input hidden id="Sucursales" value="@JsonConvert.SerializeObject(Model.Sucursales)" />
+            <input hidden id="TipoCambio" value="@JsonConvert.SerializeObject(Model.TP)" />
+            <input hidden id="Documento" value="@JsonConvert.SerializeObject(Model.Pago)" />
+            <input hidden id="CP" value="@JsonConvert.SerializeObject(Model.CP)" />
+            <input hidden id="urlModalEdicion" value="@Url.Page("Nuevo", "BuscarFM")" />
             <input hidden id="CB" value="@JsonConvert.SerializeObject(Model.CB)" />
 
 
 
 
-                <input hidden id="urlGenerar" value="@Url.Page("Nuevo", "AgregarPago")" />
-                <input hidden id="urlFacturas" value="@Url.Page("Nuevo", "Facturas")" />
-                <input hidden id="RolSinInteres" value="@(!string.IsNullOrEmpty(Roles.Where(a => a == "56").FirstOrDefault()))" />
+            <input hidden id="urlGenerar" value="@Url.Page("Nuevo", "AgregarPago")" />
+            <input hidden id="urlFacturas" value="@Url.Page("Nuevo", "Facturas")" />
+            <input hidden id="RolSinInteres" value="@(!string.IsNullOrEmpty(Roles.Where(a => a == "56").FirstOrDefault()))" />
 
 
 
-                <!-- Content Header (Page header) -->
-                <div class="box">
-                    <div class="box-header with-border">
-                        <div class="row">
-                            <div class="col-8">
-                                <h6 class="box-subtitle">Generar Pago</h6>
+            <!-- Content Header (Page header) -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+                        <div class="col-8">
+                            <h6 class="box-subtitle">Generar Pago</h6>
 
+
+                        </div>
+                        <div class="col-4">
+                            <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <!-- title row -->
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="page-header mt-0">
+                                <h2 class="d-inline"><span class="font-size-24">Abonos</span></h2>
+                                <div class="text-left">
+                                    <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
+                                    <input hidden id="Fecha" type="datetime" value="@DateTime.Now" />
+
+
+
+                                </div>
 
                             </div>
-                            <div class="col-4">
-                                <a asp-page="./Index" class="nav-link text-dark" style="text-decoration: underline;"><i class="ti-back-left "></i>  Regresar</a>
+
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Fecha Vencimiento</label>
+                                <input type="date" class="form-control" id="fechaVencimiento" value="@DateTime.Now.ToString("yyyy-MM-dd")">
 
 
                             </div>
                         </div>
-                    </div>
-                    <div class="box-body">
-                        <!-- title row -->
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="page-header mt-0">
-                                    <h2 class="d-inline"><span class="font-size-24">Abonos</span></h2>
-                                    <div class="text-left">
-                                        <h5>Fecha <span class="font-size-18">@DateTime.Now.ToString("dd MMM yyy")</span></h5>
-                                        <input hidden id="Fecha" type="datetime" value="@DateTime.Now" />
 
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Fecha Contabilización</label>
+                                <input type="date" class="form-control" id="fechaContabilzacion" value="@DateTime.Now.ToString("yyyy-MM-dd")">
 
-
-                                    </div>
-
-                                </div>
 
                             </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Fecha Vencimiento</label>
-                                    <input type="date" class="form-control" id="fechaVencimiento" value="@DateTime.Now.ToString("yyyy-MM-dd")">
-
-
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Fecha Contabilización</label>
-                                    <input type="date" class="form-control" id="fechaContabilzacion" value="@DateTime.Now.ToString("yyyy-MM-dd")">
-
-
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Moneda</label>
-                                    <select class="form-control" id="selectMoneda" onchange="javascript: onChangeMoneda()">
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Moneda</label>
+                                <select class="form-control" id="selectMoneda" onchange="javascript: onChangeMoneda()">
                                     @if (Model.Parametro.FirstOrDefault().Pais == "C" || Model.Parametro.FirstOrDefault().Pais == "")
                                     {
                                         <option value="CRC" selected>CRC</option>
 
                                     }
-                                        <option value="USD">USD</option>
+                                    <option value="USD">USD</option>
 
-                                    </select>
+                                </select>
 
 
-                                </div>
                             </div>
-                            <!-- /.col -->
-                        </div>
-                        <!-- info row -->
-
-                        <div class="row invoice-info">
-                            <div class="col-md-6 invoice-col">
-                                <strong>Para</strong>
-                                <address>
-
-                                    <select id="ClienteSeleccionado" asp-for="Pago.idCliente" class="form-control select2" onchange="javascript: onChangeCliente()">
-                                        <option value="0"> Seleccione Cliente</option>
-
-
-
-                                    </select>
-
-                                    <br><br>
-                                    <span id="spanDireccion"> </span> <br>
-                                    <strong id="strongInfo">Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
-
-                                    <br><br>
-
-
-
-
-                                </address>
-                            </div>
-                            <div class="col-md-6">
-                                <br><br>
-                                <br><br>
-
-
-                                <strong id="strongInfo2">Saldo:   &nbsp;&nbsp;&nbsp;&nbsp; Limite Crédito:  </strong>
-                            </div>
-
-
-
-
-
                         </div>
                         <!-- /.col -->
-                        <!-- /.row -->
+                    </div>
+                    <!-- info row -->
+
+                    <div class="row invoice-info">
+                        <div class="col-md-6 invoice-col">
+                            <strong>Para</strong>
+                            <address>
+
+                                <select id="ClienteSeleccionado" asp-for="Pago.idCliente" class="form-control select2" onchange="javascript: onChangeCliente()">
+                                    <option value="0"> Seleccione Cliente</option>
+
+
+
+                                </select>
+
+                                <br><br>
+                                <span id="spanDireccion"> </span> <br>
+                                <strong id="strongInfo">Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
+
+                                <br><br>
+
+
+
+
+                            </address>
+                        </div>
+                        <div class="col-md-6">
+                            <br><br>
+                            <br><br>
+
+
+                            <strong id="strongInfo2">Saldo:   &nbsp;&nbsp;&nbsp;&nbsp; Limite Crédito:  </strong>
+                        </div>
+
+
+
+
 
                     </div>
+                    <!-- /.col -->
+                    <!-- /.row -->
 
                 </div>
-
 
             </div>
 
 
-            <div class="box">
-                <div class="box-body">
-                    <!-- Table row -->
-                    <div class="row">
-                        <div class="col-md-12  ">
-                            <div class="x_panel">
-                                <div class="x_content">
+        </div>
+
+
+        <div class="box">
+            <div class="box-body">
+                <!-- Table row -->
+                <div class="row">
+                    <div class="col-md-12  ">
+                        <div class="x_panel">
+                            <div class="x_content">
 
 
 
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h3>Facturas A Crédito</h3>
-                                        </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h3>Facturas A Crédito</h3>
                                     </div>
-
-
                                 </div>
+
+
                             </div>
                         </div>
+                    </div>
 
-                        <div class="col-12 table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
+                    <div class="col-12 table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
 
-                                        <th>Aplicar</th>
+                                    <th>Aplicar</th>
                                     @*    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "56").FirstOrDefault()))
                                     {
-                                        <th>Sin Intéres</th>
+                                    <th>Sin Intéres</th>
                                     }*@
                                     <th>Nº Documento</th>
 
@@ -494,7 +494,11 @@
                         <div class="form-group">
 
                             <select class="form-control" id="selectMonedaP" onchange="javascript: onChangeMonedaP()">
-                                <option value="CRC" selected>CRC</option>
+                                @if (Model.Parametro.FirstOrDefault().Pais == "C")
+                                {
+                                    <option value="CRC" selected>CRC</option>
+
+                                }
                                 <option value="USD">USD</option>
 
                             </select>
@@ -575,7 +579,11 @@
                         <div class="form-group">
                             <label>Moneda Vuelto:  </label>
                             <select class="form-control" id="selectMonedaV">
-                                <option value="CRC" selected>CRC</option>
+                                @if (Model.Parametro.FirstOrDefault().Pais == "C")
+                                {
+                                    <option value="CRC" selected>CRC</option>
+                                }
+                              
                                 <option value="USD">USD</option>
 
                             </select>
@@ -595,17 +603,20 @@
 
 
                     </div>
+                    @if (Model.Parametro.FirstOrDefault().Pais == "C")
+                    {
 
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Total Colones:  </label>
-                            <input type="number" class="form-control" disabled id="TotalC" placeholder="Total Colones">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Total Colones:  </label>
+                                <input type="number" class="form-control" disabled id="TotalC" placeholder="Total Colones">
+
+
+                            </div>
 
 
                         </div>
-
-
-                    </div>
+                    }
 
                     <div class="col-md-4">
                         <div class="form-group">
@@ -617,16 +628,20 @@
 
 
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Tipo de Cambio:  </label>
-                            <input type="number" readonly class="form-control" disabled id="TipCam" placeholder="Tipo Cambio">
+                    @if (Model.Parametro.FirstOrDefault().Pais == "C")
+                    {
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Tipo de Cambio:  </label>
+                                <input type="number" readonly class="form-control" disabled id="TipCam" placeholder="Tipo Cambio">
+
+
+                            </div>
 
 
                         </div>
-
-
-                    </div>
+                    }
+                    
 
                     <div class="col-sm-12 pl-1" style="text-align: right;">
 
@@ -661,7 +676,14 @@
                 </div>
                 <!-- /.row -->
                 <div class="row">
-                    <div class="col-md-10"><h5 class="modal-title" style="text-align: right;"><b>Colones</b></h5> </div>
+
+                    <div class="col-md-10">
+                        @if (Model.Parametro.FirstOrDefault().Pais == "C")
+                        {
+                            <h5 class="modal-title" style="text-align: right;"><b>Colones</b></h5>
+
+                        }
+                    </div>
                     <div class="col-md-2"> <h5 class="modal-title" style="text-align: right;"><b>Dolares</b></h5></div>
                 </div>
                 <div class="row">

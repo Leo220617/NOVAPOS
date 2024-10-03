@@ -183,7 +183,6 @@
     </div>
 </section>
 
-<!-- Modal -->
 <div class="modal modal-fill fade" data-backdrop="false" id="modalPagos" tabindex="-1">
 
     <div class="modal-dialog">
@@ -234,7 +233,11 @@
                         <div class="form-group">
 
                             <select class="form-control" id="selectMonedaP" onchange="javascript: onChangeMonedaP()">
-                                <option value="CRC" selected>CRC</option>
+                                @if (Model.Parametro.FirstOrDefault().Pais == "C")
+                                {
+                                    <option value="CRC" selected>CRC</option>
+
+                                }
                                 <option value="USD">USD</option>
 
                             </select>
@@ -315,7 +318,10 @@
                         <div class="form-group">
                             <label>Moneda Vuelto:  </label>
                             <select class="form-control" id="selectMonedaV">
-                                <option value="CRC" selected>CRC</option>
+                                @if (Model.Parametro.FirstOrDefault().Pais == "C")
+                                {
+                                    <option value="CRC" selected>CRC</option>
+                                }
                                 <option value="USD">USD</option>
 
                             </select>
@@ -335,17 +341,20 @@
 
 
                     </div>
+                    @if (Model.Parametro.FirstOrDefault().Pais == "C")
+                    {
 
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Total Colones:  </label>
-                            <input type="number" class="form-control" disabled id="TotalC" placeholder="Total Colones">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Total Colones:  </label>
+                                <input type="number" class="form-control" disabled id="TotalC" placeholder="Total Colones">
+
+
+                            </div>
 
 
                         </div>
-
-
-                    </div>
+                    }
 
                     <div class="col-md-4">
                         <div class="form-group">
@@ -357,16 +366,20 @@
 
 
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Tipo de Cambio:  </label>
-                            <input type="number" readonly class="form-control" disabled id="TipCam" placeholder="Tipo Cambio">
+                    @if (Model.Parametro.FirstOrDefault().Pais == "C")
+                    {
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Tipo de Cambio:  </label>
+                                <input type="number" readonly class="form-control" disabled id="TipCam" placeholder="Tipo Cambio">
+
+
+                            </div>
 
 
                         </div>
+                    }
 
-
-                    </div>
 
                     <div class="col-sm-12 pl-1" style="text-align: right;">
 
@@ -401,7 +414,14 @@
                 </div>
                 <!-- /.row -->
                 <div class="row">
-                    <div class="col-md-10"><h5 class="modal-title" style="text-align: right;"><b>Colones</b></h5> </div>
+
+                    <div class="col-md-10">
+                        @if (Model.Parametro.FirstOrDefault().Pais == "C")
+                        {
+                            <h5 class="modal-title" style="text-align: right;"><b>Colones</b></h5>
+
+                        }
+                    </div>
                     <div class="col-md-2"> <h5 class="modal-title" style="text-align: right;"><b>Dolares</b></h5></div>
                 </div>
                 <div class="row">
@@ -457,4 +477,3 @@
         </div>
     </div>
 </div>
-<!-- /.modal -->

@@ -203,7 +203,6 @@ namespace NOVAAPP.Pages.Proformas
                 Parametros = await param.ObtenerLista("");
                 filtro.FechaInicial = DateTime.Now.Date;
 
-
                 TP = await tipoCambio.ObtenerLista(filtro);
 
 
@@ -211,7 +210,7 @@ namespace NOVAAPP.Pages.Proformas
                 {
                     TP = new TipoCambiosViewModel[1];
                     var TipoCambiosViewModel = new TipoCambiosViewModel();
-                    TipoCambiosViewModel.TipoCambio = 0;
+                    TipoCambiosViewModel.TipoCambio = 1;
                     TipoCambiosViewModel.Moneda = "USD";
                     TP[0] = TipoCambiosViewModel;
                 }

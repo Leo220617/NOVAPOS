@@ -14,6 +14,7 @@ using NOVAAPP.Models;
 using NOVAPOS.Models;
 using Refit;
 using Sicsoft.Checkin.Web.Servicios;
+using Castle.Core;
 
 
 namespace NOVAAPP.Pages.Proformas
@@ -45,7 +46,7 @@ namespace NOVAAPP.Pages.Proformas
         private readonly ICrudApi<AprobacionesCreditosViewModel, int> aprobaciones;
         private readonly ICrudApi<CategoriasViewModel, int> categorias;
         private readonly ICrudApi<ParametrosViewModel, int> param;
-    
+
 
         [BindProperty]
         public OfertasViewModel Oferta { get; set; }
@@ -159,7 +160,7 @@ namespace NOVAAPP.Pages.Proformas
             this.aprobaciones = aprobaciones;
             this.categorias = categorias;
             this.param = param;
-       
+
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -191,7 +192,7 @@ namespace NOVAAPP.Pages.Proformas
                 filtro.CardName = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
 
                 var Suc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
-               
+
                 Cantones = await serviceC.ObtenerLista("");
                 Distritos = await serviceD.ObtenerLista("");
                 Barrios = await serviceB.ObtenerLista("");
@@ -199,8 +200,22 @@ namespace NOVAAPP.Pages.Proformas
                 var Exonera = await exo.ObtenerLista("");
                 Exoneraciones = Exonera.Where(a => a.Activo == true).ToArray();
                 Grupos = await grupo.ObtenerLista("");
+                Parametros = await param.ObtenerLista("");
                 filtro.FechaInicial = DateTime.Now.Date;
+
+
                 TP = await tipoCambio.ObtenerLista(filtro);
+
+
+                if (Parametros.FirstOrDefault().Pais == "P" && TP.Length == 0)
+                {
+                    TP = new TipoCambiosViewModel[1];
+                    var TipoCambiosViewModel = new TipoCambiosViewModel();
+                    TipoCambiosViewModel.TipoCambio = 0;
+                    TipoCambiosViewModel.Moneda = "USD";
+                    TP[0] = TipoCambiosViewModel;
+                }
+
                 Vendedores = await vendedor.ObtenerLista(filtro);
                 Vendedores = Vendedores.Where(a => a.Activo == true).ToArray();
                 Bodega = await bodegas.ObtenerLista("");
@@ -208,7 +223,7 @@ namespace NOVAAPP.Pages.Proformas
                 MiSucursal = Sucursal.Where(a => a.CodSuc.ToUpper().Contains(Suc)).FirstOrDefault();
                 ParametrosFiltros filtroSeries = new ParametrosFiltros();
                 filtroSeries.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
-               SeriesProductos = await series.ObtenerListaEspecial(filtroSeries);
+                SeriesProductos = await series.ObtenerListaEspecial(filtroSeries);
 
                 ParametrosFiltros filtro2 = new ParametrosFiltros();
                 filtro2.Activo = true;
@@ -225,8 +240,8 @@ namespace NOVAAPP.Pages.Proformas
                 filtro4.Texto = "A";
                 Aprobaciones = await aprobaciones.ObtenerLista(filtro4);
                 Categorias = await categorias.ObtenerLista("");
-                Parametros = await param.ObtenerLista("");
-          
+
+
                 return Page();
             }
             catch (Exception ex)

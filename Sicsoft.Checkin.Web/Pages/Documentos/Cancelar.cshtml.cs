@@ -123,9 +123,21 @@ namespace NOVAAPP.Pages.Documentos
                 var Suc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 Sucursal = await sucursales.ObtenerLista("");
                 MiSucursal = Sucursal.Where(a => a.CodSuc.ToUpper().Contains(Suc)).FirstOrDefault();
+
+
                 TP = await tipoCambio.ObtenerLista(filtro);
 
-                foreach(var item in NCAnteriores)
+
+                if (Parametro.FirstOrDefault().Pais == "P" && TP.Length == 0)
+                {
+                    TP = new TipoCambiosViewModel[1];
+                    var TipoCambiosViewModel = new TipoCambiosViewModel();
+                    TipoCambiosViewModel.TipoCambio = 0;
+                    TipoCambiosViewModel.Moneda = "USD";
+                    TP[0] = TipoCambiosViewModel;
+                }
+
+                foreach (var item in NCAnteriores)
                 {
                     foreach(var item2 in item.Detalle)
                     {

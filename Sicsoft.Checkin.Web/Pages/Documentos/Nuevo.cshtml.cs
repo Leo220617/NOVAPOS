@@ -285,7 +285,19 @@ namespace NOVAAPP.Pages.Documentos
                 Exoneraciones = Exonera.Where(a => a.Activo = true).ToArray();
                 Grupos = await grupo.ObtenerLista("");
                 filtro.FechaInicial = DateTime.Now.Date;
+
+
                 TP = await tipoCambio.ObtenerLista(filtro);
+
+
+                if (Parametros.FirstOrDefault().Pais == "P" && TP.Length == 0)
+                {
+                    TP = new TipoCambiosViewModel[1];
+                    var TipoCambiosViewModel = new TipoCambiosViewModel();
+                    TipoCambiosViewModel.TipoCambio = 0;
+                    TipoCambiosViewModel.Moneda = "USD";
+                    TP[0] = TipoCambiosViewModel;
+                }
                 Vendedores = await vendedor.ObtenerLista(filtro);
                 Vendedores = Vendedores.Where(a => a.Activo == true).ToArray();
                 Bodega = await bodegas.ObtenerLista("");

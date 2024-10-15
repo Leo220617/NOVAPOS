@@ -206,7 +206,7 @@ namespace NOVAAPP.Pages.Proformas
                 TP = await tipoCambio.ObtenerLista(filtro);
 
 
-                if (Parametros.FirstOrDefault().Pais == "P" && TP.Length == 0)
+                if (Parametro.FirstOrDefault().Pais == "P" && TP.Length == 0)
                 {
                     TP = new TipoCambiosViewModel[1];
                     var TipoCambiosViewModel = new TipoCambiosViewModel();

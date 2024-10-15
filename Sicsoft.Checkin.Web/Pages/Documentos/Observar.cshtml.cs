@@ -108,7 +108,18 @@ namespace NOVAAPP.Pages.Documentos
                 CondicionesPagos = CondPago;
 
                 filtro.FechaInicial = DateTime.Now.Date;
+
                 TP = await tipoCambio.ObtenerLista(filtro);
+
+
+                if (Parametro.FirstOrDefault().Pais == "P" && TP.Length == 0)
+                {
+                    TP = new TipoCambiosViewModel[1];
+                    var TipoCambiosViewModel = new TipoCambiosViewModel();
+                    TipoCambiosViewModel.TipoCambio = 1;
+                    TipoCambiosViewModel.Moneda = "USD";
+                    TP[0] = TipoCambiosViewModel;
+                }
 
                 ParametrosFiltros filtro2 = new ParametrosFiltros();
                 filtro2.CardCode = Documento.CodSuc;

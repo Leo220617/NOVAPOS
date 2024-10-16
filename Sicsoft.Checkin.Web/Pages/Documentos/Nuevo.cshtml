@@ -521,7 +521,7 @@
                         <div class="form-group">
                             @if (Model.Parametros.FirstOrDefault().Pais == "P")
                             {
-                                <h5>RUC<span class="text-danger">* (Sin guiones, sin espacios y con 0's)</span></h5>
+                                <h5>RUC<span class="text-danger"></span></h5>
                             }
                             else
                             {
@@ -1098,56 +1098,59 @@
     function maskCedula() {
         $("#Telefono").mask("9999-9999");
         var TC = $("#selectTP").val();
-
-        switch (TC) {
-            case "01":
-                {
-                    $("#Cedula").mask("999999999");
-                    break;
-                }
-            case "02":
-                {
-                    $("#Cedula").mask("999999999999");
-                    break;
-                }
-            case "03":
-                {
-                    $("#Cedula").mask("999999999999");
-                    break;
-                }
-            case "04":
-                {
-                    $("#Cedula").mask("999999999999");
-                    break;
-                }
+        if ($("#Pais").val() == "C") {
+            switch (TC) {
+                case "01":
+                    {
+                        $("#Cedula").mask("999999999");
+                        break;
+                    }
+                case "02":
+                    {
+                        $("#Cedula").mask("999999999999");
+                        break;
+                    }
+                case "03":
+                    {
+                        $("#Cedula").mask("999999999999");
+                        break;
+                    }
+                case "04":
+                    {
+                        $("#Cedula").mask("999999999999");
+                        break;
+                    }
+            }
         }
 
     }
 
     function validarCedula() {
         var TC = $("#selectTP").val();
+        if ($("#Pais").val() == "C") {
 
-        switch (TC) {
-            case "01":
-                {
-                    if ($("#Cedula").val().length < 9) {
+            switch (TC) {
+                case "01":
+                    {
+                        if ($("#Cedula").val().length < 9) {
 
-                        $("#Cedula").focus();
-                        $("#Cedula").select();
+                            $("#Cedula").focus();
+                            $("#Cedula").select();
+                        }
+
+                        break;
                     }
+                case "02":
+                    {
+                        if ($("#Cedula").val().length < 12) {
 
-                    break;
-                }
-            case "02":
-                {
-                    if ($("#Cedula").val().length < 10) {
+                            $("#Cedula").focus();
+                            $("#Cedula").select();
+                        }
 
-                        $("#Cedula").focus();
-                        $("#Cedula").select();
+                        break;
                     }
-
-                    break;
-                }
+            }
         }
     }
 </script>

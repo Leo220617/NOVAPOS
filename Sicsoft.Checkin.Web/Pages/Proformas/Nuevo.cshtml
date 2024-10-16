@@ -578,7 +578,7 @@
                         <div class="form-group">
                             @if (Model.Parametros.FirstOrDefault().Pais == "P")
                             {
-                                <h5>RUC<span class="text-danger">* (Sin guiones, sin espacios y con 0's)</span></h5>
+                                <h5>RUC</h5>
                             }
                             else
                             {
@@ -853,7 +853,7 @@
     function maskCedula() {
         $("#Telefono").mask("9999-9999");
         var TC = $("#selectTP").val();
-
+        if ($("#Pais").val() == "C") {
         switch (TC) {
             case "01":
                 {
@@ -876,11 +876,13 @@
                     break;
                 }
         }
+        }
 
     }
 
     function validarCedula() {
         var TC = $("#selectTP").val();
+        if ($("#Pais").val() == "C") {
 
         switch (TC) {
             case "01":
@@ -902,6 +904,7 @@
                     }
 
                     break;
+                }
                 }
         }
     }

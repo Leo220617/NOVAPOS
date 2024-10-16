@@ -3332,7 +3332,7 @@ function BuscarCliente() {
             BuscarClienteRegistro();
         }
         if (Pais == "P") {
-
+            BuscarClientePanama();
         }
   
         console.log($("#Nombre").val());
@@ -3481,7 +3481,64 @@ function BuscarClienteHacienda() {
         })
     }
 }
+function BuscarClientePanama() {
+    try {
+        fetch('https://fepatest-api.webposonline.com/api/fepa/ak/v1/test/CheckRuc/ad733bad-167b-4478-87be-aa2035bba008/' + $("#Cedula").val() + '/0')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parsea la respuesta como JSON
+            })
+            .then(data => {
+                // Maneja los datos obtenidos
+                console.log(data);
 
+                if (data.razonSocial != undefined) {
+
+                    $("#Nombre").val(data.razonSocial.toString());
+                    $("#selectTP").val(data.tipoRuc.toString().padStart(2, '0'));
+                    $("#DV").val(data.dv.toString());
+                    $("#Nombre").attr("readonly", "readonly");
+                    $("#DV").attr("readonly", "readonly");
+
+
+
+                }
+
+                if ($("#Nombre").val().toString() == "" || $("#Nombre").val().toString() == undefined || $("#Nombre").val().toString() == '' || $("#Nombre").val().toString() == null) {
+                    console.log($("#Nombre").val());
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Cliente no encontrado en registros. Contactar a soporte!  '
+
+                    })
+                }
+            })
+            .catch(error => {
+                // Maneja errores
+                console.error('Fetch error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error  ' + error
+
+                })
+            });
+
+
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'ha ocurrido un error  ' + e
+
+        })
+    }
+}
 
 
 ///////Impresion

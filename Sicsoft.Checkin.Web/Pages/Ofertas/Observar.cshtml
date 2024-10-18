@@ -25,7 +25,9 @@
     var CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
 }
 @section styles{
-
+      .html {
+            page-break-inside: avoid;
+        }
 
 }
 @section scripts{
@@ -62,7 +64,7 @@
                     filename: 'OfertaVenta.pdf',
                     image: { type: 'jpeg', quality: 1 },
                     html2canvas: { scale: 2, logging: true },
-                    jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
+                    jsPDF: { unit: 'in', format: 'A2', orientation: 'P', compressPDF: true },
                     class: ImprimirPantalla
                 });
 
@@ -693,7 +695,7 @@
 
             </div>
         </div>
-     @*    <div class="col-md-6">
+        <div class="col-md-6">
             <div style="   font-size: 17px;">
                 <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
                 <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128152</p>
@@ -716,7 +718,7 @@
 
 
             </div>
-        </div> *@
+        </div>
     </div>
 </div>
 <form id="test-form" class="mfp-hide white-popup-block">

@@ -8,6 +8,13 @@
     formato.CurrencyGroupSeparator = ",";
     formato.NumberDecimalSeparator = ".";
 }
+@section styles {
+
+       .html {
+            page-break-inside: avoid;
+        }
+
+}
 @section scripts{
     <script>
         function ImprimirPantalla() {
@@ -28,7 +35,7 @@
                     filename: 'PagoCuenta.pdf',
                     image: { type: 'jpeg', quality: 1 },
                     html2canvas: { scale: 2, logging: true },
-                    jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
+                    jsPDF: { unit: 'in', format: 'A2', orientation: 'P', compressPDF: true },
                     class: ImprimirPantalla
                 });
 

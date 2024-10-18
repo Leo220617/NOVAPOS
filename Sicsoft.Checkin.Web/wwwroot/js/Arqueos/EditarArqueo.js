@@ -923,7 +923,7 @@ function Generar() {
                                         //Despues de insertar, ocupariamos el id del cliente en la bd 
                                         //para entonces setearlo en el array de clientes
 
-                                        window.location.href = window.location.href.split("/Editar")[0];
+                                        window.location.href = location.reload(); //window.location.href.split("/Editar")[0];
 
 
                                     }

@@ -1510,7 +1510,7 @@ function validar(cliente) {
             return false;
 
 
-        } else if (cliente.Email == "" || cliente.Email == null || !esCorreoValido(cliente.Email)) {
+        } else if (cliente.Email == "" || cliente.Email == null || !validarCorreo(cliente.Email)) {
             return false;
 
         } else if (cliente.Telefono == "" || cliente.Telefono == null) {
@@ -1532,7 +1532,7 @@ function validar(cliente) {
 
             })
             return false;
-        }
+        } 
 
         else {
             return true;

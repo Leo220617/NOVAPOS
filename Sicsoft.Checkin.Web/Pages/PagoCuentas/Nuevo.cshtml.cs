@@ -65,7 +65,7 @@ namespace NOVAAPP.Pages.PagoCuentas
                 ParametrosFiltros filtro2 = new ParametrosFiltros();
                 filtro2.FechaInicial = DateTime.Now.Date;
                 TP = await tipoCambio.ObtenerLista(filtro);
-
+                Parametro = await param.ObtenerLista("");
 
                 if (Parametro.FirstOrDefault().Pais == "P" && TP.Length == 0)
                 {
@@ -75,7 +75,7 @@ namespace NOVAAPP.Pages.PagoCuentas
                     TipoCambiosViewModel.Moneda = "USD";
                     TP[0] = TipoCambiosViewModel;
                 }
-                Parametro = await param.ObtenerLista("");
+     
                 return Page();
             }
             catch (Exception ex)

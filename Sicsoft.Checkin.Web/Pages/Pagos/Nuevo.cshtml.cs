@@ -121,7 +121,7 @@ namespace NOVAAPP.Pages.Pagos
                 filtro.FechaInicial = DateTime.Now.Date;
                 TP = await tipoCambio.ObtenerLista(filtro);
 
-
+                Parametro = await param.ObtenerLista("");
                 if (Parametro.FirstOrDefault().Pais == "P" && TP.Length == 0)
                 {
                     TP = new TipoCambiosViewModel[1];
@@ -134,7 +134,7 @@ namespace NOVAAPP.Pages.Pagos
                 ParametrosFiltros FiltroCB = new ParametrosFiltros();
                 FiltroCB.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 CB = await serviceCB.ObtenerLista(FiltroCB);
-                Parametro = await param.ObtenerLista("");
+             
                 return Page();
             }
             catch (Exception ex)

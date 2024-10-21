@@ -586,7 +586,7 @@
                             }
 
                             <div class="controls">
-                             <input type="text" id="Cedula" class="form-control" required data-validation-required-message="Este campo es requerido" maxlength="12" onchange="javascript: BuscarCliente()" onblur="javascript: validarCedula()">
+                             <input type="text" id="Cedula" class="form-control" required data-validation-required-message="Este campo es requerido" maxlength="16" onchange="javascript: BuscarCliente()" onblur="javascript: validarCedula()">
                             </div>
 
                         </div>
@@ -849,66 +849,7 @@
     <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
-<script>
-    function maskCedula() {
-        $("#Telefono").mask("9999-9999");
-        var TC = $("#selectTP").val();
-        if ($("#Pais").val() == "C") {
-        switch (TC) {
-            case "01":
-                {
-                    $("#Cedula").mask("999999999");
-                    break;
-                }
-            case "02":
-                {
-                    $("#Cedula").mask("999999999999");
-                    break;
-                }
-            case "03":
-                {
-                    $("#Cedula").mask("999999999999");
-                    break;
-                }
-            case "04":
-                {
-                    $("#Cedula").mask("999999999999");
-                    break;
-                }
-        }
-        }
 
-    }
-
-    function validarCedula() {
-        var TC = $("#selectTP").val();
-        if ($("#Pais").val() == "C") {
-
-        switch (TC) {
-            case "01":
-                {
-                    if ($("#Cedula").val().length < 9) {
-
-                        $("#Cedula").focus();
-                        $("#Cedula").select();
-                    }
-
-                    break;
-                }
-            case "02":
-                {
-                    if ($("#Cedula").val().length < 12) {
-
-                        $("#Cedula").focus();
-                        $("#Cedula").select();
-                    }
-
-                    break;
-                }
-                }
-        }
-    }
-</script>
 
 <!-- form itself -->
 <form id="test-form" class="mfp-hide white-popup-block">

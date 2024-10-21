@@ -226,6 +226,65 @@ function RecuperarInformacion() {
         })
     }
 }
+
+function maskCedula() {
+    $("#Telefono").mask("9999-9999");
+    var TC = $("#selectTP").val();
+    if ($("#Pais").val() == "C") {
+        switch (TC) {
+            case "01":
+                {
+                    $("#Cedula").mask("999999999");
+                    break;
+                }
+            case "02":
+                {
+                    $("#Cedula").mask("999999999999");
+                    break;
+                }
+            case "03":
+                {
+                    $("#Cedula").mask("999999999999");
+                    break;
+                }
+            case "04":
+                {
+                    $("#Cedula").mask("999999999999");
+                    break;
+                }
+        }
+    }
+
+}
+
+function validarCedula() {
+    var TC = $("#selectTP").val();
+    if ($("#Pais").val() == "C") {
+
+        switch (TC) {
+            case "01":
+                {
+                    if ($("#Cedula").val().length < 9) {
+
+                        $("#Cedula").focus();
+                        $("#Cedula").select();
+                    }
+
+                    break;
+                }
+            case "02":
+                {
+                    if ($("#Cedula").val().length < 12) {
+
+                        $("#Cedula").focus();
+                        $("#Cedula").select();
+                    }
+
+                    break;
+                }
+        }
+    }
+}
 function onClickModal() {
     try {
         $("#plusButton").show();

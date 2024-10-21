@@ -82,7 +82,7 @@ namespace NOVAAPP.Pages.PreCierres
                 filtro.Codigo3 = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
 
                 filtro.Externo = true;
-                filtro.Activo = false;
+                filtro.Activo = true;
               
                 Cierre = await service.ObtenerLista(filtro);
 

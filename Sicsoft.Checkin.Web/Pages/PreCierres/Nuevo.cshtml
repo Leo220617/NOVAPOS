@@ -198,7 +198,7 @@
             try {
                 var TipoCambio = JSON.parse($("#TipoCambio").val());
                 var TipodeCambio = TipoCambio.find(a => a.Moneda === "USD").TipoCambio || 1;
-
+                var Pais = JSON.parse($("#Pais").val());
                 if (Pais == "C" || Pais == "") {
                 var EfectivoColones = parseFloat($("#EfectivoColonesC").val()) || 0;
                 var TarjetaColones = parseFloat($("#TarjetaColonesC").val()) || 0;

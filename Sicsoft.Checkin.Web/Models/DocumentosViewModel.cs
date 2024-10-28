@@ -38,6 +38,7 @@ namespace NOVAAPP.Models
         public string ConsecutivoHacienda { get; set; }
 
         public decimal Redondeo { get; set; }
+        public bool Validado { get; set; }
         public MetodosPagosViewModel[] MetodosPagos { get; set; }
 
         public DetDocumentoViewModel[] Detalle { get; set; }

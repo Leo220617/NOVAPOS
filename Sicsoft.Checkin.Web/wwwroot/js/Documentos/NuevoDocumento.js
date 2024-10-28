@@ -75,6 +75,8 @@ var Aprobaciones = [];
 var MiSucursal = [];
 var Categorias = [];
 var Pais = "";
+var PIN = "";
+var Validado = false;
 function HideP() {
     try {
         $("#boxP").hide();
@@ -101,11 +103,18 @@ function generarSelect2() {
 }
 function ReadOnlyC() {
     try {
+       
+        var Transito = CP.find(a => a.Nombre == "Transito"); 
+
+        if (Documento.idCondPago != Transito.id) {
+            $("#selectCondPago").attr("disabled", "disabled");
+        }
+
         $("#boxC").attr("readonly", "readonly");
-        $("#selectCondPago").attr("disabled", "disabled");
+        
         /*    $("#selectMoneda").attr("disabled", "disabled");*/
         $("#ClienteSeleccionado").attr("disabled", "disabled");
-        $("#selectCondPago").attr("disabled", "disabled");
+        //$("#selectCondPago").attr("disabled", "disabled");
         $("#selectVendedor").attr("disabled", "disabled");
     } catch (e) {
         Swal.fire({
@@ -151,6 +160,8 @@ function Recuperar() {
         MiSucursal = JSON.parse($("#Sucursal").val());
         Categorias = JSON.parse($("#Categorias").val());
         Pais = JSON.parse($("#Pais").val());
+        PIN = JSON.parse($("#PIN").val());
+
 
         RellenaClientes();
         RellenaVendedores();
@@ -2224,6 +2235,7 @@ function Generar() {
             CodSuc: "",
             Moneda: $("#selectMoneda").val(),
             TipoDocumento: $("#selectTD").val(),
+            Validado: Validado,
             MetodosPagos: MetodosPagos,
             Detalle: ProdCadena,
             Lotes: LotesCadena
@@ -2845,7 +2857,72 @@ function AbrirPago() {
                     $("#modalPagos").modal("show");
                 }
             } else {
-                Generar();
+                if (CondPago == Transito.id) {
+                    Swal.fire({
+                        title: 'Introduce tu PIN',
+                        input: 'password',
+                        inputAttributes: {
+                            maxlength: 4,
+                            autocapitalize: 'off',
+                            autocorrect: 'off'
+                        },
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showCancelButton: false,
+                        inputPlaceholder: 'PIN de 4 dígitos',
+                        confirmButtonText: 'Aceptar',
+                        showCancelButton: false,
+                        inputValidator: (value) => {
+                            if (!value) {
+                                return '¡Por favor, ingresa tu PIN!'
+                            }
+                            if (value.length !== 4) {
+                                return '¡El PIN debe tener 4 dígitos!'
+                            }
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                             
+                            if (PIN == result.value) {
+                                Swal.fire({
+                                    title: "Ha sido validado con éxito",
+
+                                    icon: 'success',
+                                    showCancelButton: false,
+
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'swalBtnColor',
+
+                                    },
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        Validado = true;
+                                        Generar();
+                                    }
+                                })
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'PIN INCORRECTO!! '  
+
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        AbrirPago();
+                                    } else {
+
+
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    Generar();
+                }
+
+                
             }
         }
     } catch (e) {

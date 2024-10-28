@@ -132,7 +132,8 @@ namespace NOVAAPP.Pages.Documentos
 
         [BindProperty]
         public ParametrosViewModel[] Parametros { get; set; }
-
+        [BindProperty]
+        public string PIN { get; set; }
 
 
 
@@ -256,6 +257,7 @@ namespace NOVAAPP.Pages.Documentos
 
                 ParametrosFiltros FiltroCB = new ParametrosFiltros();
                 FiltroCB.Texto = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                PIN = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "PIN").Select(s1 => s1.Value).FirstOrDefault();
                 var idUsuario = Convert.ToInt32(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
                 CB = await serviceCB.ObtenerLista(FiltroCB);
                 DES = await usuario.ObtenerPorId(idUsuario);

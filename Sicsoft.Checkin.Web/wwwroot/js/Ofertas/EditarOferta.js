@@ -1102,7 +1102,7 @@ function RellenaCondiciones(CPS) {
         var Contado = CP.find(a => a.Nombre == "Contado");
         var Transito = CP.find(a => a.Nombre == "Transito");
 
-        var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
+        var CondP = CP.filter(a => a.id == Clientex.idCondicionPago);
 
 
         if (Clientex.Transitorio && Clientex.idCondicionPago == Contado.id) {

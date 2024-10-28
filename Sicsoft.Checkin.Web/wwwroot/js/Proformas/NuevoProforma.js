@@ -740,7 +740,7 @@ function RecolectarFacturas() {
 
                         })
                     } else {
-                        if ((Cliente.LimiteCredito - - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
+                        if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
                             Swal.fire({
                                 icon: 'warning',
                                 title: 'Advertencia',

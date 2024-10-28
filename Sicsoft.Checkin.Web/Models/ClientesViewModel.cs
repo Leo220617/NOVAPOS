@@ -65,6 +65,7 @@ namespace NOVAAPP.Models
 
         public bool Transitorio { get; set; }
         public string DV { get; set; }
+        public decimal DiasGracia { get; set; }
 
     }
 }

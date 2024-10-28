@@ -160,7 +160,9 @@ function RellenaTabla() {
     try {
         var html = "";
         $("#tbody").html(html);
+        var idCliente = $("#ClienteSeleccionado").val();
 
+        var Cliente = Clientes.find(a => a.id == idCliente);
 
         for (var i = 0; i < ProdCadena.length; i++) {
             html += "<tr>";
@@ -184,8 +186,8 @@ function RellenaTabla() {
             var diferencia = diff / (1000 * 60 * 60 * 24);
             var interes = 0;
 
-            if (diferencia > 10) {
-                interes = (ProdCadena[i].saldo * 0.0005) * (diferencia - 10);
+            if (diferencia > (10+ Cliente.DiasGracia)) {
+                interes = (ProdCadena[i].saldo * 0.0005) * (diferencia - (10 + Cliente.DiasGracia));
 
             }
 
@@ -298,8 +300,8 @@ function onChangeMonto(i) {
             valorInt = 0;
         }
 
-        if (diferencia > 10 ) {
-            interes = (ProdCadena[i].saldo * 0.0005) * (diferencia - 10);
+        if (diferencia > (10 + Cliente.DiasGracia) ) {
+            interes = (ProdCadena[i].saldo * 0.0005) * (diferencia - (10 + Cliente.DiasGracia));
         }
 
         TotalF = ProdCadena[i].saldo + interes;
@@ -424,8 +426,8 @@ function CalcularInteresyCapital(i) {
         }
 
 
-        if (diferencia > 10 && valorInt == 0) {
-            interes = (ProdCadena[i].saldo * 0.0005) * (diferencia - 10);
+        if (diferencia > (10 + Cliente.DiasGracia) && valorInt == 0) {
+            interes = (ProdCadena[i].saldo * 0.0005) * (diferencia - (10 + Cliente.DiasGracia));
             FacyInt = interes + ProdCadena[i].saldo;
             PorCompra = (MontoDigitado / FacyInt);
             CapitalLinea = ProdCadena[i].saldo * PorCompra;
@@ -751,8 +753,8 @@ function onChangeRevisado(i) {
         var valorCheckI = $("#" + i + "_mdcheckboxI").prop('checked');
 
 
-        if (diferencia > 10) {
-            interes = (Saldo * 0.0005) * (diferencia - 10);
+        if (diferencia > (10 + Cliente.DiasGracia)) {
+            interes = (Saldo * 0.0005) * (diferencia - (10 + Cliente.DiasGracia));
         }
 
         var TotalF = Saldo + interes;

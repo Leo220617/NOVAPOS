@@ -28,7 +28,7 @@
 
 
     <script src="/js/Proformas/NuevoProforma.js?v=0.1.3"></script>
-
+  
 
 }
 
@@ -80,6 +80,7 @@
             <input hidden id="ParamPrecioDescuento" value="@JsonConvert.SerializeObject(Model.Parametro.FirstOrDefault().PrecioDescuento)" />
             @*                <input hidden id="Lotes" value="@JsonConvert.SerializeObject(Model.Oferta.Lotes)" />*@
             <input hidden id="Pais" value="@JsonConvert.SerializeObject(Model.Parametro.FirstOrDefault().Pais)" />
+            <input hidden id="Empresa" value="@JsonConvert.SerializeObject(Model.Empresa)" />
 
             <!-- Content Header (Page header) -->
             <div class="box">
@@ -185,8 +186,8 @@
                               
                                 <br><br>
                                 <strong id="strongInfo2">Saldo:   &nbsp;&nbsp;&nbsp;&nbsp; Limite Crédito:  &nbsp;&nbsp;&nbsp;&nbsp;  Grupo:</strong>
-
-
+                                <br><br>
+                                <strong id="strongInfo3">Días gracia:   &nbsp;&nbsp;&nbsp;&nbsp; Monto Extra:  &nbsp;&nbsp;&nbsp;&nbsp;  </strong>
                             </address>
                         </div>
 
@@ -434,7 +435,11 @@
                                         }
 
                                         <th class="text-right">Impuesto</th>
-                                        <th class="text-right">% Exoneración</th>
+                                        @if(Model.Empresa == "N")
+                                        {
+                                            <th class="text-right">% Exoneración</th>
+                                        }
+                             
 
                                         <th class="text-right">Total</th>
                                         @if (!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))

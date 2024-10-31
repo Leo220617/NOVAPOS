@@ -72,7 +72,7 @@ var Aprobaciones = [];
 var DocumentosC = [];
 var Categorias = [];
 var Pais = "";
-
+var Empresa = "";
 
 function CerrarPopUpLotes() {
     try {
@@ -108,7 +108,7 @@ function Recuperar() {
         Margenes = JSON.parse($("#Margenes").val());
         DetMargenes = JSON.parse($("#DetMargenes").val());
         Pais = JSON.parse($("#Pais").val());
-
+        Empresa = $("#Empresa").val();
         RellenaClientes();
         RellenaVendedores();
         RellenaExoneraciones();
@@ -740,7 +740,7 @@ function RecolectarFacturas() {
 
                         })
                     } else {
-                        if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
+                        if (((Cliente.LimiteCredito + Cliente.MontoExtra) - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
                             Swal.fire({
                                 icon: 'warning',
                                 title: 'Advertencia',
@@ -748,7 +748,7 @@ function RecolectarFacturas() {
                                     '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
 
                             })
-                        } else if ((Cliente.LimiteCredito - Cliente.Saldo) > 0 && Cliente.idCondicionPago != Contado.id) {
+                        } else if (((Cliente.LimiteCredito + Cliente.MontoExtra) - Cliente.Saldo) > 0) {
                             FP = true;
                             //$("#selectCondPago").attr("disabled", false);
                         }
@@ -1215,9 +1215,9 @@ function onChangeCliente() {
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Cédula: " + Cliente.Cedula + " " + "Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
         $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)) + "  " + "Grupo: " + Grupo.CodSAP + "-" + Grupo.Nombre);
+        $("#strongInfo3").text("Días gracia: " + formatoDecimal(Cliente.DiasGracia.toFixed(0)) + " " + "  " + " " + "  " + "Monto Extra: " + formatoDecimal(Cliente.MontoExtra.toFixed(2)));
 
-
-        if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id && Aprobado == undefined) {
+        if (((Cliente.LimiteCredito + Cliente.MontoExtra) - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id && Aprobado == undefined) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Advertencia',
@@ -1273,9 +1273,9 @@ function RellenaCondiciones(CPS) {
 
         var CondP = CP.filter(a => a.id == Cliente.idCondicionPago);
 
-        if (Clientex.Transitorio && Clientex.idCondicionPago == Contado.id) {
+        if (Clientex.Transitorio) {
             text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
-            if (FP == false && !Name) {
+            if (!Name) {
                 text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
             }
 
@@ -1591,7 +1591,7 @@ function validar(cliente) {
 
             })
             return false;
-        } 
+        }
 
         else {
             return true;
@@ -1830,7 +1830,11 @@ function RellenaTabla() {
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
             }
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto / ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
-            html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+
+            if (Empresa == "N") {
+
+                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+            }
             html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
             if ($("#RolGanancia").val() == "value") {
                 if (ProdCadena[i].Moneda != MonedaDoc) {
@@ -2080,7 +2084,7 @@ function AgregarProductoTabla() {
 
 
         if (PE.PrecioUnitario > Producto.PrecioUnitario && PE.Editable == false && PromoExclusiva == undefined) {
-             
+
 
             throw new Error('Precio invalido, el precio tiene que ser mayor o igual a ' + ' ' + PE.PrecioUnitario);
 
@@ -2119,18 +2123,18 @@ function AgregarProductoTabla() {
         var PrecioFinal = Producto.PrecioUnitario - DescuentoX;
 
         if (Producto.PrecioMin > PrecioFinal && Promo == undefined) {
-           
+
             throw new Error('No se puede aplicar el descuento debido a que es menor al Precio Minimo, el Producto ' + Producto.Descripcion + ' lo maximo que se le puede aplicar de Descuento es de ' + parseFloat(DescuentoMaximo).toFixed(2) + '%');
 
         }
         if (Producto.PorDescto > Descuento) {
-             
+
             throw new Error('Usted no puede aplicar este descuento, el descuento máximo asignado a su usuario es de' + ' ' + parseFloat(Descuento).toFixed(2) + '%');
 
         }
 
         if (Producto.PrecioUnitario <= 0) {
-          
+
             throw new Error('No se puede agregar un producto con Precio 0');
 
         }
@@ -2191,7 +2195,7 @@ function AgregarProductoTabla() {
             $("#SerieSeleccionado").val("0").trigger('change.select2');
             $("#exoneracion").val("0").trigger('change.select2');
         } else {
-            
+
             throw new Error('Producto sin Cabys valido');
 
         }
@@ -2211,7 +2215,7 @@ function AgregarProductoTabla() {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text:  e
+            text: e
 
         })
     }
@@ -2489,7 +2493,7 @@ function validarOferta(e) {
             }
         }
 
-        if ((Cliente.LimiteCredito - Cliente.Saldo) < totalG && CondPago != Contado.id && CondPago != Transito.id && Aprobado == undefined) {
+        if (((Cliente.LimiteCredito + Cliente.MontoExtra) - Cliente.Saldo) < totalG && CondPago != Contado.id && CondPago != Transito.id && Aprobado == undefined) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

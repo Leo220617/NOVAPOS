@@ -77,6 +77,7 @@ var Categorias = [];
 var Pais = "";
 var PIN = "";
 var Validado = false;
+var Empresa = "";
 function HideP() {
     try {
         $("#boxP").hide();
@@ -134,7 +135,7 @@ function CerrarPopUpLotes() {
 }
 function Recuperar() {
     try {
-
+        Empresa = $("#Empresa").val();
         Cantones = JSON.parse($("#Cantones").val());
         Distritos = JSON.parse($("#Distritos").val());
         Barrios = JSON.parse($("#Barrios").val());
@@ -1012,7 +1013,7 @@ function onChangeCliente() {
         var Contado = CP.find(a => a.Nombre == "Contado");
         var Aprobado = Aprobaciones.find(a => a.idCliente == idCliente);
 
-        if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id && Aprobado == undefined) {
+        if (((Cliente.LimiteCredito + Cliente.MontoExtra) - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id && Aprobado == undefined) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Advertencia',
@@ -1048,7 +1049,7 @@ function onChangeCliente() {
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Cédula: " + Cliente.Cedula + " " + "Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
         $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)) + "  " + "Grupo: " + Grupo.CodSAP + "-" + Grupo.Nombre);
-
+        $("#strongInfo3").text("Días gracia: " + formatoDecimal(Cliente.DiasGracia.toFixed(0)) + " " + "  " + " " + "  " + "Monto Extra: " + formatoDecimal(Cliente.MontoExtra.toFixed(2)));
 
 
         RecolectarFacturas();
@@ -1124,7 +1125,7 @@ function RecolectarFacturas() {
 
                         })
                     } else {
-                        if ((Cliente.LimiteCredito - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
+                        if (((Cliente.LimiteCredito + Cliente.MontoExtra) - Cliente.Saldo) <= 0 && Cliente.idCondicionPago != Contado.id) {
                             Swal.fire({
                                 icon: 'warning',
                                 title: 'Advertencia',
@@ -1132,7 +1133,7 @@ function RecolectarFacturas() {
                                     '<br><button id="solicitarCreditoBtn" class="swal2-confirm swal2-styled" onclick="Solicitar()">Solicitar Crédito</button>'
 
                             })
-                        } else if ((Cliente.LimiteCredito - Cliente.Saldo) > 0 && Cliente.idCondicionPago != Contado.id) {
+                        } else if (((Cliente.LimiteCredito + Cliente.MontoExtra) - Cliente.Saldo) > 0) {
                             FP = true;
                             //$("#selectCondPago").attr("disabled", false);
                         }
@@ -1308,9 +1309,9 @@ function RellenaCondiciones(CPS) {
 
 
 
-        if (Clientex.Transitorio && Clientex.idCondicionPago == Contado.id) {
+        if (Clientex.Transitorio) {
             text += "<option value='" + Contado.id + "'> " + Contado.Nombre + " </option>";
-            if (FP == false && !Name) {
+            if (!Name) {
                 text += "<option value='" + Transito.id + "'> " + Transito.Nombre + " </option>";
             }
 
@@ -1849,7 +1850,10 @@ function RellenaTabla() {
                     html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].Descuento).toFixed(2)) + " </td>";
                 }
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalImpuesto / ProdCadena[i].Cantidad).toFixed(2)) + " </td>";
-                html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+                if (Empresa == "N") {
+
+                    html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].PorExoneracion).toFixed(2)) + " </td>";
+                }
                 html += "<td class='text-right'> " + formatoDecimal(parseFloat(ProdCadena[i].TotalLinea).toFixed(2)) + " </td>";
 
                 if ($("#RolGanancia").val() == "value") {
@@ -2752,7 +2756,7 @@ function AbrirPago() {
             totalG = totalG * TipodeCambio.TipoCambio;
         }
 
-        if ((Cliente.LimiteCredito - Cliente.Saldo) < totalG && CondPago != Contado.id && CondPago != Transito.id && Aprobado == undefined) {
+        if (((Cliente.LimiteCredito + Cliente.MontoExtra) - Cliente.Saldo) < totalG && CondPago != Contado.id && CondPago != Transito.id && Aprobado == undefined) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

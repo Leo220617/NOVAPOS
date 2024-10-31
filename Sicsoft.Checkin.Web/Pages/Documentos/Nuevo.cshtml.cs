@@ -20,6 +20,7 @@ namespace NOVAAPP.Pages.Documentos
 {
     public class NuevoModel : PageModel
     {
+        private readonly IConfiguration configuration;
         private readonly ICrudApi<DocumentosViewModel, int> service; //API
         private readonly ICrudApi<ImpuestosViewModel, int> serviceU;
         private readonly ICrudApi<ClientesViewModel, string> clientes;
@@ -136,9 +137,11 @@ namespace NOVAAPP.Pages.Documentos
         public string PIN { get; set; }
 
 
-
-        public NuevoModel(ICrudApi<ParametrosViewModel, int> parametro,  ICrudApi<DocumentosViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<OfertasViewModel, int> serviceO, ICrudApi<CuentasBancariasViewModel, int> serviceCB, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<UsuariosViewModel, int> usuario, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<DocumentosCreditoViewModel, int> documentos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<SeriesProductosViewModel, int> series, ICrudApi<PromocionesViewModel, int> promociones, ICrudApi<EncMargenesViewModel, int> margenes, ICrudApi<DetMargenesViewModel, int> detmargenes, ICrudApi<AprobacionesCreditosViewModel, int> aprobaciones, ICrudApi<CategoriasViewModel, int> categorias, ICrudApi<ParametrosViewModel, int> param) //CTOR 
+        [BindProperty]
+        public string Empresa { get; set; }
+        public NuevoModel(IConfiguration configuration, ICrudApi<ParametrosViewModel, int> parametro,  ICrudApi<DocumentosViewModel, int> service, ICrudApi<ImpuestosViewModel, int> serviceU, ICrudApi<ClientesViewModel, string> clientes, ICrudApi<ProductosViewModel, string> productos, ICrudApi<CantonesViewModel, int> serviceC, ICrudApi<DistritosViewModel, int> serviceD, ICrudApi<BarriosViewModel, int> serviceB, ICrudApi<ListaPreciosViewModel, int> precio, ICrudApi<ExoneracionesViewModel, int> exo, ICrudApi<GruposClientesViewModel, int> grupo, ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<OfertasViewModel, int> serviceO, ICrudApi<CuentasBancariasViewModel, int> serviceCB, ICrudApi<CondicionesPagosViewModel, int> serviceCP, ICrudApi<VendedoresViewModel, int> vendedor, ICrudApi<UsuariosViewModel, int> usuario, ICrudApi<BodegasViewModel, int> bodegas, ICrudApi<DocumentosCreditoViewModel, int> documentos, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<SeriesProductosViewModel, int> series, ICrudApi<PromocionesViewModel, int> promociones, ICrudApi<EncMargenesViewModel, int> margenes, ICrudApi<DetMargenesViewModel, int> detmargenes, ICrudApi<AprobacionesCreditosViewModel, int> aprobaciones, ICrudApi<CategoriasViewModel, int> categorias, ICrudApi<ParametrosViewModel, int> param) //CTOR 
         {
+            this.configuration = configuration;
             this.service = service;
             this.serviceU = serviceU;
             this.clientes = clientes;
@@ -173,6 +176,7 @@ namespace NOVAAPP.Pages.Documentos
         {
             try
             {
+                Empresa = configuration["CodCliente"].ToString();
                 var idClienteExoneracion = 0;
                 var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
                 if (string.IsNullOrEmpty(Roles.Where(a => a == "50").FirstOrDefault()))

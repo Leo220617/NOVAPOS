@@ -24,13 +24,13 @@
     var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
     var CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
 }
-@section styles{
+@section styles {
       .html {
             page-break-inside: avoid;
         }
 
 }
-@section scripts{
+@section scripts {
     <script>
         $(document).ready(function () {
             jQuery(document).ready(function ($) {
@@ -173,6 +173,7 @@
     <div class="row">
         <div class="col-12">
             <input hidden id="Lotes" value="@JsonConvert.SerializeObject(Model.Oferta.Lotes.Where(a => a.Tipo == "O"))" />
+            <input hidden id="Empresa" value="@JsonConvert.SerializeObject(Model.Empresa)" />
             <div class="box">
                 <div class="box-header with-border">
                     <div class="row">
@@ -320,7 +321,9 @@
                                         <th class="text-center">% Descuento</th>
                                         <th class="text-center">Descuento</th>
                                         <th class="text-center">Impuesto</th>
-                                        <th class="text-center">% Exoneración</th>
+
+                                        <th class="text-right">% Exoneración</th>
+
 
 
                                         <th class="text-center">Total</th>
@@ -353,7 +356,7 @@
 
                                             @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
                                             {
-                                                <td class="text-center">@Math.Round((item.PrecioUnitario  ) - (@item.Descuento/item.Cantidad), 2).ToString("C", formato)</td>
+                                                <td class="text-center">@Math.Round((item.PrecioUnitario) - (@item.Descuento / item.Cantidad), 2).ToString("C", formato)</td>
 
                                             }
                                             else
@@ -363,12 +366,12 @@
                                             }
                                             <td class="text-center">@Math.Round(@item.PorDescto) %</td>
                                             <td class="text-center">@Math.Round(@item.Descuento, 2).ToString("C", formato)</td>
-                                            <td class="text-center">@Math.Round(@item.TotalImpuesto/ @item.Cantidad,2).ToString("C",formato)</td>
+                                            <td class="text-center">@Math.Round(@item.TotalImpuesto / @item.Cantidad, 2).ToString("C", formato)</td>
                                             <td class="text-center">@(Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault() == null ? "0" : Model.Exoneraciones.Where(a => a.id == @item.idExoneracion).FirstOrDefault().PorExon.ToString()) %</td>
-                                            <td class="text-center">@Math.Round(@item.TotalLinea - @item.TotalImpuesto,2).ToString("C",formato)</td>
+                                            <td class="text-center">@Math.Round(@item.TotalLinea - @item.TotalImpuesto, 2).ToString("C", formato)</td>
                                             @if (!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))
                                             {
-                                                <td class="text-center">@Math.Round(((((@item.TotalLinea - @item.TotalImpuesto) - ( (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0: Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Costo) * item.Cantidad)) / (@item.TotalLinea - @item.TotalImpuesto)) * 100) ,2).ToString("C",formato)%</td>
+                                                <td class="text-center">@Math.Round(((((@item.TotalLinea - @item.TotalImpuesto) - ((Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Costo) * item.Cantidad)) / (@item.TotalLinea - @item.TotalImpuesto)) * 100), 2).ToString("C", formato)%</td>
                                             }
                                             <td align="center" style="padding-top:15px;">
 
@@ -396,12 +399,12 @@
 
                             <div>
                                 <p>Sub Total  : <span> @Math.Round(Model.Oferta.Subtotal - Model.Oferta.TotalDescuento, 2).ToString("C", formato)</span> </p>
-                                <p>Descuento  : <span> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>
-                                <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C",formato)</span></p>
-                                <p>Redondeo :  <span>  @Math.Round(Model.Oferta.Redondeo, 2).ToString("C",formato)</span></p>
+                                <p>Descuento  : <span> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C", formato)</span></p>
+                                <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C", formato)</span></p>
+                                <p>Redondeo :  <span>  @Math.Round(Model.Oferta.Redondeo, 2).ToString("C", formato)</span></p>
                             </div>
                             <div class="total-payment">
-                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra + Model.Oferta.Redondeo , 2).ToString("C",formato)</span></h3>
+                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra + Model.Oferta.Redondeo, 2).ToString("C", formato)</span></h3>
                             </div>
 
                         </div>
@@ -617,7 +620,7 @@
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
                                             @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
                                             {
-                                                <td class="text-center">@Math.Round((item.PrecioUnitario )- (@item.Descuento/item.Cantidad), 2).ToString("C", formato)</td>
+                                                <td class="text-center">@Math.Round((item.PrecioUnitario) - (@item.Descuento / item.Cantidad), 2).ToString("C", formato)</td>
 
                                             }
                                             else
@@ -661,13 +664,13 @@
 
                             <div>
                                 <p>Sub Total  : <span> @Math.Round(Model.Oferta.Subtotal - Model.Oferta.TotalDescuento, 2).ToString("C", formato)</span> </p>
-                                <p>Descuento  : <span> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C",formato)</span></p>
-                                <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C",formato)</span></p>
-                                <p>Redondeo :  <span>  @Math.Round(Model.Oferta.Redondeo, 2).ToString("C",formato)</span></p>
+                                <p>Descuento  : <span> @Math.Round(Model.Oferta.TotalDescuento, 2).ToString("C", formato)</span></p>
+                                <p>Impuesto :  <span>  @Math.Round(Model.Oferta.TotalImpuestos, 2).ToString("C", formato)</span></p>
+                                <p>Redondeo :  <span>  @Math.Round(Model.Oferta.Redondeo, 2).ToString("C", formato)</span></p>
 
                             </div>
                             <div class="total-payment">
-                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra + Model.Oferta.Redondeo, 2).ToString("C",formato)</span></h3>
+                                <h3><b>Total :</b>  <span>  @Math.Round(Model.Oferta.TotalCompra + Model.Oferta.Redondeo, 2).ToString("C", formato)</span></h3>
                             </div>
 
                         </div>
@@ -695,30 +698,33 @@
 
             </div>
         </div>
-        <div class="col-md-6">
-            <div style="   font-size: 17px;">
-                <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
-                <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128152</p>
-                <p><b>BANCO NACIONAL:</b>  CR55015109210010004595</p>
-                <p><b>BAC SAN JOSÉ:</b>  CR64010200009326955703</p>
-                <p><b>BANCO POPULAR:</b>  CR70016111006152606645</p>
-                <p><b>SINPE MOVIL BNCR:</b>  8770-2222</p>
-                <p><b>SINPE MOVIL BCR:</b> 8770-2221</p>
+        @if (Model.Empresa == "N")
+        {
+            <div class="col-md-6">
+                <div style="   font-size: 17px;">
+                    <b style="  font-size: 22px !important; ">CUENTAS COLONES</b>
+                    <p><b>BANCO DE COSTA RICA:</b> CR51015201345000128152</p>
+                    <p><b>BANCO NACIONAL:</b> CR55015109210010004595</p>
+                    <p><b>BAC SAN JOSÉ:</b>  CR64010200009326955703</p>
+                    <p><b>BANCO POPULAR:</b>  CR70016111006152606645</p>
+                    <p><b>SINPE MOVIL BNCR:</b>  8770-2222</p>
+                    <p><b>SINPE MOVIL BCR:</b> 8770-2221</p>
 
 
+                </div>
             </div>
-        </div>
 
-        <div class="col-md-4">
-            <div style="  font-size: 17px;">
-                <b style="  font-size: 22px !important; ">CUENTAS DÓLARES</b>
-                <p> <b>BANCO DE COSTA RICA:</b> CR62015201345000147451</p>
-                <p><b>BANCO NACIONAL</b>: CR67015105810026000819</p>
-                <p><b>BAC SAN JOSÉ</b>: CR71010200009487514827</p>
+            <div class="col-md-4">
+                <div style="  font-size: 17px;">
+                    <b style="  font-size: 22px !important; ">CUENTAS DÓLARES</b>
+                    <p> <b>BANCO DE COSTA RICA:</b> CR62015201345000147451</p>
+                    <p><b>BANCO NACIONAL</b>: CR67015105810026000819</p>
+                    <p><b>BAC SAN JOSÉ</b>: CR71010200009487514827</p>
 
 
+                </div>
             </div>
-        </div>
+        }
     </div>
 </div>
 <form id="test-form" class="mfp-hide white-popup-block">

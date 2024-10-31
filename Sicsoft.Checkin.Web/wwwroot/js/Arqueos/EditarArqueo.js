@@ -218,12 +218,14 @@ function onChangeCategoria() {
 
         if (idCategoria != 0 && idBodega != 0) {
             ProdClientes = Productos.filter(a => a.idCategoria == idCategoria && a.Stock > 0);
-            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0 && a.Nombre.includes(filtro));
+            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0 && a.Nombre.toLowerCase().includes(filtro.toLowerCase()));
+
             RellenaProductos();
             RellenaProductosSinStock();
         } else {
             ProdClientes = Productos.filter(a => a.idCategoria == 0 && a.Stock > 0);
-            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0 && a.Nombre.includes(filtro));
+            ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0 && a.Nombre.toLowerCase().includes(filtro.toLowerCase()));
+
             RellenaProductos();
             RellenaProductosSinStock();
         }

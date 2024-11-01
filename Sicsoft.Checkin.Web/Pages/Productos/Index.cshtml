@@ -47,7 +47,7 @@
                 <div class="box-body">
                     <form method="get">
                         <div class="row">
-                            <div class="col-sm-3 pr-1">
+                            <div class="col-sm-4 pr-1">
                                 <div class="form-group">
                                     <label>Bodega</label>
                                     <select class="form-control select2  " asp-for="filtro.Codigo1">
@@ -63,7 +63,7 @@
 
                             </div>
 
-                            <div class="col-sm-3 pr-1">
+                            <div class="col-sm-4 pr-1">
                                 <div class="form-group">
                                     <label>Lista de Precio</label>
                                     <select class="form-control select2  " asp-for="filtro.Codigo2">
@@ -76,7 +76,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-3 pr-1">
+                            <div class="col-sm-4 pr-1">
                                 <div class="form-group">
                                     <label>Categoría</label>
                                     <select class="form-control select2  " asp-for="filtro.Codigo3">
@@ -90,7 +90,17 @@
                                 </div>
                             </div>
 
+                           
 
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label>Cod. Producto</label>
+                                    <input type="text" class="form-control" asp-for="filtro.CardName" />
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+
+                            </div>
                             <div class="col-sm-3 pl-1" style="text-align: center; padding-top: 1%;">
                                 <button title="Buscar" type="submit" class="btn btn-rounded btn-outline-primary"> <i class="fa fa-search"></i></button>
                             </div>

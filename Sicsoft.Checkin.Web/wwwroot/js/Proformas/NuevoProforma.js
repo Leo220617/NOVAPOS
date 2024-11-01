@@ -108,7 +108,7 @@ function Recuperar() {
         Margenes = JSON.parse($("#Margenes").val());
         DetMargenes = JSON.parse($("#DetMargenes").val());
         Pais = JSON.parse($("#Pais").val());
-        Empresa = $("#Empresa").val();
+        Empresa = JSON.parse($("#Empresa").val());
         RellenaClientes();
         RellenaVendedores();
         RellenaExoneraciones();

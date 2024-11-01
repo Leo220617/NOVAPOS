@@ -135,7 +135,7 @@ function CerrarPopUpLotes() {
 }
 function Recuperar() {
     try {
-        Empresa = $("#Empresa").val();
+        Empresa = JSON.parse($("#Empresa").val());
         Cantones = JSON.parse($("#Cantones").val());
         Distritos = JSON.parse($("#Distritos").val());
         Barrios = JSON.parse($("#Barrios").val());

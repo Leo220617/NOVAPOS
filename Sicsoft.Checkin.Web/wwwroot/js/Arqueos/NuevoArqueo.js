@@ -54,6 +54,7 @@ var ProdSinStock = [];
 var htmlS = "";
 var inicio = false;
 var MiSucursal = [];
+var ProdClientes2 = [];
 
 function Recuperar() {
     try {
@@ -136,7 +137,7 @@ function onChangeCategoria() {
         var idBodega = $("#SucursalSeleccionado").val();
 
         var Categoria = Categorias.find(a => a.id == idCategoria);
-      
+
 
 
         if (idCategoria != 0 && idBodega != 0) {
@@ -379,7 +380,7 @@ function onChangeCantidad(i) {
 
 
         var idCategoria = $("#CategoriaSeleccionado").val();
-        var idBodega = $("#SucursalSeleccionado").val();
+        var idBodega = $("#BodegaSeleccionado").val();
 
         var valorCheck = $("#" + i + "_mdcheckbox").prop('checked');
 
@@ -390,11 +391,15 @@ function onChangeCantidad(i) {
         var PE = ProdClientes[i];
         if (Existe == undefined) {
 
-            var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
+
             var Cantidad1 = parseFloat($("#" + i + "_Cantidad1").val());
             var Cantidad2 = parseFloat($("#" + i + "_Cantidad2").val());
             var Cantidad3 = parseFloat($("#" + i + "_Cantidad3").val());
-            var TotalDiferencia = Cantidad - PE.Stock;
+            var TotalCantidad = Cantidad1 + Cantidad2 + Cantidad3;
+            var TotalDiferencia = TotalCantidad - PE.Stock;
+            var Costox = PE.Stock * PE.Costo;
+            var CostoDiferenciax = TotalDiferencia * PE.Costo;
+
             var Producto =
             {
 
@@ -404,8 +409,10 @@ function onChangeCantidad(i) {
                 idProducto: PE.id,
                 idEncabezado: 0,
                 Stock: PE.Stock,
-                Total: Cantidad,
-                Diferencia: TotalDiferencia,
+                Total: 0,
+                Diferencia: 0,
+                Costo: Costox,
+                CostoDiferencia: CostoDiferenciax,
                 Contado: $("#" + i + "_mdcheckbox").prop('checked'),
                 Cantidad1: Cantidad1,
                 Cantidad2: Cantidad2,
@@ -415,56 +422,89 @@ function onChangeCantidad(i) {
             };
 
             if (valorCheck == true) {
-                $("#" + i + "_Cantidad").prop('disabled', true);
+                $("#" + i + "_Cantidad1").prop('disabled', true);
+                $("#" + i + "_Cantidad2").prop('disabled', true);
+                $("#" + i + "_Cantidad3").prop('disabled', true);
                 var input = $("#" + i + "_Diferencia");
+                var input2 = $("#" + i + "_CostoDiferencia");
 
                 $("#" + i + "_Diferencia").text(TotalDiferencia);
-
+                $("#" + i + "_Cantidad").text(TotalCantidad);
+                $("#" + i + "_Costo").text(Costox);
+                $("#" + i + "_CostoDiferencia").text(CostoDiferenciax);
 
                 if (TotalDiferencia == 0) {
                     input.css('background-color', '#EFFFE9')
+                    input2.css('background-color', '#EFFFE9')
                 } else {
                     input.css('background-color', '#FFE9E9')
+                    input2.css('background-color', '#FFE9E9')
                 }
             } else {
                 $("#" + i + "_Diferencia").text(0);
+                $("#" + i + "_Cantidad").text(0);
+                $("#" + i + "_CostoDiferencia").text(0);
+                $("#" + i + "_Costo").text(0);
                 $("#" + i + "_Cantidad").prop('disabled', false);
             }
 
             ProdCadena.push(Producto);
         } else {
-            var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
-            var TotalDiferencia = Cantidad - PE.Stock;
+            var Cantidad1 = parseFloat($("#" + i + "_Cantidad1").val());
+            var Cantidad2 = parseFloat($("#" + i + "_Cantidad2").val());
+            var Cantidad3 = parseFloat($("#" + i + "_Cantidad3").val());
+            var TotalCantidad = Cantidad1 + Cantidad2 + Cantidad3;
+            var TotalDiferencia = TotalCantidad - PE.Stock;
+
+            var Costox = PE.Stock * PE.Costo;
+            var CostoDiferenciax = TotalDiferencia * PE.Costo;
 
             ProdCadena[x].idProducto = PE.id;
             ProdCadena[x].Stock = PE.Stock;
-            ProdCadena[x].Total = Cantidad;
-            ProdCadena[x].Diferencia = TotalDiferencia;
-
-
+            ProdCadena[x].Total = 0;
+            ProdCadena[x].Diferencia = 0;
+            ProdCadena[x].Contado = valorCheck;
+            ProdCadena[x].Costo = Costox;
+            ProdCadena[x].CostoDiferencia = CostoDiferenciax;
+            ProdCadena[x].Cantidad1 = Cantidad1;
+            ProdCadena[x].Cantidad2 = Cantidad2;
+            ProdCadena[x].Cantidad3 = Cantidad3;
 
 
             if (valorCheck == true) {
-                $("#" + i + "_Cantidad").prop('disabled', true);
+                $("#" + i + "_Cantidad1").prop('disabled', true);
+                $("#" + i + "_Cantidad2").prop('disabled', true);
+                $("#" + i + "_Cantidad3").prop('disabled', true);
                 var input = $("#" + i + "_Diferencia");
+                var input2 = $("#" + i + "_CostoDiferencia");
 
+
+                $("#" + i + "_Cantidad").text(TotalCantidad);
                 $("#" + i + "_Diferencia").text(TotalDiferencia);
-
+                $("#" + i + "_Costo").text(Costox);
+                $("#" + i + "_CostoDiferencia").text(CostoDiferenciax);
 
                 if (TotalDiferencia == 0) {
                     input.css('background-color', '#EFFFE9')
+                    input2.css('background-color', '#EFFFE9')
                 } else {
                     input.css('background-color', '#FFE9E9')
+                    input2.css('background-color', '#FFE9E9')
                 }
             } else {
                 $("#" + i + "_Diferencia").text(0);
-                $("#" + i + "_Cantidad").prop('disabled', false);
+                $("#" + i + "_Cantidad").text(0);
+                $("#" + i + "_CostoDiferencia").text(0);
+                $("#" + i + "_Costo").text(0);
+                $("#" + i + "_Cantidad1").prop('disabled', false);
+                $("#" + i + "_Cantidad2").prop('disabled', false);
+                $("#" + i + "_Cantidad3").prop('disabled', false);
             }
 
 
         }
-
-        $("#SucursalSeleccionado").prop("disabled", true);
+        ContarCostos();
+        $("#BodegaSeleccionado").prop("disabled", true);
         $("#CategoriaSeleccionado").prop("disabled", true);
 
 
@@ -478,13 +518,35 @@ function onChangeCantidad(i) {
     }
 
 }
+function ContarCostos() {
+    try {
+        var Costo = 0;
+        var Diferencia = 0;
+        for (var i = 0; i < ProdCadena.length; i++) {
+            Costo += ProdCadena[i].Costo;
+            Diferencia += ProdCadena[i].CostoDiferencia;
 
+
+        }
+        $("#totCot").text(Costo);
+        $("#totDif").text(Diferencia);
+
+
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error: ' + e
+
+        })
+    }
+}
 function onChangeRevisado(i) {
     try {
 
 
         var idCategoria = $("#CategoriaSeleccionado").val();
-        var idBodega = $("#SucursalSeleccionado").val();
+        var idBodega = $("#BodegaSeleccionado").val();
 
         var valorCheck = $("#" + i + "_mdcheckbox").prop('checked');
 
@@ -495,11 +557,13 @@ function onChangeRevisado(i) {
         var PE = ProdClientes[i];
         if (Existe == undefined) {
 
-            var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
             var Cantidad1 = parseFloat($("#" + i + "_Cantidad1").val());
             var Cantidad2 = parseFloat($("#" + i + "_Cantidad2").val());
             var Cantidad3 = parseFloat($("#" + i + "_Cantidad3").val());
-            var TotalDiferencia = Cantidad - PE.Stock;
+            var TotalCantidad = Cantidad1 + Cantidad2 + Cantidad3;
+            var TotalDiferencia = TotalCantidad - PE.Stock;
+            var Costox = PE.Stock * PE.Costo;
+            var CostoDiferenciax = TotalDiferencia * PE.Costo;
             var Producto =
             {
 
@@ -509,69 +573,102 @@ function onChangeRevisado(i) {
                 idProducto: PE.id,
                 idEncabezado: 0,
                 Stock: PE.Stock,
-                Total: Cantidad,
-                Diferencia: TotalDiferencia,
+                Total: 0,
+                Diferencia: 0,
                 Contado: valorCheck,
+                Costo: Costox,
+                CostoDiferencia: CostoDiferenciax,
                 Cantidad1: Cantidad1,
                 Cantidad2: Cantidad2,
                 Cantidad3: Cantidad3
-                
 
 
             };
 
             if (valorCheck == true) {
-                $("#" + i + "_Cantidad").prop('disabled', true);
+                $("#" + i + "_Cantidad1").prop('disabled', true);
+                $("#" + i + "_Cantidad2").prop('disabled', true);
+                $("#" + i + "_Cantidad3").prop('disabled', true);
                 var input = $("#" + i + "_Diferencia");
+                var input2 = $("#" + i + "_CostoDiferencia");
 
                 $("#" + i + "_Diferencia").text(TotalDiferencia);
-
+                $("#" + i + "_Cantidad").text(TotalCantidad);
+                $("#" + i + "_Costo").text(Costox);
+                $("#" + i + "_CostoDiferencia").text(CostoDiferenciax);
 
                 if (TotalDiferencia == 0) {
                     input.css('background-color', '#EFFFE9')
+                    input2.css('background-color', '#EFFFE9')
                 } else {
                     input.css('background-color', '#FFE9E9')
+                    input2.css('background-color', '#FFE9E9')
                 }
             } else {
                 $("#" + i + "_Diferencia").text(0);
+                $("#" + i + "_Cantidad").text(0);
+                $("#" + i + "_CostoDiferencia").text(0);
+                $("#" + i + "_Costo").text(0);
                 $("#" + i + "_Cantidad").prop('disabled', false);
             }
 
             ProdCadena.push(Producto);
         } else {
-            var Cantidad = parseFloat($("#" + i + "_Cantidad").val());
-            var TotalDiferencia = Cantidad - PE.Stock;
+            var Cantidad1 = parseFloat($("#" + i + "_Cantidad1").val());
+            var Cantidad2 = parseFloat($("#" + i + "_Cantidad2").val());
+            var Cantidad3 = parseFloat($("#" + i + "_Cantidad3").val());
+            var TotalCantidad = Cantidad1 + Cantidad2 + Cantidad3;
+            var TotalDiferencia = TotalCantidad - PE.Stock;
+
+            var Costox = PE.Stock * PE.Costo;
+            var CostoDiferenciax = TotalDiferencia * PE.Costo;
 
             ProdCadena[x].idProducto = PE.id;
             ProdCadena[x].Stock = PE.Stock;
-            ProdCadena[x].Total = Cantidad;
-            ProdCadena[x].Diferencia = TotalDiferencia;
+            ProdCadena[x].Total = 0;
+            ProdCadena[x].Diferencia = 0;
             ProdCadena[x].Contado = valorCheck;
+            ProdCadena[x].Costo = Costox;
+            ProdCadena[x].CostoDiferencia = CostoDiferenciax;
+
 
 
 
 
             if (valorCheck == true) {
-                $("#" + i + "_Cantidad").prop('disabled', true);
+                $("#" + i + "_Cantidad1").prop('disabled', true);
+                $("#" + i + "_Cantidad2").prop('disabled', true);
+                $("#" + i + "_Cantidad3").prop('disabled', true);
                 var input = $("#" + i + "_Diferencia");
+                var input2 = $("#" + i + "_CostoDiferencia");
 
+                $("#" + i + "_Cantidad").text(TotalCantidad);
                 $("#" + i + "_Diferencia").text(TotalDiferencia);
+                $("#" + i + "_Costo").text(Costox);
+                $("#" + i + "_CostoDiferencia").text(CostoDiferenciax);
 
 
                 if (TotalDiferencia == 0) {
                     input.css('background-color', '#EFFFE9')
+                    input2.css('background-color', '#EFFFE9')
                 } else {
                     input.css('background-color', '#FFE9E9')
+                    input2.css('background-color', '#FFE9E9')
                 }
             } else {
                 $("#" + i + "_Diferencia").text(0);
-                $("#" + i + "_Cantidad").prop('disabled', false);
+                $("#" + i + "_Cantidad").text(0);
+                $("#" + i + "_CostoDiferencia").text(0);
+                $("#" + i + "_Costo").text(0);
+                $("#" + i + "_Cantidad1").prop('disabled', false);
+                $("#" + i + "_Cantidad2").prop('disabled', false);
+                $("#" + i + "_Cantidad3").prop('disabled', false);
             }
 
 
         }
-
-        $("#SucursalSeleccionado").prop("disabled", true);
+        ContarCostos();
+        $("#BodegaSeleccionado").prop("disabled", true);
         $("#CategoriaSeleccionado").prop("disabled", true);
 
     } catch (e) {
@@ -637,6 +734,9 @@ function Generar() {
 
     try {
 
+        for (var i = 0; i < ProdClientes2.length; i++) {
+            onChangeCantidad(i);
+        }
         var EncArqueos = {
 
             id: 0,
@@ -894,7 +994,7 @@ function validarArqueo(e) {
 
 
 
-         if (e.idCategoria == "" || e.idCategoria == null || e.idCategoria == 0) {
+        if (e.idCategoria == "" || e.idCategoria == null || e.idCategoria == 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -909,7 +1009,7 @@ function validarArqueo(e) {
 
 
 
-     
+
 
 
 
@@ -995,6 +1095,7 @@ function filtrarTabla() {
                 if (!busqueda2 || descripcion.includes(busqueda2)) {
                     $(this).show();
                     indicesVisibles.push(index);
+
                 } else {
                     $(this).hide();
                 }
@@ -1005,6 +1106,8 @@ function filtrarTabla() {
             $(this).hide(); // Si 'busqueda' está vacío, no muestra registros
         }
     });
-
+    ProdClientes2 = [];
+    ProdClientes2 = ProdClientes.filter(a => a.Nombre.toLowerCase().includes(busqueda));
+   
     return indicesVisibles;
 }

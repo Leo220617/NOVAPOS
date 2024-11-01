@@ -1657,7 +1657,9 @@ function AgregarCliente() {
             Activo: true,
             ProcesadoSAP: false,
             idCondicionPago: 0,
-            DV: $("#DV").val()
+            DV: $("#DV").val(),
+            MontoExtra: 0,
+            DiasGracia: 0
         };
 
         if (validar(Cliente)) {

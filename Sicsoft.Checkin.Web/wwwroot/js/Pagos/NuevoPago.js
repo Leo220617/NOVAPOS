@@ -89,6 +89,7 @@ function onChangeCliente() {
         $("#spanDireccion").text(Cliente.Sennas);
         $("#strongInfo").text("Phone: " + Cliente.Telefono + " " + "  " + " " + "  " + "Email: " + Cliente.Email);
         $("#strongInfo2").text("Saldo: " + formatoDecimal(Cliente.Saldo.toFixed(2)) + " " + "  " + " " + "  " + "Limite Credito: " + formatoDecimal(Cliente.LimiteCredito.toFixed(2)));
+        $("#strongInfo3").text("Días gracia: " + formatoDecimal(Cliente.DiasGracia.toFixed(0)) + " " + "  " + " " + "  " + "Monto Extra: " + formatoDecimal(Cliente.MontoExtra.toFixed(2)));
         RecolectarFacturas();
     } catch (e) {
         Swal.fire({
@@ -180,14 +181,19 @@ function RellenaTabla() {
             //html += "<td > " + ProdCadena[i].fechaVencimiento.toString().split("T")[0] + " </td>";
 
 
-            var fechaInicio = new Date(ProdCadena[i].fechaVencimiento).getTime();
-            var fechaFin = new Date(Date.now()).getTime();
+            var fechaInicio = new Date(ProdCadena[i].fechaVencimiento).setHours(0, 0, 0, 0);
+            var fechaFin = new Date(Date.now()).setHours(0, 0, 0, 0); 
             var diff = fechaFin - fechaInicio;
             var diferencia = diff / (1000 * 60 * 60 * 24);
             var interes = 0;
-
-            if (diferencia > (10+ Cliente.DiasGracia)) {
-                interes = (ProdCadena[i].saldo * 0.0005) * (diferencia - (10 + Cliente.DiasGracia));
+            var DiasGracia = 0;
+            if (Cliente.DiasGracia > 0) {
+                DiasGracia = Cliente.DiasGracia;
+            } else {
+                DiasGracia = 10;
+            }
+            if (diferencia > (DiasGracia)) {
+                interes = (ProdCadena[i].saldo * 0.0005) * (diferencia - (DiasGracia));
 
             }
 
@@ -281,8 +287,8 @@ function onChangeMonto(i) {
 
         var Fac = DetallePago.find(a => a.idEncDocumentoCredito == ProdCadena[i].id);
 
-        var fechaInicio = new Date(ProdCadena[i].fechaVencimiento).getTime();
-        var fechaFin = new Date(Date.now()).getTime();
+        var fechaInicio = new Date(ProdCadena[i].fechaVencimiento).setHours(0, 0, 0, 0);
+        var fechaFin = new Date(Date.now()).setHours(0, 0, 0, 0); 
         var diff = fechaFin - fechaInicio;
         var diferencia = diff / (1000 * 60 * 60 * 24);
         var interes = 0;
@@ -300,8 +306,13 @@ function onChangeMonto(i) {
             valorInt = 0;
         }
 
-        if (diferencia > (10 + Cliente.DiasGracia) ) {
-            interes = (ProdCadena[i].saldo * 0.0005) * (diferencia - (10 + Cliente.DiasGracia));
+        if (Cliente.DiasGracia > 0) {
+            DiasGracia = Cliente.DiasGracia;
+        } else {
+            DiasGracia = 10;
+        }
+        if (diferencia > (DiasGracia)) {
+            interes = (ProdCadena[i].saldo * 0.0005) * (diferencia - (DiasGracia));
         }
 
         TotalF = ProdCadena[i].saldo + interes;
@@ -334,7 +345,7 @@ function onChangeMonto(i) {
 
 
         if (Fac == undefined && parseFloat($("#" + i + "_Fac").val()) > 0) {
-             
+
 
             var detalle = {
                 id: 0,
@@ -358,10 +369,10 @@ function onChangeMonto(i) {
                 CalcularInteresyCapital(i);
                 var posicion = DetallePago.indexOf(Fac);
 
-                if (posicion >= 0) { 
-                DetallePago[posicion].Total = parseFloat($("#" + i + "_Fac").val());
-                DetallePago[posicion].Interes = parseFloat($("#" + i + "_IntX").val());
-                DetallePago[posicion].Capital = parseFloat($("#" + i + "_Cap").val());
+                if (posicion >= 0) {
+                    DetallePago[posicion].Total = parseFloat($("#" + i + "_Fac").val());
+                    DetallePago[posicion].Interes = parseFloat($("#" + i + "_IntX").val());
+                    DetallePago[posicion].Capital = parseFloat($("#" + i + "_Cap").val());
                 }
 
 
@@ -404,8 +415,8 @@ function CalcularInteresyCapital(i) {
         var Fac = DetallePago.find(a => a.idEncDocumentoCredito == ProdCadena[i].id);
 
 
-        var fechaInicio = new Date(ProdCadena[i].fechaVencimiento).getTime();
-        var fechaFin = new Date(Date.now()).getTime();
+        var fechaInicio = new Date(ProdCadena[i].fechaVencimiento).setHours(0, 0, 0, 0);
+        var fechaFin = new Date(Date.now()).setHours(0, 0, 0, 0); 
         var diff = fechaFin - fechaInicio;
         var diferencia = diff / (1000 * 60 * 60 * 24);
         var interes = 0;
@@ -424,10 +435,14 @@ function CalcularInteresyCapital(i) {
         } else {
             valorInt = 0;
         }
+        if (Cliente.DiasGracia > 0) {
+            DiasGracia = Cliente.DiasGracia;
+        } else {
+            DiasGracia = 10;
+        }
 
-
-        if (diferencia > (10 + Cliente.DiasGracia) && valorInt == 0) {
-            interes = (ProdCadena[i].saldo * 0.0005) * (diferencia - (10 + Cliente.DiasGracia));
+        if (diferencia > (DiasGracia) && valorInt == 0) {
+            interes = (ProdCadena[i].saldo * 0.0005) * (diferencia - (DiasGracia));
             FacyInt = interes + ProdCadena[i].saldo;
             PorCompra = (MontoDigitado / FacyInt);
             CapitalLinea = ProdCadena[i].saldo * PorCompra;
@@ -446,7 +461,7 @@ function CalcularInteresyCapital(i) {
                 DetallePago[posicion].Capital = parseFloat($("#" + i + "_Cap").val());
             }
 
-        } 
+        }
         else if ($("#" + i + "_Fac").val() > 0) {
 
             var Montico = MontoDigitado * 1;
@@ -744,17 +759,21 @@ function onChangeRevisado(i) {
 
         var valorCheck = $("#" + i + "_mdcheckbox").prop('checked');
         var Saldo = ProdCadena[i].saldo;
-        var fechaInicio = new Date(ProdCadena[i].fechaVencimiento).getTime();
-        var fechaFin = new Date(Date.now()).getTime();
+        var fechaInicio = new Date(ProdCadena[i].fechaVencimiento).setHours(0, 0, 0, 0);
+        var fechaFin = new Date(Date.now()).setHours(0, 0, 0, 0); 
         var diff = fechaFin - fechaInicio;
         var diferencia = diff / (1000 * 60 * 60 * 24);
         var interes = 0;
 
         var valorCheckI = $("#" + i + "_mdcheckboxI").prop('checked');
+        if (Cliente.DiasGracia > 0) {
+            DiasGracia = Cliente.DiasGracia;
+        } else {
+            DiasGracia = 10;
+        }
 
-
-        if (diferencia > (10 + Cliente.DiasGracia)) {
-            interes = (Saldo * 0.0005) * (diferencia - (10 + Cliente.DiasGracia));
+        if (diferencia > (DiasGracia)) {
+            interes = (Saldo * 0.0005) * (diferencia - (DiasGracia));
         }
 
         var TotalF = Saldo + interes;

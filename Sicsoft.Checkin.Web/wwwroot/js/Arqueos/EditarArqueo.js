@@ -70,7 +70,7 @@ function Recuperar() {
         onChangeCategoria();
 
         RellenaTabla();
-    /*    filtrarTabla();*/
+        /*    filtrarTabla();*/
 
 
 
@@ -322,7 +322,7 @@ function RellenaProductos() {
 
         if (idCategoria != 0 && idBodega != 0) {
             RellenaTabla();
-         /*   filtrarTabla();*/
+            /*   filtrarTabla();*/
         }
 
 
@@ -353,7 +353,7 @@ function RellenaTabla() {
 
         for (var i = 0; i < ProdCadena.length; i++) {
 
-            var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+            var PE = Productos.find(a => a.id == ProdCadena[i].idProducto);
 
             var idBodega = PE.idBodega;
             var Bodega = Bodegas.find(a => a.id == idBodega);
@@ -396,20 +396,7 @@ function RellenaTabla() {
         $("#tbody").html(html);
         if (inicio) {
 
-            for (var x = 0; x < ProdCadena.length; x++) {
-                var id = ProdCadena[x].idProducto;
-                var Existe = ProdClientes.find(a => a.id == id);
 
-                if (!Existe) {
-                    var PE = ProdClientes2.find(a => a.id == id);
-                    ProdClientes.push(PE);
-                    inicio = true;
-                    RellenaTabla();
-                    $("#ProductoSeleccionado").val("0").trigger('change.select2');
-
-                }
-
-            }
             RecuperarProdCadena();
 
         }
@@ -429,14 +416,7 @@ function RecuperarProdCadena() {
     try {
 
         for (var i = 0; i < ProdCadena.length; i++) {
-
-            var z = ProdClientes.findIndex(a => a.id == ProdCadena[i].idProducto);
-            if (z != -1) {
-                var x = ProdCadena.findIndex(a => a.idProducto == ProdClientes[z].id);
-            } else {
-                z = ProdClientes2.findIndex(a => a.id == ProdCadena[i].idProducto);
-                var x = ProdCadena.findIndex(a => a.idProducto == ProdClientes2[z].id);
-            }
+            var x = i;
 
             $("#" + x + "_Cantidad1").val(ProdCadena[x].Cantidad1);
             $("#" + x + "_Cantidad2").val(ProdCadena[x].Cantidad2);
@@ -703,7 +683,7 @@ function AgregarProductoTabla() {
             inicio = true;
             RellenaTabla();
             $("#ProductoSeleccionado").val("0").trigger('change.select2');
-        /*    filtrarTabla()*/
+            /*    filtrarTabla()*/
 
         } else {
             Swal.fire({

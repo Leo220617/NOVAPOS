@@ -98,7 +98,7 @@ function Recuperar() {
         Distritos = JSON.parse($("#Distritos").val());
         Barrios = JSON.parse($("#Barrios").val());
         Clientes = JSON.parse($("#Clientes").val());
-        Aprobaciones = JSON.parse($("#Aprobaciones").val());
+        Aprobaciones = JSON.parse($("#Aprobaciones").val()) == null ? [] : JSON.parse($("#Aprobaciones").val());
         Grupos = JSON.parse($("#Grupos").val());
         Vendedores = JSON.parse($("#Vendedores").val());
         Productos = JSON.parse($("#Productos").val());

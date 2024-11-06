@@ -385,10 +385,10 @@ function onChangeCantidad(i) {
         var valorCheck = $("#" + i + "_mdcheckbox").prop('checked');
 
 
-        var Existe = ProdCadena.find(a => a.idProducto == ProdClientes[i].id);
-        var x = ProdCadena.findIndex(a => a.idProducto == ProdClientes[i].id);
+        var Existe = ProdCadena.find(a => a.idProducto == ProdClientes2[i].id);
+        var x = ProdCadena.findIndex(a => a.idProducto == ProdClientes2[i].id);
 
-        var PE = ProdClientes[i];
+        var PE = ProdClientes2[i];
         if (Existe == undefined) {
 
 

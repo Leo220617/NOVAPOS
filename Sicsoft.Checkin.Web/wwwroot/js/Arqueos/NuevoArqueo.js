@@ -689,10 +689,32 @@ function AgregarProductoTabla() {
         var id = $("#ProductoSeleccionado").val();
         var PE = ProdClientes2.find(a => a.id == id);
 
-        var Existe = ProdClientes.find(a => a.id == PE.id);
+        var Existe = ProdCadena.find(a => a.idProducto == PE.id);
 
         if (!Existe) {
-            ProdClientes.push(PE);
+            var Producto =
+            {
+
+
+
+                id: 0,
+                idProducto: PE.id,
+                idEncabezado: 0,
+                Stock: PE.Stock,
+                Total: 0,
+                Diferencia: 0,
+                Costo: PE.Costo,
+                CostoDiferencia: PE.Costo,
+                Contado: false,
+                Cantidad1: 0,
+                Cantidad2: 0,
+                Cantidad3: 0,
+                Nombre: PE.Nombre
+
+
+            };
+
+            ProdCadena.push(Producto);
             inicio = true;
             RellenaTabla();
             $("#ProductoSeleccionado").val("0").trigger('change.select2');

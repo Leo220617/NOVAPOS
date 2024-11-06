@@ -220,13 +220,13 @@ function onChangeCategoria() {
 
 
         if (idCategoria != 0 && idBodega != 0) {
-            ProdClientes = Productos.filter(a => a.idCategoria == idCategoria && a.Stock > 0);
+            ProdClientes = Productos.filter(a => a.idCategoria == idCategoria);
             ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0 && a.Nombre.toLowerCase().includes(filtro.toLowerCase()));
 
             RellenaProductos();
             RellenaProductosSinStock();
         } else {
-            ProdClientes = Productos.filter(a => a.idCategoria == 0 && a.Stock > 0);
+            ProdClientes = Productos.filter(a => a.idCategoria == 0);
             ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0 && a.Nombre.toLowerCase().includes(filtro.toLowerCase()));
 
             RellenaProductos();
@@ -256,13 +256,13 @@ function onChangeBodega() {
 
 
         if (idCategoria != 0 && idBodega != 0) {
-            ProdClientes = Productos.filter(a => a.idCategoria == idCategoria && a.Stock > 0);
+            ProdClientes = Productos.filter(a => a.idCategoria == idCategoria);
             ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0);
 
             RellenaProductos();
             RellenaProductosSinStock();
         } else {
-            ProdClientes = Productos.filter(a => a.idCategoria == 0 && a.idBodega == 0 && a.Stock > 0);
+            ProdClientes = Productos.filter(a => a.idCategoria == 0 && a.idBodega == 0);
             ProdClientes2 = Productos.filter(a => a.idCategoria == idCategoria && a.Stock == 0);
             RellenaProductos();
             RellenaProductosSinStock();
@@ -676,14 +676,38 @@ function AgregarProductoTabla() {
         var id = $("#ProductoSeleccionado").val();
         var PE = ProdClientes2.find(a => a.id == id);
 
-        var Existe = ProdClientes.find(a => a.id == PE.id);
+        var Existe = ProdCadena.find(a => a.idProducto == PE.id);
 
         if (!Existe) {
-            ProdClientes.push(PE);
+            var Producto =
+            {
+
+
+
+                id: 0,
+                idProducto: PE.id,
+                idEncabezado: 0,
+                Stock: PE.Stock,
+                Total: 0,
+                Diferencia: 0,
+                Costo: PE.Costo,
+                CostoProducto: PE.Costo,
+                CostoDiferencia: PE.Costo,
+                Contado: false,
+                Cantidad1: 0,
+                Cantidad2: 0,
+                Cantidad3: 0,
+                Nombre: PE.Nombre
+
+               
+
+            };
+
+            ProdCadena.push(Producto);
+            ProdClientes2.push(PE);
             inicio = true;
             RellenaTabla();
             $("#ProductoSeleccionado").val("0").trigger('change.select2');
-            /*    filtrarTabla()*/
 
         } else {
             Swal.fire({

@@ -188,8 +188,9 @@ namespace NOVAAPP.Pages.Ofertas
                 Clientes = await clientes.ObtenerLista(filtro);
                 Clientes = Clientes.Where(a => a.Activo == true).ToArray();
                 filtro.CardCode = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
-                Productos = await productos.ObtenerLista(filtro);
                 filtro.CardName = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                Productos = await productos.ObtenerLista(filtro);
+
                 var Suc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                
              

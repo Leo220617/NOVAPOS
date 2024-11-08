@@ -267,12 +267,13 @@ namespace NOVAAPP.Pages.Ofertas
                 ParametrosFiltros filtro = new ParametrosFiltros();
                 filtro.Externo = true;
                 filtro.Activo = true;
-                Productos = await productos.ObtenerLista(filtro);
+            
                 filtro.CardName = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault().ToString();
-
+                filtro.CardCode = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                Productos = await productos.ObtenerLista(filtro);
                 Clientes = await clientes.ObtenerLista(filtro);
                 Clientes = Clientes.Where(a => a.Activo == true).ToArray();
-                filtro.CardCode = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+           
                 var Suc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
              
                 Cantones = await serviceC.ObtenerLista("");

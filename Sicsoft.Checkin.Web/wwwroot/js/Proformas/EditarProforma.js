@@ -1664,7 +1664,9 @@ function AgregarCliente() {
                                             Activo: true,
                                             ProcesadoSAP: false,
                                             idCondicionPago: 0,
-                                            DV: json.cliente.dV
+                                            DV: json.cliente.dV,
+                                            MontoExtra: 0,
+                                            DiasGracia: 0
                                         };
 
                                         Clientes.push(ClienteInsertar);

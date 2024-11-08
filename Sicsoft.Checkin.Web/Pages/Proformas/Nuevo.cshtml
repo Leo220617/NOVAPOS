@@ -20,15 +20,15 @@
 @{
     var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
 }
-@section styles{
+@section styles {
 
 
 }
-@section scripts{
+@section scripts {
 
 
     <script src="/js/Proformas/NuevoProforma.js?v=0.1.3"></script>
-  
+
 
 }
 
@@ -73,10 +73,10 @@
             <input hidden id="DetPromociones" value="@JsonConvert.SerializeObject(Model.DetPromociones)" />
             <input hidden id="Margenes" value="@JsonConvert.SerializeObject(Model.Margenes)" />
             <input hidden id="DetMargenes" value="@JsonConvert.SerializeObject(Model.DetMargenes)" />
-     
+
             <input hidden id="SeriesProductos" value="@JsonConvert.SerializeObject(Model.SeriesProductos.SeriesProductos)" />
             <input hidden id="RolGanancia" value="@(!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))" />
-        
+
             <input hidden id="ParamPrecioDescuento" value="@JsonConvert.SerializeObject(Model.Parametro.FirstOrDefault().PrecioDescuento)" />
             @*                <input hidden id="Lotes" value="@JsonConvert.SerializeObject(Model.Oferta.Lotes)" />*@
             <input hidden id="Pais" value="@JsonConvert.SerializeObject(Model.Parametro.FirstOrDefault().Pais)" />
@@ -145,8 +145,8 @@
                                     {
                                         <option value="CRC" selected>CRC</option>
                                     }
-                                    
-                                   
+
+
                                     <option value="USD">USD</option>
 
                                 </select>
@@ -173,7 +173,7 @@
 
                                 <br><br>
                                 <span id="spanDireccion"> </span> <br>
-                                    @if (Model.Parametros.FirstOrDefault().Pais == "P")
+                                @if (Model.Parametros.FirstOrDefault().Pais == "P")
                                 {
                                     <strong id="strongInfo">  RUC: &nbsp;&nbsp;&nbsp;&nbsp; Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
 
@@ -183,7 +183,7 @@
                                     <strong id="strongInfo">  Cédula: &nbsp;&nbsp;&nbsp;&nbsp; Phone:   &nbsp;&nbsp;&nbsp;&nbsp; Email:  </strong>
 
                                 }
-                              
+
                                 <br><br>
                                 <strong id="strongInfo2">Saldo:   &nbsp;&nbsp;&nbsp;&nbsp; Limite Crédito:  &nbsp;&nbsp;&nbsp;&nbsp;  Grupo:</strong>
                                 <br><br>
@@ -349,7 +349,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Categoría</label>
-                                                <input id="inputCategoria" disabled type="text"  class="form-control" placeholder="Categoria">
+                                                <input id="inputCategoria" disabled type="text" class="form-control" placeholder="Categoria">
 
 
                                             </div>
@@ -417,12 +417,12 @@
 
                                         <th>Descripción</th>
                                         <th class="text-right">Cantidad</th>
-                                       
-                                        
-                                            <th class="text-right">Precio de Venta</th>
-                                            <th class="text-right">% Descuento</th>
-                                          
-                                        
+
+
+                                        <th class="text-right">Precio de Venta</th>
+                                        <th class="text-right">% Descuento</th>
+
+
 
                                         @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
                                         {
@@ -435,11 +435,11 @@
                                         }
 
                                         <th class="text-right">Impuesto</th>
-                                        @if(Model.Empresa == "N")
+                                        @if (Model.Empresa == "N")
                                         {
                                             <th class="text-right">% Exoneración</th>
                                         }
-                             
+
 
                                         <th class="text-right">Total</th>
                                         @if (!string.IsNullOrEmpty(Roles.Where(a => a == "53").FirstOrDefault()))
@@ -447,7 +447,7 @@
                                             <th class="text-right">% Ganancia</th>
                                         }
                                         <th class="text-right">Eliminar</th>
-                                    
+
 
                                     </tr>
                                 </thead>
@@ -488,8 +488,8 @@
                                     <h3><b>Total Ganancia :</b>  <span id="totGana">0</span>%</h3>
                                 </div>
                             }
-                         
-                       
+
+
 
                         </div>
                         <!-- /.col -->
@@ -579,7 +579,7 @@
                             </select>
                         </div>
                     </div>
-           
+
                     <div class="col-md-4">
                         <div class="form-group">
                             @if (Model.Parametros.FirstOrDefault().Pais == "P")
@@ -592,7 +592,7 @@
                             }
 
                             <div class="controls">
-                             <input type="text" id="Cedula" class="form-control" required data-validation-required-message="Este campo es requerido" maxlength="16" onchange="javascript: BuscarCliente()" onblur="javascript: validarCedula()">
+                                <input type="text" id="Cedula" class="form-control" required data-validation-required-message="Este campo es requerido" maxlength="16" onchange="javascript: BuscarCliente()" onblur="javascript: validarCedula()">
                             </div>
 
                         </div>
@@ -705,7 +705,7 @@
 
 
                     </div>
-                  <div class="col-md-3">
+                    <div class="col-md-3">
                         <div class="form-group">
                             @if (Model.Parametros.FirstOrDefault().Pais == "P")
                             {
@@ -717,7 +717,7 @@
                             }
 
 
-                            <select id="selectC" class="form-control"  onchange="javascript: ModificaSelects(2)" required>
+                            <select id="selectC" class="form-control" onchange="javascript: ModificaSelects(2)" required>
                                 @foreach (var item in Model.Cantones)
                                 {
                                     <option value="@item.CodCanton">@item.NomCanton</option>
@@ -754,28 +754,28 @@
                         </div>
 
                     </div>
-                       @if (Model.Parametros.FirstOrDefault().Pais == "P")
-                            {
+                    @if (Model.Parametros.FirstOrDefault().Pais == "P")
+                    {
 
-                            }
-                            else
-                            {
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="nom">Barrio:</label>
-                                        <select id="selectB" class="form-control"  required>
-                                            @foreach (var item in Model.Barrios)
-                                            {
-                                                <option value="@item.CodBarrio">@item.NomBarrio</option>
+                    }
+                    else
+                    {
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="nom">Barrio:</label>
+                                <select id="selectB" class="form-control" required>
+                                    @foreach (var item in Model.Barrios)
+                                    {
+                                        <option value="@item.CodBarrio">@item.NomBarrio</option>
 
-                                            }
+                                    }
 
 
-                                        </select>
-                                    </div>
+                                </select>
+                            </div>
 
-                                </div>
-                            }
+                        </div>
+                    }
 
                 </div>
                 <div class="row">
@@ -855,8 +855,6 @@
     <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
-
-
 <!-- form itself -->
 <form id="test-form" class="mfp-hide white-popup-block">
     <h2>Series</h2>

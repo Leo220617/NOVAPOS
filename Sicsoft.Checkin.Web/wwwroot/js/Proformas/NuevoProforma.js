@@ -1052,7 +1052,7 @@ function RellenaProductos() {
     try {
         var html = "";
         var idClientes = $("#ClienteSeleccionado").val();
-
+        var MonedaDoc = $("#selectMoneda").val();
 
         $("#ProductoSeleccionado").html(html);
 
@@ -1082,9 +1082,11 @@ function RellenaProductos() {
 
             var Bodegas = Bodega.find(a => a.id == ProdClientes[i].idBodega) == undefined ? undefined : Bodega.find(a => a.id == ProdClientes[i].idBodega);
 
-            if (PromoExclusiva != undefined) {
+            if (PromoExclusiva != undefined && MonedaDoc == "CRC") {
                 html += "<option class='Promo' value='" + ProdClientes[i].id + "' > " + "**PROMO EXCLUSIVA CLIENTE** " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(PromoExclusiva.PrecioFinal).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " -  Precio Anterior: " + formatoDecimal(parseFloat(PromoExclusiva.PrecioAnterior).toFixed(2)) + " </option>";
 
+            } else if (PromoExclusiva != undefined && MonedaDoc == "USD") {
+                html += "<option class='Promo' value='" + ProdClientes[i].id + "' > " + "**PROMO EXCLUSIVA CLIENTE** " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(PromoExclusiva.PrecioFinal).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " -  Precio Anterior: " + formatoDecimal(parseFloat(PromoExclusiva.PrecioAnterior).toFixed(2)) + " </option>";
             }
             else if (Promo != undefined) {
 
@@ -1736,7 +1738,9 @@ function AgregarCliente() {
                                             Activo: true,
                                             ProcesadoSAP: false,
                                             idCondicionPago: 0,
-                                            DV: json.cliente.dV
+                                            DV: json.cliente.dV,
+                                            MontoExtra: 0,
+                                            DiasGracia: 0
                                         };
 
                                         Clientes.push(ClienteInsertar);

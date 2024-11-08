@@ -2046,7 +2046,7 @@ function AgregarProductoTabla() {
 
             })
 
-
+            return false;
 
         }
 

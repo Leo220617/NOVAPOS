@@ -2468,8 +2468,8 @@ function AgregarProductoTabla() {
                 text: 'Producto sin stock valido'
 
             })
-
-
+   
+            return false;
 
         }
 

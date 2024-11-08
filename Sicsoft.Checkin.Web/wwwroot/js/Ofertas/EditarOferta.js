@@ -943,7 +943,7 @@ function onChangeCliente() {
         }
         var contieneContado = Cliente.Nombre.toUpperCase().includes("CONTADO");
 
-        if (contieneContado) {
+        if (contieneContado || Cliente.TipoCedula == "99") {
 
             $("#selectTD option[value='01']").remove();
         } else {
@@ -953,7 +953,7 @@ function onChangeCliente() {
 
             }
         }
-        if (!contieneContado) {
+        if (!contieneContado && Cliente.TipoCedula != "99") {
 
             $("#selectTD option[value='04']").remove();
         } else {
@@ -2894,13 +2894,16 @@ function ValidarTotales() {
 function BuscarCliente() {
     try {
         $("#Nombre").val("");
+        var selectTP = $("#selectTP").val();
         if (Pais == "C") {
             BuscarClienteRegistro();
         }
-        if (Pais == "P") {
+        if (Pais == "P" && selectTP != 99) {
             BuscarClientePanama();
+        } else if (selectTP == 99) {
+            $("#Nombre").removeAttr("readonly");
         }
-     
+
         console.log($("#Nombre").val());
 
 

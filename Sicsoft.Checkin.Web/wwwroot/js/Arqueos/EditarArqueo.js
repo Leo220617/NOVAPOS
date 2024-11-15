@@ -148,7 +148,13 @@ function RecuperarInformacion() {
 
 
             };
-            Producto.CostoProducto = Producto.Costo / Producto.Stock;
+            if (Producto.Stock == 0) {
+                Producto.CostoProducto = Producto.Costo;
+
+            } else {
+
+                Producto.CostoProducto = Producto.Costo / Producto.Stock;
+            }
             ProdCadena.push(Producto);
 
 
@@ -699,7 +705,7 @@ function AgregarProductoTabla() {
                 Cantidad3: 0,
                 Nombre: PE.Nombre
 
-               
+
 
             };
 

@@ -1100,24 +1100,26 @@ function filtrarTabla() {
     var filas = $("#tbody tr");
     var indicesVisibles = [];
 
+    // Dividir la búsqueda en palabras
+    var palabrasBusqueda = busqueda.split(" ");
+
     filas.each(function (index) {
         var descripcion = $(this).find("td:eq(0)").text().toLowerCase().trim();
 
-        // Extraer todo el texto después del primer guion
+        // Extraer el texto después del primer guion para 'palabraClave'
         var partes = descripcion.split('-');
         var palabraClave = partes.length > 1 ? partes[1].trim() : ''; // Toma la parte después del primer guion, si existe
 
         // Filtrar solo si 'busqueda' no está vacío
         if (busqueda) {
-            // Verifica si la palabra clave comienza con 'busqueda'
+            // Verifica que 'palabraClave' comience exactamente con las palabras en 'busqueda'
             var coincidePalabraClave = palabraClave.startsWith(busqueda);
 
             if (coincidePalabraClave) {
-                // Si 'busqueda2' está vacío o la descripción incluye 'busqueda2'
+                // Si 'busqueda2' está vacío o la 'descripcion' comienza con 'busqueda2'
                 if (!busqueda2 || descripcion.includes(busqueda2)) {
                     $(this).show();
                     indicesVisibles.push(index);
-
                 } else {
                     $(this).hide();
                 }
@@ -1128,8 +1130,15 @@ function filtrarTabla() {
             $(this).hide(); // Si 'busqueda' está vacío, no muestra registros
         }
     });
-    ProdClientes2 = [];
-    ProdClientes2 = ProdClientes.filter(a => a.Nombre.toLowerCase().includes(busqueda));
-   
+
+    // Filtrar ProdClientes2 para que solo muestre productos cuyo 'Nombre' comience exactamente con las palabras de 'busqueda'
+    ProdClientes2 = ProdClientes.filter(a => {
+        const nombreProducto = a.Nombre.toLowerCase().trim();
+
+        // Verifica que 'nombreProducto' comience exactamente con las palabras en 'busqueda'
+        return nombreProducto.startsWith(busqueda);
+    });
+
     return indicesVisibles;
 }
+

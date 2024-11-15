@@ -2385,7 +2385,7 @@ function AgregarProductoTabla() {
 
         var LotesArray = LotesCadena.filter(a => a.ItemCode == PE.Codigo);
         var cantidad = parseInt($("#cantidad").val());
-        var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria);
+        var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Cliente == 0);
         var DetMargen = DetMargenes.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
         var Margen = Margenes.find(a => a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
         var PrecioMin = 0;
@@ -2505,7 +2505,7 @@ function AgregarProductoTabla() {
             throw new Error('Descuento Invalido');
 
         }
-        if (Promo != undefined && Producto.PorDescto > 0) {
+        if ((Promo != undefined || PromoExclusiva != undefined) && Producto.PorDescto > 0) {
              
             throw new Error('No se puede aplicar más descuentos, el Producto ' + Producto.Descripcion + ' ya tiene una Promoción');
 
@@ -2975,10 +2975,10 @@ function onChangeDescuentoProducto(i) {
     try {
         ProdCadena[i].PorDescto = parseFloat($("#" + i + "_Prod2").val()).toFixed(2);
         var Descuento = parseFloat($("#DES").val());
-
+        var idClientes = $("#ClienteSeleccionado").val();
         var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
-        var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria);
-
+        var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Cliente == 0);
+        var PromoExclusiva = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Cliente == true && a.ClientesPromociones.filter(detCliente => detCliente.idCliente == idClientes).length > 0);
         var Moneda = $("#selectMoneda").val();
         var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
 
@@ -3008,7 +3008,7 @@ function onChangeDescuentoProducto(i) {
             ValidarTotales();
             ValidarCosto();
         }
-        if (Promo != undefined) {
+        if (Promo != undefined || PromoExclusiva != undefined) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

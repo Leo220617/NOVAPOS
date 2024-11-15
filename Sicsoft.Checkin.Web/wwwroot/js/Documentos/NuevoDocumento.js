@@ -1995,7 +1995,7 @@ function AgregarProductoTabla() {
         var totalG = parseFloat(ReplaceLetra($("#totG").text()));
         var totalGX = parseFloat(ReplaceLetra($("#totGX").text()));
         var redondeo = parseFloat(ReplaceLetra($("#redondeo").text()));
-
+        var idClientes = $("#ClienteSeleccionado").val();
         var id = $("#ProductoSeleccionado").val();
         var PE = ProdClientes.find(a => a.id == id);
         var Moneda = $("#selectMoneda").val();
@@ -2026,7 +2026,8 @@ function AgregarProductoTabla() {
 
         var LotesArray = LotesCadena.filter(a => a.ItemCode == PE.Codigo);
         var cantidad = parseInt($("#cantidad").val());
-        var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria);
+        var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Cliente == 0);
+        var PromoExclusiva = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Cliente == true && a.ClientesPromociones.filter(detCliente => detCliente.idCliente == idClientes).length > 0);
         var DetMargen = DetMargenes.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
         var Margen = Margenes.find(a => a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
 
@@ -2081,7 +2082,7 @@ function AgregarProductoTabla() {
              
             throw new Error('Descuento Invalido');
         }
-        if (Promo != undefined && Producto.PorDescto > 0) {
+        if ((Promo != undefined || PromoExclusiva != undefined) && Producto.PorDescto > 0) {
            
             throw new Error('No se puede aplicar más descuentos, el Producto ' + Producto.Descripcion + ' ya tiene una Promoción');
         }

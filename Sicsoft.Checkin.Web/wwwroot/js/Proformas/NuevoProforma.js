@@ -1347,14 +1347,25 @@ function onChangeProducto() {
 
         var idCliente = $("#ClienteSeleccionado").val();
         var Cliente = Clientes.find(a => a.id == idCliente);
-
-
+        var MonedaDoc = $("#selectMoneda").val();
+        var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
 
         if (Producto != undefined) {
             var Categoria = Categorias.find(a => a.id == Producto.idCategoria);
             var PromoExclusiva = DetPromociones.find(a => a.ItemCode == Producto.Codigo && a.idListaPrecio == Producto.idListaPrecios && a.idCategoria == Producto.idCategoria && a.Cliente == true && a.ClientesPromociones.filter(detCliente => detCliente.idCliente == idCliente).length > 0);
 
-            $("#inputPrecio").val(parseFloat((PromoExclusiva != undefined ? PromoExclusiva.PrecioFinal : Producto.PrecioUnitario)));
+            if (PromoExclusiva != undefined) {
+
+                if (MonedaDoc == "CRC") {
+                    $("#inputPrecio").val(parseFloat((PromoExclusiva != undefined ? PromoExclusiva.PrecioFinal : Producto.PrecioUnitario)));
+                } else {
+                    $("#inputPrecio").val(parseFloat((PromoExclusiva != undefined ? PromoExclusiva.PrecioFinal / TipodeCambio.TipoCambio: Producto.PrecioUnitario)));
+                }
+              
+            } else {
+                $("#inputPrecio").val(parseFloat((PromoExclusiva != undefined ? PromoExclusiva.PrecioFinal : Producto.PrecioUnitario)));
+            }
+       
             $("#inputCabys").val(Producto.Cabys);
             $("#inputCategoria").val(Categoria.id + " - " + Categoria.Nombre);
             $("#inputNomPro").val(Producto.Nombre);
@@ -2129,7 +2140,7 @@ function AgregarProductoTabla() {
         var DescuentoX = Producto.PrecioUnitario * (Producto.PorDescto / 100);
         var PrecioFinal = Producto.PrecioUnitario - DescuentoX;
 
-        if (Producto.PrecioMin > PrecioFinal && Promo == undefined) {
+        if (Producto.PrecioMin > PrecioFinal && Promo == undefined && PromoExclusiva == undefined) {
 
             throw new Error('No se puede aplicar el descuento debido a que es menor al Precio Minimo, el Producto ' + Producto.Descripcion + ' lo maximo que se le puede aplicar de Descuento es de ' + parseFloat(DescuentoMaximo).toFixed(2) + '%');
 

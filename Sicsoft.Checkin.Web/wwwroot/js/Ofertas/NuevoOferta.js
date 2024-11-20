@@ -2514,7 +2514,7 @@ function AgregarProductoTabla() {
         var DescuentoX = Producto.PrecioUnitario * (Producto.PorDescto / 100);
         var PrecioFinal = Producto.PrecioUnitario - DescuentoX;
 
-        if (Producto.PrecioMin > PrecioFinal && Promo == undefined) {
+        if (Producto.PrecioMin > PrecioFinal && Promo == undefined && PromoExclusiva == undefined) {
             
             throw new Error('No se puede aplicar el descuento debido a que es menor al Precio Minimo, el Producto ' + Producto.Descripcion + ' lo maximo que se le puede aplicar de Descuento es de ' + parseFloat(DescuentoMaximo).toFixed(2) + '%');
 

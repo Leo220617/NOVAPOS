@@ -53,5 +53,7 @@ namespace NOVAAPP.Models
 
         public DateTime FechaActualizacion { get; set; }
 
+        public string Localizacion { get; set; }
+
     }
 }

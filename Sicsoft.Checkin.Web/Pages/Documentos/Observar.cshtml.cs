@@ -69,6 +69,8 @@ namespace NOVAAPP.Pages.Documentos
         [BindProperty]
         public BodegasViewModel[] Bodegas { get; set; }
 
+        [BindProperty]
+        public string Empresa { get; set; }
 
         public ObservarModel(ICrudApi<ParametrosViewModel, int> parametro, IConfiguration configuration, ICrudApi<DocumentosViewModel, int> service, ICrudApi<ClientesViewModel, string> serviceE, ICrudApi<ProductosViewModel, string> serviceP, ICrudApi<ExoneracionesViewModel, int> exoneracion, ICrudApi<CondicionesPagosViewModel, int> condiconesPago, ICrudApi<VendedoresViewModel, int> vendedor,ICrudApi<TipoCambiosViewModel, int> tipoCambio, ICrudApi<SucursalesViewModel, string> sucursales, ICrudApi<BodegasViewModel, int> bodegas)
         {
@@ -88,6 +90,7 @@ namespace NOVAAPP.Pages.Documentos
         {
             try
             {
+                Empresa = configuration["CodCliente"].ToString();
                 var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
                 if (string.IsNullOrEmpty(Roles.Where(a => a == "32").FirstOrDefault()))
                 {

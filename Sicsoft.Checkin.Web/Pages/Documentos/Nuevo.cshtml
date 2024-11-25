@@ -371,6 +371,10 @@
                                         <th>#</th>
 
                                         <th>Descripción</th>
+                                              @if (Model.Empresa == "G")
+                                        {
+                                            <th>Localización</th>
+                                        }
                                         <th class="text-right">Cantidad</th>
                                         <th class="text-right">Precio de Venta</th>
                                         @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)

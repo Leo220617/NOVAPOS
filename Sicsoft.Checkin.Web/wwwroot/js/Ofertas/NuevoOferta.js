@@ -203,7 +203,8 @@ function RecuperarInformacion() {
                 PorExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).PorExon,
                 idExoneracion: Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion) == undefined ? 0 : Exoneraciones.find(a => a.id == Documento.Detalle[i].idExoneracion).id,
                 PrecioMin: 0,
-                MargenMin: 0
+                MargenMin: 0,
+                Localizacion: PE.Localizacion
 
             };
             var DetMargen = DetMargenes.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Moneda == PE.Moneda);
@@ -2195,6 +2196,9 @@ function RellenaTabla() {
                 html += "<td> " + (i + 1) + " </td>";
 
                 html += "<td > " + ProdCadena[i].Descripcion + " </td>";
+                if (Empresa == "G") {
+                    html += "<td > " + ProdCadena[i].Localizacion + " </td>";
+                }
                 html += "<td class='text-center'> <input onchange='javascript: onChangeCantidadProducto(" + i + ")' type='number' id='" + i + "_Prod' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].Cantidad).toFixed(2)) + "' min='1'/>  </td>";
                 html += "<td class='text-center'> <input onchange='javascript: onChangePrecioProducto(" + i + ")' type='number' id='" + i + "_Prod3' class='form-control'   value= '" + parseFloat(ProdCadena[i].PrecioUnitario).toFixed(2) + "' min='1'/> </td>";
                 html += "<td class='text-center'> <input onchange='javascript: onChangeDescuentoProducto(" + i + ")' type='number' id='" + i + "_Prod2' class='form-control'   value= '" + formatoDecimal(parseFloat(ProdCadena[i].PorDescto).toFixed(2)) + "' min='1'/>  </td>";
@@ -2377,7 +2381,8 @@ function AgregarProductoTabla() {
             PorExoneracion: 0,
             Costo: PE.Costo,
             PrecioMin: 0,
-            MargenMin: 0
+            MargenMin: 0,
+            Localizacion: PE.Localizacion
         };
 
         var Descuento = parseFloat($("#DES").val());

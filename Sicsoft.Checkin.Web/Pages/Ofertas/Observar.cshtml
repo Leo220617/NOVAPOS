@@ -307,6 +307,10 @@
                                     <tr class="bg-pale-info">
                                         <th class="text-center">#</th>
                                         <th class="text-center">Producto</th>
+                                        @if (Model.Empresa == "G")
+                                        {
+                                            <th>Localización</th>
+                                        }
                                         <th class="text-center">Cantidad</th>
                                         @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
                                         {
@@ -349,7 +353,10 @@
                                                 @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + item.NomPro + " - BOD: " +
                                                     (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP))
                                             </td>
-
+                                            @if (Model.Empresa == "G")
+                                            {
+                                                <td>@item.Localizacion</td>
+                                            }
 
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
 
@@ -577,6 +584,10 @@
                                     <tr class="bg-pale-info">
                                         <th class="text-center">#</th>
                                         <th class="text-center">Producto</th>
+                                        @if (Model.Empresa == "G")
+                                        {
+                                            <th>Localización</th>
+                                        }
                                         <th class="text-center">Cantidad</th>
                                         @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
                                         {
@@ -615,8 +626,11 @@
                                                 @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo + " - " + item.NomPro + " - BOD: " +
                                                     (Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault() == null ? "0" : Model.Bodegas.Where(a => a.id == (Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().idBodega)).FirstOrDefault().CodSAP))
                                             </td>
-
-
+                                            @if (Model.Empresa == "G")
+                                            {
+                                                <td>@item.Localizacion</td>
+                                            }
+                                            <td>@item.Localizacion</td>
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
                                             @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
                                             {

@@ -475,6 +475,10 @@
                                     <tr class="bg-pale-info">
                                         <th class="text-center">#</th>
                                         <th class="text-center">Producto</th>
+                                        @if (Model.Empresa == "G")
+                                        {
+                                            <th>Localización</th>
+                                        }
                                         <th class="text-center">Cantidad</th>
                                         @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
                                         {
@@ -527,7 +531,10 @@
                                                 </td>
                                             }
 
-
+                                            @if (Model.Empresa == "G")
+                                            {
+                                                <td>@item.Localizacion</td>
+                                            }
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
 
 

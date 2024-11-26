@@ -119,7 +119,21 @@
                 }
 
             }
+            @{
+                if (!string.IsNullOrEmpty(Roles.Where(a => a == "76").FirstOrDefault()))
+                {
+                    <li class="">
 
+                        <a asp-page="/Sincronizacion/Index">
+                            <i class="mdi mdi-cube"></i> <span>Sincronización</span>
+
+                        </a>
+
+                    </li>
+
+                }
+
+            }
              @{
                 if (!string.IsNullOrEmpty(Roles.Where(a => a == "52").FirstOrDefault()))
                 {

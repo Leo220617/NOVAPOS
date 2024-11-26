@@ -30,6 +30,8 @@ namespace Sicsoft.Checkin.Web.Servicios
         Task<TEntity[]> ObtenerLista<TQuery>(TQuery q);
 
 
+        [Get("/InsertarSAPByCardCode")]
+        Task InsertarSAPByCardCode(string code);
 
         [Get("/Emision")]
         Task<TEntity[]> GenerarEmision<TQuery>(TQuery q);

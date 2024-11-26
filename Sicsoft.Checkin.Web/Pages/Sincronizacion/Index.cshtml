@@ -1,0 +1,367 @@
+﻿@page
+@using Newtonsoft.Json;
+@model NOVAPOS.Pages.Sincronizacion.IndexModel
+@{
+    ViewData["Title"] = "Sincronizacion";
+
+}
+
+
+
+@section styles {
+
+
+}
+
+@section scripts {
+
+
+
+    <script>
+        var ids = 0;
+        function AbrirModalAgregarCliente() {
+
+            try {
+                $("#ModalAgregarCliente").modal("show");
+
+
+            } catch (e) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Error ' + e
+
+                })
+            }
+
+        }
+
+        function InsertarSAPByCardCode() {
+            try {
+
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: '@Url.Page("Index", "InsertarSAPByCardCode")',
+                    data: { id: ids },
+                    success: function (result) {
+                        $("#divProcesando").modal("hide");
+
+                        if (result == false) {
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Ha ocurrido un error al intentar actualizar'
+
+                            })
+
+                        } else {
+                            Swal.fire({
+                                title: "Ha sido actualizado con éxito",
+
+                                icon: 'success',
+                                showCancelButton: false,
+                                customClass: {
+                                    confirmButton: 'swalBtnColor',
+
+                                },
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            })
+                        }
+                    },
+                    beforeSend: function () {
+                        $("#divProcesando").modal("show");
+                    }
+                })
+            } catch (e) {
+                console.log(e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+                })
+            }
+
+        }
+
+        function onClickModalByCardCode() {
+            try {
+                var id = document.getElementById("CardCode").value;
+                ids = id;
+                Swal.fire({
+                    title: '¿Desea actualizar este cliente?',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: `Aceptar`,
+                    denyButtonText: `Cancelar`,
+                    customClass: {
+                        confirmButton: 'swalBtnColor',
+                        denyButton: 'swalDeny'
+                    },
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+
+                        InsertarSAPByCardCode();
+
+                    }
+                })
+            } catch (e) {
+                console.log(e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+                })
+            }
+
+
+
+
+        }
+
+     
+        function AbrirModalAgregarCliente2() {
+
+            try {
+                $("#ModalAgregarCliente2").modal("show");
+
+
+            } catch (e) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Error ' + e
+
+                })
+            }
+
+        }
+    
+        function InsertarSAPByCardCode2() {
+            try {
+
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: '@Url.Page("Index", "InsertarSAPByProduct")',
+                    data: { id: ids },
+                    success: function (result) {
+                        $("#divProcesando").modal("hide");
+
+                        if (result == false) {
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Ha ocurrido un error al intentar actualizar'
+
+                            })
+
+                        } else {
+                            Swal.fire({
+                                title: "Ha sido actualizado con éxito",
+
+                                icon: 'success',
+                                showCancelButton: false,
+                                customClass: {
+                                    confirmButton: 'swalBtnColor',
+
+                                },
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            })
+                        }
+                    },
+                    beforeSend: function () {
+                        $("#divProcesando").modal("show");
+                    }
+                })
+            } catch (e) {
+                console.log(e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+                })
+            }
+
+        }
+
+        function onClickModalByCardCode2() {
+            try {
+                var id = document.getElementById("CardCode2").value;
+                ids = id;
+                Swal.fire({
+                    title: '¿Desea actualizar este producto?',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: `Aceptar`,
+                    denyButtonText: `Cancelar`,
+                    customClass: {
+                        confirmButton: 'swalBtnColor',
+                        denyButton: 'swalDeny'
+                    },
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+
+                        InsertarSAPByCardCode2();
+
+                    }
+                })
+            } catch (e) {
+                console.log(e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ha ocurrido un error al intentar imprimir ' + e
+
+                })
+            }
+
+
+
+
+        }
+
+    </script>
+
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Sincronización
+    </h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#"><i class="ti-dashboard"></i></a></li>
+        <li class="breadcrumb-item active">Sincronización</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+            <input hidden id="Productos" value="@JsonConvert.SerializeObject(Model.Objeto)" />
+    
+
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <div class="row">
+
+                        <div class="col-sm-6"> <h4 class="box-title">Sincronización</h4></div>
+                        <div class="col-sm-2"> <button onclick="javascript: AbrirModalAgregarCliente()" class="btn btn-rounded btn-info"> Sincronizar Cliente</button></div>
+                        <div class="col-sm-2"> <button onclick="javascript: AbrirModalAgregarCliente2()" class="btn btn-rounded btn-info"> Sincronizar Producto</button></div>
+                        @* <div class="col-sm-2"> <button onclick="javascript: InsertarSAP()" class="btn btn-rounded btn-success"><i class="mdi mdi-cached"></i  title="Sincronizar a SAP"> Sincronizar a SAP</button></div>*@
+
+                    </div>
+
+
+                </div>
+ 
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
+<div class="modal fade bs-example-modal-lg" id="ModalAgregarCliente" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Actualizar Cliente desde SAP</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+
+
+
+
+
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <h5>Ingrese el Código del Cliente<span class="text-danger">*</span></h5>
+                            <div class="controls">
+                                <input type="text" id="CardCode" class="form-control" required data-validation-required-message="Este campo es requerido">
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Cancelar</button> &nbsp;
+                <button type="button" class="btn btn-primary waves-effect text-left" onclick="javascript: onClickModalByCardCode();">Guardar</button> &nbsp;
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade bs-example-modal-lg" id="ModalAgregarCliente2" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Actualizar Productos desde SAP</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+
+
+
+
+
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <h5>Ingrese el Código del Producto<span class="text-danger">*</span></h5>
+                            <div class="controls">
+                                <input type="text" id="CardCode2" class="form-control" required data-validation-required-message="Este campo es requerido">
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Cancelar</button> &nbsp;
+                <button type="button" class="btn btn-primary waves-effect text-left" onclick="javascript: onClickModalByCardCode2();">Guardar</button> &nbsp;
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

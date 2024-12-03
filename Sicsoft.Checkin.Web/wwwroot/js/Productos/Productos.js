@@ -248,3 +248,40 @@ function ImprimirEtiqueta(id) {
         })
     }
 }
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    function ImprimirCodigoBarras(id) {
+        const codigoBarrasSvg = document.getElementById('codigoBarras');
+        const codigoBarrasContainer = document.getElementById('codigoBarrasContainer');
+
+        if (!codigoBarrasSvg) {
+            console.error("No se encontró el elemento con id 'codigoBarras'.");
+            return;
+        }
+
+        JsBarcode(codigoBarrasSvg, id, {
+            format: "CODE128",
+            lineColor: "#000",
+            width: 2,
+            height: 50,
+            displayValue: true
+        });
+
+        codigoBarrasContainer.style.display = 'block';
+
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Imprimir Código de Barras</title></head><body>');
+        printWindow.document.write(codigoBarrasContainer.innerHTML);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+
+        codigoBarrasContainer.style.display = 'none';
+    }
+
+    // Exponer la función en el ámbito global
+    window.ImprimirCodigoBarras = ImprimirCodigoBarras;
+});

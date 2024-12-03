@@ -1,5 +1,7 @@
 ﻿
 $(document).ready(function () {
+    let barcode = "";
+    let timeout = null;
     function matchCustom(params, data) {
         if ($.trim(params.term) === '') {
             return data;
@@ -33,7 +35,23 @@ $(document).ready(function () {
         Recuperar();
     });
 
+    $(document).on('keydown', function (e) {
+        // Ignora teclas especiales (Shift, Ctrl, Alt, etc.)
+        if (e.key.length > 1) return;
 
+        // Acumula caracteres
+        barcode += e.key;
+
+        // Reinicia temporizador en cada pulsaci�n
+        clearTimeout(timeout);
+        timeout = setTimeout(function () {
+            if (barcode.length >= 6) { // Ajusta la longitud m�nima del c�digo
+                console.log("Llego " + barcode);
+                processBarcode(barcode); // Procesa el c�digo detectado
+            }
+            barcode = ""; // Reinicia para la siguiente lectura
+        }, 50); // Intervalo corto para capturar la entrada r�pida del esc�ner
+    });
 
     $(document).ready(function () {
 
@@ -73,6 +91,38 @@ var DocumentosC = [];
 var Categorias = [];
 var Pais = "";
 var Empresa = "";
+
+function processBarcode(code) {
+    if (/^\d+$/.test(code)) {  // Verifica que el c�digo contenga solo n�meros (aj�stalo seg�n tu c�digo de barras)
+
+        $("#textoEscaneado").val(code)
+
+        var Producto = ProdClientes.find(a => a.CodBarras.includes(code));
+
+        
+
+        if (Producto != undefined) {
+
+            $("#ProductoSeleccionado").val(Producto.id);
+
+            onChangeProducto();
+            var Barras = true;
+            AgregarProductoTabla(Barras);
+
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Código inexistente '
+
+            })
+        }
+    }
+}
+
+
+
 
 function CerrarPopUpLotes() {
     try {
@@ -1091,6 +1141,7 @@ function RellenaProductos() {
             }
             else if (Promo != undefined) {
 
+
                 html += "<option class='Promo' value='" + ProdClientes[i].id + "' > " + "**PROMO** " + ProdClientes[i].Codigo + " - " + ProdClientes[i].Nombre + " -  Precio: " + formatoDecimal(parseFloat(ProdClientes[i].PrecioUnitario).toFixed(2)) + " -  Stock: " + formatoDecimal(parseFloat(ProdClientes[i].Stock).toFixed(2)) + " -  BOD: " + Bodegas.CodSAP + " -  Precio Anterior: " + formatoDecimal(parseFloat(Promo.PrecioAnterior).toFixed(2)) + " </option>";
                 //var options = document.querySelectorAll('.select2-results__option');
 
@@ -1192,7 +1243,7 @@ function onChangeCliente() {
         //Preguntarle a CP cual es la de 30 dias
 
         var contieneContado = Cliente.Nombre.toUpperCase().includes("CONTADO");
-        
+
 
         if (contieneContado || Cliente.TipoCedula == "99") {
 
@@ -1360,13 +1411,13 @@ function onChangeProducto() {
                 if (MonedaDoc == "CRC") {
                     $("#inputPrecio").val(parseFloat((PromoExclusiva != undefined ? PromoExclusiva.PrecioFinal : Producto.PrecioUnitario)));
                 } else {
-                    $("#inputPrecio").val(parseFloat((PromoExclusiva != undefined ? PromoExclusiva.PrecioFinal / TipodeCambio.TipoCambio: Producto.PrecioUnitario)));
+                    $("#inputPrecio").val(parseFloat((PromoExclusiva != undefined ? PromoExclusiva.PrecioFinal / TipodeCambio.TipoCambio : Producto.PrecioUnitario)));
                 }
-              
+
             } else {
                 $("#inputPrecio").val(parseFloat((PromoExclusiva != undefined ? PromoExclusiva.PrecioFinal : Producto.PrecioUnitario)));
             }
-       
+
             $("#inputCabys").val(Producto.Cabys);
             $("#inputCategoria").val(Categoria.id + " - " + Categoria.Nombre);
             $("#inputNomPro").val(Producto.Nombre);
@@ -1986,8 +2037,9 @@ function ValidarCosto() {
     }
 }
 
-function AgregarProductoTabla() {
+function AgregarProductoTabla(Barras) {
     try {
+        console.log("Llego a AgregarProductoTabla");
         var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
         var impuestoG = parseFloat(ReplaceLetra($("#impG").text()));
         var descuentoG = parseFloat(ReplaceLetra($("#descG").text()));
@@ -2087,7 +2139,7 @@ function AgregarProductoTabla() {
         for (var i = 0; i < ProdCadena.length; i++) {
 
 
-            if (PE.id == ProdCadena[i].idProducto && PE.Editable == false) {
+            if (PE.id == ProdCadena[i].idProducto && PE.Editable == false && Barras != true) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -2209,7 +2261,20 @@ function AgregarProductoTabla() {
 
             $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
-            ProdCadena.push(Producto);
+            if (ProdCadena.find(a => a.idProducto == Producto.idProducto) != undefined && Barras == true) {
+                console.log("Llego a antes de onChangeCantidad");
+                var x = ProdCadena.indexOf(ProdCadena.find(a => a.idProducto == Producto.idProducto));
+                ProdCadena[x].Cantidad += 1;
+                parseFloat($("#" + x + "_Prod").val(ProdCadena[x].Cantidad)).toFixed(2);
+                onChangeCantidadProducto(x);
+
+            } else {
+                ProdCadena.push(Producto);
+            }
+
+            
+
+
 
             RellenaTabla();
             onChangeMoneda();
@@ -2808,8 +2873,8 @@ function onChangeCantidadProducto(i) {
     try {
 
         var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
-        ;
-        ProdCadena[i].Cantidad = parseFloat($("#" + i + "_Prod").val()).toFixed(2);
+
+        ProdCadena[i].Cantidad = parseFloat(parseFloat($("#" + i + "_Prod").val()).toFixed(2));
 
         if (ProdCadena[i].Cantidad > 0) {
             ValidarTotales();
@@ -2924,7 +2989,7 @@ function BuscarCliente() {
         if (Pais == "P" && selectTP != 99) {
             BuscarClientePanama();
         } else if (selectTP == 99) {
-            $("#Nombre").removeAttr("readonly"); 
+            $("#Nombre").removeAttr("readonly");
         }
 
         console.log($("#Nombre").val());

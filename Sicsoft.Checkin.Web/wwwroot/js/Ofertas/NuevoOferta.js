@@ -1,5 +1,7 @@
 ﻿
 $(document).ready(function () {
+    let barcode = "";
+    let timeout = null;
     function matchCustom(params, data) {
         if ($.trim(params.term) === '') {
             return data;
@@ -33,7 +35,23 @@ $(document).ready(function () {
         Recuperar();
     });
 
+    $(document).on('keydown', function (e) {
+        // Ignora teclas especiales (Shift, Ctrl, Alt, etc.)
+        if (e.key.length > 1) return;
 
+        // Acumula caracteres
+        barcode += e.key;
+
+        // Reinicia temporizador en cada pulsaci�n
+        clearTimeout(timeout);
+        timeout = setTimeout(function () {
+            if (barcode.length >= 6) { // Ajusta la longitud m�nima del c�digo
+                console.log("Llego " + barcode);
+                processBarcode(barcode); // Procesa el c�digo detectado
+            }
+            barcode = ""; // Reinicia para la siguiente lectura
+        }, 50); // Intervalo corto para capturar la entrada r�pida del esc�ner
+    });
 
     $(document).ready(function () {
 
@@ -73,6 +91,36 @@ var ids = 0;
 var Categorias = [];
 var Pais = "";
 var Empresa = "";
+
+function processBarcode(code) {
+    if (/^\d+$/.test(code)) {  // Verifica que el c�digo contenga solo n�meros (aj�stalo seg�n tu c�digo de barras)
+
+        $("#textoEscaneado").val(code)
+
+        var Producto = ProdClientes.find(a => a.CodBarras.includes(code));
+
+
+
+        if (Producto != undefined) {
+
+            $("#ProductoSeleccionado").val(Producto.id);
+
+            onChangeProducto();
+            var Barras = true;
+            AgregarProductoTabla(Barras);
+
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Código inexistente '
+
+            })
+        }
+    }
+}
+
 function CerrarPopUpLotes() {
     try {
         $('#listoCerrar').magnificPopup('close');
@@ -2345,7 +2393,7 @@ function ValidarCosto() {
     }
 }
 
-function AgregarProductoTabla() {
+function AgregarProductoTabla(Barras) {
     try {
         Duplicado = false;
         var subtotalG = parseFloat(ReplaceLetra($("#subG").text()));
@@ -2454,7 +2502,7 @@ function AgregarProductoTabla() {
         for (var i = 0; i < ProdCadena.length; i++) {
 
 
-            if (PE.id == ProdCadena[i].idProducto) {
+            if (PE.id == ProdCadena[i].idProducto && Barras != true) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -2579,8 +2627,16 @@ function AgregarProductoTabla() {
 
                 $("#redondeo").text(formatoDecimal(redondeo.toFixed(2)));
 
-                ProdCadena.push(Producto);
+                if (ProdCadena.find(a => a.idProducto == Producto.idProducto) != undefined && Barras == true) {
+                    console.log("Llego a antes de onChangeCantidad");
+                    var x = ProdCadena.indexOf(ProdCadena.find(a => a.idProducto == Producto.idProducto));
+                    ProdCadena[x].Cantidad += 1;
+                    parseFloat($("#" + x + "_Prod").val(ProdCadena[x].Cantidad)).toFixed(2);
+                    onChangeCantidadProducto(x);
 
+                } else {
+                    ProdCadena.push(Producto);
+                }
                 RellenaTabla();
                 onChangeMoneda();
 
@@ -3222,7 +3278,7 @@ function onChangeCantidadProducto(i) {
 
         var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
         var PS = Productos.find(a => a.Nombre == "SERVICIO TRANSPORTE  (KM)");
-        ProdCadena[i].Cantidad = parseFloat($("#" + i + "_Prod").val()).toFixed(2);
+        ProdCadena[i].Cantidad = parseFloat(parseFloat($("#" + i + "_Prod").val()).toFixed(2));
 
         if (ProdCadena[i].Cantidad > 0 && (PE.Stock - ProdCadena[i].Cantidad) >= 0 || PE.Codigo == PS.Codigo || (PE.Editable == true && ProdCadena[i].Cantidad > 0)) {
             ValidarTotales();

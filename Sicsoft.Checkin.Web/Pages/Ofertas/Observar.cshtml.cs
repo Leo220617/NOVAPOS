@@ -99,7 +99,9 @@ namespace NOVAAPP.Pages.Ofertas
                 CondicionesPago = CondPago.Where(a => a.id == Oferta.idCondPago).FirstOrDefault();
                 Vendedor = Vendedores.Where(a => a.id == Oferta.idVendedor).FirstOrDefault();
                 Clientes = await serviceE.ObtenerLista(filtro);
-                Productos = await serviceP.ObtenerLista("");
+                filtro.CardCode = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                filtro.CardName = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
+                Productos = await serviceP.ObtenerLista(filtro);
                 Exoneraciones = await exoneracion.ObtenerLista("");
                 var Suc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
                 Sucursal = await sucursales.ObtenerLista("");

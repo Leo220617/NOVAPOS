@@ -34,6 +34,16 @@
         }
 
         .html6, .html5, .html4, .html3, .html2, .html2, .html {
+            page-break-inside: avoid; /* Evita cortes dentro de un contenedor */
+            page-break-before: auto; /* Ajusta según la necesidad */
+        }
+
+        .no-break {
+            break-inside: avoid; /* Previene cortes dentro de elementos */
+        }
+
+        table {
+            width: 100%;
             page-break-inside: avoid;
         }
     </style>
@@ -53,28 +63,31 @@
 
 
         });
-
+         
         function ImprimirPantalla() {
             try {
                 // window.print();
-                var margins = {
-                    top: 10,
-                    bottom: 10,
-                    left: 10,
-                    width: 595
-                };
+                // var margins = {
+                //     top: 10,
+                //     bottom: 10,
+                //     left: 10,
+                //     width: 595
+                // };
 
 
-                html = $(".html").html();
+                 html = $(".html").html();
                 html2pdf(html, {
                     margin: 1,
                     padding: 0,
                     filename: 'Proforma.pdf',
-                    image: { type: 'jpeg', quality: 1 },
-                    html2canvas: { scale: 2, logging: true },
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, logging: true, useCORS: true },
                     jsPDF: { unit: 'in', format: 'A2', orientation: 'P', compressPDF: true },
                     class: ImprimirPantalla
                 });
+                
+                
+
 
             } catch (e) {
                 console.log(e);
@@ -170,7 +183,8 @@
                     filename: 'Proforma.pdf',
                     image: { type: 'jpeg', quality: 1 },
                     html2canvas: { scale: 2 }, // Escalado para mejorar la calidad
-                    jsPDF: { unit: 'in', format: 'A3', orientation: 'landscape', compressPDF: true } // Usar formato A3 con orientación horizontal
+                    jsPDF: { unit: 'in', format: 'A3', orientation: 'landscape', compressPDF: true }, // Usar formato A3 con orientación horizontal
+                    class: ImprimirMarvin
                 });
 
             } catch (e) {
@@ -233,7 +247,7 @@
                     filename: 'Proforma.pdf',
                     image: { type: 'jpeg', quality: 1 },
                     html2canvas: { scale: 2, logging: true },
-                    jsPDF: { unit: 'in', format: 'A2', orientation: 'P' },
+                    jsPDF: { unit: 'in', format: 'A2', orientation: 'P', compressPDF: true },
                     class: ImprimirCabys
                 });
 
@@ -815,7 +829,7 @@
 
                         @foreach (var item in Model.Oferta.Detalle)
                         {
-                                        <tr>
+                                        <tr class="no-break">
                                             <td>@item.NumLinea</td>
 
 
@@ -864,7 +878,7 @@
                             </table>
                         </div>
                         <!-- /.col -->
-                        <div class="col-12  text-right">
+                        <div class="col-12  text-right no-break">
 
 
                             <div>
@@ -1103,7 +1117,7 @@
 
                         @foreach (var item in Model.Oferta.Detalle)
                         {
-                                        <tr>
+                                        <tr class="no-break">
                                             <td>@item.NumLinea</td>
 
 
@@ -1368,7 +1382,7 @@
 
                         @foreach (var item in Model.Oferta.Detalle)
                         {
-                                        <tr>
+                                        <tr class="no-break">
                                             <td>@item.NumLinea</td>
 
 
@@ -1402,7 +1416,7 @@
                             </table>
                         </div>
                         <!-- /.col -->
-                        <div class="col-12  text-right">
+                        <div class="col-12  text-right no-break">
 
 
                             <div>
@@ -1638,7 +1652,7 @@
                         @foreach (var item in Model.Oferta.Detalle)
                         {
 
-                                        <tr>
+                                        <tr class="no-break">
                                             <td>@item.NumLinea</td>
 
 
@@ -1678,7 +1692,7 @@
                             </table>
                         </div>
                         <!-- /.col -->
-                        <div class="col-12  text-right">
+                        <div class="col-12  text-right no-break">
 
 
                             <div>
@@ -1922,7 +1936,7 @@
 
                         @foreach (var item in Model.Oferta.Detalle)
                         {
-                                        <tr>
+                                        <tr class="no-break">
                                             <td>@item.NumLinea</td>
 
 
@@ -1973,7 +1987,7 @@
                             </table>
                         </div>
                         <!-- /.col -->
-                        <div class="col-12  text-right">
+                        <div class="col-12  text-right no-break">
 
 
                             <div>
@@ -2206,7 +2220,7 @@
 
                         @foreach (var item in Model.Oferta.Detalle)
                         {
-                                        <tr style="  font-size: 16px !important; ">
+                                        <tr class="no-break" style="  font-size: 16px !important; ">
 
                                 @*   <td>
                                         @(Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : "*" + Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo)
@@ -2253,7 +2267,7 @@
                             </table>
                         </div>
                         <!-- /.col -->
-                        <div class="col-12  text-right">
+                        <div class="col-12  text-right no-break">
 
 
                             <div style="  font-size: 20px !important; ">

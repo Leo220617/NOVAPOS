@@ -2532,7 +2532,7 @@ function onChangeDescuentoProducto(i) {
         PrecioFinal = parseFloat(PrecioFinal.toFixed(2));
 
         if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento && Promo == undefined && ((ProdCadena[i].PrecioMin <= PrecioFinal && Moneda == "CRC") || (ProdCadena[i].PrecioMin / TipodeCambio.TipoCambio <= PrecioFinal && Moneda == "USD"))) {
-            ValidarTotales();
+           /* ValidarTotales();*/
         }
 
         if (ProdCadena[i].PorDescto < 0) {
@@ -2544,8 +2544,8 @@ function onChangeDescuentoProducto(i) {
 
             })
 
-            ValidarTotales();
-            ValidarCosto();
+            //ValidarTotales();
+            //ValidarCosto();
         }
         if ((Promo != undefined || PromoExclusiva != undefined) && Producto.PorDescto > 0) {
             Swal.fire({
@@ -2555,8 +2555,8 @@ function onChangeDescuentoProducto(i) {
 
             })
             ProdCadena[i].PorDescto = 0;
-            ValidarTotales();
-            ValidarCosto();
+            //ValidarTotales();
+            //ValidarCosto();
         }
 
         if (ProdCadena[i].PorDescto > Descuento) {
@@ -2567,8 +2567,8 @@ function onChangeDescuentoProducto(i) {
 
             })
             ProdCadena[i].PorDescto = 0;
-            ValidarTotales();
-            ValidarCosto();
+            //ValidarTotales();
+            //ValidarCosto();
         }
         if (Moneda != "USD") {
             if (ProdCadena[i].PrecioMin > PrecioFinal) {
@@ -2579,8 +2579,8 @@ function onChangeDescuentoProducto(i) {
 
                 })
                 ProdCadena[i].PorDescto = 0;
-                ValidarTotales();
-                ValidarCosto();
+                //ValidarTotales();
+                //ValidarCosto();
             }
 
         } else {
@@ -2592,8 +2592,7 @@ function onChangeDescuentoProducto(i) {
 
                 })
                 ProdCadena[i].PorDescto = 0;
-                ValidarTotales();
-                ValidarCosto();
+                
             }
         }
         var Exon = ProdCadena.find(a => a.PorExoneracion > 0);
@@ -2607,7 +2606,116 @@ function onChangeDescuentoProducto(i) {
             $('#ClienteSeleccionado').prop('disabled', false);
 
         }
+        ValidarTotales();
+        ValidarCosto();
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error en: ' + e
 
+        })
+    }
+}
+
+function onChangeDescuentoProductoSetear(i) {
+    try {
+        ProdCadena[i].PorDescto = parseFloat($("#" + i + "_Prod2").val()).toFixed(2);
+        var Descuento = parseFloat($("#DES").val());
+        var idClientes = $("#ClienteSeleccionado").val();
+
+        var PE = ProdClientes.find(a => a.id == ProdCadena[i].idProducto);
+        var Promo = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Cliente == 0);
+        var PromoExclusiva = DetPromociones.find(a => a.ItemCode == PE.Codigo && a.idListaPrecio == PE.idListaPrecios && a.idCategoria == PE.idCategoria && a.Cliente == true && a.ClientesPromociones.filter(detCliente => detCliente.idCliente == idClientes).length > 0);
+        var Moneda = $("#selectMoneda").val();
+        var TipodeCambio = TipoCambio.find(a => a.Moneda == "USD");
+
+        if (Moneda != "USD") {
+            var DescuentoMaximo = ((ProdCadena[i].PrecioUnitario - ProdCadena[i].PrecioMin) / ProdCadena[i].PrecioUnitario) * 100;
+        } else {
+            var DescuentoMaximo = ((ProdCadena[i].PrecioUnitario - (ProdCadena[i].PrecioMin / TipodeCambio.TipoCambio)) / ProdCadena[i].PrecioUnitario) * 100;
+        }
+        var DescuentoX = ProdCadena[i].PrecioUnitario * (ProdCadena[i].PorDescto / 100);
+        var PrecioFinal = ProdCadena[i].PrecioUnitario - DescuentoX;
+        DescuentoX = parseFloat(DescuentoX.toFixed(2));
+        PrecioFinal = parseFloat(PrecioFinal.toFixed(2));
+
+        if (ProdCadena[i].PorDescto >= 0 && ProdCadena[i].PorDescto <= Descuento && Promo == undefined && ((ProdCadena[i].PrecioMin <= PrecioFinal && Moneda == "CRC") || (ProdCadena[i].PrecioMin / TipodeCambio.TipoCambio <= PrecioFinal && Moneda == "USD"))) {
+            /* ValidarTotales();*/
+        }
+
+        if (ProdCadena[i].PorDescto < 0) {
+            ProdCadena[i].PorDescto = 0;
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Descuento Invalido'
+
+            })
+
+            //ValidarTotales();
+            //ValidarCosto();
+        }
+        if ((Promo != undefined || PromoExclusiva != undefined) && Producto.PorDescto > 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No se puede aplicar más descuentos, el Producto ' + ProdCadena[i].Descripcion + ' ya tiene una Promoción'
+
+            })
+            ProdCadena[i].PorDescto = 0;
+            //ValidarTotales();
+            //ValidarCosto();
+        }
+
+        if (ProdCadena[i].PorDescto > Descuento) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Usted no puede aplicar este descuento, el descuento máximo asignado a su usuario es de' + ' ' + parseFloat(Descuento).toFixed(2) + '%'
+
+            })
+            ProdCadena[i].PorDescto = 0;
+            //ValidarTotales();
+            //ValidarCosto();
+        }
+        if (Moneda != "USD") {
+            if (ProdCadena[i].PrecioMin > PrecioFinal) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'No se puede aplicar el descuento debido a que es menor al Precio Minimo, el Producto ' + ProdCadena[i].Descripcion + ' lo maximo que se le puede aplicar de Descuento es de ' + parseFloat(DescuentoMaximo).toFixed(2) + '%'
+
+                })
+                ProdCadena[i].PorDescto = 0;
+                //ValidarTotales();
+                //ValidarCosto();
+            }
+
+        } else {
+            if ((ProdCadena[i].PrecioMin / TipodeCambio.TipoCambio) > PrecioFinal) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'No se puede aplicar el descuento debido a que es menor al Precio Minimo, el Producto ' + ProdCadena[i].Descripcion + ' lo maximo que se le puede aplicar de Descuento es de ' + parseFloat(DescuentoMaximo).toFixed(2) + '%'
+
+                })
+                ProdCadena[i].PorDescto = 0;
+
+            }
+        }
+        var Exon = ProdCadena.find(a => a.PorExoneracion > 0);
+        var Desc = ProdCadena.find(a => a.PorDescto > 0);
+        if (ProdCadena.length > 0 && (Exon != undefined || Desc != undefined)) {
+
+            $('#ClienteSeleccionado').prop('disabled', true);
+
+        } else {
+            $('#selectMoneda').prop('disabled', false);
+            $('#ClienteSeleccionado').prop('disabled', false);
+
+        }
+        
     } catch (e) {
         Swal.fire({
             icon: 'error',
@@ -2643,10 +2751,11 @@ function Setear() {
             var PrecioFinal = ProdCadena[i].PrecioUnitario - Descuento;
             ProdCadena[i].PorDescto = DescuentoMaximo;
             parseFloat($("#" + i + "_Prod2").val(DescuentoMaximo)).toFixed(2);
-            onChangeDescuentoProducto(i);
+            onChangeDescuentoProductoSetear(i);
         }
 
-
+        ValidarTotales();
+        ValidarCosto();
 
     } catch (e) {
         Swal.fire({

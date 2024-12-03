@@ -25,10 +25,16 @@
     var CodSuc = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CodSuc").Select(s1 => s1.Value).FirstOrDefault();
 }
 @section styles {
-      .html {
+    <style>
+        .html {
             page-break-inside: avoid;
         }
 
+        .no-break {
+            break-inside: avoid; /* Previene cortes dentro de elementos */
+        }
+    </style>
+      
 }
 @section scripts {
     <script>
@@ -618,7 +624,7 @@
 
                                     @foreach (var item in Model.Oferta.Detalle)
                                     {
-                                        <tr>
+                                        <tr class="no-break">
                                             <td>@item.NumLinea</td>
 
 
@@ -673,7 +679,7 @@
                             </table>
                         </div>
                         <!-- /.col -->
-                        <div class="col-12  text-right">
+                        <div class="col-12  text-right no-break">
 
 
                             <div>

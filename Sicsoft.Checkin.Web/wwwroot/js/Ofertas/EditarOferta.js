@@ -2834,7 +2834,8 @@ function Setear() {
             parseFloat($("#" + i + "_Prod2").val(DescuentoMaximo)).toFixed(2);
             onChangeDescuentoProductoSetear(i);
         }
-
+        ValidarTotales();
+        ValidarCosto();
 
 
     } catch (e) {

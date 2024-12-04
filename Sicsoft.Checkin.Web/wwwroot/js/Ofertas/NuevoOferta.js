@@ -3272,7 +3272,8 @@ function Setear() {
             onChangeDescuentoProductoSetear(i);
         }
 
-
+        ValidarTotales();
+        ValidarCosto();
 
     } catch (e) {
         Swal.fire({

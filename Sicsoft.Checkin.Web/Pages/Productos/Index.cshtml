@@ -161,8 +161,10 @@
                                         <td>
                                             <a id="print" class="fa fa-print icono" onclick="javascript: ImprimirEtiqueta(@item.id)"> </a>
                                             &nbsp;
-                                            <a id="print" class="fa fa-barcode icono" onclick="javascript: ImprimirCodigoBarras('@(string.IsNullOrEmpty(item.CodBarras) ? "NOVA" + item.Codigo : item.CodBarras.Split(";").Length > 1 ? item.CodBarras.Split(";")[0] : item.CodBarras)')"> </a>
+                                            <a id="print" class="fa fa-barcode icono" onclick="javascript: ImprimirCodigoBarras('@(string.IsNullOrEmpty(item.CodBarras) ? "NOVA" + item.Codigo : item.CodBarras.Split(";").Length > 1 ? item.CodBarras.Split(";")[0] : item.CodBarras)', '@item.Nombre')"> </a>
+
                                             <div hidden id="codigoBarrasContainer" style="display: none;">
+                                                <div id="codigoBarrasNombre"></div>
                                                 <svg id="codigoBarras"></svg>
                                             </div>
                                         </td>

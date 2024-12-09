@@ -29,7 +29,7 @@
     <style>
 
         body {
-            width: 100%;
+          /*   width: 100%; */
             height: auto;
         }
 
@@ -40,11 +40,18 @@
 
         .no-break {
             break-inside: avoid; /* Previene cortes dentro de elementos */
+            overflow: auto;
         }
 
-        table {
+       /*  table {
             width: 100%;
             page-break-inside: avoid;
+            table-layout: fixed;
+        }
+ */
+        .box-body {
+            page-break-inside: avoid; /* Evita cortes dentro del contenedor */
+            overflow: auto; /* Asegura que el contenido se muestre correctamente */
         }
     </style>
 }
@@ -571,7 +578,7 @@
 
                                                 <td class="text-center">@Math.Round(((((@item.TotalLinea - @item.TotalImpuesto) - ((Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? 0 : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Costo) * item.Cantidad)) / (@item.TotalLinea - @item.TotalImpuesto)) * 100), 2).ToString("C", formato)%</td>
                                             }
-                                            <td align="center" style="padding-top:15px;">
+                               
 
                                                 @{
                                                     var Codigo = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo;
@@ -582,10 +589,12 @@
                                                 {
                                                     @if (Serie == true)
                                                     {
+                                                    <td align="center" style="padding-top:15px;">
                                                         <a href="#test-form" onclick="javascript: onClickModal('@Codigo', '@item.id');" class=" popup-with-form fa fa-info-circle icono"> </a>
+                                                    </td>
                                                     }
                                                 }
-                                            </td>
+                                           
                                         </tr>
                                     }
 
@@ -802,25 +811,25 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr class="bg-pale-info">
-                                        <th class="text-center">#</th>
-                                        <th class="text-center">Producto</th>
-                                        <th class="text-center">Cantidad</th>
+                                        <th class="text-center" style="width: 10%;">#</th>
+                                        <th class="text-center" style="width: 30%;">Producto</th>
+                                        <th class="text-center" style="width: 10%;">Cantidad</th>
                         @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
                         {
-                                            <th class="text-center">Precio Final</th>
+                                            <th class="text-center" style="width: 12%;">Precio Final</th>
 
                         }
                         else
                         {
-                                            <th class="text-center">Precio Unitario</th>
+                                            <th class="text-center" style="width: 12%;">Precio Unitario</th>
 
                         }
                         @* <th class="text-center">% Descuento</th>*@
                         @*   <th class="text-center">Descuento</th>*@
-                                        <th class="text-center">Impuesto</th>
-                                        <th class="text-center">% Exoneración</th>
+                                        <th class="text-center" style="width: 10%;">Impuesto</th>
+                                        <th class="text-center" style="width: 10%;">% Exoneración</th>
 
-                                        <th class="text-center">Total</th>
+                                        <th class="text-center" style="width: 12%;">Total</th>
 
 
                                     </tr>

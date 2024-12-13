@@ -643,7 +643,7 @@
                                             {
                                                 <td>@item.Localizacion</td>
                                             }
-                                            <td>@item.Localizacion</td>
+                                          
                                             <td class="text-right">@(Math.Round(item.Cantidad, 2).ToString("C", formato))</td>
                                             @if (Model.Parametro.FirstOrDefault().PrecioDescuento == true)
                                             {
@@ -663,7 +663,7 @@
                                             <td class="text-center">@Math.Round(@item.TotalLinea - @item.TotalImpuesto, 2).ToString("C", formato)</td>
 
 
-                                            <td align="center" style="padding-top:15px;">
+                                          
 
                                                 @{
                                                     var Codigo = Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault() == null ? "Producto Inexistente" : Model.Productos.Where(a => a.id == item.idProducto).FirstOrDefault().Codigo;
@@ -674,10 +674,12 @@
                                                 {
                                                     @if (Serie == true)
                                                     {
+                                                    <td align="center" style="padding-top:15px;">
                                                         <a href="#test-form" onclick="javascript: onClickModal('@Codigo', '@item.id');" class=" popup-with-form fa fa-info-circle icono"> </a>
+                                                    </td>
                                                     }
                                                 }
-                                            </td>
+                                         
                                         </tr>
                                     }
 

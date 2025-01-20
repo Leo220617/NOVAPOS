@@ -747,12 +747,40 @@ function AgregarProductoTabla() {
 
 
 }
+function ReplaceLetra(palabra) {
+    var cantidad = cantidadRepetidos(palabra, ",");
+    for (var i = 0; i < cantidad; i++) {
+        palabra = palabra.replace(",", "");
+    }
 
+    //var cantidad2 = cantidadRepetidos(palabra, ".");
+    //for (var i = 0; i < cantidad2; i++) {
+    //    palabra = palabra.replace(".", "");
+    //}
+    return palabra;
+}
+function cantidadRepetidos(palabra, separador) {
+    try {
+        return palabra.split(separador).length - 1;
+    } catch (e) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error ' + e
+
+        })
+    }
+
+
+}
 function Generar() {
 
     try {
-        var totCot = parseFloat($("#totCot").text());
-        var totDif = parseFloat($("#totDif").text());
+        var totCot = parseFloat(ReplaceLetra($("#totCot").text()));
+        var totDif = parseFloat(ReplaceLetra($("#totDif").text()));
+
+     
+          
         var EncArqueos = {
 
             id: $("#id").val(),
@@ -882,8 +910,8 @@ function Generar() {
 function GeneraryEnviar() {
 
     try {
-        var totCot = parseFloat($("#totCot").text());
-        var totDif = parseFloat($("#totDif").text());
+        var totCot = parseFloat(ReplaceLetra($("#totCot").text()));
+        var totDif = parseFloat(ReplaceLetra($("#totDif").text()));
 
         var EncArqueos = {
 

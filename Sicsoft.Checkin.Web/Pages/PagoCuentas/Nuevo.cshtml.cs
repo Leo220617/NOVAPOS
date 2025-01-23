@@ -64,7 +64,7 @@ namespace NOVAAPP.Pages.PagoCuentas
                 CB = await serviceCB.ObtenerLista(FiltroCB);
                 ParametrosFiltros filtro2 = new ParametrosFiltros();
                 filtro2.FechaInicial = DateTime.Now.Date;
-                TP = await tipoCambio.ObtenerLista(filtro);
+                TP = await tipoCambio.ObtenerLista(filtro2);
                 Parametro = await param.ObtenerLista("");
 
                 if (Parametro.FirstOrDefault().Pais == "P" && TP.Length == 0)
